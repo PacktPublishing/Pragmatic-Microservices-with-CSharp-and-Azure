@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <PackageId>Codebreaker.GameAPIs.Algorithms</PackageId>
+    <Version>1.0.0</Version>
+    <Authors>CN innovation</Authors>
+    <Company>CN innvoation</Company>
+    <TargetFrameworks>net7.0;net8.0</TargetFrameworks>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <Description></Description>
+  </PropertyGroup>
+
+</Project>
