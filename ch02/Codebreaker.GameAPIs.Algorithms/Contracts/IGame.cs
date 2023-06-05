@@ -12,8 +12,7 @@ public interface IGame<TField, TResult>
     bool Won { get; set; }
     int LastMoveNumber { get; set; }
     IEnumerable<TField> Fields { get; }
-    ICollection<TField> Codes { get; init; }
+    ICollection<TField> Codes { get; }
     ICollection<IMove<TField, TResult>> Moves { get; }
     IMove<TField, TResult> CreateMove(IEnumerable<TField> fields, TResult result, int moveNumber);
 }
-
