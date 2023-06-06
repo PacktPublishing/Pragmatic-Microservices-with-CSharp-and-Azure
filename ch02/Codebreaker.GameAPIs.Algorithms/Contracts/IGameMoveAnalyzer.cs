@@ -2,6 +2,6 @@
 
 public interface IGameMoveAnalyzer
 {
-    void ApplyMove();
+    string ApplyMove();
 }
 

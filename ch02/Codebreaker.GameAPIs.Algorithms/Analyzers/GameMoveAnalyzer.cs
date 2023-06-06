@@ -37,7 +37,7 @@ public abstract class GameMoveAnalyzer<TField, TResult> : IGameMoveAnalyzer
 
     public abstract void SetEndInformation();
 
-    public void ApplyMove()
+    public string ApplyMove()
     {
         ValidateMove();
         var result = GetResult();
