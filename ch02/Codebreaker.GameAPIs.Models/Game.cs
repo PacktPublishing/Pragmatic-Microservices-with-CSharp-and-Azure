@@ -10,24 +10,20 @@ public abstract class Game(
     DateTime startTime,
     int holes,
     int maxMoves)
-    : IFormattable
 {
-    public Guid GameId { get; private set; } = gameId;
-    public string GameType { get; private set; } = gameType;
-    public string PlayerName { get; private set; } = playerName;
-    public bool IsAuthenticated { get; private set; } = isAuthenticated;
-    public DateTime StartTime { get; private set; } = startTime;
+    public Guid GameId { get; } = gameId;
+    public string GameType { get; } = gameType;
+    public string PlayerName { get; } = playerName;
+    public bool IsAuthenticated { get; } = isAuthenticated;
+    public DateTime StartTime { get; } = startTime;
     public DateTime? EndTime { get; set; }
     public TimeSpan? Duration { get; set; }
     public int LastMoveNumber { get; set; } = 0;
     public int Holes { get; private set; } = holes;
-    public int MaxMoves { get; private set; } = maxMoves;
+    public int MaxMoves { get; } = maxMoves;
     public bool Won { get; set; } = false;
 
-    public string ToString(string? format = default, IFormatProvider? formatProvider = default) =>
-        $"{GameId}:{GameType} - {StartTime}";
-
-    public override string ToString() => ToString(null, null);
+    public override string ToString() => $"{GameId}:{GameType} - {StartTime}";
 }
 
 public class Game<TField, TResult>(
@@ -49,14 +45,12 @@ public class Game<TField, TResult>(
     // the code to guess
     public required ICollection<TField> Codes { get; init; }
 
-    public IMove<TField, TResult> CreateMove(IEnumerable<TField> fields, TResult result, int moveNumber)
+    public IMove<TField, TResult> CreateMove(IEnumerable<TField> fields, TResult result, int moveNumber) => 
+        new Move<TField, TResult>(GameId, Guid.NewGuid(), moveNumber)
     {
-        return new Move<TField, TResult>(GameId, Guid.NewGuid(), moveNumber)
-        {
-            GuessPegs = fields.ToArray(),
-            KeyPegs = result
-        };
-    }
+        GuessPegs = fields.ToArray(),
+        KeyPegs = result
+    };
 
     public ICollection<IMove<TField, TResult>> Moves { get; } = new List<IMove<TField, TResult>>();
 }
