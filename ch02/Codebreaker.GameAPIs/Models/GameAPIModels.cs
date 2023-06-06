@@ -14,13 +14,12 @@ public record class CreateGameRequest(GameType GameType, string PlayerName);
 
 [JsonDerivedType(typeof(CreateGameResponse<ColorField>), "Color")]
 [JsonDerivedType(typeof(CreateGameResponse<ShapeAndColorField>), "Shape")]
-public record class CreateGameResponse(GameType GameType, string PlayerName)
+public record class CreateGameResponse(Guid GameId, GameType GameType, string PlayerName)
 {
-    public Guid GameId { get; init; }
 }
 
-public record class CreateGameResponse<TField>(GameType GameType, string PlayerName)
-    : CreateGameResponse(GameType, PlayerName)
+public record class CreateGameResponse<TField>(Guid GameId, GameType GameType, string PlayerName)
+    : CreateGameResponse(GameId, GameType, PlayerName)
 {
     public required TField[] Fields { get; init; }
 }

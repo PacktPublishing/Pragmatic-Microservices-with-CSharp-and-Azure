@@ -10,21 +10,18 @@ public static partial class ApiModelExtensions
 
     public static CreateGameResponse ToCreateGameResponse(this Game game)
     {
-        static CreateGameResponse GetColorGameResponse(ColorGame game) => new CreateGameResponse<ColorField>( Enum.Parse<GameType>(game.GameType), game.PlayerName)
+        static CreateGameResponse GetColorGameResponse(ColorGame game) => new CreateGameResponse<ColorField>( game.GameId, Enum.Parse<GameType>(game.GameType), game.PlayerName)
         {
-            GameId = game.GameId,
             Fields = game.Fields.ToArray()
         };
 
-        static CreateGameResponse GetSimpleGameResponse(SimpleGame game) => new CreateGameResponse<ColorField>( Enum.Parse<GameType>(game.GameType), game.PlayerName)
+        static CreateGameResponse GetSimpleGameResponse(SimpleGame game) => new CreateGameResponse<ColorField>( game.GameId, Enum.Parse<GameType>(game.GameType), game.PlayerName)
         {
-            GameId = game.GameId,
             Fields = game.Fields.ToArray()
         };
 
-        static CreateGameResponse<ShapeAndColorField> GetShapeGameResponse(ShapeGame game) => new( Enum.Parse<GameType>(game.GameType), game.PlayerName) 
+        static CreateGameResponse<ShapeAndColorField> GetShapeGameResponse(ShapeGame game) => new(game.GameId, Enum.Parse<GameType>(game.GameType), game.PlayerName) 
         {
-            GameId = game.GameId,
             Fields = game.Fields.ToArray()
         };
 
