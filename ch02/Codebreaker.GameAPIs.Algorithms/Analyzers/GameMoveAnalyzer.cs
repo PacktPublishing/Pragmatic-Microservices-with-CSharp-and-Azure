@@ -6,15 +6,14 @@ public abstract class GameMoveAnalyzer<TField, TResult> : IGameMoveAnalyzer
     where TResult : struct
 {
     protected readonly IGame<TField, TResult> _game;
-    private readonly IList<TField> _guesses;
     private readonly int _moveNumber;
 
-    protected IList<TField> Guesses => _guesses;
+    protected IList<TField> Guesses { get; private set; }
 
     protected GameMoveAnalyzer(IGame<TField, TResult> game, IList<TField> guesses, int moveNumber)
     {
         _game = game;
-        _guesses = guesses;
+        Guesses = guesses;
         _moveNumber = moveNumber;
     }
 
@@ -24,8 +23,8 @@ public abstract class GameMoveAnalyzer<TField, TResult> : IGameMoveAnalyzer
     private void ValidateMove()
     {
         /// The number of holes in the game does not match the number of pegs in the move.
-        if (_game.Holes != _guesses.Count)
-            throw new ArgumentException($"Invalid guess number {_guesses.Count} for {_game.Holes} holes");
+        if (_game.Holes != Guesses.Count)
+            throw new ArgumentException($"Invalid guess number {Guesses.Count} for {_game.Holes} holes");
 
         ValidateGuessPegs();
 
@@ -40,9 +39,10 @@ public abstract class GameMoveAnalyzer<TField, TResult> : IGameMoveAnalyzer
     public string ApplyMove()
     {
         ValidateMove();
-        var result = GetResult();
-        var move = _game.CreateMove(_guesses, result, _moveNumber);
+        TResult result = GetResult();
+        var move = _game.CreateMove(Guesses, result, _moveNumber);
         _game.Moves.Add(move);
         SetEndInformation();
+        return result.ToString() ?? string.Empty;
     }
 }

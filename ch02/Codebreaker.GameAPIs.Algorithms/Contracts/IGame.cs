@@ -3,6 +3,7 @@
 public interface IGame<TField, TResult>
     where TResult : struct
 {
+    Guid GameId { get; }
     string GameType { get; }
     int Holes { get; }
     int MaxMoves { get; }
