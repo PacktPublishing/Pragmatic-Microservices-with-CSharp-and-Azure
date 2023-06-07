@@ -22,13 +22,13 @@ public class GamesService(IGamesRepository dataRepository) : IGamesService
     private static string ApplyMove(Game game, IEnumerable<string> guesses, int moveNumber)
     {
         ColorGameMoveAnalyzer GetColorGameMoveAnalyzer(ColorGame game) =>
-            new ColorGameMoveAnalyzer(game, guesses.ToPegs<ColorField>(), moveNumber);
+            new(game, guesses.ToPegs<ColorField>(), moveNumber);
 
         SimpleGameMoveAnalyzer GetSimpleGameMoveAnalyzer(SimpleGame game) =>
-            new SimpleGameMoveAnalyzer(game, guesses.ToPegs<ColorField>(), moveNumber);
+            new(game, guesses.ToPegs<ColorField>(), moveNumber);
 
         ShapeGameMoveAnalyzer GetShapeGameMoveAnalyzer(ShapeGame game) =>
-            new ShapeGameMoveAnalyzer(game, guesses.ToPegs<ShapeAndColorField>(), moveNumber);
+            new(game, guesses.ToPegs<ShapeAndColorField>(), moveNumber);
 
         IGameMoveAnalyzer analyzer = game switch
         {
