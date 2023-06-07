@@ -5,6 +5,7 @@ namespace Codebreaker.GameAPIs.Algorithms.Tests;
 
 public class MockShapeGame : IGame<ShapeAndColorField, ShapeAndColorResult>
 {
+    public Guid GameId { get; init; }
     public int Holes { get; init; }
     public int MaxMoves { get; init; }
     public DateTime? EndTime { get; set; }

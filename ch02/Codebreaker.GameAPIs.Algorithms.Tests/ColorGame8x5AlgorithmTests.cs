@@ -1,6 +1,6 @@
 using System.Collections;
 
-using Codebreaker.GameAPIs.Extensions;
+using Codebreaker.GameAPIs.Analyzers;
 using Codebreaker.GameAPIs.Models;
 
 using static Codebreaker.GameAPIs.Models.Colors;
@@ -76,11 +76,11 @@ public class ColorGame8x5AlgorithmTests
             Codes = new List<ColorField>(codes.Select(c => new ColorField(c)))
         };
 
-        var guessPegs = new List<ColorField>(guesses.Select(g => new ColorField(g)));
+        var guessPegs = guesses.Select(g => new ColorField(g)).ToList();
+        ColorGameMoveAnalyzer analyzer = new(game, guessPegs, 1);
+        string result = analyzer.ApplyMove();
 
-        game.ApplyMove(guessPegs, 1);
-
-        return game.Moves.First().KeyPegs ?? throw new InvalidOperationException();
+        return ColorResult.Parse(result);
     }
 }
 
