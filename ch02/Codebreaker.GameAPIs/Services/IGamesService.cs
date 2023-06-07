@@ -4,7 +4,7 @@ public interface IGamesService
 {
     Task<Game> StartGameAsync(string gameType, string playerName, CancellationToken cancellationToken = default);
 
-    Task<Game> SetMoveAsync(Guid gameId, IEnumerable<string> guesses, int moveNumber, CancellationToken cancellationToken = default);
+    Task<(Game Game, string Result)> SetMoveAsync(Guid gameId, IEnumerable<string> guesses, int moveNumber, CancellationToken cancellationToken = default);
 
     ValueTask<Game?> GetGameAsync(Guid id, CancellationToken cancellationToken = default);
 

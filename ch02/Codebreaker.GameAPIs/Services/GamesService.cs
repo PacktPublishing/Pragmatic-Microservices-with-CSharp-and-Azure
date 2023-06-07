@@ -41,16 +41,16 @@ public class GamesService(IGamesRepository dataRepository) : IGamesService
         return analyzer.ApplyMove();
     }
 
-    public async Task<Game> SetMoveAsync(Guid gameId, IEnumerable<string> guesses, int moveNumber, CancellationToken cancellationToken = default)
+    public async Task<(Game Game, string Result)> SetMoveAsync(Guid gameId, IEnumerable<string> guesses, int moveNumber, CancellationToken cancellationToken = default)
     {
         Game game = await _dataRepository.GetGameAsync(gameId, cancellationToken) ?? throw new GameNotFoundException($"Game with id {gameId} not found");
 
-        ApplyMove(game, guesses, moveNumber);
+        string result = ApplyMove(game, guesses, moveNumber);
 
         // Update the game in the game-service database
         await _dataRepository.UpdateGameAsync(game, cancellationToken);
 
-        return game;
+        return (game, result);
     }
 
     // get the game from the cache or the data repository
