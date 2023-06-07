@@ -1,5 +1,7 @@
 ﻿using System.Text.Json.Serialization;
 
+using Swashbuckle.AspNetCore.Annotations;
+
 namespace Codebreaker.GameAPIs.Models;
 
 public enum GameType
@@ -12,6 +14,9 @@ public enum GameType
 
 public record class CreateGameRequest(GameType GameType, string PlayerName);
 
+[SwaggerDiscriminator("fieldType")]
+[SwaggerSubType(typeof(CreateGameResponse<ColorField>), DiscriminatorValue = "color")]
+[SwaggerSubType(typeof(CreateGameResponse<ShapeAndColorField>), DiscriminatorValue = "shape")]
 [JsonDerivedType(typeof(CreateGameResponse<ColorField>), "Color")]
 [JsonDerivedType(typeof(CreateGameResponse<ShapeAndColorField>), "Shape")]
 public record class CreateGameResponse(Guid GameId, GameType GameType, string PlayerName)
