@@ -24,14 +24,16 @@ public abstract class GameMoveAnalyzer<TField, TResult> : IGameMoveAnalyzer
     {
         /// The number of holes in the game does not match the number of pegs in the move.
         if (_game.Holes != Guesses.Count)
-            throw new ArgumentException($"Invalid guess number {Guesses.Count} for {_game.Holes} holes");
+            throw new ArgumentException($"Invalid guess number {Guesses.Count} for {_game.Holes} holes") { HResult = 4200 };
 
         ValidateGuessPegs();
 
         _game.LastMoveNumber++;
 
         if (_game.LastMoveNumber != _moveNumber)
-            throw new ArgumentException($"Incorrect move number received {_moveNumber}");
+        {
+            throw new ArgumentException($"Incorrect move number received {_moveNumber}") { HResult = 4300 };
+        }
     }
 
     public abstract void SetEndInformation();

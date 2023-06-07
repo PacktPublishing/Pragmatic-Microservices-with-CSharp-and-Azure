@@ -13,7 +13,7 @@ public class SimpleGameMoveAnalyzer : GameMoveAnalyzer<ColorField, SimpleColorRe
     public override void ValidateGuessPegs()
     {
         if (Guesses.Any(guessPeg => _game.Fields.Contains(guessPeg)))
-            throw new ArgumentException("The guess contains an invalid value");
+            throw new ArgumentException("The guess contains an invalid value") { HResult = 4400 };
     }
 
     public override SimpleColorResult GetResult()
