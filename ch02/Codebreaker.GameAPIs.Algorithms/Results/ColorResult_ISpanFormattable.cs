@@ -1,6 +1,8 @@
 ﻿namespace Codebreaker.GameAPIs.Models;
 public readonly partial record struct ColorResult : ISpanFormattable
 {
+    public override string ToString() => ToString(default, default);
+
     public string ToString(string? format = default, IFormatProvider? formatProvider = default)
     {
         var destination = new char[3].AsSpan();

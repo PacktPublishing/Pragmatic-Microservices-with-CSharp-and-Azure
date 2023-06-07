@@ -2,6 +2,8 @@
 
 public readonly partial record struct ShapeAndColorResult : ISpanFormattable
 {
+    public override string ToString() => ToString(default, default);
+
     public string ToString(string? format = default, IFormatProvider? formatProvider = default)
     {
         var destination = new char[5].AsSpan();

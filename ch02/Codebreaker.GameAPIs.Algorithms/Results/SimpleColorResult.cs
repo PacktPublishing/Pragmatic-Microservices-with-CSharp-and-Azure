@@ -17,7 +17,4 @@ public readonly partial struct SimpleColorResult
     }
 
     public readonly ResultValue[] Results { get; }
-
-    public override string ToString() =>
-        string.Join(Separator, Results.Select(r => (byte)r));
 }
