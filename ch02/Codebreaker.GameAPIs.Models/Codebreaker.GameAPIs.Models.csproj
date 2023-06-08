@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Codebreaker.GameAPIs.Algorithms\Codebreaker.GameAPIs.Algorithms.csproj" />
+    <PackageReference Include="Codebreaker.GameAPIs.Algorithms" Version="3.0.1-beta.9" />
   </ItemGroup>
 
 </Project>
