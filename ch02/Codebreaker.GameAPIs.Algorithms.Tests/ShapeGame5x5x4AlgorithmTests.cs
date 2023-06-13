@@ -71,22 +71,15 @@ public class ShapeGame5x5x4AlgorithmTests
         MockShapeGame game = new()
         {
             GameType = GameTypes.Game5x5x4,
-            Holes = 4,
+            NumberPositions = 4,
             MaxMoves = 14,
             Won = false,
-            Fields = new List<ShapeAndColorField>() { (Shapes.Rectangle, Red), (Circle, Blue), (Star, Yellow), (Triangle, Green), (Square, Purple) },
-            Codes = new List<ShapeAndColorField>(codes)
+            FieldValues = new ShapeAndColorField[] { (Shapes.Rectangle, Red), (Circle, Blue), (Star, Yellow), (Triangle, Green), (Square, Purple) },
+            Codes = codes
         };
 
-        MockShapeMove move = new()
-        {
-            MoveNumber = 1,
-            GuessPegs = new List<ShapeAndColorField>(guesses)
-        };
-
-        ShapeGameMoveAnalyzer analyzer = new(game, guesses.ToList(), 1);
-        string result = analyzer.ApplyMove();
-        return ShapeAndColorResult.Parse(result);
+        ShapeGameGuessAnalyzer analyzer = new(game, guesses.ToList(), 1);
+        return analyzer.GetResult();
     }
 }
 

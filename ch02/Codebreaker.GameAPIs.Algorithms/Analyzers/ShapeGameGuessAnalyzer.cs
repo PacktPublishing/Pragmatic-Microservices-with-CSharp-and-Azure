@@ -3,25 +3,25 @@ using Codebreaker.GameAPIs.Models;
 
 namespace Codebreaker.GameAPIs.Analyzers;
 
-public class ShapeGameMoveAnalyzer : GameMoveAnalyzer<ShapeAndColorField, ShapeAndColorResult>
+public class ShapeGameGuessAnalyzer : GameGuessAnalyzer<ShapeAndColorField, ShapeAndColorResult>
 {
-    public ShapeGameMoveAnalyzer(IGame<ShapeAndColorField, ShapeAndColorResult> game, IList<ShapeAndColorField> guesses, int moveNumber)
+    public ShapeGameGuessAnalyzer(IGame<ShapeAndColorField, ShapeAndColorResult> game, IList<ShapeAndColorField> guesses, int moveNumber)
         : base(game, guesses, moveNumber)
     {
     }
 
-    public override void ValidateGuessPegs()
+    public override void ValidateGuessValues()
     {
         // check for valid colors
-        if (Guesses.Select(f => f.Color).Any(color => !_game.Fields.Select(f => f.Color).Contains(color)))
+        if (Guesses.Select(f => f.Color).Any(color => !_game.FieldValues.Select(f => f.Color).Contains(color)))
             throw new ArgumentException("The guess contains an invalid color") { HResult = 4402 };
 
         // check for valid shapes
-        if (Guesses.Select(f => f.Shape).Any(shape => !_game.Fields.Select(c => c.Shape).Contains(shape)))
+        if (Guesses.Select(f => f.Shape).Any(shape => !_game.FieldValues.Select(c => c.Shape).Contains(shape)))
             throw new ArgumentException("The guess contains an invalid shape") { HResult = 4403 };
     }
 
-    public override ShapeAndColorResult GetResult()
+    public override ShapeAndColorResult GetCoreResult()
     {
         // Check black and white keyPegs
         List<ShapeAndColorField> codesToCheck = new(_game.Codes);
@@ -84,16 +84,16 @@ public class ShapeGameMoveAnalyzer : GameMoveAnalyzer<ShapeAndColorField, ShapeA
 
         ShapeAndColorResult resultPegs = new(black, blue, white);
 
-        if ((resultPegs.Correct + resultPegs.WrongPosition + resultPegs.ColorOrShape) > _game.Holes)
+        if ((resultPegs.Correct + resultPegs.WrongPosition + resultPegs.ColorOrShape) > _game.NumberPositions)
             throw new InvalidOperationException("There are more keyPegs than holes"); // Should not be the case
 
         return resultPegs;
     }
 
-    public override void SetEndInformation()
+    public override void SetGameEndInformation(ShapeAndColorResult result)
     {
-        bool allCorrect = _game.Moves.Last().KeyPegs?.Correct == _game.Holes;
-        if (allCorrect || _game.Moves.Count >= _game.MaxMoves)
+        bool allCorrect = result.Correct == _game.NumberPositions;
+        if (allCorrect || _game.LastMoveNumber >= _game.MaxMoves)
         {
             _game.EndTime = DateTime.UtcNow;
             _game.Duration = _game.EndTime - _game.StartTime;

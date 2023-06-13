@@ -69,18 +69,16 @@ public class ColorGame8x5AlgorithmTests
         MockColorGame game = new()
         {
             GameType = GameTypes.Game8x5,
-            Holes = 5,
+            NumberPositions = 5,
             MaxMoves = 14,
             Won = false,
-            Fields = new List<ColorField>() { Red, Blue, Green, Yellow, Black, White, Purple, Orange },
-            Codes = new List<ColorField>(codes.Select(c => new ColorField(c)))
+            FieldValues = new ColorField[] { Red, Blue, Green, Yellow, Black, White, Purple, Orange },
+            Codes = codes.Select(c => new ColorField(c)).ToArray()
         };
 
         var guessPegs = guesses.Select(g => new ColorField(g)).ToList();
-        ColorGameMoveAnalyzer analyzer = new(game, guessPegs, 1);
-        string result = analyzer.ApplyMove();
-
-        return ColorResult.Parse(result);
+        ColorGameGuessAnalyzer analyzer = new(game, guessPegs, 1);
+        return analyzer.GetResult();
     }
 }
 

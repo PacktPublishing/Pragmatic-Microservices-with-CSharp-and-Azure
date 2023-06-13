@@ -69,18 +69,16 @@ public class ColorGame6x4AlgorithmTests
         MockColorGame game = new()
         {
             GameType = GameTypes.Game6x4,
-            Holes = 4,
+            NumberPositions = 4,
             MaxMoves = 12,
             Won = false,
-            Fields = new List<ColorField>() { Red, Blue, Green, Yellow, Black, White },
-            Codes = new List<ColorField>(codes.Select(c => new ColorField(c)))
+            FieldValues = new ColorField[] { Red, Blue, Green, Yellow, Black, White },
+            Codes = codes.Select(c => new ColorField(c)).ToArray()
         };
 
         var guessPegs = guesses.Select(g => new ColorField(g)).ToList();
-        ColorGameMoveAnalyzer analyzer = new(game, guessPegs, 1);
-        string result = analyzer.ApplyMove();
-
-        return ColorResult.Parse(result);
+        ColorGameGuessAnalyzer analyzer = new(game, guessPegs, 1);
+        return analyzer.GetResult();
     }
 }
 

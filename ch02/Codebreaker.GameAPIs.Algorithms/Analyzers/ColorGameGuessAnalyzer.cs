@@ -3,20 +3,20 @@ using Codebreaker.GameAPIs.Models;
 
 namespace Codebreaker.GameAPIs.Analyzers;
 
-public class ColorGameMoveAnalyzer : GameMoveAnalyzer<ColorField, ColorResult>
+public class ColorGameGuessAnalyzer : GameGuessAnalyzer<ColorField, ColorResult>
 {
-    public ColorGameMoveAnalyzer(IGame<ColorField, ColorResult> game, IList<ColorField> guesses, int moveNumber)
+    public ColorGameGuessAnalyzer(IGame<ColorField, ColorResult> game, IList<ColorField> guesses, int moveNumber)
         : base(game, guesses, moveNumber)
     {
     }
 
-    public override void ValidateGuessPegs()
+    public override void ValidateGuessValues()
     {
-        if (Guesses.Any(guessPeg => !_game.Fields.Contains(guessPeg)))
+        if (Guesses.Any(guessPeg => !_game.FieldValues.Contains(guessPeg)))
             throw new ArgumentException("The guess contains an invalid value") { HResult = 4400 };
     }
 
-    public override ColorResult GetResult()
+    public override ColorResult GetCoreResult()
     {
         // Check black and white keyPegs
         List<ColorField> codesToCheck = new(_game.Codes);
@@ -50,7 +50,7 @@ public class ColorGameMoveAnalyzer : GameMoveAnalyzer<ColorField, ColorResult>
         }
 
         ColorResult resultPegs = new(black, whitePegs.Count);
-        if (resultPegs.Correct + resultPegs.WrongPosition > _game.Holes)
+        if (resultPegs.Correct + resultPegs.WrongPosition > _game.NumberPositions)
         {
             throw new InvalidOperationException("More key pegs than holes");
         }
@@ -58,10 +58,10 @@ public class ColorGameMoveAnalyzer : GameMoveAnalyzer<ColorField, ColorResult>
         return resultPegs;
     }
 
-    public override void SetEndInformation()
+    public override void SetGameEndInformation(ColorResult result)
     {
-        bool allCorrect = _game.Moves.Last().KeyPegs?.Correct == _game.Holes;
-        if (allCorrect || _game.Moves.Count >= _game.MaxMoves)
+        bool allCorrect = result.Correct == _game.NumberPositions;
+        if (allCorrect || _game.LastMoveNumber >= _game.MaxMoves)
         {
             _game.EndTime = DateTime.UtcNow;
             _game.Duration = _game.EndTime - _game.StartTime;
