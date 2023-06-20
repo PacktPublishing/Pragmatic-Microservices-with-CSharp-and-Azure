@@ -2,7 +2,7 @@
 
 namespace Codebreaker.GameAPIs.Analyzers;
 
-public abstract class GameGuessAnalyzer<TField, TResult> : IGameGuessAnalyzer<TResult>
+public abstract class GameGuessAnalyzer<TField, TResult> : IGameGuessAnalyzer
     where TResult : struct
 {
     protected readonly IGame<TField, TResult> _game;
@@ -51,11 +51,11 @@ public abstract class GameGuessAnalyzer<TField, TResult> : IGameGuessAnalyzer<TR
     /// <param name="result">The result of the guess analysis</param>
     public abstract void SetGameEndInformation(TResult result);
 
-    public TResult GetResult()
+    public string GetResult()
     {
         ValidateGameStateWithGuess();
         TResult result = GetCoreResult();
         SetGameEndInformation(result);
-        return result;
+        return result.ToString() ?? throw new InvalidOperationException();
     }
 }

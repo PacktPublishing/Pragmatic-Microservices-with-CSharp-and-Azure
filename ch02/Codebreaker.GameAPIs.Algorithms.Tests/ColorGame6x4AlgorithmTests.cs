@@ -78,7 +78,8 @@ public class ColorGame6x4AlgorithmTests
 
         var guessPegs = guesses.Select(g => new ColorField(g)).ToList();
         ColorGameGuessAnalyzer analyzer = new(game, guessPegs, 1);
-        return analyzer.GetResult();
+        string result = analyzer.GetResult();
+        return ColorResult.Parse(result);
     }
 }
 

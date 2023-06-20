@@ -79,7 +79,8 @@ public class ShapeGame5x5x4AlgorithmTests
         };
 
         ShapeGameGuessAnalyzer analyzer = new(game, guesses.ToList(), 1);
-        return analyzer.GetResult();
+        string result = analyzer.GetResult();
+        return ShapeAndColorResult.Parse(result);
     }
 }
 

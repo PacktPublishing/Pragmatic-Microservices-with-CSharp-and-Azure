@@ -1,6 +1,6 @@
 ﻿namespace Codebreaker.GameAPIs.Contracts;
 
-public interface IGameGuessAnalyzer<TResult>
+public interface IGameGuessAnalyzer
 {
     /// <summary>
     /// Returns the result of the guesses using the current state of the game.
@@ -9,5 +9,5 @@ public interface IGameGuessAnalyzer<TResult>
     /// <exception cref="ArgumentException" HResult="4200">Thrown when the number of guesses does not match the number of holes in the game</exception>
     /// <exception cref="ArgumentException" HRESULT="4300">Thrown when the move number is not the next move number in the game</exception>
     /// <exception cref="ArgumentException" HRESULT="4400..4404">Thrown when the guess contains an invalid value</exception></exception>
-    TResult GetResult();
+    string GetResult();
 }
