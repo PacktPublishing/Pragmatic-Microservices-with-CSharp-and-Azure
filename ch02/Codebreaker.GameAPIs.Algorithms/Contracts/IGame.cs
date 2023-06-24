@@ -44,7 +44,7 @@ public interface IGame<TField, TResult>
     /// <summary>
     /// The available fields the user can chose from to position the pegs
     /// </summary>
-    TField[] FieldValues { get; }
+    ILookup<string, string> FieldValues { get; }
     /// <summary>
     /// This is the code that the user needs to guess
     /// </summary>

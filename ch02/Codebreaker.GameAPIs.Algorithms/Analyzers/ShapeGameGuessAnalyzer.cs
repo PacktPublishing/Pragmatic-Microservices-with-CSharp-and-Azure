@@ -13,11 +13,15 @@ public class ShapeGameGuessAnalyzer : GameGuessAnalyzer<ShapeAndColorField, Shap
     public override void ValidateGuessValues()
     {
         // check for valid colors
-        if (Guesses.Select(f => f.Color).Any(color => !_game.FieldValues.Select(f => f.Color).Contains(color)))
+        if (!Guesses.Select(f => f.Color.ToString())
+            .Any(color => _game.FieldValues["Colors"]
+            .Contains(color)))
             throw new ArgumentException("The guess contains an invalid color") { HResult = 4402 };
 
         // check for valid shapes
-        if (Guesses.Select(f => f.Shape).Any(shape => !_game.FieldValues.Select(c => c.Shape).Contains(shape)))
+        if (!Guesses.Select(f => f.Shape.ToString())
+            .Any(shape => _game.FieldValues["Shapes"]
+            .Contains(shape)))
             throw new ArgumentException("The guess contains an invalid shape") { HResult = 4403 };
     }
 

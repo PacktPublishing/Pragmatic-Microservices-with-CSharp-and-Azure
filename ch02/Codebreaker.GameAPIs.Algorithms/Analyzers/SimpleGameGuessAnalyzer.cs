@@ -12,7 +12,7 @@ public class SimpleGameGuessAnalyzer : GameGuessAnalyzer<ColorField, SimpleColor
 
     public override void ValidateGuessValues()
     {
-        if (Guesses.Any(guessPeg => _game.FieldValues.Contains(guessPeg)))
+        if (Guesses.Any(guessPeg => !_game.FieldValues["Colors"].Contains(guessPeg.ToString())))
             throw new ArgumentException("The guess contains an invalid value") { HResult = 4400 };
     }
 

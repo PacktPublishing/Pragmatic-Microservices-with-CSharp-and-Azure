@@ -11,7 +11,7 @@ public class MockShapeGame : IGame<ShapeAndColorField, ShapeAndColorResult>
     public DateTime? EndTime { get; set; }
     public bool Won { get; set; }
 
-    public required ShapeAndColorField[] FieldValues { get; init; }
+    public required ILookup<string, string> FieldValues { get; init; }
     public required ShapeAndColorField[] Codes { get; init; }
 
     public DateTime StartTime { get; }

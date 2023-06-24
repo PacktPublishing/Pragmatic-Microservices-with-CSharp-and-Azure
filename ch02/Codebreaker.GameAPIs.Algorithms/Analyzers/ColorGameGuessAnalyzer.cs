@@ -12,8 +12,12 @@ public class ColorGameGuessAnalyzer : GameGuessAnalyzer<ColorField, ColorResult>
 
     public override void ValidateGuessValues()
     {
-        if (Guesses.Any(guessPeg => !_game.FieldValues.Contains(guessPeg)))
-            throw new ArgumentException("The guess contains an invalid value") { HResult = 4400 };
+        if (Guesses.Any(guessPeg => !_game.FieldValues["Colors"].Contains(guessPeg.ToString())))
+        {
+            string guesses = string.Join(", ", Guesses.Select(g => g.ToString()));
+            string fields = string.Join(", ", _game.FieldValues["Colors"]);
+            throw new ArgumentException($"The guess contains an invalid value. Guesses: {guesses}, fields: {fields}") { HResult = 4400 };
+        }
     }
 
     public override ColorResult GetCoreResult()

@@ -11,7 +11,7 @@ public class MockColorGame : IGame<ColorField, ColorResult>
     public DateTime? EndTime { get; set; }
     public bool Won { get; set; }
 
-    public required ColorField[] FieldValues { get; init; }
+    public required ILookup<string, string> FieldValues { get; init; }
     public required ColorField[] Codes { get; init; }
 
     public DateTime StartTime { get; }

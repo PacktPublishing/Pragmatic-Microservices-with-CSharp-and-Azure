@@ -72,7 +72,7 @@ public class ColorGame8x5AlgorithmTests
             NumberPositions = 5,
             MaxMoves = 14,
             Won = false,
-            FieldValues = new ColorField[] { Red, Blue, Green, Yellow, Black, White, Purple, Orange },
+            FieldValues = TestData8x5.Colors8.ToLookup(keySelector:s => "Colors", elementSelector: s => s),
             Codes = codes.Select(c => new ColorField(c)).ToArray()
         };
 
@@ -85,6 +85,8 @@ public class ColorGame8x5AlgorithmTests
 
 public class TestData8x5 : IEnumerable<object[]>
 {
+    public static string[] Colors8 = new string[] { Red, Blue, Green, Yellow, Black, White, Purple, Orange };
+
     public IEnumerator<object[]> GetEnumerator()
     {
         yield return new object[]
