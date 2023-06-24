@@ -69,7 +69,7 @@ public class ColorGame6x4AlgorithmTests
         MockColorGame game = new()
         {
             GameType = GameTypes.Game6x4,
-            NumberPositions = 4,
+            NumberCodes = 4,
             MaxMoves = 12,
             Won = false,
             FieldValues = TestData6x4.Colors6.ToLookup(s => "Colors"), 

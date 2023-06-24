@@ -6,7 +6,7 @@ namespace Codebreaker.GameAPIs.Algorithms.Tests;
 public class MockShapeGame : IGame<ShapeAndColorField, ShapeAndColorResult>
 {
     public Guid GameId { get; init; }
-    public int NumberPositions { get; init; }
+    public int NumberCodes { get; init; }
     public int MaxMoves { get; init; }
     public DateTime? EndTime { get; set; }
     public bool Won { get; set; }

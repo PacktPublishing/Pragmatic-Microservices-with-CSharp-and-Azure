@@ -31,8 +31,8 @@ public abstract class GameGuessAnalyzer<TField, TResult> : IGameGuessAnalyzer
     private void ValidateGameStateWithGuess()
     {
         /// The number of holes in the game does not match the number of pegs in the move.
-        if (_game.NumberPositions != Guesses.Count)
-            throw new ArgumentException($"Invalid guess number {Guesses.Count} for {_game.NumberPositions} holes") { HResult = 4200 };
+        if (_game.NumberCodes != Guesses.Count)
+            throw new ArgumentException($"Invalid guess number {Guesses.Count} for {_game.NumberCodes} holes") { HResult = 4200 };
 
         ValidateGuessValues();
 

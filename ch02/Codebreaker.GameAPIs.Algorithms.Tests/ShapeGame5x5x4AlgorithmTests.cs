@@ -71,7 +71,7 @@ public class ShapeGame5x5x4AlgorithmTests
         MockShapeGame game = new()
         {
             GameType = GameTypes.Game5x5x4,
-            NumberPositions = 4,
+            NumberCodes = 4,
             MaxMoves = 14,
             Won = false,
             FieldValues = new List<string[]>

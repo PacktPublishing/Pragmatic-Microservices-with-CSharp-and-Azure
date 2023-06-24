@@ -54,7 +54,7 @@ public class ColorGameGuessAnalyzer : GameGuessAnalyzer<ColorField, ColorResult>
         }
 
         ColorResult resultPegs = new(black, whitePegs.Count);
-        if (resultPegs.Correct + resultPegs.WrongPosition > _game.NumberPositions)
+        if (resultPegs.Correct + resultPegs.WrongPosition > _game.NumberCodes)
         {
             throw new InvalidOperationException("More key pegs than holes");
         }
@@ -64,7 +64,7 @@ public class ColorGameGuessAnalyzer : GameGuessAnalyzer<ColorField, ColorResult>
 
     public override void SetGameEndInformation(ColorResult result)
     {
-        bool allCorrect = result.Correct == _game.NumberPositions;
+        bool allCorrect = result.Correct == _game.NumberCodes;
         if (allCorrect || _game.LastMoveNumber >= _game.MaxMoves)
         {
             _game.EndTime = DateTime.UtcNow;

@@ -69,7 +69,7 @@ public class ColorGame8x5AlgorithmTests
         MockColorGame game = new()
         {
             GameType = GameTypes.Game8x5,
-            NumberPositions = 5,
+            NumberCodes = 5,
             MaxMoves = 14,
             Won = false,
             FieldValues = TestData8x5.Colors8.ToLookup(keySelector:s => "Colors", elementSelector: s => s),
@@ -85,7 +85,7 @@ public class ColorGame8x5AlgorithmTests
 
 public class TestData8x5 : IEnumerable<object[]>
 {
-    public static string[] Colors8 = new string[] { Red, Blue, Green, Yellow, Black, White, Purple, Orange };
+    public static readonly string[] Colors8 = new string[] { Red, Blue, Green, Yellow, Black, White, Purple, Orange };
 
     public IEnumerator<object[]> GetEnumerator()
     {

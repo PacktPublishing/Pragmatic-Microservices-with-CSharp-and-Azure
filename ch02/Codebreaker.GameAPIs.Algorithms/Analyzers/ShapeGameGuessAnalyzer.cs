@@ -88,7 +88,7 @@ public class ShapeGameGuessAnalyzer : GameGuessAnalyzer<ShapeAndColorField, Shap
 
         ShapeAndColorResult resultPegs = new(black, blue, white);
 
-        if ((resultPegs.Correct + resultPegs.WrongPosition + resultPegs.ColorOrShape) > _game.NumberPositions)
+        if ((resultPegs.Correct + resultPegs.WrongPosition + resultPegs.ColorOrShape) > _game.NumberCodes)
             throw new InvalidOperationException("There are more keyPegs than holes"); // Should not be the case
 
         return resultPegs;
@@ -96,7 +96,7 @@ public class ShapeGameGuessAnalyzer : GameGuessAnalyzer<ShapeAndColorField, Shap
 
     public override void SetGameEndInformation(ShapeAndColorResult result)
     {
-        bool allCorrect = result.Correct == _game.NumberPositions;
+        bool allCorrect = result.Correct == _game.NumberCodes;
         if (allCorrect || _game.LastMoveNumber >= _game.MaxMoves)
         {
             _game.EndTime = DateTime.UtcNow;
