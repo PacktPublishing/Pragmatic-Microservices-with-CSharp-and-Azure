@@ -8,26 +8,26 @@ public static partial class ApiModelExtensions
 
     public static CreateGameResponse ToCreateGameResponse(this Game game)
     {
-        static CreateGameResponse GetColorGameResponse(ColorGame game) => new CreateGameResponse<ColorField>(game.GameId, Enum.Parse<GameType>(game.GameType), game.PlayerName)
+        static CreateGameResponse AsColorGameResponse(ColorGame game) => new CreateGameResponse<ColorField>(game.GameId, Enum.Parse<GameType>(game.GameType), game.PlayerName)
         {
-            Fields = game.Fields.ToArray()
+            FieldValues = game.FieldValues
         };
 
-        static CreateGameResponse GetSimpleGameResponse(SimpleGame game) => new CreateGameResponse<ColorField>(game.GameId, Enum.Parse<GameType>(game.GameType), game.PlayerName)
+        static CreateGameResponse AsSimpleGameResponse(SimpleGame game) => new CreateGameResponse<ColorField>(game.GameId, Enum.Parse<GameType>(game.GameType), game.PlayerName)
         {
-            Fields = game.Fields.ToArray()
+            FieldValues = game.FieldValues
         };
 
-        static CreateGameResponse<ShapeAndColorField> GetShapeGameResponse(ShapeGame game) => new(game.GameId, Enum.Parse<GameType>(game.GameType), game.PlayerName)
+        static CreateGameResponse<ShapeAndColorField> AsShapeGameResponse(ShapeGame game) => new(game.GameId, Enum.Parse<GameType>(game.GameType), game.PlayerName)
         {
-            Fields = game.Fields.ToArray()
+            FieldValues = game.FieldValues
         };
 
         return game switch
         {
-            ColorGame g => GetColorGameResponse(g),
-            SimpleGame g => GetSimpleGameResponse(g),
-            ShapeGame g => GetShapeGameResponse(g),
+            ColorGame g => AsColorGameResponse(g),
+            SimpleGame g => AsSimpleGameResponse(g),
+            ShapeGame g => AsShapeGameResponse(g),
             _ => throw new InvalidOperationException("invalid game type")
         };
     }
