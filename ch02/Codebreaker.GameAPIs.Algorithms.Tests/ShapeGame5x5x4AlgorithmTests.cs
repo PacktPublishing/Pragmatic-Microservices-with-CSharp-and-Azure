@@ -16,8 +16,8 @@ public class ShapeGame5x5x4AlgorithmTests
     {
         ShapeAndColorResult expectedKeyPegs = new(0, 3, 0);
         ShapeAndColorResult? resultKeyPegs = TestSkeleton(
-            new ShapeAndColorField[] { (Shapes.Rectangle, Green), (Circle, Yellow), (Shapes.Rectangle, Green), (Star, Blue) },
-            new ShapeAndColorField[] { (Circle, Yellow), (Shapes.Rectangle, Green), (Star, Blue), (Square, Purple)  }
+            new ShapeAndColorField[] { (Rectangle, Green), (Circle, Yellow), (Rectangle, Green), (Star, Blue) },
+            new ShapeAndColorField[] { (Circle, Yellow), (Rectangle, Green), (Star, Blue), (Square, Purple)  }
         );
 
         Assert.Equal(expectedKeyPegs, resultKeyPegs);
@@ -71,27 +71,29 @@ public class ShapeGame5x5x4AlgorithmTests
         MockShapeGame game = new()
         {
             GameType = GameTypes.Game5x5x4,
-            Holes = 4,
+            NumberCodes = 4,
             MaxMoves = 14,
             Won = false,
-            Fields = new List<ShapeAndColorField>() { (Shapes.Rectangle, Red), (Circle, Blue), (Star, Yellow), (Triangle, Green), (Square, Purple) },
-            Codes = new List<ShapeAndColorField>(codes)
+            FieldValues = new List<string[]>
+            {
+                TestData5x5x4.Colors5,
+                TestData5x5x4.Shapes5
+            }.SelectMany(c => c.Select(s => (key: c == TestData5x5x4.Colors5 ? "Colors" : "Shapes", value: s)))
+            .ToLookup(c => c.key, c => c.value),
+            Codes = codes
         };
 
-        MockShapeMove move = new()
-        {
-            MoveNumber = 1,
-            GuessPegs = new List<ShapeAndColorField>(guesses)
-        };
-
-        ShapeGameMoveAnalyzer analyzer = new(game, guesses.ToList(), 1);
-        string result = analyzer.ApplyMove();
+        ShapeGameGuessAnalyzer analyzer = new(game, guesses.ToList(), 1);
+        string result = analyzer.GetResult();
         return ShapeAndColorResult.Parse(result);
     }
 }
 
 public class TestData5x5x4 : IEnumerable<object[]>
 {
+    public static readonly string[] Colors5 = { Red, Green, Blue, Yellow, Purple };
+    public static readonly string[] Shapes5 = { Circle, Square, Triangle, Star, Rectangle };
+
     public IEnumerator<object[]> GetEnumerator()
     {
         yield return new object[]

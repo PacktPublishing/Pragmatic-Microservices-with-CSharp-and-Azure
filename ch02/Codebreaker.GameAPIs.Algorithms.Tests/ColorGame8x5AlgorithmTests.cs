@@ -69,23 +69,24 @@ public class ColorGame8x5AlgorithmTests
         MockColorGame game = new()
         {
             GameType = GameTypes.Game8x5,
-            Holes = 5,
+            NumberCodes = 5,
             MaxMoves = 14,
             Won = false,
-            Fields = new List<ColorField>() { Red, Blue, Green, Yellow, Black, White, Purple, Orange },
-            Codes = new List<ColorField>(codes.Select(c => new ColorField(c)))
+            FieldValues = TestData8x5.Colors8.ToLookup(keySelector:s => "Colors", elementSelector: s => s),
+            Codes = codes.Select(c => new ColorField(c)).ToArray()
         };
 
         var guessPegs = guesses.Select(g => new ColorField(g)).ToList();
-        ColorGameMoveAnalyzer analyzer = new(game, guessPegs, 1);
-        string result = analyzer.ApplyMove();
-
+        ColorGameGuessAnalyzer analyzer = new(game, guessPegs, 1);
+        string result = analyzer.GetResult();
         return ColorResult.Parse(result);
     }
 }
 
 public class TestData8x5 : IEnumerable<object[]>
 {
+    public static readonly string[] Colors8 = new string[] { Red, Blue, Green, Yellow, Black, White, Purple, Orange };
+
     public IEnumerator<object[]> GetEnumerator()
     {
         yield return new object[]

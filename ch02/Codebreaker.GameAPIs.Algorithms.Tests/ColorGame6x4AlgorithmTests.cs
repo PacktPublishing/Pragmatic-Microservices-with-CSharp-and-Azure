@@ -69,23 +69,24 @@ public class ColorGame6x4AlgorithmTests
         MockColorGame game = new()
         {
             GameType = GameTypes.Game6x4,
-            Holes = 4,
+            NumberCodes = 4,
             MaxMoves = 12,
             Won = false,
-            Fields = new List<ColorField>() { Red, Blue, Green, Yellow, Black, White },
-            Codes = new List<ColorField>(codes.Select(c => new ColorField(c)))
+            FieldValues = TestData6x4.Colors6.ToLookup(s => "Colors"), 
+            Codes = codes.Select(c => new ColorField(c)).ToArray()
         };
 
         var guessPegs = guesses.Select(g => new ColorField(g)).ToList();
-        ColorGameMoveAnalyzer analyzer = new(game, guessPegs, 1);
-        string result = analyzer.ApplyMove();
-
+        ColorGameGuessAnalyzer analyzer = new(game, guessPegs, 1);
+        string result = analyzer.GetResult();
         return ColorResult.Parse(result);
     }
 }
 
 public class TestData6x4 : IEnumerable<object[]>
 {
+    public static readonly string[] Colors6 = { Red, Green, Blue, Yellow, Black, White };
+
     public IEnumerator<object[]> GetEnumerator()
     {
         yield return new object[]

@@ -3,20 +3,20 @@ using Codebreaker.GameAPIs.Models;
 
 namespace Codebreaker.GameAPIs.Analyzers;
 
-public class SimpleGameMoveAnalyzer : GameMoveAnalyzer<ColorField, SimpleColorResult>
+public class SimpleGameGuessAnalyzer : GameGuessAnalyzer<ColorField, SimpleColorResult>
 {
-    public SimpleGameMoveAnalyzer(IGame<ColorField, SimpleColorResult> game, IList<ColorField> guesses, int moveNumber)
+    public SimpleGameGuessAnalyzer(IGame<ColorField, SimpleColorResult> game, IList<ColorField> guesses, int moveNumber)
         : base(game, guesses, moveNumber)
     {
     }
 
-    public override void ValidateGuessPegs()
+    public override void ValidateGuessValues()
     {
-        if (Guesses.Any(guessPeg => _game.Fields.Contains(guessPeg)))
+        if (Guesses.Any(guessPeg => !_game.FieldValues["Colors"].Contains(guessPeg.ToString())))
             throw new ArgumentException("The guess contains an invalid value") { HResult = 4400 };
     }
 
-    public override SimpleColorResult GetResult()
+    public override SimpleColorResult GetCoreResult()
     {
         // Check black and white keyPegs
         List<ColorField> codesToCheck = new(_game.Codes);
@@ -30,7 +30,7 @@ public class SimpleGameMoveAnalyzer : GameMoveAnalyzer<ColorField, SimpleColorRe
         }
 
         // check black
-        for (int i = 0; i < _game.Codes.Count; i++)
+        for (int i = 0; i < _game.Codes.Length; i++)
         {
             // check black
             if (guessPegsToCheck[i] == codesToCheck[i])
@@ -49,12 +49,11 @@ public class SimpleGameMoveAnalyzer : GameMoveAnalyzer<ColorField, SimpleColorRe
         return new SimpleColorResult(results);
     }
 
-    public override void SetEndInformation()
+    public override void SetGameEndInformation(SimpleColorResult result)
     {
-        SimpleColorResult result = _game.Moves.Last().KeyPegs ?? throw new InvalidOperationException();
         bool allCorrect = result.Results.Any(r => r == ResultValue.CorrectColor);
 
-        if (allCorrect || _game.Moves.Count >= _game.MaxMoves)
+        if (allCorrect || _game.LastMoveNumber >= _game.MaxMoves)
         {
             _game.EndTime = DateTime.UtcNow;
             _game.Duration = _game.EndTime - _game.StartTime;
