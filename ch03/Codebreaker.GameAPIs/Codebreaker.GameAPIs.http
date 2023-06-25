@@ -12,7 +12,7 @@ Content-Type: {{ContentType}}
 
 ### Set a move
 
-@gameid = 1eae1e79-a7fb-41a6-9be8-39f83537b7f3
+@gameid = 9a154941-65b7-4655-9b24-0f4a03ac40ac
 
 PATCH {{Codebreaker.GameAPIs_HostAddress}}/games/{{gameid}}/moves
 Content-Type: {{ContentType}}

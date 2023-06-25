@@ -2,13 +2,11 @@
 
 namespace Codebreaker.GameAPIs.Endpoints;
 
-public class CreateGameExceptionEndpointFilter : IEndpointFilter
+public class CreateGameExceptionEndpointFilter(ILogger<CreateGameExceptionEndpointFilter> logger) 
+    : IEndpointFilter
 {
-    private readonly ILogger _logger;
-    public CreateGameExceptionEndpointFilter(ILogger<CreateGameExceptionEndpointFilter> logger)
-    {
-        _logger = logger;
-    }
+    private readonly ILogger _logger = logger;
+
     public async ValueTask<object?> InvokeAsync(EndpointFilterInvocationContext context, EndpointFilterDelegate next)
     {
         CreateGameRequest request = context.GetArgument<CreateGameRequest>(1);

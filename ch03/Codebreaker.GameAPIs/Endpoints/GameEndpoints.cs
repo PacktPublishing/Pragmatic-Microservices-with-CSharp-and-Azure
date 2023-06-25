@@ -29,13 +29,15 @@ public static class GameEndpoints
             }
             return TypedResults.Created($"/games/{game.GameId}", game.ToCreateGameResponse());
         })
-        .WithName("CreateGame")
-        .WithSummary("Creates and starts a game")
+#if NET8_0_OR_GREATER
         .WithOpenApi(op =>
         {
             op.RequestBody.Description = "The game type and the player name of the game to create";
             return op;
-        });
+        })
+#endif
+        .WithName("CreateGame")
+        .WithSummary("Creates and starts a game");
 
         // Update the game resource with a move
         group.MapPatch("/{gameId:guid}/moves", async Task<Results<Ok<SetMoveResponse>, NotFound, BadRequest<InvalidGameMoveError>>> (
@@ -64,14 +66,16 @@ public static class GameEndpoints
                 return TypedResults.NotFound();
             }
         })
-        .WithName("SetMove")
-        .WithSummary("Sets a move for the game with the given id")
+#if NET8_0_OR_GREATER
         .WithOpenApi(op =>
         {
             op.Parameters[0].Description = "The id of the game to create a move for";
             op.RequestBody.Description = "The data for creating the move";
             return op;
-        });
+        })
+#endif
+        .WithName("SetMove")
+        .WithSummary("Sets a move for the game with the given id");
 
         group.MapGet("/rank/{date}", async (
             DateOnly date,
@@ -85,12 +89,12 @@ public static class GameEndpoints
             return TypedResults.Ok(games.ToGamesRankResponse(date, gameType));
         })
         .WithName("GetGames")
-        .WithSummary("Get games by the given date and type")
-        .WithOpenApi(op =>
-        {
-            op.Parameters[0].Description = "The of date to get the games from. (e.g. 2023-01-01)";
-            return op;
-        });
+        .WithSummary("Get games by the given date and type");
+        //.WithOpenApi(op =>
+        //{
+        //    op.Parameters[0].Description = "The of date to get the games from. (e.g. 2023-01-01)";
+        //    return op;
+        //});
 
         // Get game by id
         group.MapGet("/{gameId:guid}", async Task<Results<Ok<Game>, NotFound>> (
@@ -109,16 +113,16 @@ public static class GameEndpoints
             return TypedResults.Ok(game);
         })
         .WithName("GetGame")
-        .WithSummary("Gets a game by the given id")
-        .WithOpenApi(op =>
-        {
-            op.Parameters[0].Description = "The id of the game to get";
-            return op;
-        });
+        .WithSummary("Gets a game by the given id");
+        //.WithOpenApi(op =>
+        //{
+        //    op.Parameters[0].Description = "The id of the game to get";
+        //    return op;
+        //});
 
         group.MapDelete("/{gameId:guid}", async (
             Guid gameId,
-            IGamesService gameService, 
+            IGamesService gameService,
             CancellationToken cancellationToken
         ) =>
         {
@@ -128,11 +132,11 @@ public static class GameEndpoints
         })
         .WithName("DeleteGame")
         .WithSummary("Deletes the game with the given id")
-        .WithDescription("Deletes a game from the database")
-        .WithOpenApi(op =>
-        {
-            op.Parameters[0].Description = "The id of the game to delete or cancel";
-            return op;
-        });
+        .WithDescription("Deletes a game from the database");
+        //.WithOpenApi(op =>
+        //{
+        //    op.Parameters[0].Description = "The id of the game to delete or cancel";
+        //    return op;
+        //});
     }
 }

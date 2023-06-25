@@ -7,6 +7,6 @@ public interface IGamesRepository
     Task DeleteGameAsync(Guid gameId, CancellationToken cancellationToken = default);
     Task<Game?> GetGameAsync(Guid gameId, CancellationToken cancellationToken = default);
     Task<IEnumerable<Game>> GetGamesByDateAsync(string gameType, DateOnly date, CancellationToken cancellationToken = default);
-    Task<IEnumerable<Game>> GetMyGamesAsync(string playerName, CancellationToken cancellationToken = default);
-    Task<IEnumerable<Game>> GetMyRunningGamesAsync(string playerName, CancellationToken cancellationToken = default);
+    Task<IEnumerable<Game>> GetGamesByPlayerAsync(string playerName, CancellationToken cancellationToken = default);
+    Task<IEnumerable<Game>> GetRunningGamesByPlayerAsync(string playerName, CancellationToken cancellationToken = default);
 }
