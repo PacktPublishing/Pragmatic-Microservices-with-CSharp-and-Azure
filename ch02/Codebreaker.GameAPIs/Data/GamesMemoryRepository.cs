@@ -36,13 +36,13 @@ public class GamesMemoryRepository(ILogger<GamesMemoryRepository> logger) : IGam
         return Task.FromResult<IEnumerable<Game>>(games);
     }
 
-    public Task<IEnumerable<Game>> GetMyGamesAsync(string playerName, CancellationToken cancellationToken = default)
+    public Task<IEnumerable<Game>> GetGamesByPlayerAsync(string playerName, CancellationToken cancellationToken = default)
     {
         var games = _games.Values.Where(g => g.PlayerName == playerName).ToArray();
         return Task.FromResult<IEnumerable<Game>>(games);
     }
 
-    public Task<IEnumerable<Game>> GetMyRunningGamesAsync(string playerName, CancellationToken cancellationToken = default)
+    public Task<IEnumerable<Game>> GetRunningGamesByPlayerAsync(string playerName, CancellationToken cancellationToken = default)
     {
        
         var games = _games.Values

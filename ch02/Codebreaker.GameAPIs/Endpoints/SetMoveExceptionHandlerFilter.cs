@@ -11,7 +11,7 @@ public class SetMoveExceptionHandlerFilter : IEndpointFilter
         {
             return await next.Invoke(context);
         }
-        catch (ArgumentException ex) when (ex.HResult <= 4200 && ex.HResult >= 400)
+        catch (ArgumentException ex) when (ex.HResult is <= 4200 and >= 400)
         {
             return ex.HResult switch
             {

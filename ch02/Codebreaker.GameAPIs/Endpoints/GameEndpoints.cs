@@ -49,7 +49,7 @@ public static class GameEndpoints
                 (Game game, string result) = await gameService.SetMoveAsync(gameId, request.GuessPegs, request.MoveNumber, cancellationToken);
                 return TypedResults.Ok(game.ToSetMoveResponse(result));
             }
-            catch (ArgumentException ex) when (ex.HResult <= 4200 && ex.HResult >= 400)
+            catch (ArgumentException ex) when (ex.HResult is <= 4200 and >= 400)
             {
                 return ex.HResult switch
                 {

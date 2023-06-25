@@ -1,6 +1,4 @@
-﻿using Codebreaker.GameAPIs.Contracts;
-
-namespace Codebreaker.GameAPIs.Models;
+﻿namespace Codebreaker.GameAPIs.Models;
 
 public abstract class Move(Guid gameId, Guid moveId, int moveNumber)
 {
@@ -12,7 +10,7 @@ public abstract class Move(Guid gameId, Guid moveId, int moveNumber)
 }
 
 public class Move<TField, TResult>(Guid gameId, Guid moveId, int moveNumber)
-    : Move(gameId, moveId, moveNumber), IMove<TField, TResult>
+    : Move(gameId, moveId, moveNumber)
     where TResult: struct
     where TField : IParsable<TField>
 {
