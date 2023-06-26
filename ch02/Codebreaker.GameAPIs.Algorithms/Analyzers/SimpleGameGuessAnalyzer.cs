@@ -30,7 +30,7 @@ public class SimpleGameGuessAnalyzer : GameGuessAnalyzer<ColorField, SimpleColor
         }
 
         // check black
-        for (int i = 0; i < _game.Codes.Length; i++)
+        for (int i = 0; i < _game.Codes.Count(); i++)
         {
             // check black
             if (guessPegsToCheck[i] == codesToCheck[i])

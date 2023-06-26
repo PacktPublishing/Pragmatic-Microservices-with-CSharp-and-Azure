@@ -72,7 +72,10 @@ public class ColorGame6x4AlgorithmTests
             NumberCodes = 4,
             MaxMoves = 12,
             Won = false,
-            FieldValues = TestData6x4.Colors6.ToLookup(s => "Colors"), 
+            FieldValues = new Dictionary<string, IEnumerable<string>>()
+            {
+                ["Colors" ] = TestData6x4.Colors6.ToList()
+            },
             Codes = codes.Select(c => new ColorField(c)).ToArray()
         };
 

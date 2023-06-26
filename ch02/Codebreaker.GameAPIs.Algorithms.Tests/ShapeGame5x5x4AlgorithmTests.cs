@@ -74,12 +74,11 @@ public class ShapeGame5x5x4AlgorithmTests
             NumberCodes = 4,
             MaxMoves = 14,
             Won = false,
-            FieldValues = new List<string[]>
+            FieldValues = new Dictionary<string, IEnumerable<string>>()
             {
-                TestData5x5x4.Colors5,
-                TestData5x5x4.Shapes5
-            }.SelectMany(c => c.Select(s => (key: c == TestData5x5x4.Colors5 ? "Colors" : "Shapes", value: s)))
-            .ToLookup(c => c.key, c => c.value),
+                ["Colors"] = TestData5x5x4.Colors5.ToList(),
+                ["Shapes"] = TestData5x5x4.Shapes5.ToList()
+            },
             Codes = codes
         };
 
