@@ -2,8 +2,7 @@
 
 namespace Codebreaker.GameAPIs.Endpoints;
 
-public class CreateGameExceptionEndpointFilter(ILogger<CreateGameExceptionEndpointFilter> logger) 
-    : IEndpointFilter
+public class CreateGameExceptionEndpointFilter(ILogger<CreateGameExceptionEndpointFilter> logger) : IEndpointFilter
 {
     private readonly ILogger _logger = logger;
 

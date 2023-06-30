@@ -1,14 +1,9 @@
 using System.Runtime.CompilerServices;
 using System.Text.Json.Serialization;
 
-using Codebreaker.Data.Cosmos;
-using Codebreaker.Data.SqlServer;
 using Codebreaker.GameAPIs.Data;
 using Codebreaker.GameAPIs.Data.InMemory;
 
-using Microsoft.Azure.Cosmos;
-using Microsoft.Azure.Cosmos.Serialization.HybridRow.Schemas;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
 [assembly: InternalsVisibleTo("Codbreaker.APIs.Tests")]
@@ -48,47 +43,13 @@ builder.Services.AddSwaggerGen(options =>
     });
 
     options.EnableAnnotations(enableAnnotationsForInheritance: true, enableAnnotationsForPolymorphism: true);
+    // options.UseOneOfForPolymorphism();
 });
 builder.Services.AddProblemDetails();
 
 // Application Services
 
-string dataStorage = builder.Configuration["DataStorage"] ??= "Cosmos";
-
-if (dataStorage == "Cosmos")
-{
-    builder.Services.AddDbContext<IGamesRepository, GamesCosmosContext>(options =>
-    {
-        string connectionString = builder.Configuration.GetConnectionString("GamesConnection") ?? throw new InvalidOperationException("Could not find GamesConnection");
-        options.UseCosmos(connectionString, databaseName: "CodebreakerGames");
-    });
-}
-else if (dataStorage == "SqlServer")
-{
-
-    builder.Services.AddDbContext<IGamesRepository, GamesSqlServerContext>(options =>
-    {
-        string connectionString = builder.Configuration.GetConnectionString("GamesSqlServerConnection") ?? throw new InvalidOperationException("Could not find GamesSqlServerConnection");
-        options.UseSqlServer(connectionString);
-    });
-}
-else
-{
-    builder.Services.AddSingleton<IGamesRepository, GamesMemoryRepository>();
-}
-
-//builder.Services.AddDbContext<IGamesRepository, GamesContext>(options =>
-//{
-//    string connectionString = builder.Configuration.GetConnectionString("GamesConnection") ?? throw new InvalidOperationException("Could not find GamesConnection");
-//    options.UseCosmos(connectionString, "CodebreakerGames", o =>
-//    {
-//        o.ConnectionMode(ConnectionMode.Gateway)
-//            .ConsistencyLevel(ConsistencyLevel.Eventual);
-//        o.PreferredTLSVersion(Sdk.TlsProtocol.Tls12); // add this line
-//    });
-//});
-
-// builder.Services.AddSingleton<IGamesRepository, GamesMemoryRepository>();
+builder.Services.AddSingleton<IGamesRepository, GamesMemoryRepository>();
 builder.Services.AddScoped<IGamesService, GamesService>();
 
 var app = builder.Build();

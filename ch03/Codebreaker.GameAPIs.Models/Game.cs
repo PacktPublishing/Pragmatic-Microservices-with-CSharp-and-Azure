@@ -10,15 +10,15 @@ public abstract class Game(
     int numberCodes,
     int maxMoves)
 {
-    public Guid GameId { get; private set; } = gameId;
-    public string GameType { get; private set; } = gameType;
-    public string PlayerName { get; private set; } = playerName;
-    public DateTime StartTime { get; private set; } = startTime;
+    public Guid GameId { get; } = gameId;
+    public string GameType { get; } = gameType;
+    public string PlayerName { get; } = playerName;
+    public DateTime StartTime { get; } = startTime;
     public DateTime? EndTime { get; set; }
     public TimeSpan? Duration { get; set; }
     public int LastMoveNumber { get; set; } = 0;
     public int NumberCodes { get; private set; } = numberCodes;
-    public int MaxMoves { get; private set; } = maxMoves;
+    public int MaxMoves { get; } = maxMoves;
     public bool Won { get; set; } = false;
 
     public override string ToString() => $"{GameId}:{GameType} - {StartTime}";
@@ -29,15 +29,15 @@ public class Game<TField, TResult>(
     string gameType,
     string playerName,
     DateTime startTime,
-    int numberCodes,
+    int holes,
     int maxMoves)
-    : Game(gameId, gameType, playerName, startTime, numberCodes, maxMoves),
+    : Game(gameId, gameType, playerName, startTime, holes, maxMoves),
     IGame<TField, TResult>
     where TResult: struct, IParsable<TResult>
     where TField: IParsable<TField>
 {
     // possible fields the player can choose from
-    public required ILookup<string, string> FieldValues { get; init; }
+    public required IDictionary<string, IEnumerable<string>> FieldValues { get; init; }
 
     // the code to guess
     public required IEnumerable<TField> Codes { get; init; }
