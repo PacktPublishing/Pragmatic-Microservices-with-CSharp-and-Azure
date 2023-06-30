@@ -1,4 +1,5 @@
-﻿using Codebreaker.GameAPIs.Contracts;
+﻿using Codebreaker.GameAPIs.Algorithms.Fields;
+using Codebreaker.GameAPIs.Contracts;
 using Codebreaker.GameAPIs.Models;
 
 namespace Codebreaker.GameAPIs.Analyzers;
@@ -12,10 +13,10 @@ public class ColorGameGuessAnalyzer : GameGuessAnalyzer<ColorField, ColorResult>
 
     public override void ValidateGuessValues()
     {
-        if (Guesses.Any(guessPeg => !_game.FieldValues["Colors"].Contains(guessPeg.ToString())))
+        if (Guesses.Any(guessPeg => !_game.FieldValues[FieldCategories.Colors].Contains(guessPeg.ToString())))
         {
             string guesses = string.Join(", ", Guesses.Select(g => g.ToString()));
-            string fields = string.Join(", ", _game.FieldValues["Colors"]);
+            string fields = string.Join(", ", _game.FieldValues[FieldCategories.Colors]);
             throw new ArgumentException($"The guess contains an invalid value. Guesses: {guesses}, fields: {fields}") { HResult = 4400 };
         }
     }

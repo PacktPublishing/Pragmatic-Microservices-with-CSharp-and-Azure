@@ -1,4 +1,5 @@
-﻿using Codebreaker.GameAPIs.Contracts;
+﻿using Codebreaker.GameAPIs.Algorithms.Fields;
+using Codebreaker.GameAPIs.Contracts;
 using Codebreaker.GameAPIs.Models;
 
 namespace Codebreaker.GameAPIs.Analyzers;
@@ -14,13 +15,13 @@ public class ShapeGameGuessAnalyzer : GameGuessAnalyzer<ShapeAndColorField, Shap
     {
         // check for valid colors
         if (!Guesses.Select(f => f.Color.ToString())
-            .Any(color => _game.FieldValues["Colors"]
+            .Any(color => _game.FieldValues[FieldCategories.Colors]
             .Contains(color)))
             throw new ArgumentException("The guess contains an invalid color") { HResult = 4402 };
 
         // check for valid shapes
         if (!Guesses.Select(f => f.Shape.ToString())
-            .Any(shape => _game.FieldValues["Shapes"]
+            .Any(shape => _game.FieldValues[FieldCategories.Shapes]
             .Contains(shape)))
             throw new ArgumentException("The guess contains an invalid shape") { HResult = 4403 };
     }

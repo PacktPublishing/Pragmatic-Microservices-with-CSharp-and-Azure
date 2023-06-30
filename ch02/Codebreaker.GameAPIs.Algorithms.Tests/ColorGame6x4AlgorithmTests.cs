@@ -1,5 +1,6 @@
 using System.Collections;
 
+using Codebreaker.GameAPIs.Algorithms.Fields;
 using Codebreaker.GameAPIs.Analyzers;
 using Codebreaker.GameAPIs.Models;
 
@@ -74,7 +75,7 @@ public class ColorGame6x4AlgorithmTests
             Won = false,
             FieldValues = new Dictionary<string, IEnumerable<string>>()
             {
-                ["Colors" ] = TestData6x4.Colors6.ToList()
+                [FieldCategories.Colors ] = TestData6x4.Colors6.ToList()
             },
             Codes = codes.Select(c => new ColorField(c)).ToArray()
         };

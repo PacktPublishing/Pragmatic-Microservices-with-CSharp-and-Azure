@@ -1,5 +1,6 @@
 using System.Collections;
 
+using Codebreaker.GameAPIs.Algorithms.Fields;
 using Codebreaker.GameAPIs.Analyzers;
 using Codebreaker.GameAPIs.Models;
 
@@ -76,8 +77,8 @@ public class ShapeGame5x5x4AlgorithmTests
             Won = false,
             FieldValues = new Dictionary<string, IEnumerable<string>>()
             {
-                ["Colors"] = TestData5x5x4.Colors5.ToList(),
-                ["Shapes"] = TestData5x5x4.Shapes5.ToList()
+                [FieldCategories.Colors] = TestData5x5x4.Colors5.ToList(),
+                [FieldCategories.Shapes] = TestData5x5x4.Shapes5.ToList()
             },
             Codes = codes
         };
