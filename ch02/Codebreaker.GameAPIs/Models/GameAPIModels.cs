@@ -26,7 +26,7 @@ public record class CreateGameResponse(Guid GameId, GameType GameType, string Pl
 public record class CreateGameResponse<TField>(Guid GameId, GameType GameType, string PlayerName)
     : CreateGameResponse(GameId, GameType, PlayerName)
 {
-    public required ILookup<string, string> FieldValues { get; init; }
+    public required IDictionary<string, IEnumerable<string>> FieldValues { get; init; }
 }
 
 public record class SetMoveRequest(Guid GameId, GameType GameType, string PlayerName, int MoveNumber)

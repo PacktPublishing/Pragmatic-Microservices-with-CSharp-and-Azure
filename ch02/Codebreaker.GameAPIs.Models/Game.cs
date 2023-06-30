@@ -37,10 +37,10 @@ public class Game<TField, TResult>(
     where TField: IParsable<TField>
 {
     // possible fields the player can choose from
-    public required ILookup<string, string> FieldValues { get; init; }
+    public required IDictionary<string, IEnumerable<string>> FieldValues { get; init; }
 
     // the code to guess
-    public required TField[] Codes { get; init; }
+    public required IEnumerable<TField> Codes { get; init; }
 
     public void AddMove(TField[] guesses, TResult result, int moveNumber)
     {
@@ -51,13 +51,6 @@ public class Game<TField, TResult>(
         };
         Moves.Add(move);
     }
-
-    //public Move<TField, TResult> CreateMove(TField[] fields, TResult result, int moveNumber) => 
-    //    new Move<TField, TResult>(GameId, Guid.NewGuid(), moveNumber)
-    //{
-    //    GuessPegs = fields,
-    //    KeyPegs = result
-    //};
 
     public ICollection<Move<TField, TResult>> Moves { get; } = new List<Move<TField, TResult>>();
 }

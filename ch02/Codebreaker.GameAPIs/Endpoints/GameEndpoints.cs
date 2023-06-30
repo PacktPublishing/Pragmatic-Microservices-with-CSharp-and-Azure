@@ -1,6 +1,7 @@
 ﻿using Codebreaker.GameAPIs.Errors;
 using Codebreaker.GameAPIs.Exceptions;
 
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace Codebreaker.GameAPIs.Endpoints;
@@ -12,9 +13,10 @@ public static class GameEndpoints
         var group = routes.MapGroup("/games")
             .WithTags("Games API");
 
-        group.MapPost("/", async Task<Results<Created<CreateGameResponse>, BadRequest<InvalidGameTypeError>>> (
+        group.MapPost("/", async Task<Results<Created<CreateGameResponse>, BadRequest<GameError>>> (
             CreateGameRequest request,
             IGamesService gameService,
+            HttpContext context,
             CancellationToken cancellationToken) =>
         {
             Game game;
@@ -24,7 +26,7 @@ public static class GameEndpoints
             }
             catch (GameTypeNotFoundException)
             {
-                InvalidGameTypeError error = new($"Game type {request.GameType} does not exist", Enum.GetNames<GameType>());
+                GameError error = new("GameTypeError", $"Game type {request.GameType} does not exist", context.Request.GetDisplayUrl(),   Enum.GetNames<GameType>());
                 return TypedResults.BadRequest(error);
             }
             return TypedResults.Created($"/games/{game.GameId}", game.ToCreateGameResponse());
@@ -38,10 +40,11 @@ public static class GameEndpoints
         });
 
         // Update the game resource with a move
-        group.MapPatch("/{gameId:guid}/moves", async Task<Results<Ok<SetMoveResponse>, NotFound, BadRequest<InvalidGameMoveError>>> (
+        group.MapPatch("/{gameId:guid}/moves", async Task<Results<Ok<SetMoveResponse>, NotFound, BadRequest<GameError>>> (
             Guid gameId,
             SetMoveRequest request,
             IGamesService gameService,
+            HttpContext context,
             CancellationToken cancellationToken) =>
         {
             try
@@ -51,12 +54,13 @@ public static class GameEndpoints
             }
             catch (ArgumentException ex) when (ex.HResult is <= 4200 and >= 400)
             {
+                string url = context.Request.GetDisplayUrl();
                 return ex.HResult switch
                 {
-                    4200 => TypedResults.BadRequest(new InvalidGameMoveError("Invalid number of guesses received")),
-                    4300 => TypedResults.BadRequest(new InvalidGameMoveError("Invalid move number received")),
-                    4400 => TypedResults.BadRequest(new InvalidGameMoveError("Invalid guess values received!")),
-                    _ => TypedResults.BadRequest(new InvalidGameMoveError("Invalid move received!")),
+                    4200 => TypedResults.BadRequest(new GameError(ErrorCodes.InvalidGuessNumber, "Invalid number of guesses received", url)),
+                    4300 => TypedResults.BadRequest(new GameError(ErrorCodes.UnexpectedMoveNumber, "Unexpected move number received", url)),
+                    4400 => TypedResults.BadRequest(new GameError(ErrorCodes.InvalidGuess, "Invalid guess values received!", url)),
+                    _ => TypedResults.BadRequest(new GameError(ErrorCodes.InvalidMove,"Invalid move received!", url))
                 };
             }
             catch (GameNotFoundException)
