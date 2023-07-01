@@ -1,9 +1,6 @@
-﻿using System.Linq.Expressions;
-
-using Codebreaker.GameAPIs.Data;
+﻿using Codebreaker.GameAPIs.Data;
 
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Codebreaker.Data.SqlServer;
 
@@ -72,14 +69,15 @@ public class GamesSqlServerContext(DbContextOptions<GamesSqlServerContext> optio
 
     public async Task AddGameAsync(Game game, CancellationToken cancellationToken = default)
     {
-
         Games.Add(game);
         await SaveChangesAsync(cancellationToken);
     }
 
-    public async Task UpdateGameAsync(Game game, CancellationToken cancellationToken = default)
+    public async Task AddMoveAsync(Game game, Move move, CancellationToken cancellationToken = default)
     {
+        Moves.Add(move);
         Games.Update(game);
+       
         await SaveChangesAsync(cancellationToken);
     }
 
@@ -115,54 +113,4 @@ public class GamesSqlServerContext(DbContextOptions<GamesSqlServerContext> optio
         var games = await Games.Where(g => g.PlayerName == playerName && g.EndTime == null).ToListAsync(cancellationToken);
         return games;
     }
-}
-
-public class ColorResultValueConverter : ValueConverter<ColorResult, int>
-{
-    public ColorResultValueConverter(ConverterMappingHints? mappingHints = null) :
-        base((cr => cr.Correct << 4 + cr.WrongPosition), (n => new ColorResult(n >> 4, n & 0b1111)))
-    {
-    }
-}
-
-public class ColorResultConverter : ValueConverter<ColorResult, string>
-{
-    public ColorResultConverter() :
-        base(cr => MapColorResultToString(cr), s => MapStringToColorResult(s), null)
-    {
-
-    }
-
-    public ColorResultConverter(ConverterMappingHints? mappingHints = default) :
-        base(cr => MapColorResultToString(cr), s => MapStringToColorResult(s), mappingHints)
-    {
-    }
-
-    private static string MapColorResultToString(ColorResult r) => r.ToString();
-    private static ColorResult MapStringToColorResult(string s) => Enum.Parse<ColorResult>(s);
-}
-
-public class ParsableValueConverter<TModel> : ValueConverter<TModel, string>
-    where TModel : IParsable<TModel>
-{
-    public ParsableValueConverter() :
-        base(convertToProviderExpression: t => MapTToString(t), convertFromProviderExpression: s => MapStringToT(s))
-    { }
-
-    private static string MapTToString(TModel value) => value.ToString() ?? throw new InvalidOperationException();
-    private static TModel MapStringToT(string s) => TModel.Parse(s, default);
-}
-
-public class ColorFieldCollectionConverter : ValueConverter<IEnumerable<ColorField>, string>
-{
-    public ColorFieldCollectionConverter(Expression<Func<IEnumerable<ColorField>, string>> convertToProviderExpression, Expression<Func<string, IEnumerable<ColorField>>> convertFromProviderExpression, ConverterMappingHints? mappingHints = null) :
-        base(coll => ColorFieldCollectionToString(coll), s => StringToColorFieldCollection(s), mappingHints)
-    {
-    }
-
-    private static string ColorFieldCollectionToString(IEnumerable<ColorField> coll) =>
-        string.Join("#", coll.Select(cf => cf.ToString()));
-
-    private static IEnumerable<ColorField> StringToColorFieldCollection(string result) =>
-        result.Split("#").Select(s => ColorField.Parse(s)).ToArray();
 }
