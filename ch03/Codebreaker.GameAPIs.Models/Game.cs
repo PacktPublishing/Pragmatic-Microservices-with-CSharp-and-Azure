@@ -36,13 +36,17 @@ public class Game<TField, TResult>(
     where TResult: struct, IParsable<TResult>
     where TField: IParsable<TField>
 {
-    // possible fields the player can choose from
+    /// <summary>
+    /// possible fields the player can choose from
+    /// </summary>
     public required IDictionary<string, IEnumerable<string>> FieldValues { get; init; }
 
-    // the code to guess
+    /// <summary>
+    /// The code to guess
+    /// </summary>
     public required IEnumerable<TField> Codes { get; init; }
 
-    public void AddMove(TField[] guesses, TResult result, int moveNumber)
+    public Move AddMove(TField[] guesses, TResult result, int moveNumber)
     {
         Move<TField, TResult> move = new (GameId, Guid.NewGuid(), moveNumber)
         {
@@ -50,6 +54,7 @@ public class Game<TField, TResult>(
             KeyPegs = result
         };
         Moves.Add(move);
+        return move;
     }
 
     public ICollection<Move<TField, TResult>> Moves { get; } = new List<Move<TField, TResult>>();
