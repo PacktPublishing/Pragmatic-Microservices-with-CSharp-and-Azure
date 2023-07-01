@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Codebreaker.Data.SqlServer.Migrations
 {
     /// <inheritdoc />
-    public partial class InitGames : Migration
+    public partial class InitGame : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -29,8 +29,8 @@ namespace Codebreaker.Data.SqlServer.Migrations
                     NumberCodes = table.Column<int>(type: "int", nullable: false),
                     MaxMoves = table.Column<int>(type: "int", nullable: false),
                     Won = table.Column<bool>(type: "bit", nullable: false),
-                    Fields = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
-                    Codes = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false)
+                    Fields = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    Codes = table.Column<string>(type: "nvarchar(140)", maxLength: 140, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -52,8 +52,8 @@ namespace Codebreaker.Data.SqlServer.Migrations
                     NumberCodes = table.Column<int>(type: "int", nullable: false),
                     MaxMoves = table.Column<int>(type: "int", nullable: false),
                     Won = table.Column<bool>(type: "bit", nullable: false),
-                    Fields = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
-                    Codes = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false)
+                    Fields = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    Codes = table.Column<string>(type: "nvarchar(140)", maxLength: 140, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -75,8 +75,8 @@ namespace Codebreaker.Data.SqlServer.Migrations
                     NumberCodes = table.Column<int>(type: "int", nullable: false),
                     MaxMoves = table.Column<int>(type: "int", nullable: false),
                     Won = table.Column<bool>(type: "bit", nullable: false),
-                    Fields = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
-                    Codes = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false)
+                    Fields = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    Codes = table.Column<string>(type: "nvarchar(140)", maxLength: 140, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -91,7 +91,7 @@ namespace Codebreaker.Data.SqlServer.Migrations
                     MoveId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     GameId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     MoveNumber = table.Column<int>(type: "int", nullable: false),
-                    GuessPegs = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
+                    GuessPegs = table.Column<string>(type: "nvarchar(140)", maxLength: 140, nullable: false),
                     KeyPegs = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true)
                 },
                 constraints: table =>
@@ -114,7 +114,7 @@ namespace Codebreaker.Data.SqlServer.Migrations
                     MoveId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     GameId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     MoveNumber = table.Column<int>(type: "int", nullable: false),
-                    GuessPegs = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
+                    GuessPegs = table.Column<string>(type: "nvarchar(140)", maxLength: 140, nullable: false),
                     KeyPegs = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true)
                 },
                 constraints: table =>
@@ -137,8 +137,8 @@ namespace Codebreaker.Data.SqlServer.Migrations
                     MoveId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     GameId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     MoveNumber = table.Column<int>(type: "int", nullable: false),
-                    GuessPegs = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
-                    KeyPegs = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true)
+                    GuessPegs = table.Column<string>(type: "nvarchar(140)", maxLength: 140, nullable: false),
+                    KeyPegs = table.Column<string>(type: "nvarchar(40)", maxLength: 40, nullable: true)
                 },
                 constraints: table =>
                 {

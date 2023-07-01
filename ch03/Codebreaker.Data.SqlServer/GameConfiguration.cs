@@ -1,5 +1,7 @@
 ﻿using Codebreaker.GameAPIs.Contracts;
 
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+
 namespace Codebreaker.Data.SqlServer;
 
 internal class GameConfiguration : IEntityTypeConfiguration<Game>
@@ -9,7 +11,6 @@ internal class GameConfiguration : IEntityTypeConfiguration<Game>
         builder.HasKey(g => g.GameId);
 
         builder.UseTpcMappingStrategy();
-
     }
 }
 
@@ -24,5 +25,26 @@ internal class GameConfiguration<TGame, TField, TResult>(string tableName) : IEn
     {
         builder.ToTable(_tableName);
 
+        builder.Property(b => b.Codes)
+            .HasColumnName("Codes")
+            .HasColumnType("nvarchar")
+            .HasMaxLength(140)
+            .HasConversion(convertToProviderExpression: codes => codes.ToFieldString(),
+                           convertFromProviderExpression: codes => codes.ToFieldCollection<TField>(),
+                           valueComparer: new ValueComparer<IEnumerable<TField>>(
+                               equalsExpression: (a, b) => a!.SequenceEqual(b!),
+                               hashCodeExpression: a => a.Aggregate(0, (result, next) => HashCode.Combine(result, next.GetHashCode())),
+                               snapshotExpression: a => a.ToList()));
+
+        builder.Property(g => g.FieldValues)
+            .HasColumnName("Fields")
+            .HasColumnType("nvarchar")
+            .HasMaxLength(200)
+            .HasConversion(convertToProviderExpression: fields => fields.ToFieldsString(),
+                           convertFromProviderExpression: fields => fields.ToFieldsDictionary(),
+                           valueComparer: new ValueComparer<IDictionary<string, IEnumerable<string>>>(
+                               equalsExpression: (a, b) => a!.SequenceEqual(b!),
+                               hashCodeExpression: a => a.Aggregate(0, (result, next) => HashCode.Combine(result, next.GetHashCode())),
+                               snapshotExpression: a => a.ToDictionary(kv => kv.Key, kv => kv.Value)));
     }
 }

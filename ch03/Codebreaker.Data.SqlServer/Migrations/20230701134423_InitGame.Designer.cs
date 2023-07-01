@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Codebreaker.Data.SqlServer.Migrations
 {
     [DbContext(typeof(GamesSqlServerContext))]
-    [Migration("20230701112553_InitGames")]
-    partial class InitGames
+    [Migration("20230701134423_InitGame")]
+    partial class InitGame
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -93,13 +93,13 @@ namespace Codebreaker.Data.SqlServer.Migrations
 
                     b.Property<string>("Codes")
                         .IsRequired()
-                        .HasMaxLength(150)
+                        .HasMaxLength(140)
                         .HasColumnType("nvarchar")
                         .HasColumnName("Codes");
 
                     b.Property<string>("FieldValues")
                         .IsRequired()
-                        .HasMaxLength(150)
+                        .HasMaxLength(200)
                         .HasColumnType("nvarchar")
                         .HasColumnName("Fields");
 
@@ -112,13 +112,13 @@ namespace Codebreaker.Data.SqlServer.Migrations
 
                     b.Property<string>("Codes")
                         .IsRequired()
-                        .HasMaxLength(150)
+                        .HasMaxLength(140)
                         .HasColumnType("nvarchar")
                         .HasColumnName("Codes");
 
                     b.Property<string>("FieldValues")
                         .IsRequired()
-                        .HasMaxLength(150)
+                        .HasMaxLength(200)
                         .HasColumnType("nvarchar")
                         .HasColumnName("Fields");
 
@@ -131,13 +131,13 @@ namespace Codebreaker.Data.SqlServer.Migrations
 
                     b.Property<string>("Codes")
                         .IsRequired()
-                        .HasMaxLength(150)
+                        .HasMaxLength(140)
                         .HasColumnType("nvarchar")
                         .HasColumnName("Codes");
 
                     b.Property<string>("FieldValues")
                         .IsRequired()
-                        .HasMaxLength(150)
+                        .HasMaxLength(200)
                         .HasColumnType("nvarchar")
                         .HasColumnName("Fields");
 
@@ -150,7 +150,7 @@ namespace Codebreaker.Data.SqlServer.Migrations
 
                     b.Property<string>("GuessPegs")
                         .IsRequired()
-                        .HasMaxLength(30)
+                        .HasMaxLength(140)
                         .HasColumnType("nvarchar");
 
                     b.Property<string>("KeyPegs")
@@ -168,11 +168,11 @@ namespace Codebreaker.Data.SqlServer.Migrations
 
                     b.Property<string>("GuessPegs")
                         .IsRequired()
-                        .HasMaxLength(30)
+                        .HasMaxLength(140)
                         .HasColumnType("nvarchar");
 
                     b.Property<string>("KeyPegs")
-                        .HasMaxLength(20)
+                        .HasMaxLength(40)
                         .HasColumnType("nvarchar");
 
                     b.HasIndex("GameId");
@@ -186,7 +186,7 @@ namespace Codebreaker.Data.SqlServer.Migrations
 
                     b.Property<string>("GuessPegs")
                         .IsRequired()
-                        .HasMaxLength(30)
+                        .HasMaxLength(140)
                         .HasColumnType("nvarchar");
 
                     b.Property<string>("KeyPegs")

@@ -2,6 +2,7 @@
 
 using Codebreaker.GameAPIs.Data;
 
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Codebreaker.Data.SqlServer;
@@ -17,107 +18,38 @@ public class GamesSqlServerContext(DbContextOptions<GamesSqlServerContext> optio
         modelBuilder.ApplyConfiguration(new GameConfiguration<SimpleGame, ColorField, SimpleColorResult>("SimpleGames"));
         modelBuilder.ApplyConfiguration(new GameConfiguration<ShapeGame, ShapeAndColorField, ShapeAndColorResult>("ShapeGames"));
 
-        // TODO: change to use generic implementation
-        // TODO: set useful maxlength values
-        // TODO: add value comparers
-
-        modelBuilder.Entity<ColorGame>().Property(b => b.Codes)
-            .HasColumnName("Codes")
-            .HasColumnType("nvarchar")
-            .HasMaxLength(150)
-            .HasConversion(convertToProviderExpression: codes => codes.ToFieldString(),
-                           convertFromProviderExpression: codes => codes.ToFieldCollection<ColorField>());
-
-        modelBuilder.Entity<SimpleGame>().Property(b => b.Codes)
-            .HasColumnName("Codes")
-            .HasColumnType("nvarchar")
-            .HasMaxLength(150)
-            .HasConversion(convertToProviderExpression: codes => codes.ToFieldString(),
-                           convertFromProviderExpression: codes => codes.ToFieldCollection<ColorField>());
-
-        modelBuilder.Entity<ShapeGame>().Property(b => b.Codes)
-            .HasColumnName("Codes")
-            .HasColumnType("nvarchar")
-            .HasMaxLength(150)
-            .HasConversion(convertToProviderExpression: codes => codes.ToFieldString(),
-                          convertFromProviderExpression: codes => codes.ToFieldCollection<ShapeAndColorField>());
-
-        modelBuilder.Entity<ColorGame>().Property(g => g.FieldValues)
-            .HasColumnName("Fields")
-            .HasColumnType("nvarchar")
-            .HasMaxLength(150)
-            .HasConversion(convertToProviderExpression: fields => fields.ToFieldsString(),
-                           convertFromProviderExpression: fields => fields.ToFieldsDictionary());
-
-        modelBuilder.Entity<SimpleGame>().Property(g => g.FieldValues)
-            .HasColumnName("Fields")
-            .HasColumnType("nvarchar")
-            .HasMaxLength(150)
-            .HasConversion(convertToProviderExpression: fields => fields.ToFieldsString(),
-                           convertFromProviderExpression: fields => fields.ToFieldsDictionary());
-
-        modelBuilder.Entity<ShapeGame>().Property(g => g.FieldValues)
-            .HasColumnName("Fields")
-            .HasColumnType("nvarchar")
-            .HasMaxLength(150)
-            .HasConversion(convertToProviderExpression: fields => fields.ToFieldsString(),
-                           convertFromProviderExpression: fields => fields.ToFieldsDictionary());
-
         modelBuilder.ApplyConfiguration(new MoveConfiguration());
 
-        modelBuilder.Entity<ColorMove>().ToTable("ColorMoves");
-        modelBuilder.Entity<SimpleMove>().ToTable("SimpleMoves");
-        modelBuilder.Entity<ShapeMove>().ToTable("ShapeMoves");
+        modelBuilder.ApplyConfiguration(new MoveConfiguration<ColorMove, ColorField, ColorResult>("ColorMoves"));
+        modelBuilder.ApplyConfiguration(new MoveConfiguration<SimpleMove, ColorField, SimpleColorResult>("SimpleMoves"));
+        modelBuilder.ApplyConfiguration(new MoveConfiguration<ShapeMove, ShapeAndColorField, ShapeAndColorResult>("ShapeMoves"));
 
         modelBuilder.Entity<ColorMove>()
             .Property(m => m.KeyPegs)
             .HasColumnType("nvarchar")
             .HasMaxLength(20)
             .HasConversion(
-                peg => peg.ToString(),
-                peg => ColorResult.Parse(peg!, null));
+                convertToProviderExpression: peg => peg.ToString(),
+                convertFromProviderExpression: peg => ColorResult.Parse(peg!, null),
+                valueComparer: new ValueComparer<ColorResult>(favorStructuralComparisons: true));
 
         modelBuilder.Entity<SimpleMove>()
             .Property(m => m.KeyPegs)
             .HasColumnType("nvarchar")
-            .HasMaxLength(20)
+            .HasMaxLength(40)
             .HasConversion(
-                peg => peg.ToString(),
-                peg => SimpleColorResult.Parse(peg!, null));
+                convertToProviderExpression: peg => peg.ToString(),
+                convertFromProviderExpression: peg => SimpleColorResult.Parse(peg!, null),
+                valueComparer: new ValueComparer<SimpleColorResult>(favorStructuralComparisons: true));
 
         modelBuilder.Entity<ShapeMove>()
             .Property(m => m.KeyPegs)
             .HasColumnType("nvarchar")
             .HasMaxLength(20)
             .HasConversion(
-                peg => peg.ToString(),
-                peg => ShapeAndColorResult.Parse(peg!, null));
-
-        modelBuilder.Entity<ColorMove>()
-            .Property(m => m.GuessPegs)
-            .HasColumnType("nvarchar")
-            .HasMaxLength(30)
-            .HasConversion(
-                pegs => pegs.ToFieldString(),
-                pegs => pegs.ToFieldCollection<ColorField>());
-
-
-        modelBuilder.Entity<SimpleMove>()
-            .Property(m => m.GuessPegs)
-            .HasColumnType("nvarchar")
-            .HasMaxLength(30)
-            .HasConversion(
-                pegs => pegs.ToFieldString(),
-                pegs => pegs.ToFieldCollection<ColorField>());
-
-
-        modelBuilder.Entity<ShapeMove>()
-            .Property(m => m.GuessPegs)
-            .HasColumnType("nvarchar")
-            .HasMaxLength(30)
-            .HasConversion(
-                pegs => pegs.ToFieldString(),
-                pegs => pegs.ToFieldCollection<ShapeAndColorField>());
+                convertToProviderExpression: peg => peg.ToString(),
+                convertFromProviderExpression: peg => ShapeAndColorResult.Parse(peg!, null),
+                valueComparer: new ValueComparer<ShapeAndColorResult>(favorStructuralComparisons: true));
 
         modelBuilder.Entity<ColorGame>()
             .HasMany(g => g.Moves)
