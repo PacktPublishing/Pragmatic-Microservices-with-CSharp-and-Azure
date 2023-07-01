@@ -23,41 +23,37 @@ public class MappingExtensionsTests
     }
 
     [Fact]
-    public void ToLookupString_ShouldReturnCorrectLookupString()
+    public void ToFieldString_ShouldReturnCorrectString()
     {
         // Arrange
-        var lookup = new List<KeyValuePair<string, string>>()
+        IDictionary<string, IEnumerable<string>> dict = new Dictionary<string, IEnumerable<string>>()
             {
-                new KeyValuePair<string, string>("key1", "item1"),
-                new KeyValuePair<string, string>("key1", "item2"),
-                new KeyValuePair<string, string>("key2", "item3"),
-                new KeyValuePair<string, string>("key2", "item4")
-            }.ToLookup(pair => pair.Key, pair => pair.Value);
+                { "colors", new[] {"Red", "Green", "Blue"} },
+                { "shapes", new[] {"Rectangle", "Circle"} }
+            };
 
-        var expected = "key1:item1#key1:item2#key2:item3#key2:item4";
+        var expected = "colors:Red#colors:Green#colors:Blue#shapes:Rectangle#shapes:Circle";
 
         // Act
-        var result = MappingExtensions.ToLookupString(lookup);
+        var result = MappingExtensions.ToFieldsString(dict);
 
         // Assert
         Assert.Equal(expected, result);
     }
 
     [Fact]
-    public void ToLookup_ShouldReturnCorrectLookupObject()
+    public void ToFieldsDictionary_ShouldReturnCorrectDictionary()
     {
         // Arrange
-        var input = "key1:item1#key1:item2#key2:item3#key2:item4";
-        var expected = new List<KeyValuePair<string, string>>()
+        var input = "colors:Red#colors:Green#colors:Blue#shapes:Rectangle#shapes:Circle";
+        Dictionary<string, IEnumerable<string>> expected = new ()
             {
-                new KeyValuePair<string, string>("key1", "item1"),
-                new KeyValuePair<string, string>("key1", "item2"),
-                new KeyValuePair<string, string>("key2", "item3"),
-                new KeyValuePair<string, string>("key2", "item4")
-            }.ToLookup(pair => pair.Key, pair => pair.Value);
+                { "colors", new[] {"Red", "Green", "Blue"} },
+                { "shapes", new[] {"Rectangle", "Circle"} }
+            };
 
         // Act
-        var result = MappingExtensions.ToLookup(input);
+        var result = MappingExtensions.ToFieldsDictionary(input);
 
         // Assert
         Assert.Equal(expected, result);

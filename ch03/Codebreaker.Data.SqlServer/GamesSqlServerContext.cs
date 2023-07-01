@@ -1,6 +1,4 @@
 ﻿using System.Linq.Expressions;
-using System.Security.Cryptography;
-using System.Text.Json;
 
 using Codebreaker.GameAPIs.Data;
 
@@ -27,49 +25,43 @@ public class GamesSqlServerContext(DbContextOptions<GamesSqlServerContext> optio
             .HasColumnName("Codes")
             .HasColumnType("nvarchar")
             .HasMaxLength(150)
-            .HasConversion(
-                codes => codes.ToFieldString(),
-                        codes => codes.ToFieldCollection<ColorField>());
+            .HasConversion(convertToProviderExpression: codes => codes.ToFieldString(),
+                           convertFromProviderExpression: codes => codes.ToFieldCollection<ColorField>());
 
         modelBuilder.Entity<SimpleGame>().Property(b => b.Codes)
             .HasColumnName("Codes")
             .HasColumnType("nvarchar")
             .HasMaxLength(150)
-            .HasConversion(
-                codes => codes.ToFieldString(),
-                        codes => codes.ToFieldCollection<ColorField>());
+            .HasConversion(convertToProviderExpression: codes => codes.ToFieldString(),
+                           convertFromProviderExpression: codes => codes.ToFieldCollection<ColorField>());
 
         modelBuilder.Entity<ShapeGame>().Property(b => b.Codes)
             .HasColumnName("Codes")
             .HasColumnType("nvarchar")
             .HasMaxLength(150)
-            .HasConversion(
-                codes => codes.ToFieldString(),
-                        codes => codes.ToFieldCollection<ShapeAndColorField>());
+            .HasConversion(convertToProviderExpression: codes => codes.ToFieldString(),
+                          convertFromProviderExpression: codes => codes.ToFieldCollection<ShapeAndColorField>());
 
         modelBuilder.Entity<ColorGame>().Property(g => g.FieldValues)
             .HasColumnName("Fields")
             .HasColumnType("nvarchar")
             .HasMaxLength(150)
-            .HasConversion(
-                convertToProviderExpression: fields => fields.ToLookupString(),
-                convertFromProviderExpression: fields => fields.ToLookup());
+            .HasConversion(convertToProviderExpression: fields => fields.ToFieldsString(),
+                           convertFromProviderExpression: fields => fields.ToFieldsDictionary());
 
         modelBuilder.Entity<SimpleGame>().Property(g => g.FieldValues)
             .HasColumnName("Fields")
             .HasColumnType("nvarchar")
             .HasMaxLength(150)
-            .HasConversion(
-                convertToProviderExpression: fields => fields.ToLookupString(),
-                convertFromProviderExpression: fields => fields.ToLookup());
+            .HasConversion(convertToProviderExpression: fields => fields.ToFieldsString(),
+                           convertFromProviderExpression: fields => fields.ToFieldsDictionary());
 
         modelBuilder.Entity<ShapeGame>().Property(g => g.FieldValues)
             .HasColumnName("Fields")
             .HasColumnType("nvarchar")
             .HasMaxLength(150)
-            .HasConversion(
-                convertToProviderExpression: fields => fields.ToLookupString(),
-                convertFromProviderExpression: fields => fields.ToLookup());
+            .HasConversion(convertToProviderExpression: fields => fields.ToFieldsString(),
+                           convertFromProviderExpression: fields => fields.ToFieldsDictionary());
 
         modelBuilder.ApplyConfiguration(new MoveConfiguration());
 
@@ -143,7 +135,7 @@ public class GamesSqlServerContext(DbContextOptions<GamesSqlServerContext> optio
             .HasForeignKey(m => m.GameId);
     }
 
-    public DbSet<Game> Games => Set<Game>(); 
+    public DbSet<Game> Games => Set<Game>();
     public DbSet<Move> Moves => Set<Move>();
 
     public async Task AddGameAsync(Game game, CancellationToken cancellationToken = default)
@@ -195,7 +187,7 @@ public class GamesSqlServerContext(DbContextOptions<GamesSqlServerContext> optio
 
 public class ColorResultValueConverter : ValueConverter<ColorResult, int>
 {
-    public ColorResultValueConverter(ConverterMappingHints? mappingHints = null) : 
+    public ColorResultValueConverter(ConverterMappingHints? mappingHints = null) :
         base((cr => cr.Correct << 4 + cr.WrongPosition), (n => new ColorResult(n >> 4, n & 0b1111)))
     {
     }
@@ -209,7 +201,7 @@ public class ColorResultConverter : ValueConverter<ColorResult, string>
 
     }
 
-    public ColorResultConverter(ConverterMappingHints? mappingHints = default) : 
+    public ColorResultConverter(ConverterMappingHints? mappingHints = default) :
         base(cr => MapColorResultToString(cr), s => MapStringToColorResult(s), mappingHints)
     {
     }
@@ -221,9 +213,9 @@ public class ColorResultConverter : ValueConverter<ColorResult, string>
 public class ParsableValueConverter<TModel> : ValueConverter<TModel, string>
     where TModel : IParsable<TModel>
 {
-    public ParsableValueConverter() : 
+    public ParsableValueConverter() :
         base(convertToProviderExpression: t => MapTToString(t), convertFromProviderExpression: s => MapStringToT(s))
-        {}
+    { }
 
     private static string MapTToString(TModel value) => value.ToString() ?? throw new InvalidOperationException();
     private static TModel MapStringToT(string s) => TModel.Parse(s, default);

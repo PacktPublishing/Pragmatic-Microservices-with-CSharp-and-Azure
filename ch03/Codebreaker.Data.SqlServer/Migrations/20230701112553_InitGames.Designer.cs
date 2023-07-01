@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Codebreaker.Data.SqlServer.Migrations
 {
     [DbContext(typeof(GamesSqlServerContext))]
-    [Migration("20230625210904_InitGame")]
-    partial class InitGame
+    [Migration("20230701112553_InitGames")]
+    partial class InitGames
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -21,7 +21,7 @@ namespace Codebreaker.Data.SqlServer.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema("Codebreaker")
-                .HasAnnotation("ProductVersion", "8.0.0-preview.4.23259.3")
+                .HasAnnotation("ProductVersion", "8.0.0-preview.5.23280.1")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Codebreaker.Data.SqlServer.Migrations
 {
     /// <inheritdoc />
-    public partial class InitGame : Migration
+    public partial class InitGames : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

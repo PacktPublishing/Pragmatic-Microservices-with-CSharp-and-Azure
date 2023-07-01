@@ -2,9 +2,9 @@
 
 public abstract class Move(Guid gameId, Guid moveId, int moveNumber)
 {
-    public Guid GameId { get; } = gameId;
-    public Guid MoveId { get; } = moveId;
-    public int MoveNumber { get; } = moveNumber;
+    public Guid GameId { get; private set; } = gameId;
+    public Guid MoveId { get; private set; } = moveId;
+    public int MoveNumber { get; private set; } = moveNumber;
 
     public override string ToString() => $"{GameId}: {MoveNumber}";
 }
