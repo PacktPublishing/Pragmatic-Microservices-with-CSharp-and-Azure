@@ -21,10 +21,10 @@ public class GamesService(IGamesRepository dataRepository) : IGamesService
     {
         Game game = await _dataRepository.GetGameAsync(gameId, cancellationToken) ?? throw new GameNotFoundException($"Game with id {gameId} not found");
 
-        string result = game.ApplyMove(guesses, moveNumber);
+        (string result, Move move) = game.ApplyMove(guesses, moveNumber);
 
         // Update the game in the game-service database
-        await _dataRepository.UpdateGameAsync(game, cancellationToken);
+        await _dataRepository.AddMoveAsync(game, move, cancellationToken);
 
         return (game, result);
     }

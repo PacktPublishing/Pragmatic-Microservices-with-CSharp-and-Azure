@@ -79,7 +79,7 @@ public static class GamesFactory
         };       
     }
 
-    private static string ApplyMoveCore<TField, TResult>(Game<TField, TResult> game, IList<TField> guesses, int moveNumber)
+    private static (string Result, Move move) ApplyMoveCore<TField, TResult>(Game<TField, TResult> game, IList<TField> guesses, int moveNumber)
         where TField: IParsable<TField>
         where TResult: struct, IParsable<TResult>
     {
@@ -94,11 +94,11 @@ public static class GamesFactory
             _ => throw new NotSupportedException()
         };
         string result = analyzer.GetResult();
-        game.AddMove(guesses.ToArray(), ToResult(result), moveNumber);
-        return result;
+        Move move = game.AddMove(guesses.ToArray(), ToResult(result), moveNumber);
+        return (result, move);
     }
 
-    public static string ApplyMove(this Game game, IEnumerable<string> guesses, int moveNumber)
+    public static (string Result, Move move) ApplyMove(this Game game, IEnumerable<string> guesses, int moveNumber)
     {
         static IList<TField> GetGuesses<TField>(IEnumerable<string> guesses)
             where TField: IParsable<TField>
@@ -106,13 +106,13 @@ public static class GamesFactory
             return guesses.Select(g => TField.Parse(g, default)).ToList();
         }
 
-        string result = game switch
+        (string Result, Move Move) = game switch
         {
             ColorGame g => ApplyMoveCore(g, GetGuesses<ColorField>(guesses), moveNumber),
             SimpleGame g => ApplyMoveCore(g, GetGuesses<ColorField>(guesses), moveNumber),
             ShapeGame g => ApplyMoveCore(g, GetGuesses<ShapeAndColorField>(guesses), moveNumber),
             _ => throw new NotSupportedException()
         };
-        return result;
+        return (Result, Move);
     }
 }
