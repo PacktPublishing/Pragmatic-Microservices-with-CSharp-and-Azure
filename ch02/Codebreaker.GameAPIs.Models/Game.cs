@@ -32,7 +32,7 @@ public class Game<TField, TResult>(
     int numberCodes,
     int maxMoves)
     : Game(gameId, gameType, playerName, startTime, numberCodes, maxMoves),
-    IGame<TField, TResult>
+    IGame<TField>
     where TResult: struct, IParsable<TResult>
     where TField: IParsable<TField>
 {

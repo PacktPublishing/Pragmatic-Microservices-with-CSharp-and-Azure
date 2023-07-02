@@ -1,7 +1,6 @@
 ﻿namespace Codebreaker.GameAPIs.Contracts;
 
-public interface IGame<TField, TResult>
-    where TResult : struct
+public interface IGame<TField>
 {
     /// <summary>
     /// The unique identifier for the game

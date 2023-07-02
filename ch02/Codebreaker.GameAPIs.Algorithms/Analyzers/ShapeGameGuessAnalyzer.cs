@@ -6,7 +6,7 @@ namespace Codebreaker.GameAPIs.Analyzers;
 
 public class ShapeGameGuessAnalyzer : GameGuessAnalyzer<ShapeAndColorField, ShapeAndColorResult>
 {
-    public ShapeGameGuessAnalyzer(IGame<ShapeAndColorField, ShapeAndColorResult> game, IList<ShapeAndColorField> guesses, int moveNumber)
+    public ShapeGameGuessAnalyzer(IGame<ShapeAndColorField> game, IList<ShapeAndColorField> guesses, int moveNumber)
         : base(game, guesses, moveNumber)
     {
     }

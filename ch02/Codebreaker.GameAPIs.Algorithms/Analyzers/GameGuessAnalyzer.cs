@@ -5,12 +5,12 @@ namespace Codebreaker.GameAPIs.Analyzers;
 public abstract class GameGuessAnalyzer<TField, TResult> : IGameGuessAnalyzer
     where TResult : struct
 {
-    protected readonly IGame<TField, TResult> _game;
+    protected readonly IGame<TField> _game;
     private readonly int _moveNumber;
 
     protected IList<TField> Guesses { get; private set; }
 
-    protected GameGuessAnalyzer(IGame<TField, TResult> game, IList<TField> guesses, int moveNumber)
+    protected GameGuessAnalyzer(IGame<TField> game, IList<TField> guesses, int moveNumber)
     {
         _game = game;
         Guesses = guesses;

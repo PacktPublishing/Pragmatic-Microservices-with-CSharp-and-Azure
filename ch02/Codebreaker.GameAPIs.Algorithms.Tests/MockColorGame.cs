@@ -3,7 +3,7 @@ using Codebreaker.GameAPIs.Models;
 
 namespace Codebreaker.GameAPIs.Algorithms.Tests;
 
-public class MockColorGame : IGame<ColorField, ColorResult>
+public class MockColorGame : IGame<ColorField>
 {
     public Guid GameId { get; init; }
     public int NumberCodes { get; init; }

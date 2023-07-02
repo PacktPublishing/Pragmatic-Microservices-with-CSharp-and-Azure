@@ -3,7 +3,7 @@ using Codebreaker.GameAPIs.Models;
 
 namespace Codebreaker.GameAPIs.Algorithms.Tests;
 
-public class MockShapeGame : IGame<ShapeAndColorField, ShapeAndColorResult>
+public class MockShapeGame : IGame<ShapeAndColorField>
 {
     public Guid GameId { get; init; }
     public int NumberCodes { get; init; }

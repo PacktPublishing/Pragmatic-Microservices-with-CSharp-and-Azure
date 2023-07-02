@@ -6,7 +6,7 @@ namespace Codebreaker.GameAPIs.Analyzers;
 
 public class ColorGameGuessAnalyzer : GameGuessAnalyzer<ColorField, ColorResult>
 {
-    public ColorGameGuessAnalyzer(IGame<ColorField, ColorResult> game, IList<ColorField> guesses, int moveNumber)
+    public ColorGameGuessAnalyzer(IGame<ColorField> game, IList<ColorField> guesses, int moveNumber)
         : base(game, guesses, moveNumber)
     {
     }
