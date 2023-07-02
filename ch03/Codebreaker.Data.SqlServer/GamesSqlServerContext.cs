@@ -81,13 +81,14 @@ public class GamesSqlServerContext(DbContextOptions<GamesSqlServerContext> optio
         await SaveChangesAsync(cancellationToken);
     }
 
-    public async Task DeleteGameAsync(Guid gameId, CancellationToken cancellationToken = default)
+    public async Task<bool> DeleteGameAsync(Guid gameId, CancellationToken cancellationToken = default)
     {
-        var game = await Games.FindAsync(new object[] { gameId }, cancellationToken);
+        var game = await Games.FindAsync(gameId, cancellationToken);
         if (game is null)
-            return;
+            return false;
         Games.Remove(game);
         await SaveChangesAsync(cancellationToken);
+        return true;
     }
 
     public async Task<Game?> GetGameAsync(Guid gameId, CancellationToken cancellationToken = default)

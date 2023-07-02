@@ -15,13 +15,14 @@ public class GamesMemoryRepository(ILogger<GamesMemoryRepository> logger) : IGam
         return Task.CompletedTask;
     }
 
-    public Task DeleteGameAsync(Guid gameId, CancellationToken cancellationToken = default)
+    public Task<bool> DeleteGameAsync(Guid gameId, CancellationToken cancellationToken = default)
     {
         if (!_games.TryRemove(gameId, out _))
         {
             _logger.LogWarning("gamid {gameId} not available", gameId);
+            return Task.FromResult(false);
         }
-        return Task.CompletedTask;
+        return Task.FromResult(true);
     }
 
     public Task<Game?> GetGameAsync(Guid gameId, CancellationToken cancellationToken = default)
