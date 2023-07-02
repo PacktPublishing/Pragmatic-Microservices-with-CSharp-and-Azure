@@ -26,7 +26,7 @@ public static class GameEndpoints
             }
             catch (GameTypeNotFoundException)
             {
-                GameError error = new("GameTypeError", $"Game type {request.GameType} does not exist", context.Request.GetDisplayUrl(),   Enum.GetNames<GameType>());
+                GameError error = new(ErrorCodes.InvalidGameType, $"Game type {request.GameType} does not exist", context.Request.GetDisplayUrl(),   Enum.GetNames<GameType>());
                 return TypedResults.BadRequest(error);
             }
             return TypedResults.Created($"/games/{game.GameId}", game.ToCreateGameResponse());

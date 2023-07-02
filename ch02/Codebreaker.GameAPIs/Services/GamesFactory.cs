@@ -66,19 +66,6 @@ public static class GamesFactory
         };
     }
 
-    public static IGameGuessAnalyzer CreateAnalyzer<TField, TResult>(this Game game, IList<TField> guesses, int moveNumber)
-        where TField: IParsable<TField>
-        where TResult: struct, IParsable<TResult>
-    {
-        return (game, guesses) switch
-        {
-            (ColorGame g, IList<ColorField> gu)   => new ColorGameGuessAnalyzer(g, gu, moveNumber),
-            (SimpleGame g, IList<ColorField> gu)  => new SimpleGameGuessAnalyzer(g, gu, moveNumber),
-            (ShapeGame g, IList<ShapeAndColorField> gu) => new ShapeGameGuessAnalyzer(g, gu, moveNumber),
-            _ => throw new NotSupportedException()
-        };       
-    }
-
     private static (string Result, Move move) ApplyMoveCore<TField, TResult>(Game<TField, TResult> game, IList<TField> guesses, int moveNumber)
         where TField: IParsable<TField>
         where TResult: struct, IParsable<TResult>
