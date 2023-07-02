@@ -1,7 +1,6 @@
 ﻿namespace Codebreaker.GameAPIs.Contracts;
 
-public interface IGame<TField, TResult>
-    where TResult : struct
+public interface IGame<TField>
 {
     /// <summary>
     /// The unique identifier for the game
@@ -51,12 +50,12 @@ public interface IGame<TField, TResult>
     int LastMoveNumber { get; set; }
 
     /// <summary>
-    /// The available fields the user can chose from to position the pegs
+    /// The available field values the user can chose from to position the pegs
     /// </summary>
-    ILookup<string, string> FieldValues { get; }
+    IDictionary<string, IEnumerable<string>> FieldValues { get; }
 
     /// <summary>
     /// This is the code that the user needs to guess
     /// </summary>
-    TField[] Codes { get; }
+    IEnumerable<TField> Codes { get; }
 }

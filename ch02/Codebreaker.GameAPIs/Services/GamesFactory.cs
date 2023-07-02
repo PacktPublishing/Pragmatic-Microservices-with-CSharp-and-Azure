@@ -1,6 +1,7 @@
 ﻿using Codebreaker.GameAPIs.Analyzers;
 using Codebreaker.GameAPIs.Contracts;
 using Codebreaker.GameAPIs.Exceptions;
+using Codebreaker.GameAPIs.Algorithms.Fields;
 
 namespace Codebreaker.GameAPIs.Services;
 
@@ -16,38 +17,45 @@ public static class GamesFactory
         SimpleGame Create6x4SimpleGame() =>
             new(Guid.NewGuid(), gameType, playerName,  DateTime.Now, 4, 12)
             {
-                FieldValues = s_colors6.ToLookup(_ => "Colors"),
+                FieldValues = new Dictionary<string, IEnumerable<string>>()
+                {
+                    { FieldCategories.Colors, s_colors6 }
+                },
                 Codes = Random.Shared.GetItems(s_colors6, 4).Select(c => new ColorField(c)).ToArray()
             };
 
         ColorGame Create6x4Game() =>
             new(Guid.NewGuid(), gameType, playerName, DateTime.Now, 4, 12)
             {
-                FieldValues = s_colors6.ToLookup(_ => "Colors"),
+                FieldValues = new Dictionary<string, IEnumerable<string>>()
+                {
+                    { FieldCategories.Colors, s_colors6 }
+                },
                 Codes = Random.Shared.GetItems(s_colors6, 4).Select(c => new ColorField(c)).ToArray()
             };
 
         ColorGame Create8x5Game() =>
             new(Guid.NewGuid(), gameType, playerName, DateTime.Now, 5, 12)
             {
-                FieldValues = s_colors8.ToLookup(_ => "Colors"),
+                FieldValues = new Dictionary<string, IEnumerable<string>>()
+                {
+                    { FieldCategories.Colors, s_colors8 }
+                },
                 Codes = Random.Shared.GetItems(s_colors8, 5).Select(c => new ColorField(c)).ToArray()
             };
 
         ShapeGame Create5x5x4Game() =>
             new(Guid.NewGuid(), gameType, playerName, DateTime.Now, 4, 14)
             {
-                FieldValues = new List<string[]>
-                {
-                    s_colors5,
-                    s_shapes5
-                }.SelectMany(c => c.Select(
-                    s => (key: c == s_colors5 ? "Colors" : "Shapes", value: s)))
-                .ToLookup(keySelector: c => c.key, elementSelector: c => c.value),
+                FieldValues = new Dictionary<string, IEnumerable<string>>()
+                    {
+                        { FieldCategories.Colors, s_colors5 },
+                        { FieldCategories.Shapes, s_shapes5 }
+                    },
                 Codes = Random.Shared.GetItems(s_shapes5, 4)
                     .Zip(Random.Shared.GetItems(s_colors5, 4), (s, c) => new ShapeAndColorField(s, c)).ToArray()
             };
-
+        
         return gameType switch
         {
             GameTypes.Game6x4Mini => Create6x4SimpleGame(),
@@ -58,20 +66,7 @@ public static class GamesFactory
         };
     }
 
-    public static IGameGuessAnalyzer CreateAnalyzer<TField, TResult>(this Game game, IList<TField> guesses, int moveNumber)
-        where TField: IParsable<TField>
-        where TResult: struct, IParsable<TResult>
-    {
-        return (game, guesses) switch
-        {
-            (ColorGame g, IList<ColorField> gu)   => new ColorGameGuessAnalyzer(g, gu, moveNumber),
-            (SimpleGame g, IList<ColorField> gu)  => new SimpleGameGuessAnalyzer(g, gu, moveNumber),
-            (ShapeGame g, IList<ShapeAndColorField> gu) => new ShapeGameGuessAnalyzer(g, gu, moveNumber),
-            _ => throw new NotSupportedException()
-        };       
-    }
-
-    private static string ApplyMoveCore<TField, TResult>(Game<TField, TResult> game, IList<TField> guesses, int moveNumber)
+    private static (string Result, Move move) ApplyMoveCore<TField, TResult>(Game<TField, TResult> game, IList<TField> guesses, int moveNumber)
         where TField: IParsable<TField>
         where TResult: struct, IParsable<TResult>
     {
@@ -86,11 +81,11 @@ public static class GamesFactory
             _ => throw new NotSupportedException()
         };
         string result = analyzer.GetResult();
-        game.AddMove(guesses.ToArray(), ToResult(result), moveNumber);
-        return result;
+        Move move = game.AddMove(guesses.ToArray(), ToResult(result), moveNumber);
+        return (result, move);
     }
 
-    public static string ApplyMove(this Game game, IEnumerable<string> guesses, int moveNumber)
+    public static (string Result, Move move) ApplyMove(this Game game, IEnumerable<string> guesses, int moveNumber)
     {
         static IList<TField> GetGuesses<TField>(IEnumerable<string> guesses)
             where TField: IParsable<TField>
@@ -98,13 +93,13 @@ public static class GamesFactory
             return guesses.Select(g => TField.Parse(g, default)).ToList();
         }
 
-        string result = game switch
+        (string Result, Move Move) = game switch
         {
             ColorGame g => ApplyMoveCore(g, GetGuesses<ColorField>(guesses), moveNumber),
             SimpleGame g => ApplyMoveCore(g, GetGuesses<ColorField>(guesses), moveNumber),
             ShapeGame g => ApplyMoveCore(g, GetGuesses<ShapeAndColorField>(guesses), moveNumber),
             _ => throw new NotSupportedException()
         };
-        return result;
+        return (Result, Move);
     }
 }

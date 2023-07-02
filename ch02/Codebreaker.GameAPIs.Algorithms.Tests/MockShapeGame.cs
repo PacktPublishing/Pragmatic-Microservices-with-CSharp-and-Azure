@@ -3,7 +3,7 @@ using Codebreaker.GameAPIs.Models;
 
 namespace Codebreaker.GameAPIs.Algorithms.Tests;
 
-public class MockShapeGame : IGame<ShapeAndColorField, ShapeAndColorResult>
+public class MockShapeGame : IGame<ShapeAndColorField>
 {
     public Guid GameId { get; init; }
     public int NumberCodes { get; init; }
@@ -11,8 +11,8 @@ public class MockShapeGame : IGame<ShapeAndColorField, ShapeAndColorResult>
     public DateTime? EndTime { get; set; }
     public bool Won { get; set; }
 
-    public required ILookup<string, string> FieldValues { get; init; }
-    public required ShapeAndColorField[] Codes { get; init; }
+    public required IDictionary<string, IEnumerable<string>> FieldValues { get; init; }
+    public required IEnumerable<ShapeAndColorField> Codes { get; init; }
 
     public DateTime StartTime { get; }
     public TimeSpan? Duration { get; set; }
