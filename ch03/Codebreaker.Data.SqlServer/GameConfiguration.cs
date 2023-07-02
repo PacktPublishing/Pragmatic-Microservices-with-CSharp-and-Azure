@@ -11,6 +11,8 @@ internal class GameConfiguration : IEntityTypeConfiguration<Game>
         builder.HasKey(g => g.GameId);
 
         builder.UseTpcMappingStrategy();
+        builder.Property(g => g.GameType).HasMaxLength(20);
+        builder.Property(g => g.PlayerName).HasMaxLength(60);
     }
 }
 

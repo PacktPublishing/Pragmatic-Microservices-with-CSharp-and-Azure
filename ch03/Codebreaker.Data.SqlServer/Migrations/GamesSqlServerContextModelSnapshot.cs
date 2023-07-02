@@ -37,7 +37,8 @@ namespace Codebreaker.Data.SqlServer.Migrations
 
                     b.Property<string>("GameType")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<int>("LastMoveNumber")
                         .HasColumnType("int");
@@ -50,7 +51,8 @@ namespace Codebreaker.Data.SqlServer.Migrations
 
                     b.Property<string>("PlayerName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(60)
+                        .HasColumnType("nvarchar(60)");
 
                     b.Property<DateTime>("StartTime")
                         .HasColumnType("datetime2");

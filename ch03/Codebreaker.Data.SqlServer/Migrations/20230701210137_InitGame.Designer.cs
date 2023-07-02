@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Codebreaker.Data.SqlServer.Migrations
 {
     [DbContext(typeof(GamesSqlServerContext))]
-    [Migration("20230701134423_InitGame")]
+    [Migration("20230701210137_InitGame")]
     partial class InitGame
     {
         /// <inheritdoc />
@@ -40,7 +40,8 @@ namespace Codebreaker.Data.SqlServer.Migrations
 
                     b.Property<string>("GameType")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<int>("LastMoveNumber")
                         .HasColumnType("int");
@@ -53,7 +54,8 @@ namespace Codebreaker.Data.SqlServer.Migrations
 
                     b.Property<string>("PlayerName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(60)
+                        .HasColumnType("nvarchar(60)");
 
                     b.Property<DateTime>("StartTime")
                         .HasColumnType("datetime2");
