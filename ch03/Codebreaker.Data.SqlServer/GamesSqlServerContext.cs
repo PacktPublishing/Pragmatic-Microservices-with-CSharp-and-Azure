@@ -93,25 +93,33 @@ public class GamesSqlServerContext(DbContextOptions<GamesSqlServerContext> optio
 
     public async Task<Game?> GetGameAsync(Guid gameId, CancellationToken cancellationToken = default)
     {
-        var game = await Games.FindAsync(new object[] { gameId }, cancellationToken);
+        var game = await Games.Include("Moves")
+            .SingleOrDefaultAsync(g => g.GameId == gameId, cancellationToken);
         return game;
     }
 
     public async Task<IEnumerable<Game>> GetGamesByDateAsync(string gameType, DateOnly date, CancellationToken cancellationToken = default)
     {
-        var games = await Games.Where(g => DateOnly.FromDateTime(g.StartTime) == date).ToListAsync(cancellationToken);
-        return games;
+        var d = date.ToDateTime(TimeOnly.MinValue);
+        var games = await Games
+            .Where(g => g.GameType == gameType && g.StartTime.Date == d)
+            .ToListAsync(cancellationToken);
+                return games;
     }
 
     public async Task<IEnumerable<Game>> GetGamesByPlayerAsync(string playerName, CancellationToken cancellationToken = default)
     {
-        var games = await Games.Where(g => g.PlayerName == playerName).ToListAsync(cancellationToken);
+        var games = await Games
+            .Where(g => g.PlayerName == playerName)
+            .ToListAsync(cancellationToken);
         return games;
     }
 
     public async Task<IEnumerable<Game>> GetRunningGamesByPlayerAsync(string playerName, CancellationToken cancellationToken = default)
     {
-        var games = await Games.Where(g => g.PlayerName == playerName && g.EndTime == null).ToListAsync(cancellationToken);
+        var games = await Games
+            .Where(g => g.PlayerName == playerName && g.EndTime == null)
+            .ToListAsync(cancellationToken);
         return games;
     }
 }
