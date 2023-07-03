@@ -58,17 +58,18 @@ if (dataStorage == "Cosmos")
 {
     builder.Services.AddDbContext<IGamesRepository, GamesCosmosContext>(options =>
     {
-        string connectionString = builder.Configuration.GetConnectionString("GamesConnection") ?? throw new InvalidOperationException("Could not find GamesConnection");
-        options.UseCosmos(connectionString, databaseName: "CodebreakerGames");
+        string connectionString = builder.Configuration.GetConnectionString("GamesCosmosConnection") ?? throw new InvalidOperationException("Could not find GamesCosmosConnection");
+        options.UseCosmos(connectionString, databaseName: "codebreaker")
+            .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
     });
 }
 else if (dataStorage == "SqlServer")
 {
-
     builder.Services.AddDbContext<IGamesRepository, GamesSqlServerContext>(options =>
     {
         string connectionString = builder.Configuration.GetConnectionString("GamesSqlServerConnection") ?? throw new InvalidOperationException("Could not find GamesSqlServerConnection");
-        options.UseSqlServer(connectionString);
+        options.UseSqlServer(connectionString)
+            .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
     });
 }
 else
