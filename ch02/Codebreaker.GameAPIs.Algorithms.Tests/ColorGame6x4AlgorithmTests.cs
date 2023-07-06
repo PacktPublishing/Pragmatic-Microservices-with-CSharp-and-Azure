@@ -2,6 +2,7 @@ using System.Collections;
 
 using Codebreaker.GameAPIs.Algorithms.Fields;
 using Codebreaker.GameAPIs.Analyzers;
+using Codebreaker.GameAPIs.Algorithms.Extensions;
 using Codebreaker.GameAPIs.Models;
 
 using static Codebreaker.GameAPIs.Models.Colors;
@@ -77,13 +78,11 @@ public class ColorGame6x4AlgorithmTests
             {
                 [FieldCategories.Colors ] = TestData6x4.Colors6.ToList()
             },
-            Codes = codes.Select(c => new ColorField(c)).ToArray()
+            Codes = codes
         };
 
-        var guessPegs = guesses.Select(g => new ColorField(g)).ToList();
-        ColorGameGuessAnalyzer analyzer = new(game, guessPegs, 1);
-        string result = analyzer.GetResult();
-        return ColorResult.Parse(result);
+        ColorGameGuessAnalyzer analyzer = new(game,guesses.ToPegs<ColorField>().ToArray(), 1);
+        return analyzer.GetResult();
     }
 }
 

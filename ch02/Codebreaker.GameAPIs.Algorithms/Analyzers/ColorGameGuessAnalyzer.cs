@@ -1,17 +1,18 @@
 ﻿using Codebreaker.GameAPIs.Algorithms.Fields;
 using Codebreaker.GameAPIs.Contracts;
 using Codebreaker.GameAPIs.Models;
+using Codebreaker.GameAPIs.Algorithms.Extensions;
 
 namespace Codebreaker.GameAPIs.Analyzers;
 
 public class ColorGameGuessAnalyzer : GameGuessAnalyzer<ColorField, ColorResult>
 {
-    public ColorGameGuessAnalyzer(IGame<ColorField> game, IList<ColorField> guesses, int moveNumber)
+    public ColorGameGuessAnalyzer(IGame game, ColorField[] guesses, int moveNumber)
         : base(game, guesses, moveNumber)
     {
     }
 
-    public override void ValidateGuessValues()
+    protected override void ValidateGuessValues()
     {
         if (Guesses.Any(guessPeg => !_game.FieldValues[FieldCategories.Colors].Contains(guessPeg.ToString())))
         {
@@ -21,16 +22,17 @@ public class ColorGameGuessAnalyzer : GameGuessAnalyzer<ColorField, ColorResult>
         }
     }
 
-    public override ColorResult GetCoreResult()
+    protected override ColorResult GetCoreResult()
     {
         // Check black and white keyPegs
-        List<ColorField> codesToCheck = new(_game.Codes);
+        List<ColorField> codesToCheck = new(_game.Codes.ToPegs<ColorField>());
         List<ColorField> guessPegsToCheck = new(Guesses);
         int black = 0;
         List<string> whitePegs = new();
 
         // check black
         for (int i = 0; i < guessPegsToCheck.Count; i++)
+        {
             if (guessPegsToCheck[i] == codesToCheck[i])
             {
                 black++;
@@ -38,6 +40,7 @@ public class ColorGameGuessAnalyzer : GameGuessAnalyzer<ColorField, ColorResult>
                 guessPegsToCheck.RemoveAt(i);
                 i--;
             }
+        }
 
         // check white
         foreach (ColorField value in guessPegsToCheck)
@@ -57,13 +60,13 @@ public class ColorGameGuessAnalyzer : GameGuessAnalyzer<ColorField, ColorResult>
         ColorResult resultPegs = new(black, whitePegs.Count);
         if (resultPegs.Correct + resultPegs.WrongPosition > _game.NumberCodes)
         {
-            throw new InvalidOperationException("More key pegs than holes");
+            throw new InvalidOperationException("More key pegs than codes");
         }
 
         return resultPegs;
     }
 
-    public override void SetGameEndInformation(ColorResult result)
+    protected override void SetGameEndInformation(ColorResult result)
     {
         bool allCorrect = result.Correct == _game.NumberCodes;
         if (allCorrect || _game.LastMoveNumber >= _game.MaxMoves)

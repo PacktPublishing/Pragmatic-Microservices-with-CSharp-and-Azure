@@ -12,6 +12,7 @@ public static class Colors
     public const string Orange = nameof(Orange);
     public const string Pink = nameof(Pink);
     public const string Brown = nameof(Brown);
+    public const string None = nameof(None);
 }
 
 public static class Shapes

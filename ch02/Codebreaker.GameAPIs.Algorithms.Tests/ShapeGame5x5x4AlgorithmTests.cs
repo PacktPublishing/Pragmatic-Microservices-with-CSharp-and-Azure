@@ -1,5 +1,6 @@
 using System.Collections;
 
+using Codebreaker.GameAPIs.Algorithms.Extensions;
 using Codebreaker.GameAPIs.Algorithms.Fields;
 using Codebreaker.GameAPIs.Analyzers;
 using Codebreaker.GameAPIs.Models;
@@ -17,8 +18,8 @@ public class ShapeGame5x5x4AlgorithmTests
     {
         ShapeAndColorResult expectedKeyPegs = new(0, 3, 0);
         ShapeAndColorResult? resultKeyPegs = TestSkeleton(
-            new ShapeAndColorField[] { (Rectangle, Green), (Circle, Yellow), (Rectangle, Green), (Star, Blue) },
-            new ShapeAndColorField[] { (Circle, Yellow), (Rectangle, Green), (Star, Blue), (Square, Purple)  }
+            new string[] { "Rectangle;Green", "Circle;Yellow", "Rectangle;Green", "Star;Blue"},
+            new string[] {"Circle;Yellow", "Rectangle;Green", "Star;Blue", "Square;Purple"}
         );
 
         Assert.Equal(expectedKeyPegs, resultKeyPegs);
@@ -67,7 +68,7 @@ public class ShapeGame5x5x4AlgorithmTests
     //    });
     //}
 
-    private static ShapeAndColorResult TestSkeleton(ShapeAndColorField[] codes, ShapeAndColorField[] guesses)
+    private static ShapeAndColorResult TestSkeleton(string[] codes, string[] guesses)
     {
         MockShapeGame game = new()
         {
@@ -83,9 +84,8 @@ public class ShapeGame5x5x4AlgorithmTests
             Codes = codes
         };
 
-        ShapeGameGuessAnalyzer analyzer = new(game, guesses.ToList(), 1);
-        string result = analyzer.GetResult();
-        return ShapeAndColorResult.Parse(result);
+        ShapeGameGuessAnalyzer analyzer = new(game, guesses.ToPegs<ShapeAndColorField>().ToArray(), 1);
+        return analyzer.GetResult();
     }
 }
 

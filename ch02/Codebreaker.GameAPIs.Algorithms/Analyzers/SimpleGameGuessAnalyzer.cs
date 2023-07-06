@@ -1,4 +1,5 @@
-﻿using Codebreaker.GameAPIs.Algorithms.Fields;
+﻿using Codebreaker.GameAPIs.Algorithms.Extensions;
+using Codebreaker.GameAPIs.Algorithms.Fields;
 using Codebreaker.GameAPIs.Contracts;
 using Codebreaker.GameAPIs.Models;
 
@@ -6,21 +7,21 @@ namespace Codebreaker.GameAPIs.Analyzers;
 
 public class SimpleGameGuessAnalyzer : GameGuessAnalyzer<ColorField, SimpleColorResult>
 {
-    public SimpleGameGuessAnalyzer(IGame<ColorField> game, IList<ColorField> guesses, int moveNumber)
+    public SimpleGameGuessAnalyzer(IGame game, ColorField[] guesses, int moveNumber)
         : base(game, guesses, moveNumber)
     {
     }
 
-    public override void ValidateGuessValues()
+    protected override void ValidateGuessValues()
     {
         if (Guesses.Any(guessPeg => !_game.FieldValues[FieldCategories.Colors].Contains(guessPeg.ToString())))
             throw new ArgumentException("The guess contains an invalid value") { HResult = 4400 };
     }
 
-    public override SimpleColorResult GetCoreResult()
+    protected override SimpleColorResult GetCoreResult()
     {
         // Check black and white keyPegs
-        List<ColorField> codesToCheck = new(_game.Codes);
+        List<ColorField> codesToCheck = new(_game.Codes.ToPegs<ColorField>());
         List<ColorField> guessPegsToCheck = new(Guesses);
 
         var results = Enumerable.Repeat(ResultValue.Incorrect, 4).ToArray();
@@ -50,7 +51,7 @@ public class SimpleGameGuessAnalyzer : GameGuessAnalyzer<ColorField, SimpleColor
         return new SimpleColorResult(results);
     }
 
-    public override void SetGameEndInformation(SimpleColorResult result)
+    protected override void SetGameEndInformation(SimpleColorResult result)
     {
         bool allCorrect = result.Results.Any(r => r == ResultValue.CorrectColor);
 
