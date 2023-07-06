@@ -2,13 +2,13 @@
 
 namespace Codebreaker.GameAPIs.Models;
 
-public abstract class Game(
+public class Game(
     Guid gameId,
     string gameType,
     string playerName,
     DateTime startTime,
     int numberCodes,
-    int maxMoves)
+    int maxMoves) : IGame
 {
     public Guid GameId { get; private set; } = gameId;
     public string GameType { get; private set; } = gameType;
@@ -21,41 +21,10 @@ public abstract class Game(
     public int MaxMoves { get; private set; } = maxMoves;
     public bool Won { get; set; } = false;
 
-    public override string ToString() => $"{GameId}:{GameType} - {StartTime}";
-}
-
-public class Game<TField, TResult>(
-    Guid gameId,
-    string gameType,
-    string playerName,
-    DateTime startTime,
-    int numberCodes,
-    int maxMoves)
-    : Game(gameId, gameType, playerName, startTime, numberCodes, maxMoves),
-    IGame<TField, TResult>
-    where TResult: struct, IParsable<TResult>
-    where TField: IParsable<TField>
-{
-    /// <summary>
-    /// possible fields the player can choose from
-    /// </summary>
     public required IDictionary<string, IEnumerable<string>> FieldValues { get; init; }
 
-    /// <summary>
-    /// The code to guess
-    /// </summary>
-    public required IEnumerable<TField> Codes { get; init; }
+    public required string[] Codes { get; init; }
+    public ICollection<Move> Moves { get; } = new List<Move>();
 
-    public Move AddMove(TField[] guesses, TResult result, int moveNumber)
-    {
-        Move<TField, TResult> move = new (GameId, Guid.NewGuid(), moveNumber)
-        {
-            GuessPegs = guesses,
-            KeyPegs = result
-        };
-        Moves.Add(move);
-        return move;
-    }
-
-    public ICollection<Move<TField, TResult>> Moves { get; } = new List<Move<TField, TResult>>();
+    public override string ToString() => $"{GameId}:{GameType} - {StartTime}";
 }
