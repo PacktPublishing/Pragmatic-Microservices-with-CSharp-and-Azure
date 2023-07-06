@@ -1,6 +1,6 @@
 ﻿namespace Codebreaker.GameAPIs.Contracts;
 
-public interface IGame<TField>
+public interface IGame
 {
     /// <summary>
     /// The unique identifier for the game
@@ -57,5 +57,5 @@ public interface IGame<TField>
     /// <summary>
     /// This is the code that the user needs to guess
     /// </summary>
-    IEnumerable<TField> Codes { get; }
+    string[] Codes { get; }
 }

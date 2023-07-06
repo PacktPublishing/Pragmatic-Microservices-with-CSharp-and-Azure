@@ -1,4 +1,5 @@
-﻿using Codebreaker.GameAPIs.Algorithms.Fields;
+﻿using Codebreaker.GameAPIs.Algorithms.Extensions;
+using Codebreaker.GameAPIs.Algorithms.Fields;
 using Codebreaker.GameAPIs.Contracts;
 using Codebreaker.GameAPIs.Models;
 
@@ -6,12 +7,12 @@ namespace Codebreaker.GameAPIs.Analyzers;
 
 public class ShapeGameGuessAnalyzer : GameGuessAnalyzer<ShapeAndColorField, ShapeAndColorResult>
 {
-    public ShapeGameGuessAnalyzer(IGame<ShapeAndColorField> game, IList<ShapeAndColorField> guesses, int moveNumber)
+    public ShapeGameGuessAnalyzer(IGame game, ShapeAndColorField[] guesses, int moveNumber)
         : base(game, guesses, moveNumber)
     {
     }
 
-    public override void ValidateGuessValues()
+    protected override void ValidateGuessValues()
     {
         // check for valid colors
         if (!Guesses.Select(f => f.Color.ToString())
@@ -26,10 +27,10 @@ public class ShapeGameGuessAnalyzer : GameGuessAnalyzer<ShapeAndColorField, Shap
             throw new ArgumentException("The guess contains an invalid shape") { HResult = 4403 };
     }
 
-    public override ShapeAndColorResult GetCoreResult()
+    protected override ShapeAndColorResult GetCoreResult()
     {
         // Check black and white keyPegs
-        List<ShapeAndColorField> codesToCheck = new(_game.Codes);
+        List<ShapeAndColorField> codesToCheck = new(_game.Codes.ToPegs<ShapeAndColorField>());
         List<ShapeAndColorField> guessPegsToCheck = new(Guesses);
         List<ShapeAndColorField> remainingCodesToCheck = new();
         List<ShapeAndColorField> remainingGuessPegsToCheck = new();
@@ -90,12 +91,12 @@ public class ShapeGameGuessAnalyzer : GameGuessAnalyzer<ShapeAndColorField, Shap
         ShapeAndColorResult resultPegs = new(black, blue, white);
 
         if ((resultPegs.Correct + resultPegs.WrongPosition + resultPegs.ColorOrShape) > _game.NumberCodes)
-            throw new InvalidOperationException("There are more keyPegs than holes"); // Should not be the case
+            throw new InvalidOperationException("There are more keyPegs than codes"); // Should not be the case
 
         return resultPegs;
     }
 
-    public override void SetGameEndInformation(ShapeAndColorResult result)
+    protected override void SetGameEndInformation(ShapeAndColorResult result)
     {
         bool allCorrect = result.Correct == _game.NumberCodes;
         if (allCorrect || _game.LastMoveNumber >= _game.MaxMoves)
