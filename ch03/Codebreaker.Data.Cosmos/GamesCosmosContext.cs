@@ -6,6 +6,8 @@ namespace Codebreaker.Data.Cosmos;
 
 public class GamesCosmosContext : DbContext, IGamesRepository
 {
+    // public const string PartitionKey = nameof(PartitionKey);
+
     public GamesCosmosContext(DbContextOptions<GamesCosmosContext> options)
         : base(options)
     {
@@ -22,12 +24,24 @@ public class GamesCosmosContext : DbContext, IGamesRepository
         modelBuilder.Entity<ColorGame>().OwnsMany(g => g.Moves);
         modelBuilder.Entity<SimpleGame>().OwnsMany(g => g.Moves);
         modelBuilder.Entity<ShapeGame>().OwnsMany(g => g.Moves);
+
+        modelBuilder.Entity<ColorField>().HasNoKey();
     }
+
+
+    //// for using a shadow property for the partition key
+    //public static string ComputePartitionKey(Game game) => game.GameId.ToString();
+   
+    //public void SetPartitionKey(Game game) =>
+    //    Entry(game).Property(PartitionKey).CurrentValue =
+    //        ComputePartitionKey(game);
 
     public DbSet<Game> Games => Set<Game>();
 
     public async Task AddGameAsync(Game game, CancellationToken cancellationToken = default)
     {
+        // when using a shadow property for the partition key
+        // SetPartitionKey(game);
         Games.Add(game);
         await SaveChangesAsync(cancellationToken);
     }
@@ -50,19 +64,23 @@ public class GamesCosmosContext : DbContext, IGamesRepository
 
     public async Task<Game?> GetGameAsync(Guid gameId, CancellationToken cancellationToken = default)
     {
-        var game = await Games.FindAsync(new object[] { gameId }, cancellationToken);
+        var game = await Games.FindAsync(gameId, cancellationToken);
         return game;
     }
 
     public async Task<IEnumerable<Game>> GetGamesByDateAsync(string gameType, DateOnly date, CancellationToken cancellationToken = default)
     {
-        var games = await Games.Where(g => DateOnly.FromDateTime(g.StartTime) == date).ToListAsync(cancellationToken);
+        var games = await Games
+            .Where(g => DateOnly.FromDateTime(g.StartTime) == date)
+            .ToListAsync(cancellationToken);
         return games;
     }
 
     public async Task<IEnumerable<Game>> GetMyGamesAsync(string playerName, CancellationToken cancellationToken = default)
     {
-        var games = await Games.Where(g => g.PlayerName == playerName).ToListAsync(cancellationToken);
+        var games = await Games
+            .Where(g => g.PlayerName == playerName)
+            .ToListAsync(cancellationToken);
         return games;
     }
 

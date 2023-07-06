@@ -10,9 +10,13 @@ internal class GameConfiguration : IEntityTypeConfiguration<Game>
     public void Configure(EntityTypeBuilder<Game> builder)
     {
         builder.HasPartitionKey(g => g.GameId);
-        builder.HasKey(g => g.GameId);
 
-        builder.Property(g => g.GameType).HasMaxLength(10);
+        // using a shadow property for the partition key
+        // builder.HasPartitionKey(GamesCosmosContext.PartitionKey);
+        // builder.Property<string>(GamesCosmosContext.PartitionKey);
+        // builder.HasKey(GamesCosmosContext.PartitionKey, "GameId");
+        
+        builder.HasKey(g => g.GameId);
 
         builder.HasDiscriminator<string>("Discriminator")
             .HasValue<ColorGame>("color")
@@ -29,6 +33,8 @@ internal class GameConfiguration<TGame, TField, TResult> : IEntityTypeConfigurat
     public void Configure(EntityTypeBuilder<TGame> builder)
     {
         builder.HasPartitionKey(g => g.GameId);
-        builder.Property(g => g.FieldValues).HasConversion(new FieldValueValueConverter());
+        // builder.HasPartitionKey(GamesCosmosContext.PartitionKey);
+        builder.Property(g => g.FieldValues)
+            .HasConversion(new FieldValueValueConverter());
     }
 }
