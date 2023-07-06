@@ -15,13 +15,14 @@ public class GamesMemoryRepository(ILogger<GamesMemoryRepository> logger) : IGam
         return Task.CompletedTask;
     }
 
-    public Task DeleteGameAsync(Guid gameId, CancellationToken cancellationToken = default)
+    public Task<bool> DeleteGameAsync(Guid gameId, CancellationToken cancellationToken = default)
     {
         if (!_games.TryRemove(gameId, out _))
         {
             _logger.LogWarning("gamid {gameId} not available", gameId);
+            return Task.FromResult(false);
         }
-        return Task.CompletedTask;
+        return Task.FromResult(true);
     }
 
     public Task<Game?> GetGameAsync(Guid gameId, CancellationToken cancellationToken = default)
@@ -43,8 +44,7 @@ public class GamesMemoryRepository(ILogger<GamesMemoryRepository> logger) : IGam
     }
 
     public Task<IEnumerable<Game>> GetRunningGamesByPlayerAsync(string playerName, CancellationToken cancellationToken = default)
-    {
-       
+    {     
         var games = _games.Values
             .Where(g => g.PlayerName == playerName && g.StartTime >= DateTime.Today.AddDays(-1) && !g.Ended())
             .ToArray();

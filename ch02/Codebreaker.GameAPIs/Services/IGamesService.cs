@@ -22,7 +22,7 @@ public interface IGamesService
     /// <param name="moveNumber">the number of the move</param>
     /// <param name="cancellationToken">cancellation token</param>
     /// <returns>tuple consisting of the updated game and its result</returns>
-    Task<(Game Game, string Result)> SetMoveAsync(Guid gameId, IEnumerable<string> guesses, int moveNumber, CancellationToken cancellationToken = default);
+    Task<(Game Game, Move Move)> SetMoveAsync(Guid gameId, string[] guesses, int moveNumber, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Get the Game by id
