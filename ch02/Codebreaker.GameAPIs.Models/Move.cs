@@ -1,21 +1,20 @@
 ﻿namespace Codebreaker.GameAPIs.Models;
 
-public abstract class Move(Guid gameId, Guid moveId, int moveNumber)
+public class Move(int moveNumber)
 {
-    public Guid GameId { get; private set; } = gameId;
-    public Guid MoveId { get; private set; } = moveId;
+    /// <summary>
+    /// The move number for this move within the associated game.
+    /// </summary>
     public int MoveNumber { get; private set; } = moveNumber;
 
-    public override string ToString() => $"{GameId}: {MoveNumber}";
-}
+    public override string ToString() => $"{MoveNumber}. {GuessPegs}";
 
-public class Move<TField, TResult>(Guid gameId, Guid moveId, int moveNumber)
-    : Move(gameId, moveId, moveNumber)
-    where TResult: struct
-    where TField : IParsable<TField>
-{
-    public required ICollection<TField> GuessPegs { get; init; }
-    public required TResult? KeyPegs { get; init; }
-
-    public override string ToString() => $"{MoveNumber}, {string.Join(".", GuessPegs)}";
+    /// <summary>
+    /// The guess pegs from the user for this move.
+    /// </summary>
+    public required string[] GuessPegs { get; init; }
+    /// <summary>
+    /// The result from the analyer for this move based on the associated game that contains the move.
+    /// </summary>
+    public required string[] KeyPegs { get; init; }
 }
