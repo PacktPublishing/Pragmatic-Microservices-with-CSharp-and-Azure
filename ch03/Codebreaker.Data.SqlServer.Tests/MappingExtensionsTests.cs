@@ -53,7 +53,7 @@ public class MappingExtensionsTests
             };
 
         // Act
-        var result = MappingExtensions.ToFieldsDictionary(input);
+        var result = MappingExtensions.FromFieldsString(input);
 
         // Assert
         Assert.Equal(expected, result);

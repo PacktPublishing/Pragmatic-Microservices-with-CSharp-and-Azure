@@ -4,6 +4,7 @@ using Codebreaker.Data.SqlServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Codebreaker.Data.SqlServer.Migrations
 {
     [DbContext(typeof(GamesSqlServerContext))]
-    partial class GamesSqlServerContextModelSnapshot : ModelSnapshot
+    [Migration("20230707150804_InitGames")]
+    partial class InitGames
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -59,9 +62,6 @@ namespace Codebreaker.Data.SqlServer.Migrations
 
                     b.Property<int>("NumberCodes")
                         .HasColumnType("int");
-
-                    b.Property<bool>("PlayerIsAuthenticated")
-                        .HasColumnType("bit");
 
                     b.Property<string>("PlayerName")
                         .IsRequired()

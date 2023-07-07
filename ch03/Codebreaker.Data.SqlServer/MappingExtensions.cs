@@ -34,11 +34,11 @@ public static class MappingExtensions
     {
         return string.Join(
             '#', fields.SelectMany(
-                field => field.Value
-                    .Select(value => $"{field.Key}:{value}")));
+                key => key.Value
+                    .Select(value => $"{key.Key}:{value}")));
     }
 
-    public static IDictionary<string, IEnumerable<string>> ToFieldsDictionary(this string fieldsString)
+    public static IDictionary<string, IEnumerable<string>> FromFieldsString(this string fieldsString)
     {
         Dictionary<string, List<string>> fields = new();
 
@@ -54,9 +54,9 @@ public static class MappingExtensions
             var key = pair[..index];
             var value = pair[(index + 1)..];
 
-            if (!fields.TryGetValue(key, out var list))
+            if (!fields.TryGetValue(key, out List<string>? list))
             {
-                list = new List<string>();
+                list = new();
                 fields[key] = list;
             }
 

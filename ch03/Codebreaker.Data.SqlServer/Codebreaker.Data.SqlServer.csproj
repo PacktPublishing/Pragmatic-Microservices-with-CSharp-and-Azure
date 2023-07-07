@@ -14,5 +14,9 @@
   <ItemGroup>
     <ProjectReference Include="..\Codebreaker.GameAPIs.Models\Codebreaker.GameAPIs.Models.csproj" />
   </ItemGroup>
+  
+  <ItemGroup>
+    <Folder Include="Converters\" />
+  </ItemGroup>
 
 </Project>

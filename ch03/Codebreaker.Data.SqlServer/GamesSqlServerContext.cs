@@ -1,67 +1,22 @@
 ﻿using Codebreaker.GameAPIs.Data;
 
-using Microsoft.EntityFrameworkCore.ChangeTracking;
-
 namespace Codebreaker.Data.SqlServer;
 
 public class GamesSqlServerContext(DbContextOptions<GamesSqlServerContext> options) : DbContext(options), IGamesRepository
 {
+    internal const string GameId = nameof(GameId);
+    internal const string MoveId = nameof(MoveId);
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.HasDefaultSchema("Codebreaker");
+        modelBuilder.HasDefaultSchema("codebreaker");
         modelBuilder.ApplyConfiguration(new GameConfiguration());
-
-        modelBuilder.ApplyConfiguration(new GameConfiguration<ColorGame, ColorField, ColorResult>("ColorGames"));
-        modelBuilder.ApplyConfiguration(new GameConfiguration<SimpleGame, ColorField, SimpleColorResult>("SimpleGames"));
-        modelBuilder.ApplyConfiguration(new GameConfiguration<ShapeGame, ShapeAndColorField, ShapeAndColorResult>("ShapeGames"));
-
         modelBuilder.ApplyConfiguration(new MoveConfiguration());
 
-        modelBuilder.ApplyConfiguration(new MoveConfiguration<ColorMove, ColorField, ColorResult>("ColorMoves"));
-        modelBuilder.ApplyConfiguration(new MoveConfiguration<SimpleMove, ColorField, SimpleColorResult>("SimpleMoves"));
-        modelBuilder.ApplyConfiguration(new MoveConfiguration<ShapeMove, ShapeAndColorField, ShapeAndColorResult>("ShapeMoves"));
-
-        modelBuilder.Entity<ColorMove>()
-            .Property(m => m.KeyPegs)
-            .HasColumnType("nvarchar")
-            .HasMaxLength(20)
-            .HasConversion(
-                convertToProviderExpression: peg => peg.ToString(),
-                convertFromProviderExpression: peg => ColorResult.Parse(peg!, null),
-                valueComparer: new ValueComparer<ColorResult>(favorStructuralComparisons: true));
-
-        modelBuilder.Entity<SimpleMove>()
-            .Property(m => m.KeyPegs)
-            .HasColumnType("nvarchar")
-            .HasMaxLength(40)
-            .HasConversion(
-                convertToProviderExpression: peg => peg.ToString(),
-                convertFromProviderExpression: peg => SimpleColorResult.Parse(peg!, null),
-                valueComparer: new ValueComparer<SimpleColorResult>(favorStructuralComparisons: true));
-
-        modelBuilder.Entity<ShapeMove>()
-            .Property(m => m.KeyPegs)
-            .HasColumnType("nvarchar")
-            .HasMaxLength(20)
-            .HasConversion(
-                convertToProviderExpression: peg => peg.ToString(),
-                convertFromProviderExpression: peg => ShapeAndColorResult.Parse(peg!, null),
-                valueComparer: new ValueComparer<ShapeAndColorResult>(favorStructuralComparisons: true));
-
-        modelBuilder.Entity<ColorGame>()
+        modelBuilder.Entity<Game>()
             .HasMany(g => g.Moves)
             .WithOne()
-            .HasForeignKey(m => m.GameId);
-
-        modelBuilder.Entity<SimpleGame>()
-            .HasMany(g => g.Moves)
-            .WithOne()
-            .HasForeignKey(m => m.GameId);
-
-        modelBuilder.Entity<ShapeGame>()
-            .HasMany(g => g.Moves)
-            .WithOne()
-            .HasForeignKey(m => m.GameId);
+            .HasForeignKey(GameId);
     }
 
     public DbSet<Game> Games => Set<Game>();
@@ -93,7 +48,9 @@ public class GamesSqlServerContext(DbContextOptions<GamesSqlServerContext> optio
 
     public async Task<Game?> GetGameAsync(Guid gameId, CancellationToken cancellationToken = default)
     {
-        var game = await Games.Include("Moves")
+        var game = await Games
+            .Include("Moves")
+            .TagWith(nameof(GetGameAsync))
             .SingleOrDefaultAsync(g => g.GameId == gameId, cancellationToken);
         return game;
     }
@@ -103,6 +60,7 @@ public class GamesSqlServerContext(DbContextOptions<GamesSqlServerContext> optio
         var d = date.ToDateTime(TimeOnly.MinValue);
         var games = await Games
             .Where(g => g.GameType == gameType && g.StartTime.Date == d)
+            .TagWith(nameof(GetGamesByDateAsync))
             .ToListAsync(cancellationToken);
                 return games;
     }
@@ -111,6 +69,7 @@ public class GamesSqlServerContext(DbContextOptions<GamesSqlServerContext> optio
     {
         var games = await Games
             .Where(g => g.PlayerName == playerName)
+            .TagWith(nameof(GetGamesByPlayerAsync))
             .ToListAsync(cancellationToken);
         return games;
     }
