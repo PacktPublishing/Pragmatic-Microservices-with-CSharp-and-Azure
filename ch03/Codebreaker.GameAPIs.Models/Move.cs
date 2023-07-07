@@ -7,8 +7,6 @@ public class Move(int moveNumber)
     /// </summary>
     public int MoveNumber { get; private set; } = moveNumber;
 
-    public override string ToString() => $"{MoveNumber}. {GuessPegs}";
-
     /// <summary>
     /// The guess pegs from the user for this move.
     /// </summary>
@@ -17,4 +15,8 @@ public class Move(int moveNumber)
     /// The result from the analyer for this move based on the associated game that contains the move.
     /// </summary>
     public required string[] KeyPegs { get; init; }
+
+    public override string ToString() => $"{MoveNumber}. " +
+        $"{string.Join('#',GuessPegs)} : " +
+        $"{string.Join('#', KeyPegs)}";
 }

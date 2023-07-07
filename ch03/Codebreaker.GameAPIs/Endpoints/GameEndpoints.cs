@@ -26,10 +26,10 @@ public static class GameEndpoints
             }
             catch (GameTypeNotFoundException)
             {
-                GameError error = new("GameTypeError", $"Game type {request.GameType} does not exist", context.Request.GetDisplayUrl(),   Enum.GetNames<GameType>());
+                GameError error = new(ErrorCodes.InvalidGameType, $"Game type {request.GameType} does not exist", context.Request.GetDisplayUrl(),   Enum.GetNames<GameType>());
                 return TypedResults.BadRequest(error);
             }
-            return TypedResults.Created($"/games/{game.GameId}", game.ToCreateGameResponse());
+            return TypedResults.Created($"/games/{game.GameId}", game.AsCreateGameResponse());
         })
         .WithName("CreateGame")
         .WithSummary("Creates and starts a game")
@@ -49,8 +49,8 @@ public static class GameEndpoints
         {
             try
             {
-                (Game game, string result) = await gameService.SetMoveAsync(gameId, request.GuessPegs, request.MoveNumber, cancellationToken);
-                return TypedResults.Ok(game.ToSetMoveResponse(result));
+                (Game game, Move move) = await gameService.SetMoveAsync(gameId, request.GuessPegs, request.MoveNumber, cancellationToken);
+                return TypedResults.Ok(game.AsSetMoveResponse(move.KeyPegs));
             }
             catch (ArgumentException ex) when (ex.HResult is <= 4200 and >= 400)
             {

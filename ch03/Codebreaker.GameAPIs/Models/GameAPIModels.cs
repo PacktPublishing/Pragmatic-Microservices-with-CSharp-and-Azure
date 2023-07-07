@@ -1,8 +1,4 @@
-﻿using System.Text.Json.Serialization;
-
-using Swashbuckle.AspNetCore.Annotations;
-
-namespace Codebreaker.GameAPIs.Models;
+﻿namespace Codebreaker.GameAPIs.Models;
 
 public enum GameType
 {
@@ -14,17 +10,7 @@ public enum GameType
 
 public record class CreateGameRequest(GameType GameType, string PlayerName);
 
-[SwaggerDiscriminator("fieldType")]
-[SwaggerSubType(typeof(CreateGameResponse<ColorField>), DiscriminatorValue = "color")]
-[SwaggerSubType(typeof(CreateGameResponse<ShapeAndColorField>), DiscriminatorValue = "shape")]
-[JsonDerivedType(typeof(CreateGameResponse<ColorField>), "Color")]
-[JsonDerivedType(typeof(CreateGameResponse<ShapeAndColorField>), "Shape")]
 public record class CreateGameResponse(Guid GameId, GameType GameType, string PlayerName)
-{
-}
-
-public record class CreateGameResponse<TField>(Guid GameId, GameType GameType, string PlayerName)
-    : CreateGameResponse(GameId, GameType, PlayerName)
 {
     public required IDictionary<string, IEnumerable<string>> FieldValues { get; init; }
 }
@@ -38,11 +24,11 @@ public record SetMoveResponse(
     Guid GameId,
     GameType GameType,
     int MoveNumber,
-    string Result);
+    string[] Results);
 
-public record GameInfo(Guid GameId, string PlayerName, DateTime StartTime, TimeSpan Duration);
+public record GameSummary(Guid GameId, string PlayerName, DateTime StartTime, int NumberMoves, bool Won, TimeSpan? Duration);
 
 public record GetGamesRankResponse(DateOnly Date, GameType GameType)
 {
-    public required IEnumerable<GameInfo> Games { get; set; }
+    public required IEnumerable<GameSummary> Games { get; set; }
 }

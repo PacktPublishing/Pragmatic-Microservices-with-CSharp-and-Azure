@@ -1,10 +1,13 @@
-﻿using Codebreaker.GameAPIs.Analyzers;
-using Codebreaker.GameAPIs.Contracts;
-using Codebreaker.GameAPIs.Exceptions;
+﻿using Codebreaker.GameAPIs.Algorithms.Extensions;
 using Codebreaker.GameAPIs.Algorithms.Fields;
+using Codebreaker.GameAPIs.Analyzers;
+using Codebreaker.GameAPIs.Exceptions;
 
 namespace Codebreaker.GameAPIs.Services;
 
+/// <summary>
+/// A factory class for creating instances of the <see cref="Game"/> class.
+/// </summary>
 public static class GamesFactory
 {
     private static readonly string[] s_colors6 = { Colors.Red, Colors.Green, Colors.Blue, Colors.Yellow, Colors.Purple, Colors.Orange };
@@ -12,39 +15,45 @@ public static class GamesFactory
     private static readonly string[] s_colors5 = { Colors.Red, Colors.Green, Colors.Blue, Colors.Yellow, Colors.Purple };
     private static readonly string[] s_shapes5 = { Shapes.Circle, Shapes.Square, Shapes.Triangle, Shapes.Star, Shapes.Rectangle };
 
-    public static Game CreateGame(string gameType, string playerName, bool isAuthenticated)
+    /// <summary>
+    /// Creates a game object with specified gameType and playerName.
+    /// </summary>
+    /// <param name="gameType">The type of game to be created.</param>
+    /// <param name="playerName">The name of the player.</param>
+    /// <returns>The created game object.</returns>
+    public static Game CreateGame(string gameType, string playerName)
     {
-        SimpleGame Create6x4SimpleGame() =>
+        Game Create6x4SimpleGame() =>
             new(Guid.NewGuid(), gameType, playerName,  DateTime.Now, 4, 12)
             {
                 FieldValues = new Dictionary<string, IEnumerable<string>>()
                 {
                     { FieldCategories.Colors, s_colors6 }
                 },
-                Codes = Random.Shared.GetItems(s_colors6, 4).Select(c => new ColorField(c)).ToArray()
+                Codes = Random.Shared.GetItems(s_colors6, 4)
             };
 
-        ColorGame Create6x4Game() =>
+        Game Create6x4Game() =>
             new(Guid.NewGuid(), gameType, playerName, DateTime.Now, 4, 12)
             {
                 FieldValues = new Dictionary<string, IEnumerable<string>>()
                 {
                     { FieldCategories.Colors, s_colors6 }
                 },
-                Codes = Random.Shared.GetItems(s_colors6, 4).Select(c => new ColorField(c)).ToArray()
+                Codes = Random.Shared.GetItems(s_colors6, 4)
             };
 
-        ColorGame Create8x5Game() =>
+        Game Create8x5Game() =>
             new(Guid.NewGuid(), gameType, playerName, DateTime.Now, 5, 12)
             {
                 FieldValues = new Dictionary<string, IEnumerable<string>>()
                 {
                     { FieldCategories.Colors, s_colors8 }
                 },
-                Codes = Random.Shared.GetItems(s_colors8, 5).Select(c => new ColorField(c)).ToArray()
+                Codes = Random.Shared.GetItems(s_colors8, 5)
             };
 
-        ShapeGame Create5x5x4Game() =>
+        Game Create5x5x4Game() =>
             new(Guid.NewGuid(), gameType, playerName, DateTime.Now, 4, 14)
             {
                 FieldValues = new Dictionary<string, IEnumerable<string>>()
@@ -53,7 +62,9 @@ public static class GamesFactory
                         { FieldCategories.Shapes, s_shapes5 }
                     },
                 Codes = Random.Shared.GetItems(s_shapes5, 4)
-                    .Zip(Random.Shared.GetItems(s_colors5, 4), (s, c) => new ShapeAndColorField(s, c)).ToArray()
+                    .Zip(Random.Shared.GetItems(s_colors5, 4))
+                    .Select((s, c) => string.Join(';', s, c))
+                    .ToArray()
             };
         
         return gameType switch
@@ -66,53 +77,64 @@ public static class GamesFactory
         };
     }
 
-    public static IGameGuessAnalyzer CreateAnalyzer<TField, TResult>(this Game game, IList<TField> guesses, int moveNumber)
-        where TField: IParsable<TField>
-        where TResult: struct, IParsable<TResult>
+    /// <summary>
+    /// Applies a player's move to a game and returns a <see cref="Move"/> object that encapsulates the player's guess and the result of the guess.
+    /// </summary>
+    /// <param name="game">The game to apply the move to.</param>
+    /// <param name="guesses">The player's guesses.</param>
+    /// <param name="moveNumber">The move number.</param>
+    /// <returns>A <see cref="Move"/> object that encapsulates the player's guess and the result of the guess.</returns>
+    public static Move ApplyMove(this Game game, string[] guesses, int moveNumber)
     {
-        return (game, guesses) switch
-        {
-            (ColorGame g, IList<ColorField> gu)   => new ColorGameGuessAnalyzer(g, gu, moveNumber),
-            (SimpleGame g, IList<ColorField> gu)  => new SimpleGameGuessAnalyzer(g, gu, moveNumber),
-            (ShapeGame g, IList<ShapeAndColorField> gu) => new ShapeGameGuessAnalyzer(g, gu, moveNumber),
-            _ => throw new NotSupportedException()
-        };       
-    }
-
-    private static (string Result, Move move) ApplyMoveCore<TField, TResult>(Game<TField, TResult> game, IList<TField> guesses, int moveNumber)
-        where TField: IParsable<TField>
-        where TResult: struct, IParsable<TResult>
-    {
-        static TResult ToResult(string result) => 
-            TResult.Parse(result, null);
-
-        IGameGuessAnalyzer analyzer = (game, guesses) switch
-        {
-            (ColorGame g, IList<ColorField> gu) => new ColorGameGuessAnalyzer(g, gu, moveNumber),
-            (SimpleGame g, IList<ColorField> gu) => new SimpleGameGuessAnalyzer(g, gu, moveNumber),
-            (ShapeGame g, IList<ShapeAndColorField> gu) => new ShapeGameGuessAnalyzer(g, gu, moveNumber),
-            _ => throw new NotSupportedException()
-        };
-        string result = analyzer.GetResult();
-        Move move = game.AddMove(guesses.ToArray(), ToResult(result), moveNumber);
-        return (result, move);
-    }
-
-    public static (string Result, Move move) ApplyMove(this Game game, IEnumerable<string> guesses, int moveNumber)
-    {
-        static IList<TField> GetGuesses<TField>(IEnumerable<string> guesses)
+        static TField[] GetGuesses<TField>(IEnumerable<string> guesses)
             where TField: IParsable<TField>
         {
-            return guesses.Select(g => TField.Parse(g, default)).ToList();
+            return guesses.Select(g => TField.Parse(g, default)).ToArray();
         }
 
-        (string Result, Move Move) = game switch
+        Move GetColorGameGuessAnalyzerResult()
         {
-            ColorGame g => ApplyMoveCore(g, GetGuesses<ColorField>(guesses), moveNumber),
-            SimpleGame g => ApplyMoveCore(g, GetGuesses<ColorField>(guesses), moveNumber),
-            ShapeGame g => ApplyMoveCore(g, GetGuesses<ShapeAndColorField>(guesses), moveNumber),
-            _ => throw new NotSupportedException()
+            ColorGameGuessAnalyzer analyzer = new (game, GetGuesses<ColorField>(guesses), moveNumber);
+            ColorResult result = analyzer.GetResult();
+            return new(moveNumber)
+            {
+                GuessPegs = guesses,
+                KeyPegs = result.ToStringResults()
+            };
+        }
+
+        Move GetSimpleGameGuessAnalyzerResult()
+        {
+            SimpleGameGuessAnalyzer analyzer = new(game, GetGuesses<ColorField>(guesses), moveNumber);
+            SimpleColorResult result = analyzer.GetResult();
+            return new(moveNumber)
+            {
+                GuessPegs = guesses,
+                KeyPegs = result.ToStringResults()
+            };
+        }
+
+        Move GetShapeGameGuessAnalyzerResult()
+        {
+            ShapeGameGuessAnalyzer analyzer = new(game, GetGuesses<ShapeAndColorField>(guesses), moveNumber);
+            ShapeAndColorResult result = analyzer.GetResult();
+            return new(moveNumber)
+            {
+                GuessPegs = guesses,
+                KeyPegs = result.ToStringResults()
+            };
+        }
+
+        Move move = game.GameType switch
+        {
+            GameTypes.Game6x4 => GetColorGameGuessAnalyzerResult(),
+            GameTypes.Game8x5 => GetColorGameGuessAnalyzerResult(),
+            GameTypes.Game6x4Mini => GetSimpleGameGuessAnalyzerResult(),
+            GameTypes.Game5x5x4 => GetShapeGameGuessAnalyzerResult(), 
+            _ => throw new NotImplementedException()
         };
-        return (Result, Move);
+
+        game.Moves.Add(move);
+        return move;
     }
 }

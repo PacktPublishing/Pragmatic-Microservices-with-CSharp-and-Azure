@@ -10,9 +10,27 @@ Content-Type: {{ContentType}}
   "playerName": "test"
 }
 
+### Create a 8x5 game
+POST {{Codebreaker.GameAPIs_HostAddress}}/games/
+Content-Type: {{ContentType}}
+
+{
+  "gameType": "Game8x5",
+  "playerName": "test"
+}
+
+### Create a 5x5x4 game
+POST {{Codebreaker.GameAPIs_HostAddress}}/games/
+Content-Type: {{ContentType}}
+
+{
+  "gameType": "Game5x5x4",
+  "playerName": "test"
+}
+
 ### Set a move
 
-@gameid = 4302efef-d8b0-4206-be72-a288917a99fd
+@gameid = 92a8e98b-aff6-444f-9c6d-bd574ca196a4
 
 PATCH {{Codebreaker.GameAPIs_HostAddress}}/games/{{gameid}}/moves
 Content-Type: {{ContentType}}
@@ -32,3 +50,7 @@ Content-Type: {{ContentType}}
 ### Get game information
 
 GET {{Codebreaker.GameAPIs_HostAddress}}/games/{{gameid}}
+
+### Get games per day
+
+GET {{Codebreaker.GameAPIs_HostAddress}}/games/rank/2023-07-07?gameType=Game6x4 

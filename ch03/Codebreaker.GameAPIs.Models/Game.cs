@@ -13,6 +13,7 @@ public class Game(
     public Guid GameId { get; private set; } = gameId;
     public string GameType { get; private set; } = gameType;
     public string PlayerName { get; private set; } = playerName;
+    public bool PlayerIsAuthenticated { get; set; } = false;
     public DateTime StartTime { get; private set; } = startTime;
     public DateTime? EndTime { get; set; }
     public TimeSpan? Duration { get; set; }

@@ -44,8 +44,7 @@ public class GamesMemoryRepository(ILogger<GamesMemoryRepository> logger) : IGam
     }
 
     public Task<IEnumerable<Game>> GetRunningGamesByPlayerAsync(string playerName, CancellationToken cancellationToken = default)
-    {
-       
+    {     
         var games = _games.Values
             .Where(g => g.PlayerName == playerName && g.StartTime >= DateTime.Today.AddDays(-1) && !g.Ended())
             .ToArray();
