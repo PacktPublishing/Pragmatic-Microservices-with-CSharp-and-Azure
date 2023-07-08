@@ -1,4 +1,5 @@
-﻿using Codebreaker.GameAPIs.Data;
+﻿using Codebreaker.Data.Cosmos.Utilities;
+using Codebreaker.GameAPIs.Data;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -6,7 +7,14 @@ namespace Codebreaker.Data.Cosmos;
 
 public class GamesCosmosContext : DbContext, IGamesRepository
 {
-    // public const string PartitionKey = nameof(PartitionKey);
+    public const string PartitionKey = nameof(PartitionKey);
+    public const string GameId = nameof(GameId);
+    public const string MoveId = nameof(MoveId);
+    public const string Id = nameof(Id);
+    public const string ETag = nameof(ETag);
+
+    private FieldValueValueConverter _fieldValueConverter = new();
+    private FieldValueComparer _fieldValueComparer = new();
 
     public GamesCosmosContext(DbContextOptions<GamesCosmosContext> options)
         : base(options)
@@ -15,32 +23,46 @@ public class GamesCosmosContext : DbContext, IGamesRepository
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.HasDefaultContainer("Gamesv3");
-        modelBuilder.ApplyConfiguration(new GameConfiguration());
-        modelBuilder.ApplyConfiguration(new GameConfiguration<SimpleGame, ColorField, SimpleColorResult>());
-        modelBuilder.ApplyConfiguration(new GameConfiguration<ColorGame, ColorField, ColorResult>());
-        modelBuilder.ApplyConfiguration(new GameConfiguration<ShapeGame, ShapeAndColorField, ShapeAndColorResult>());
+        modelBuilder.HasDefaultContainer("GamesV3");
+        modelBuilder.Entity<Game>().HasPartitionKey(g => g.GameId);
+        var gameModel = modelBuilder.Entity<Game>();
 
-        modelBuilder.Entity<ColorGame>().OwnsMany(g => g.Moves);
-        modelBuilder.Entity<SimpleGame>().OwnsMany(g => g.Moves);
-        modelBuilder.Entity<ShapeGame>().OwnsMany(g => g.Moves);
+        //gameModel.Ignore(g => g.GameId);
+        //gameModel.Ignore(g => g.Moves);
+        // gameModel.HasPartitionKey(PartitionKey);
+        // gameModel.Property<string>(PartitionKey);
+        // gameModel.Property<string>(ETag).IsETagConcurrency();
 
-        modelBuilder.Entity<ColorField>().HasNoKey();
+        gameModel.Property(g => g.FieldValues)
+            .HasConversion(_fieldValueConverter, _fieldValueComparer);
+
+        // modelBuilder.Owned<Move>();
+
+         //gameModel
+         //   .OwnsMany(g => g.Moves, moveBuilder =>
+         //   {
+         //       moveBuilder.ToJsonProperty("Moves");
+         //       moveBuilder.Property<string>(PartitionKey);
+         //       moveBuilder.Property<Guid>(GameId);
+         //       //moveBuilder.Property<Guid>(MoveId).ValueGeneratedOnAdd();
+         //       //moveBuilder.WithOwner().HasForeignKey(GameId, PartitionKey);
+         //       //moveBuilder.HasKey(MoveId);
+         //   });
     }
 
+    public static string ComputePartitionKey(Game game) => game.GameId.ToString();
 
-    //// for using a shadow property for the partition key
-    //public static string ComputePartitionKey(Game game) => game.GameId.ToString();
-   
-    //public void SetPartitionKey(Game game) =>
-    //    Entry(game).Property(PartitionKey).CurrentValue =
-    //        ComputePartitionKey(game);
+    public void SetPartitionKey(Game game) =>
+        Entry(game).Property(PartitionKey).CurrentValue =
+            ComputePartitionKey(game);
+
+    //public void SetMoveId(Move move) =>
+    //    Entry(move).Property<Guid>(MoveId).CurrentValue = Guid.NewGuid();
 
     public DbSet<Game> Games => Set<Game>();
 
     public async Task AddGameAsync(Game game, CancellationToken cancellationToken = default)
     {
-        // when using a shadow property for the partition key
         // SetPartitionKey(game);
         Games.Add(game);
         await SaveChangesAsync(cancellationToken);
@@ -48,13 +70,14 @@ public class GamesCosmosContext : DbContext, IGamesRepository
 
     public async Task AddMoveAsync(Game game, Move move, CancellationToken cancellationToken = default)
     {
+        // SetMoveId(move);
         Games.Update(game);
         await SaveChangesAsync(cancellationToken);
     }
 
     public async Task<bool> DeleteGameAsync(Guid gameId, CancellationToken cancellationToken = default)
     {
-        var game = await Games.FindAsync(new object[] { gameId }, cancellationToken);
+        var game = await Games.FindAsync(gameId, cancellationToken);
         if (game is null)
             return false;
         Games.Remove(game);
@@ -76,27 +99,19 @@ public class GamesCosmosContext : DbContext, IGamesRepository
         return games;
     }
 
-    public async Task<IEnumerable<Game>> GetMyGamesAsync(string playerName, CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<Game>> GetGamesByPlayerAsync(string playerName, CancellationToken cancellationToken = default)
     {
         var games = await Games
             .Where(g => g.PlayerName == playerName)
             .ToListAsync(cancellationToken);
+                return games;
+    }
+
+    public async Task<IEnumerable<Game>> GetRunningGamesByPlayerAsync(string playerName, CancellationToken cancellationToken = default)
+    {
+        var games = await Games
+            .Where(g => g.PlayerName == playerName && g.EndTime == null)
+            .ToListAsync(cancellationToken);
         return games;
-    }
-
-    public async Task<IEnumerable<Game>> GetMyRunningGamesAsync(string playerName, CancellationToken cancellationToken = default)
-    {
-        var games = await Games.Where(g => g.PlayerName == playerName && g.EndTime == null).ToListAsync(cancellationToken);
-        return games;
-    }
-
-    public Task<IEnumerable<Game>> GetGamesByPlayerAsync(string playerName, CancellationToken cancellationToken = default)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<IEnumerable<Game>> GetRunningGamesByPlayerAsync(string playerName, CancellationToken cancellationToken = default)
-    {
-        throw new NotImplementedException();
     }
 }

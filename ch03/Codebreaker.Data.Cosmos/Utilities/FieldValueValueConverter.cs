@@ -2,7 +2,7 @@
 
 using System.Text.Json;
 
-namespace Codebreaker.Data.Cosmos.Converters;
+namespace Codebreaker.Data.Cosmos.Utilities;
 
 internal class FieldValueValueConverter : ValueConverter<IDictionary<string, IEnumerable<string>>, string>
 {
