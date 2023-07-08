@@ -5,7 +5,6 @@ namespace Codebreaker.Data.SqlServer;
 public class GamesSqlServerContext(DbContextOptions<GamesSqlServerContext> options) : DbContext(options), IGamesRepository
 {
     internal const string GameId = nameof(GameId);
-    internal const string MoveId = nameof(MoveId);
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
