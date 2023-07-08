@@ -2,7 +2,7 @@
 
 public class Move(Guid moveId, int moveNumber)
 {
-    public Guid MoveId { get; private set; }
+    public Guid MoveId { get; private set; } = moveId;
 
     /// <summary>
     /// The move number for this move within the associated game.
