@@ -6,16 +6,11 @@ namespace Codebreaker.Data.Cosmos.Utilities;
 
 internal class FieldValueValueConverter : ValueConverter<IDictionary<string, IEnumerable<string>>, string>
 {
-    // an expression tree may not contain a call or invocation that uses optional arguments
-    static string GetJson(IDictionary<string, IEnumerable<string>> values)
-    {
-        return JsonSerializer.Serialize(values);
-    }
+    static string GetJson(IDictionary<string, IEnumerable<string>> values) => 
+        JsonSerializer.Serialize(values);
 
-    static IDictionary<string, IEnumerable<string>> GetDictionary(string json)
-    {
-        return JsonSerializer.Deserialize<IDictionary<string, IEnumerable<string>>>(json) ?? new Dictionary<string, IEnumerable<string>>();
-    }
+    static IDictionary<string, IEnumerable<string>> GetDictionary(string json) => 
+        JsonSerializer.Deserialize<IDictionary<string, IEnumerable<string>>>(json) ?? new Dictionary<string, IEnumerable<string>>();
 
     public FieldValueValueConverter() : base(
         convertToProviderExpression: v => GetJson(v),

@@ -18,9 +18,8 @@ public class GamesCosmosContext : DbContext, IGamesRepository
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.HasDefaultContainer("GamesV3");
-        modelBuilder.Entity<Game>().HasPartitionKey(g => g.GameId);
         var gameModel = modelBuilder.Entity<Game>();
-
+        gameModel.HasPartitionKey(g => g.GameId);
         gameModel.Property(g => g.FieldValues)
             .HasConversion(_fieldValueConverter, _fieldValueComparer);
     }
@@ -33,7 +32,7 @@ public class GamesCosmosContext : DbContext, IGamesRepository
         await SaveChangesAsync(cancellationToken);
     }
 
-    public async Task AddMoveAsync(Game game, Move move, CancellationToken cancellationToken = default)
+    public async Task AddMoveAsync(Game game, Move _, CancellationToken cancellationToken = default)
     {
         Games.Update(game);
         await SaveChangesAsync(cancellationToken);
@@ -55,27 +54,37 @@ public class GamesCosmosContext : DbContext, IGamesRepository
         return game;
     }
 
-    public async Task<IEnumerable<Game>> GetGamesByDateAsync(string gameType, DateOnly date, CancellationToken cancellationToken = default)
+    private const int MAXGAMESRETURNED = 500;
+    public async Task<IEnumerable<Game>> GetGamesAsync(GamesQuery gamesQuery, CancellationToken cancellationToken = default)
     {
-        var games = await Games
-            .Where(g => DateOnly.FromDateTime(g.StartTime) == date)
-            .ToListAsync(cancellationToken);
-        return games;
-    }
+        IQueryable<Game> query = Games
+            .TagWith(nameof(GetGamesAsync))
+            .Include(g => g.Moves);
 
-    public async Task<IEnumerable<Game>> GetGamesByPlayerAsync(string playerName, CancellationToken cancellationToken = default)
-    {
-        var games = await Games
-            .Where(g => g.PlayerName == playerName)
-            .ToListAsync(cancellationToken);
-                return games;
-    }
+        // Apply Game filters if provided.
+        if (gamesQuery.Date.HasValue)
+        {
+            DateTime begin = gamesQuery.Date.Value.ToDateTime(TimeOnly.MinValue);
+            DateTime end = begin.AddDays(1);
+            query = query.Where(g => g.StartTime < end && g.StartTime > begin);
+        }
+        if (gamesQuery.PlayerName != null)
+            query = query.Where(g => g.PlayerName == gamesQuery.PlayerName);
+        if (gamesQuery.GameType != null)
+            query = query.Where(g => g.GameType == gamesQuery.GameType);
 
-    public async Task<IEnumerable<Game>> GetRunningGamesByPlayerAsync(string playerName, CancellationToken cancellationToken = default)
-    {
-        var games = await Games
-            .Where(g => g.PlayerName == playerName && g.EndTime == null)
-            .ToListAsync(cancellationToken);
-        return games;
+        if (gamesQuery.Ended == true)
+        {
+            query = query.Where(g => g.EndTime != null)
+                .OrderBy(g => g.Duration);
+        }
+        else
+        {
+            query = query.OrderByDescending(g => g.StartTime);
+        }
+
+        query = query.Take(MAXGAMESRETURNED);
+
+        return await query.ToListAsync(cancellationToken);
     }
 }
