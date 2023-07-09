@@ -41,30 +41,9 @@ public class GamesService(IGamesRepository dataRepository) : IGamesService
         await _dataRepository.DeleteGameAsync(id, cancellationToken);
     }
 
-    public async Task<IEnumerable<Game>> GetMyGamesAsync(string playerName, CancellationToken cancellationToken = default)
-    {
-        var games = await _dataRepository.GetGamesByPlayerAsync(playerName, cancellationToken);
-        return games;
-    }
-
     public Task<Game> EndGameAsync(Guid gameId)
     {
         throw new NotImplementedException();
-    }
-
-    public async Task<IEnumerable<Game>> GetRunningGamesByPlayerAsync(string playerName, CancellationToken cancellationToken = default)
-    {
-        return await _dataRepository.GetRunningGamesByPlayerAsync(playerName, cancellationToken);
-    }
-
-    public async Task<IEnumerable<Game>> GetAllMyGamesAsync(string playerName, CancellationToken cancellationToken = default)
-    {
-        return await _dataRepository.GetGamesByPlayerAsync(playerName, cancellationToken);
-    }
-
-    public async Task<IEnumerable<Game>> GetGamesRankByDateAsync(GameType gameType, DateOnly date, CancellationToken cancellationToken = default)
-    {
-        return await _dataRepository.GetGamesByDateAsync(gameType.ToString(), date, cancellationToken);      
     }
 
     public Task<Game> EndGameAsync(Guid gameId, CancellationToken cancellationToken = default)
@@ -72,8 +51,9 @@ public class GamesService(IGamesRepository dataRepository) : IGamesService
         throw new NotImplementedException();
     }
 
-    public Task<IEnumerable<Game>> GetCompletedGamesByPlayerAsync(string playerName, CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<Game>> GetGamesAsync(GamesQuery gamesQuery, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        var games = await _dataRepository.GetGamesAsync(gamesQuery, cancellationToken);
+        return games;
     }
 }

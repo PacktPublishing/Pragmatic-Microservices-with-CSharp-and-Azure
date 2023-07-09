@@ -80,4 +80,39 @@ public class GamesSqlServerContext(DbContextOptions<GamesSqlServerContext> optio
             .ToListAsync(cancellationToken);
         return games;
     }
+
+    private const int MaxGamesReturned = 500;
+
+    public async Task<IEnumerable<Game>> GetGamesAsync(GamesQuery gamesQuery, CancellationToken cancellationToken = default)
+    {
+        IQueryable<Game> query = Games
+            .TagWith(nameof(GetGamesAsync))
+            .Include(g => g.Moves);
+
+        // Apply Game filters if provided.
+        if (gamesQuery.Date.HasValue)
+        {
+            DateTime begin = gamesQuery.Date.Value.ToDateTime(TimeOnly.MinValue);
+            DateTime end = begin.AddDays(1);
+            query = query.Where(g => g.StartTime < end && g.StartTime > begin);
+        }
+        if (gamesQuery.PlayerName != null)
+            query = query.Where(g => g.PlayerName == gamesQuery.PlayerName);
+        if (gamesQuery.GameType != null)
+            query = query.Where(g => g.GameType == gamesQuery.GameType);
+
+        if (gamesQuery.Ended == true)
+        {
+            query = query.Where(g => g.EndTime != null)
+                .OrderBy(g => g.Duration);
+        }
+        else
+        {
+            query = query.OrderByDescending(g => g.StartTime);
+        }
+
+        query = query.Take(MaxGamesReturned);
+
+        return await query.ToListAsync(cancellationToken);
+    }
 }

@@ -1,4 +1,6 @@
-﻿namespace Codebreaker.GameAPIs.Services;
+﻿using Codebreaker.GameAPIs.Data;
+
+namespace Codebreaker.GameAPIs.Services;
 
 /// <summary>
 /// Interface for Game Service
@@ -49,27 +51,10 @@ public interface IGamesService
     Task<Game> EndGameAsync(Guid gameId, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Get ranked games by date
+    /// Get a list of games as an IEnumerable of Game
     /// </summary>
-    /// <param name="gameType">type of the game</param>
-    /// <param name="date">date of the game</param>
+    /// <param name="gamesQuery">optional games query</param>
     /// <param name="cancellationToken">cancellation token</param>
-    /// <returns>list of ranked games</returns>
-    Task<IEnumerable<Game>> GetGamesRankByDateAsync(GameType gameType, DateOnly date, CancellationToken cancellationToken = default);
-
-    /// <summary>
-    /// Get last games which did not end of the player
-    /// </summary>
-    /// <param name="playerName">name of the player</param>
-    /// <param name="cancellationToken">cancellation token</param>
-    /// <returns>list of last running games by playerName</returns>
-    Task<IEnumerable<Game>> GetRunningGamesByPlayerAsync(string playerName, CancellationToken cancellationToken = default);
-
-    /// <summary>
-    /// Get all the completed games by the player
-    /// </summary>
-    /// <param name="playerName">name of the player</param>
-    /// <param name="cancellationToken">cancellation token</param>
-    /// <returns>list of all games played by playerName</returns>
-    Task<IEnumerable<Game>> GetCompletedGamesByPlayerAsync(string playerName, CancellationToken cancellationToken = default);
+    /// <returns>IEnumerable of Game</returns>
+    Task<IEnumerable<Game>> GetGamesAsync(GamesQuery gamesQuery, CancellationToken cancellationToken = default); 
 }

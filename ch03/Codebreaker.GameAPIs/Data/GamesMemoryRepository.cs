@@ -56,4 +56,9 @@ public class GamesMemoryRepository(ILogger<GamesMemoryRepository> logger) : IGam
         _games[game.GameId] = game;
         return Task.CompletedTask;
     }
+
+    public Task<IEnumerable<Game>> GetGamesAsync(GamesQuery? gamesQuery = null, CancellationToken cancellationToken = default)
+    {
+        throw new NotImplementedException();
+    }
 }

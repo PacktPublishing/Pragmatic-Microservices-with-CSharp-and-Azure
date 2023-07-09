@@ -30,7 +30,7 @@ Content-Type: {{ContentType}}
 
 ### Set a move
 
-@gameid = 92a8e98b-aff6-444f-9c6d-bd574ca196a4
+@gameid = 704602fe-8caf-4821-9a6b-d6fb3ced6b44
 
 PATCH {{Codebreaker.GameAPIs_HostAddress}}/games/{{gameid}}/moves
 Content-Type: {{ContentType}}
@@ -51,6 +51,15 @@ Content-Type: {{ContentType}}
 
 GET {{Codebreaker.GameAPIs_HostAddress}}/games/{{gameid}}
 
-### Get games per day
+### Get games per game type
 
-GET {{Codebreaker.GameAPIs_HostAddress}}/games/rank/2023-07-07?gameType=Game6x4 
+GET {{Codebreaker.GameAPIs_HostAddress}}/games/?gameType=Game6x4 
+
+### Get games per player name
+
+GET {{Codebreaker.GameAPIs_HostAddress}}/games/?playerName=test 
+
+
+### Get games per day and game type
+
+GET {{Codebreaker.GameAPIs_HostAddress}}/games/?gameType=Game6x4&date=2023-07-09

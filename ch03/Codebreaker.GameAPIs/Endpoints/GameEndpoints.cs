@@ -1,4 +1,5 @@
-﻿using Codebreaker.GameAPIs.Errors;
+﻿using Codebreaker.GameAPIs.Data;
+using Codebreaker.GameAPIs.Errors;
 using Codebreaker.GameAPIs.Exceptions;
 
 using Microsoft.AspNetCore.Http.Extensions;
@@ -77,24 +78,24 @@ public static class GameEndpoints
             return op;
         });
 
-        group.MapGet("/rank/{date}", async (
-            DateOnly date,
-            GameType gameType,
-            IGamesService gameService,
-            CancellationToken cancellationToken
-        ) =>
-        {
-            IEnumerable<Game> games = await gameService.GetGamesRankByDateAsync(gameType, date, cancellationToken);
+        //group.MapGet("/rank/{date}", async (
+        //    DateOnly date,
+        //    GameType gameType,
+        //    IGamesService gameService,
+        //    CancellationToken cancellationToken
+        //) =>
+        //{
+        //    IEnumerable<Game> games = await gameService.GetGamesRankByDateAsync(gameType, date, cancellationToken);
 
-            return TypedResults.Ok(games.ToGamesRankResponse(date, gameType));
-        })
-        .WithName("GetGames")
-        .WithSummary("Get games by the given date and type")
-        .WithOpenApi(op =>
-        {
-            op.Parameters[0].Description = "The of date to get the games from. (e.g. 2023-01-01)";
-            return op;
-        });
+        //    return TypedResults.Ok(games.ToGamesRankResponse(date, gameType));
+        //})
+        //.WithName("GetGames")
+        //.WithSummary("Get games by the given date and type")
+        //.WithOpenApi(op =>
+        //{
+        //    op.Parameters[0].Description = "The of date to get the games from. (e.g. 2023-01-01)";
+        //    return op;
+        //});
 
         // Get game by id
         group.MapGet("/{gameId:guid}", async Task<Results<Ok<Game>, NotFound>> (
@@ -120,6 +121,29 @@ public static class GameEndpoints
             return op;
         });
 
+        group.MapGet("/", async (
+            IGamesService gameService,
+            string? gameType = default,
+            string? playerName = default,
+            DateOnly? date = default,
+            bool ended = false,
+            CancellationToken cancellationToken = default) => 
+        {
+            GamesQuery query = new(gameType, playerName, date, Ended: ended);
+            var games = await gameService.GetGamesAsync(query, cancellationToken);
+            return TypedResults.Ok(games);
+        })
+        .WithName("GetGames")
+        .WithSummary("Get games based on query parameters")
+        .WithOpenApi(op =>
+        {
+            op.Parameters[0].Description = "The game type to filter by";
+            op.Parameters[1].Description = "The player name to filter by";
+            op.Parameters[2].Description = "The date to filter by";
+            op.Parameters[3].Description = "Whether to filter by ended games";
+            return op;
+        });
+
         group.MapDelete("/{gameId:guid}", async (
             Guid gameId,
             IGamesService gameService, 
@@ -138,5 +162,7 @@ public static class GameEndpoints
             op.Parameters[0].Description = "The id of the game to delete or cancel";
             return op;
         });
+
+
     }
 }
