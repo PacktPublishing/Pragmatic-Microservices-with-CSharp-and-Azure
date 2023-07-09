@@ -40,9 +40,9 @@ public interface IGame
     TimeSpan? Duration { get; set; }
 
     /// <summary>
-    /// Whether the game was won or not
+    /// Indicates whether the game has been won or not
     /// </summary>
-    bool Won { get; set; }
+    bool IsVictory { get; set; }
 
     /// <summary>
     /// The last move number that was played

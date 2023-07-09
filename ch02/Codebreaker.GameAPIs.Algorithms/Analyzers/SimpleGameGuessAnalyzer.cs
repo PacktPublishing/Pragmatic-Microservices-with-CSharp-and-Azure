@@ -62,7 +62,7 @@ public class SimpleGameGuessAnalyzer : GameGuessAnalyzer<ColorField, SimpleColor
         }
         if (allCorrect)
         {
-            _game.Won = true;
+            _game.IsVictory = true;
         }
     }
 }

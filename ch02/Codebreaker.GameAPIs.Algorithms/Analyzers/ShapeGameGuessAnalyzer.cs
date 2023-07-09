@@ -104,6 +104,6 @@ public class ShapeGameGuessAnalyzer : GameGuessAnalyzer<ShapeAndColorField, Shap
             _game.EndTime = DateTime.UtcNow;
             _game.Duration = _game.EndTime - _game.StartTime;
         }
-        _game.Won = allCorrect;
+        _game.IsVictory = allCorrect;
     }
 }
