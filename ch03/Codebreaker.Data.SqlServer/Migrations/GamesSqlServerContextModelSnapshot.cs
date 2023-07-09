@@ -51,6 +51,9 @@ namespace Codebreaker.Data.SqlServer.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
+                    b.Property<bool>("IsVictory")
+                        .HasColumnType("bit");
+
                     b.Property<int>("LastMoveNumber")
                         .HasColumnType("int");
 
@@ -70,9 +73,6 @@ namespace Codebreaker.Data.SqlServer.Migrations
 
                     b.Property<DateTime>("StartTime")
                         .HasColumnType("datetime2");
-
-                    b.Property<bool>("Won")
-                        .HasColumnType("bit");
 
                     b.HasKey("GameId");
 

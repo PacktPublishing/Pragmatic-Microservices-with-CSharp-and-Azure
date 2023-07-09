@@ -25,7 +25,7 @@ public static partial class ApiModelExtensions
                 g.PlayerName, 
                 g.StartTime, 
                 g.LastMoveNumber,
-                g.Won,
+                g.IsVictory,
                 g.Duration)).ToArray()
         };
 }

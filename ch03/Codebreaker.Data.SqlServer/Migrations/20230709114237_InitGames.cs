@@ -28,7 +28,7 @@ namespace Codebreaker.Data.SqlServer.Migrations
                     LastMoveNumber = table.Column<int>(type: "int", nullable: false),
                     NumberCodes = table.Column<int>(type: "int", nullable: false),
                     MaxMoves = table.Column<int>(type: "int", nullable: false),
-                    Won = table.Column<bool>(type: "bit", nullable: false),
+                    IsVictory = table.Column<bool>(type: "bit", nullable: false),
                     Fields = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     Codes = table.Column<string>(type: "nvarchar(120)", maxLength: 120, nullable: false)
                 },

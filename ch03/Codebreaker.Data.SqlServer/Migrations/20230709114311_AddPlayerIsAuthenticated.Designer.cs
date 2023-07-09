@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Codebreaker.Data.SqlServer.Migrations
 {
     [DbContext(typeof(GamesSqlServerContext))]
-    [Migration("20230707150804_InitGames")]
-    partial class InitGames
+    [Migration("20230709114311_AddPlayerIsAuthenticated")]
+    partial class AddPlayerIsAuthenticated
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -54,6 +54,9 @@ namespace Codebreaker.Data.SqlServer.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
+                    b.Property<bool>("IsVictory")
+                        .HasColumnType("bit");
+
                     b.Property<int>("LastMoveNumber")
                         .HasColumnType("int");
 
@@ -63,6 +66,9 @@ namespace Codebreaker.Data.SqlServer.Migrations
                     b.Property<int>("NumberCodes")
                         .HasColumnType("int");
 
+                    b.Property<bool>("PlayerIsAuthenticated")
+                        .HasColumnType("bit");
+
                     b.Property<string>("PlayerName")
                         .IsRequired()
                         .HasMaxLength(60)
@@ -70,9 +76,6 @@ namespace Codebreaker.Data.SqlServer.Migrations
 
                     b.Property<DateTime>("StartTime")
                         .HasColumnType("datetime2");
-
-                    b.Property<bool>("Won")
-                        .HasColumnType("bit");
 
                     b.HasKey("GameId");
 

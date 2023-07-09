@@ -20,7 +20,7 @@ public class Game(
     public int LastMoveNumber { get; set; } = 0;
     public int NumberCodes { get; private set; } = numberCodes;
     public int MaxMoves { get; private set; } = maxMoves;
-    public bool Won { get; set; } = false;
+    public bool IsVictory { get; set; } = false;
 
     public required IDictionary<string, IEnumerable<string>> FieldValues { get; init; }
 

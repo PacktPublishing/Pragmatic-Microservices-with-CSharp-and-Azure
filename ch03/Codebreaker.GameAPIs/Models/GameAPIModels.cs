@@ -26,7 +26,7 @@ public record SetMoveResponse(
     int MoveNumber,
     string[] Results);
 
-public record GameSummary(Guid GameId, string PlayerName, DateTime StartTime, int NumberMoves, bool Won, TimeSpan? Duration);
+public record GameSummary(Guid GameId, string PlayerName, DateTime StartTime, int NumberMoves, bool IsVictory, TimeSpan? Duration);
 
 public record GetGamesRankResponse(DateOnly Date, GameType GameType)
 {
