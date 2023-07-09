@@ -73,7 +73,7 @@ public class ColorGame8x5AlgorithmTests
             GameType = GameTypes.Game8x5,
             NumberCodes = 5,
             MaxMoves = 14,
-            Won = false,
+            IsVictory = false,
             FieldValues = new Dictionary<string, IEnumerable<string>>()
             {
                 [FieldCategories.Colors] = TestData8x5.Colors8.ToList()

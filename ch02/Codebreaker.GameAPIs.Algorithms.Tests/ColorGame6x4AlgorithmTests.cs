@@ -73,7 +73,7 @@ public class ColorGame6x4AlgorithmTests
             GameType = GameTypes.Game6x4,
             NumberCodes = 4,
             MaxMoves = 12,
-            Won = false,
+            IsVictory = false,
             FieldValues = new Dictionary<string, IEnumerable<string>>()
             {
                 [FieldCategories.Colors ] = TestData6x4.Colors6.ToList()

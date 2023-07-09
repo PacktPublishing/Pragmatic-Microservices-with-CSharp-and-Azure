@@ -8,7 +8,7 @@ public class MockColorGame : IGame
     public int NumberCodes { get; init; }
     public int MaxMoves { get; init; }
     public DateTime? EndTime { get; set; }
-    public bool Won { get; set; }
+    public bool IsVictory { get; set; }
 
     public required IDictionary<string, IEnumerable<string>> FieldValues { get; init; }
     public required string[] Codes { get; init; }

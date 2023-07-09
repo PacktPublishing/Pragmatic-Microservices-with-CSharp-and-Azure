@@ -75,7 +75,7 @@ public class ShapeGame5x5x4AlgorithmTests
             GameType = GameTypes.Game5x5x4,
             NumberCodes = 4,
             MaxMoves = 14,
-            Won = false,
+            IsVictory = false,
             FieldValues = new Dictionary<string, IEnumerable<string>>()
             {
                 [FieldCategories.Colors] = TestData5x5x4.Colors5.ToList(),
