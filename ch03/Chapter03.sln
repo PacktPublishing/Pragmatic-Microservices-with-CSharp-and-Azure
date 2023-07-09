@@ -1,0 +1,49 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.7.33711.374
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Codebreaker.GameAPIs", "Codebreaker.GameAPIs\Codebreaker.GameAPIs.csproj", "{1672A868-5C43-4B9C-8AA2-28CEC0D284EE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Codebreaker.GameAPIs.Models", "Codebreaker.GameAPIs.Models\Codebreaker.GameAPIs.Models.csproj", "{85E24212-96A8-4EF7-9E28-64092658FDD9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Codebreaker.Data.Cosmos", "Codebreaker.Data.Cosmos\Codebreaker.Data.Cosmos.csproj", "{E2B78FBC-0DC0-442C-B7D9-9CF75A444FD2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Codebreaker.Data.SqlServer", "Codebreaker.Data.SqlServer\Codebreaker.Data.SqlServer.csproj", "{126842C7-7C02-4DBB-911A-BD8EFDA4CE33}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Codebreaker.Data.SqlServer.Tests", "Codebreaker.Data.SqlServer.Tests\Codebreaker.Data.SqlServer.Tests.csproj", "{FF82EB8F-CA9F-4593-8AED-4432ECA9F16A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1672A868-5C43-4B9C-8AA2-28CEC0D284EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1672A868-5C43-4B9C-8AA2-28CEC0D284EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1672A868-5C43-4B9C-8AA2-28CEC0D284EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1672A868-5C43-4B9C-8AA2-28CEC0D284EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{85E24212-96A8-4EF7-9E28-64092658FDD9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{85E24212-96A8-4EF7-9E28-64092658FDD9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{85E24212-96A8-4EF7-9E28-64092658FDD9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{85E24212-96A8-4EF7-9E28-64092658FDD9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E2B78FBC-0DC0-442C-B7D9-9CF75A444FD2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E2B78FBC-0DC0-442C-B7D9-9CF75A444FD2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E2B78FBC-0DC0-442C-B7D9-9CF75A444FD2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E2B78FBC-0DC0-442C-B7D9-9CF75A444FD2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{126842C7-7C02-4DBB-911A-BD8EFDA4CE33}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{126842C7-7C02-4DBB-911A-BD8EFDA4CE33}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{126842C7-7C02-4DBB-911A-BD8EFDA4CE33}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{126842C7-7C02-4DBB-911A-BD8EFDA4CE33}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FF82EB8F-CA9F-4593-8AED-4432ECA9F16A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF82EB8F-CA9F-4593-8AED-4432ECA9F16A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF82EB8F-CA9F-4593-8AED-4432ECA9F16A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF82EB8F-CA9F-4593-8AED-4432ECA9F16A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6C274370-9CFA-4F41-8C71-A987FB4BB92F}
+	EndGlobalSection
+EndGlobal
