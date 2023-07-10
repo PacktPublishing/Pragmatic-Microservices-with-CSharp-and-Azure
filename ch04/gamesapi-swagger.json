@@ -1,555 +1,560 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "Codebreaker Games API",
-    "description": "An ASP.NET Core minimal API to play Codebreaker games",
-    "termsOfService": "https://www.cninnovation.com/terms",
-    "contact": {
-      "name": "Christian Nagel",
-      "url": "https://csharp.christiannagel.com"
-    },
-    "license": {
-      "name": "License API Usage",
-      "url": "https://www.cninnovation.com/apiusage"
-    },
-    "version": "v3"
+      "title": "Codebreaker Games API",
+      "description": "An ASP.NET Core minimal API to play Codebreaker games",
+      "termsOfService": "https://www.cninnovation.com/terms",
+      "contact": {
+          "name": "Christian Nagel",
+          "url": "https://csharp.christiannagel.com"
+      },
+      "license": {
+          "name": "License API Usage",
+          "url": "https://www.cninnovation.com/apiusage"
+      },
+      "version": "v3"
   },
   "paths": {
-    "/games": {
-      "post": {
-        "tags": [
-          "Games API"
-        ],
-        "summary": "Creates and starts a game",
-        "operationId": "CreateGame",
-        "requestBody": {
-          "description": "The game type and the player name of the game to create",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateGameRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "201": {
-            "description": "Created",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreateGameResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GameError"
-                }
-              }
-            }
-          }
-        }
-      },
-      "get": {
-        "tags": [
-          "Games API"
-        ],
-        "summary": "Get games based on query parameters",
-        "operationId": "GetGames",
-        "parameters": [
-          {
-            "name": "gameType",
-            "in": "query",
-            "description": "The game type to filter by",
-            "style": "form",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "playerName",
-            "in": "query",
-            "description": "The player name to filter by",
-            "style": "form",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "date",
-            "in": "query",
-            "description": "The date to filter by",
-            "style": "form",
-            "schema": {
-              "type": "string",
-              "format": "date"
-            }
-          },
-          {
-            "name": "ended",
-            "in": "query",
-            "description": "Whether to filter by ended games",
-            "style": "form",
-            "schema": {
-              "type": "boolean",
-              "default": false
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Game"
+      "/games": {
+          "post": {
+              "tags": [
+                  "Games API"
+              ],
+              "summary": "Creates and starts a game",
+              "operationId": "CreateGame",
+              "requestBody": {
+                  "description": "The game type and the player name of the game to create",
+                  "content": {
+                      "application/json": {
+                          "schema": {
+                              "$ref": "#/components/schemas/CreateGameRequest"
+                          }
+                      }
+                  },
+                  "required": true
+              },
+              "responses": {
+                  "201": {
+                      "description": "Created",
+                      "content": {
+                          "application/json": {
+                              "schema": {
+                                  "$ref": "#/components/schemas/CreateGameResponse"
+                              }
+                          }
+                      }
+                  },
+                  "400": {
+                      "description": "Bad Request",
+                      "content": {
+                          "application/json": {
+                              "schema": {
+                                  "$ref": "#/components/schemas/GameError"
+                              }
+                          }
+                      }
                   }
-                }
               }
-            }
-          }
-        }
-      }
-    },
-    "/games/{gameId}/moves": {
-      "patch": {
-        "tags": [
-          "Games API"
-        ],
-        "summary": "Sets a move for the game with the given id",
-        "operationId": "SetMove",
-        "parameters": [
-          {
-            "name": "gameId",
-            "in": "path",
-            "description": "The id of the game to create a move for",
-            "required": true,
-            "style": "simple",
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "The data for creating the move",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/SetMoveRequest"
-              }
-            }
           },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SetMoveResponse"
-                }
+          "get": {
+              "tags": [
+                  "Games API"
+              ],
+              "summary": "Get games based on query parameters",
+              "operationId": "GetGames",
+              "parameters": [
+                  {
+                      "name": "gameType",
+                      "in": "query",
+                      "description": "The game type to filter by",
+                      "style": "form",
+                      "schema": {
+                          "type": "string"
+                      }
+                  },
+                  {
+                      "name": "playerName",
+                      "in": "query",
+                      "description": "The player name to filter by",
+                      "style": "form",
+                      "schema": {
+                          "type": "string"
+                      }
+                  },
+                  {
+                      "name": "date",
+                      "in": "query",
+                      "description": "The date to filter by",
+                      "style": "form",
+                      "schema": {
+                          "type": "string",
+                          "format": "date"
+                      }
+                  },
+                  {
+                      "name": "ended",
+                      "in": "query",
+                      "description": "Whether to filter by ended games",
+                      "style": "form",
+                      "schema": {
+                          "type": "boolean",
+                          "default": false
+                      }
+                  }
+              ],
+              "responses": {
+                  "200": {
+                      "description": "OK",
+                      "content": {
+                          "application/json": {
+                              "schema": {
+                                  "type": "array",
+                                  "items": {
+                                      "$ref": "#/components/schemas/Game"
+                                  }
+                              }
+                          }
+                      }
+                  }
               }
-            }
-          },
-          "404": {
-            "description": "Not Found"
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GameError"
-                }
-              }
-            }
           }
-        }
-      }
-    },
-    "/games/{gameId}": {
-      "get": {
-        "tags": [
-          "Games API"
-        ],
-        "summary": "Gets a game by the given id",
-        "operationId": "GetGame",
-        "parameters": [
-          {
-            "name": "gameId",
-            "in": "path",
-            "description": "The id of the game to get",
-            "required": true,
-            "style": "simple",
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Game"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found"
-          }
-        }
       },
-      "delete": {
-        "tags": [
-          "Games API"
-        ],
-        "summary": "Deletes the game with the given id",
-        "description": "Deletes a game from the database",
-        "operationId": "DeleteGame",
-        "parameters": [
-          {
-            "name": "gameId",
-            "in": "path",
-            "description": "The id of the game to delete or cancel",
-            "required": true,
-            "style": "simple",
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
+      "/games/{gameId}/moves": {
+          "patch": {
+              "tags": [
+                  "Games API"
+              ],
+              "summary": "Sets a move for the game with the given id",
+              "operationId": "SetMove",
+              "parameters": [
+                  {
+                      "name": "gameId",
+                      "in": "path",
+                      "description": "The id of the game to create a move for",
+                      "required": true,
+                      "style": "simple",
+                      "schema": {
+                          "type": "string",
+                          "format": "uuid"
+                      }
+                  }
+              ],
+              "requestBody": {
+                  "description": "The data for creating the move",
+                  "content": {
+                      "application/json": {
+                          "schema": {
+                              "$ref": "#/components/schemas/SetMoveRequest"
+                          }
+                      }
+                  },
+                  "required": true
+              },
+              "responses": {
+                  "200": {
+                      "description": "OK",
+                      "content": {
+                          "application/json": {
+                              "schema": {
+                                  "$ref": "#/components/schemas/SetMoveResponse"
+                              }
+                          }
+                      }
+                  },
+                  "400": {
+                      "description": "Bad Request",
+                      "content": {
+                          "application/json": {
+                              "schema": {
+                                  "$ref": "#/components/schemas/GameError"
+                              }
+                          }
+                      }
+                  },
+                  "404": {
+                      "description": "Not Found"
+                  }
+              }
           }
-        ],
-        "responses": {
-          "204": {
-            "description": "No Content"
+      },
+      "/games/{gameId}": {
+          "get": {
+              "tags": [
+                  "Games API"
+              ],
+              "summary": "Gets a game by the given id",
+              "operationId": "GetGame",
+              "parameters": [
+                  {
+                      "name": "gameId",
+                      "in": "path",
+                      "description": "The id of the game to get",
+                      "required": true,
+                      "style": "simple",
+                      "schema": {
+                          "type": "string",
+                          "format": "uuid"
+                      }
+                  }
+              ],
+              "responses": {
+                  "200": {
+                      "description": "OK",
+                      "content": {
+                          "application/json": {
+                              "schema": {
+                                  "$ref": "#/components/schemas/Game"
+                              }
+                          }
+                      }
+                  },
+                  "404": {
+                      "description": "Not Found"
+                  }
+              }
+          },
+          "delete": {
+              "tags": [
+                  "Games API"
+              ],
+              "summary": "Deletes the game with the given id",
+              "description": "Deletes a game from the database",
+              "operationId": "DeleteGame",
+              "parameters": [
+                  {
+                      "name": "gameId",
+                      "in": "path",
+                      "description": "The id of the game to delete or cancel",
+                      "required": true,
+                      "style": "simple",
+                      "schema": {
+                          "type": "string",
+                          "format": "uuid"
+                      }
+                  }
+              ],
+              "responses": {
+                  "204": {
+                      "description": "No Content"
+                  }
+              }
           }
-        }
       }
-    }
   },
   "components": {
-    "schemas": {
-      "CreateGameRequest": {
-        "type": "object",
-        "properties": {
-          "gameType": {
-            "$ref": "#/components/schemas/GameType"
+      "schemas": {
+          "CreateGameRequest": {
+              "type": "object",
+              "properties": {
+                  "gameType": {
+                      "$ref": "#/components/schemas/GameType"
+                  },
+                  "playerName": {
+                      "type": "string",
+                      "nullable": true
+                  }
+              },
+              "additionalProperties": false
           },
-          "playerName": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "CreateGameResponse": {
-        "type": "object",
-        "properties": {
-          "gameId": {
-            "type": "string",
-            "format": "uuid"
+          "CreateGameResponse": {
+              "required": [
+                  "fieldValues",
+                  "gameId",
+                  "gameType",
+                  "playerName"
+              ],
+              "type": "object",
+              "properties": {
+                  "gameId": {
+                      "type": "string",
+                      "format": "uuid"
+                  },
+                  "gameType": {
+                      "$ref": "#/components/schemas/GameType"
+                  },
+                  "playerName": {
+                      "minLength": 1,
+                      "type": "string"
+                  },
+                  "fieldValues": {
+                      "type": "object",
+                      "additionalProperties": {
+                          "type": "array",
+                          "items": {
+                              "type": "string"
+                          }
+                      }
+                  }
+              },
+              "additionalProperties": false
           },
-          "gameType": {
-            "$ref": "#/components/schemas/GameType"
+          "Game": {
+              "type": "object",
+              "properties": {
+                  "gameId": {
+                      "type": "string",
+                      "format": "uuid"
+                  },
+                  "gameType": {
+                      "type": "string",
+                      "nullable": true
+                  },
+                  "playerName": {
+                      "type": "string",
+                      "nullable": true
+                  },
+                  "playerIsAuthenticated": {
+                      "type": "boolean"
+                  },
+                  "startTime": {
+                      "type": "string",
+                      "format": "date-time"
+                  },
+                  "endTime": {
+                      "type": "string",
+                      "format": "date-time",
+                      "nullable": true
+                  },
+                  "duration": {
+                      "$ref": "#/components/schemas/TimeSpan"
+                  },
+                  "lastMoveNumber": {
+                      "type": "integer",
+                      "format": "int32"
+                  },
+                  "numberCodes": {
+                      "type": "integer",
+                      "format": "int32"
+                  },
+                  "maxMoves": {
+                      "type": "integer",
+                      "format": "int32"
+                  },
+                  "isVictory": {
+                      "type": "boolean"
+                  },
+                  "fieldValues": {
+                      "type": "object",
+                      "additionalProperties": {
+                          "type": "array",
+                          "items": {
+                              "type": "string"
+                          }
+                      },
+                      "nullable": true
+                  },
+                  "codes": {
+                      "type": "array",
+                      "items": {
+                          "type": "string"
+                      },
+                      "nullable": true
+                  },
+                  "moves": {
+                      "type": "array",
+                      "items": {
+                          "$ref": "#/components/schemas/Move"
+                      },
+                      "nullable": true,
+                      "readOnly": true
+                  }
+              },
+              "additionalProperties": false
           },
-          "playerName": {
-            "type": "string",
-            "nullable": true
+          "GameError": {
+              "type": "object",
+              "properties": {
+                  "code": {
+                      "type": "string",
+                      "nullable": true
+                  },
+                  "message": {
+                      "type": "string",
+                      "nullable": true
+                  },
+                  "target": {
+                      "type": "string",
+                      "nullable": true
+                  },
+                  "details": {
+                      "type": "array",
+                      "items": {
+                          "type": "string"
+                      },
+                      "nullable": true
+                  }
+              },
+              "additionalProperties": false
           },
-          "fieldValues": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            },
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "Game": {
-        "type": "object",
-        "properties": {
-          "gameId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "gameType": {
-            "type": "string",
-            "nullable": true
-          },
-          "playerName": {
-            "type": "string",
-            "nullable": true
-          },
-          "playerIsAuthenticated": {
-            "type": "boolean"
-          },
-          "startTime": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "endTime": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "duration": {
-            "$ref": "#/components/schemas/TimeSpan"
-          },
-          "lastMoveNumber": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "numberCodes": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "maxMoves": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "isVictory": {
-            "type": "boolean"
-          },
-          "fieldValues": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            },
-            "nullable": true
-          },
-          "codes": {
-            "type": "array",
-            "items": {
+          "GameType": {
+              "enum": [
+                  "Game6x4",
+                  "Game6x4Mini",
+                  "Game8x5",
+                  "Game5x5x4"
+              ],
               "type": "string"
-            },
-            "nullable": true
           },
-          "moves": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Move"
-            },
-            "nullable": true,
-            "readOnly": true
+          "Move": {
+              "type": "object",
+              "properties": {
+                  "moveId": {
+                      "type": "string",
+                      "format": "uuid"
+                  },
+                  "moveNumber": {
+                      "type": "integer",
+                      "format": "int32"
+                  },
+                  "guessPegs": {
+                      "type": "array",
+                      "items": {
+                          "type": "string"
+                      },
+                      "nullable": true
+                  },
+                  "keyPegs": {
+                      "type": "array",
+                      "items": {
+                          "type": "string"
+                      },
+                      "nullable": true
+                  }
+              },
+              "additionalProperties": false
+          },
+          "SetMoveRequest": {
+              "type": "object",
+              "properties": {
+                  "gameId": {
+                      "type": "string",
+                      "format": "uuid"
+                  },
+                  "gameType": {
+                      "$ref": "#/components/schemas/GameType"
+                  },
+                  "playerName": {
+                      "type": "string",
+                      "nullable": true
+                  },
+                  "moveNumber": {
+                      "type": "integer",
+                      "format": "int32"
+                  },
+                  "guessPegs": {
+                      "type": "array",
+                      "items": {
+                          "type": "string"
+                      },
+                      "nullable": true
+                  }
+              },
+              "additionalProperties": false
+          },
+          "SetMoveResponse": {
+              "type": "object",
+              "properties": {
+                  "gameId": {
+                      "type": "string",
+                      "format": "uuid"
+                  },
+                  "gameType": {
+                      "$ref": "#/components/schemas/GameType"
+                  },
+                  "moveNumber": {
+                      "type": "integer",
+                      "format": "int32"
+                  },
+                  "results": {
+                      "type": "array",
+                      "items": {
+                          "type": "string"
+                      },
+                      "nullable": true
+                  }
+              },
+              "additionalProperties": false
+          },
+          "TimeSpan": {
+              "type": "object",
+              "properties": {
+                  "ticks": {
+                      "type": "integer",
+                      "format": "int64"
+                  },
+                  "days": {
+                      "type": "integer",
+                      "format": "int32",
+                      "readOnly": true
+                  },
+                  "hours": {
+                      "type": "integer",
+                      "format": "int32",
+                      "readOnly": true
+                  },
+                  "milliseconds": {
+                      "type": "integer",
+                      "format": "int32",
+                      "readOnly": true
+                  },
+                  "microseconds": {
+                      "type": "integer",
+                      "format": "int32",
+                      "readOnly": true
+                  },
+                  "nanoseconds": {
+                      "type": "integer",
+                      "format": "int32",
+                      "readOnly": true
+                  },
+                  "minutes": {
+                      "type": "integer",
+                      "format": "int32",
+                      "readOnly": true
+                  },
+                  "seconds": {
+                      "type": "integer",
+                      "format": "int32",
+                      "readOnly": true
+                  },
+                  "totalDays": {
+                      "type": "number",
+                      "format": "double",
+                      "readOnly": true
+                  },
+                  "totalHours": {
+                      "type": "number",
+                      "format": "double",
+                      "readOnly": true
+                  },
+                  "totalMilliseconds": {
+                      "type": "number",
+                      "format": "double",
+                      "readOnly": true
+                  },
+                  "totalMicroseconds": {
+                      "type": "number",
+                      "format": "double",
+                      "readOnly": true
+                  },
+                  "totalNanoseconds": {
+                      "type": "number",
+                      "format": "double",
+                      "readOnly": true
+                  },
+                  "totalMinutes": {
+                      "type": "number",
+                      "format": "double",
+                      "readOnly": true
+                  },
+                  "totalSeconds": {
+                      "type": "number",
+                      "format": "double",
+                      "readOnly": true
+                  }
+              },
+              "additionalProperties": false
           }
-        },
-        "additionalProperties": false
-      },
-      "GameError": {
-        "type": "object",
-        "properties": {
-          "code": {
-            "type": "string",
-            "nullable": true
-          },
-          "message": {
-            "type": "string",
-            "nullable": true
-          },
-          "target": {
-            "type": "string",
-            "nullable": true
-          },
-          "details": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "GameType": {
-        "enum": [
-          "Game6x4",
-          "Game6x4Mini",
-          "Game8x5",
-          "Game5x5x4"
-        ],
-        "type": "string"
-      },
-      "Move": {
-        "type": "object",
-        "properties": {
-          "moveId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "moveNumber": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "guessPegs": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "nullable": true
-          },
-          "keyPegs": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "SetMoveRequest": {
-        "type": "object",
-        "properties": {
-          "gameId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "gameType": {
-            "$ref": "#/components/schemas/GameType"
-          },
-          "playerName": {
-            "type": "string",
-            "nullable": true
-          },
-          "moveNumber": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "guessPegs": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "SetMoveResponse": {
-        "type": "object",
-        "properties": {
-          "gameId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "gameType": {
-            "$ref": "#/components/schemas/GameType"
-          },
-          "moveNumber": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "results": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "TimeSpan": {
-        "type": "object",
-        "properties": {
-          "ticks": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "days": {
-            "type": "integer",
-            "format": "int32",
-            "readOnly": true
-          },
-          "hours": {
-            "type": "integer",
-            "format": "int32",
-            "readOnly": true
-          },
-          "milliseconds": {
-            "type": "integer",
-            "format": "int32",
-            "readOnly": true
-          },
-          "microseconds": {
-            "type": "integer",
-            "format": "int32",
-            "readOnly": true
-          },
-          "nanoseconds": {
-            "type": "integer",
-            "format": "int32",
-            "readOnly": true
-          },
-          "minutes": {
-            "type": "integer",
-            "format": "int32",
-            "readOnly": true
-          },
-          "seconds": {
-            "type": "integer",
-            "format": "int32",
-            "readOnly": true
-          },
-          "totalDays": {
-            "type": "number",
-            "format": "double",
-            "readOnly": true
-          },
-          "totalHours": {
-            "type": "number",
-            "format": "double",
-            "readOnly": true
-          },
-          "totalMilliseconds": {
-            "type": "number",
-            "format": "double",
-            "readOnly": true
-          },
-          "totalMicroseconds": {
-            "type": "number",
-            "format": "double",
-            "readOnly": true
-          },
-          "totalNanoseconds": {
-            "type": "number",
-            "format": "double",
-            "readOnly": true
-          },
-          "totalMinutes": {
-            "type": "number",
-            "format": "double",
-            "readOnly": true
-          },
-          "totalSeconds": {
-            "type": "number",
-            "format": "double",
-            "readOnly": true
-          }
-        },
-        "additionalProperties": false
       }
-    }
   }
 }
