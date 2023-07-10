@@ -1,4 +1,7 @@
-﻿namespace Codebreaker.GameAPIs.Models;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+
+namespace Codebreaker.GameAPIs.Models;
 
 public enum GameType
 {
@@ -8,27 +11,46 @@ public enum GameType
     Game5x5x4
 }
 
-public record class CreateGameRequest(GameType GameType, string PlayerName);
+public record class CreateGameRequest(
+    [property: Required] GameType GameType, 
+    [property: Required] string PlayerName);
 
-public record class CreateGameResponse(Guid GameId, GameType GameType, string PlayerName)
+public record class CreateGameResponse(
+    [property: Required] Guid GameId, 
+    [property: Required] GameType GameType, 
+    [property: Required] string PlayerName)
 {
+    [Required] 
     public required IDictionary<string, IEnumerable<string>> FieldValues { get; init; }
 }
 
-public record class SetMoveRequest(Guid GameId, GameType GameType, string PlayerName, int MoveNumber)
+public record class SetMoveRequest(
+    [property: Required] Guid GameId, 
+    [property: Required] GameType GameType, 
+    [property: Required] string PlayerName, 
+    [property: Required] int MoveNumber)
 {
+    [Required]
     public required string[] GuessPegs { get; set; }
 }
 
 public record SetMoveResponse(
-    Guid GameId,
-    GameType GameType,
-    int MoveNumber,
-    string[] Results);
+    [property: Required] Guid GameId,
+    [property: Required] GameType GameType,
+    [property: Required] int MoveNumber,
+    [property: Required] string[] Results);
 
-public record GameSummary(Guid GameId, string PlayerName, DateTime StartTime, int NumberMoves, bool IsVictory, TimeSpan? Duration);
+public record GameSummary(
+    [property: Required] Guid GameId,
+    [property: Required] string PlayerName,
+    [property: Required] DateTime StartTime,
+    [property: Required] int NumberMoves,
+    [property: Required] bool IsVictory,
+    TimeSpan? Duration);
 
-public record GetGamesRankResponse(DateOnly Date, GameType GameType)
+public record GetGamesRankResponse(
+    [property: Required] DateOnly Date, 
+    [property: Required] GameType GameType)
 {
     public required IEnumerable<GameSummary> Games { get; set; }
 }
