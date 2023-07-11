@@ -78,25 +78,6 @@ public static class GameEndpoints
             return op;
         });
 
-        //group.MapGet("/rank/{date}", async (
-        //    DateOnly date,
-        //    GameType gameType,
-        //    IGamesService gameService,
-        //    CancellationToken cancellationToken
-        //) =>
-        //{
-        //    IEnumerable<Game> games = await gameService.GetGamesRankByDateAsync(gameType, date, cancellationToken);
-
-        //    return TypedResults.Ok(games.ToGamesRankResponse(date, gameType));
-        //})
-        //.WithName("GetGames")
-        //.WithSummary("Get games by the given date and type")
-        //.WithOpenApi(op =>
-        //{
-        //    op.Parameters[0].Description = "The of date to get the games from. (e.g. 2023-01-01)";
-        //    return op;
-        //});
-
         // Get game by id
         group.MapGet("/{gameId:guid}", async Task<Results<Ok<Game>, NotFound>> (
             Guid gameId,
@@ -162,7 +143,5 @@ public static class GameEndpoints
             op.Parameters[0].Description = "The id of the game to delete or cancel";
             return op;
         });
-
-
     }
 }
