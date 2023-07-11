@@ -24,6 +24,8 @@ public record SetMoveResponse(
     Guid GameId,
     GameType GameType,
     int MoveNumber,
+    bool Ended,
+    bool IsVictory,
     string[] Results);
 
 public record GameSummary(Guid GameId, string PlayerName, DateTime StartTime, int NumberMoves, bool IsVictory, TimeSpan? Duration);
