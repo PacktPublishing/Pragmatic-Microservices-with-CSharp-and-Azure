@@ -15,7 +15,7 @@ public static partial class ApiModelExtensions
     }
 
     public static SetMoveResponse AsSetMoveResponse(this Game game, string[] result) =>
-        new(game.GameId, Enum.Parse<GameType>(game.GameType), game.LastMoveNumber, result);
+        new(game.GameId, Enum.Parse<GameType>(game.GameType), game.LastMoveNumber, game.Ended(), game.IsVictory, result);
 
     public static GetGamesRankResponse ToGamesRankResponse(this IEnumerable<Game> games, DateOnly date, GameType gameType) =>
         new(date, gameType)
