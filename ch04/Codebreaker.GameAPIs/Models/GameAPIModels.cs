@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Codebreaker.GameAPIs.Models;
 
@@ -13,12 +12,12 @@ public enum GameType
 
 public record class CreateGameRequest(
     [property: Required] GameType GameType, 
-    [property: Required] string PlayerName);
+    [property: Required, MinLength(4), MaxLength(60)] string PlayerName);
 
 public record class CreateGameResponse(
     [property: Required] Guid GameId, 
     [property: Required] GameType GameType, 
-    [property: Required] string PlayerName)
+    [property: Required, MinLength(4), MaxLength(60)] string PlayerName)
 {
     [Required] 
     public required IDictionary<string, IEnumerable<string>> FieldValues { get; init; }
@@ -27,7 +26,7 @@ public record class CreateGameResponse(
 public record class SetMoveRequest(
     [property: Required] Guid GameId, 
     [property: Required] GameType GameType, 
-    [property: Required] string PlayerName, 
+    [property: Required, MinLength(4), MaxLength(60)] string PlayerName, 
     [property: Required] int MoveNumber)
 {
     [Required]
@@ -38,11 +37,13 @@ public record SetMoveResponse(
     [property: Required] Guid GameId,
     [property: Required] GameType GameType,
     [property: Required] int MoveNumber,
+    [property: Required] bool Ended,
+    [property: Required] bool IsVictory,
     [property: Required] string[] Results);
 
 public record GameSummary(
     [property: Required] Guid GameId,
-    [property: Required] string PlayerName,
+    [property: Required, MinLength(4), MaxLength(60)] string PlayerName,
     [property: Required] DateTime StartTime,
     [property: Required] int NumberMoves,
     [property: Required] bool IsVictory,
