@@ -17,7 +17,9 @@ public record class CreateGameRequest(
 public record class CreateGameResponse(
     [property: Required] Guid GameId, 
     [property: Required] GameType GameType, 
-    [property: Required, MinLength(4), MaxLength(60)] string PlayerName)
+    [property: Required, MinLength(4), MaxLength(60)] string PlayerName,
+    [property: Required] int NumberCodes,
+    [property: Required] int MaxMoves)
 {
     [Required] 
     public required IDictionary<string, IEnumerable<string>> FieldValues { get; init; }

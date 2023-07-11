@@ -8,7 +8,7 @@ public static partial class ApiModelExtensions
 
     public static CreateGameResponse AsCreateGameResponse(this Game game)
     {       
-        return new CreateGameResponse(game.GameId, Enum.Parse<GameType>(game.GameType), game.PlayerName)
+        return new CreateGameResponse(game.GameId, Enum.Parse<GameType>(game.GameType), game.PlayerName, game.NumberCodes, game.MaxMoves)
         {
             FieldValues = game.FieldValues
         };
