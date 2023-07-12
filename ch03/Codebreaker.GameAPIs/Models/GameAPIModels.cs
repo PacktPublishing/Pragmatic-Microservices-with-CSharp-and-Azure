@@ -1,5 +1,8 @@
-﻿namespace Codebreaker.GameAPIs.Models;
+﻿using System.Text.Json.Serialization;
 
+namespace Codebreaker.GameAPIs.Models;
+
+[JsonConverter(typeof(JsonStringEnumConverter<GameType>))]
 public enum GameType
 {
     Game6x4,

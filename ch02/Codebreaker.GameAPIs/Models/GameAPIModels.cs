@@ -1,9 +1,8 @@
 ﻿using System.Text.Json.Serialization;
 
-using Swashbuckle.AspNetCore.Annotations;
-
 namespace Codebreaker.GameAPIs.Models;
 
+[JsonConverter(typeof(JsonStringEnumConverter<GameType>))]
 public enum GameType
 {
     Game6x4,
