@@ -73,7 +73,7 @@ public static class GamesFactory
             GameTypes.Game6x4 => Create6x4Game(),
             GameTypes.Game8x5 => Create8x5Game(),
             GameTypes.Game5x5x4 => Create5x5x4Game(),
-            _ => throw new InvalidGameException("Invalid game type") { HResult = 4000 }
+            _ => throw new CodebreakerException("Invalid game type") { Code = CodebreakerExceptionCodes.InvalidGameType }
         };
     }
 
@@ -131,7 +131,7 @@ public static class GamesFactory
             GameTypes.Game8x5 => GetColorGameGuessAnalyzerResult(),
             GameTypes.Game6x4Mini => GetSimpleGameGuessAnalyzerResult(),
             GameTypes.Game5x5x4 => GetShapeGameGuessAnalyzerResult(), 
-            _ => throw new NotImplementedException()
+            _ => throw new CodebreakerException("Invalid game type") { Code = CodebreakerExceptionCodes.InvalidGameType }
         };
 
         game.Moves.Add(move);

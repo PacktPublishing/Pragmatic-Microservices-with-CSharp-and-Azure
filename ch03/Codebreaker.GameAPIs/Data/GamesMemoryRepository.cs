@@ -1,5 +1,7 @@
 ﻿using System.Collections.Concurrent;
 
+using Codebreaker.GameAPIs.Exceptions;
+
 namespace Codebreaker.GameAPIs.Data.InMemory;
 public class GamesMemoryRepository(ILogger<GamesMemoryRepository> logger) : IGamesRepository
 {
@@ -44,7 +46,7 @@ public class GamesMemoryRepository(ILogger<GamesMemoryRepository> logger) : IGam
     }
 
     public Task<IEnumerable<Game>> GetRunningGamesByPlayerAsync(string playerName, CancellationToken cancellationToken = default)
-    {     
+    {
         var games = _games.Values
             .Where(g => g.PlayerName == playerName && g.StartTime >= DateTime.Today.AddDays(-1) && !g.Ended())
             .ToArray();
@@ -59,6 +61,60 @@ public class GamesMemoryRepository(ILogger<GamesMemoryRepository> logger) : IGam
 
     public Task<IEnumerable<Game>> GetGamesAsync(GamesQuery? gamesQuery = null, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        IEnumerable<Game> filteredGames = _games.Values;
+
+        if (gamesQuery != null)
+        {
+            if (!string.IsNullOrEmpty(gamesQuery.GameType))
+            {
+                filteredGames = filteredGames.Where(g => g.GameType == gamesQuery.GameType);
+            }
+
+            if (gamesQuery.Date != null)
+            {
+                filteredGames = filteredGames.Where(g => DateOnly.FromDateTime(g.StartTime.Date) == gamesQuery.Date);
+            }
+
+            if (!string.IsNullOrEmpty(gamesQuery.PlayerName))
+            {
+                filteredGames = filteredGames
+                    .Where(g => g.PlayerName == gamesQuery.PlayerName);
+            }
+
+            if (gamesQuery.RunningOnly)
+            {
+                filteredGames = filteredGames
+                    .Where(g => !g.Ended());
+            }
+
+            if (gamesQuery.Ended)
+            {
+                filteredGames = filteredGames
+                    .Where(g => g.Ended())
+                    .OrderBy(g => g.Duration);
+            }
+            else
+            {
+                filteredGames = filteredGames
+                    .OrderByDescending(g => g.StartTime);
+            }
+
+        }
+
+        return Task.FromResult(filteredGames.AsEnumerable());
+    }
+
+    public Task<Game> UpdateGameAsync(Game game, CancellationToken cancellationToken = default)
+    {
+        _games.TryGetValue(game.GameId, out var existingGame);
+        CodebreakerException.ThrowIfNull(existingGame);
+
+        if (_games.TryUpdate(game.GameId, game, existingGame))
+        {
+            return Task.FromResult(game);
+        }
+
+        CodebreakerException.ThrowUpdateFailed(game);
+        throw new Exception("unreachable");
     }
 }
