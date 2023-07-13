@@ -100,8 +100,10 @@ public class GamesSqlServerContext(DbContextOptions<GamesSqlServerContext> optio
             query = query.Where(g => g.PlayerName == gamesQuery.PlayerName);
         if (gamesQuery.GameType != null)
             query = query.Where(g => g.GameType == gamesQuery.GameType);
+        if (gamesQuery.RunningOnly)
+            query = query.Where(g => g.EndTime == null);
 
-        if (gamesQuery.Ended == true)
+        if (gamesQuery.Ended)
         {
             query = query.Where(g => g.EndTime != null)
                 .OrderBy(g => g.Duration);
@@ -114,5 +116,12 @@ public class GamesSqlServerContext(DbContextOptions<GamesSqlServerContext> optio
         query = query.Take(MaxGamesReturned);
 
         return await query.ToListAsync(cancellationToken);
+    }
+
+    public async Task<Game> UpdateGameAsync(Game game, CancellationToken cancellationToken = default)
+    {
+        Games.Update(game);
+        await SaveChangesAsync(cancellationToken);
+        return game;
     }
 }

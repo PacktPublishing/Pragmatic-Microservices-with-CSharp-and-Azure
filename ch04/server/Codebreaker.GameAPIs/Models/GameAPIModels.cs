@@ -1,7 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Text.Json.Serialization;
 
 namespace Codebreaker.GameAPIs.Models;
 
+[JsonConverter(typeof(JsonStringEnumConverter<GameType>))]
 public enum GameType
 {
     Game6x4,
@@ -10,50 +11,25 @@ public enum GameType
     Game5x5x4
 }
 
-public record class CreateGameRequest(
-    [property: Required] GameType GameType, 
-    [property: Required, MinLength(4), MaxLength(60)] string PlayerName);
+public record class CreateGameRequest(GameType GameType, string PlayerName);
 
-public record class CreateGameResponse(
-    [property: Required] Guid GameId, 
-    [property: Required] GameType GameType, 
-    [property: Required, MinLength(4), MaxLength(60)] string PlayerName,
-    [property: Required] int NumberCodes,
-    [property: Required] int MaxMoves)
+public record class CreateGameResponse(Guid GameId, GameType GameType, string PlayerName, int NumberCodes, int MaxMoves)
 {
-    [Required] 
     public required IDictionary<string, IEnumerable<string>> FieldValues { get; init; }
 }
 
-public record class SetMoveRequest(
-    [property: Required] Guid GameId, 
-    [property: Required] GameType GameType, 
-    [property: Required, MinLength(4), MaxLength(60)] string PlayerName, 
-    [property: Required] int MoveNumber)
+public record class UpdateGameRequest(Guid GameId, GameType GameType, string PlayerName, int MoveNumber, bool End = false)
 {
-    [Required]
-    public required string[] GuessPegs { get; set; }
+    public string[]? GuessPegs { get; set; }
 }
 
-public record SetMoveResponse(
-    [property: Required] Guid GameId,
-    [property: Required] GameType GameType,
-    [property: Required] int MoveNumber,
-    [property: Required] bool Ended,
-    [property: Required] bool IsVictory,
-    [property: Required] string[] Results);
+public record class UpdateGameResponse(
+    Guid GameId,
+    GameType GameType,
+    int MoveNumber,
+    bool Ended,
+    bool IsVictory,
+    string[]? Results);
 
-public record GameSummary(
-    [property: Required] Guid GameId,
-    [property: Required, MinLength(4), MaxLength(60)] string PlayerName,
-    [property: Required] DateTime StartTime,
-    [property: Required] int NumberMoves,
-    [property: Required] bool IsVictory,
-    TimeSpan? Duration);
 
-public record GetGamesRankResponse(
-    [property: Required] DateOnly Date, 
-    [property: Required] GameType GameType)
-{
-    public required IEnumerable<GameSummary> Games { get; set; }
-}
+public record GameSummary(Guid GameId, string PlayerName, DateTime StartTime, int NumberMoves, bool IsVictory, TimeSpan? Duration);
