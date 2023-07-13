@@ -17,7 +17,7 @@ builder.Services.ConfigureHttpJsonOptions(options =>
 
 builder.Services.Configure<Microsoft.AspNetCore.Mvc.JsonOptions>(options =>
 {
-    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter<GameType>());
 });
 
 // Swagger/EndpointDocumentation

@@ -19,7 +19,9 @@ public class GamesService(IGamesRepository dataRepository) : IGamesService
 
     public async Task<(Game Game, Move Move)> SetMoveAsync(Guid gameId, string[] guesses, int moveNumber, CancellationToken cancellationToken = default)
     {
-        Game game = await _dataRepository.GetGameAsync(gameId, cancellationToken) ?? throw new GameNotFoundException($"Game with id {gameId} not found");
+        Game? game = await _dataRepository.GetGameAsync(gameId, cancellationToken);
+        CodebreakerException.ThrowIfNull(game);
+        CodebreakerException.ThrowIfEnded(game);
 
         Move move = game.ApplyMove(guesses, moveNumber);
 
@@ -30,9 +32,10 @@ public class GamesService(IGamesRepository dataRepository) : IGamesService
     }
 
     // get the game from the cache or the data repository
-    public async ValueTask<Game?> GetGameAsync(Guid id, CancellationToken cancellationToken = default)
+    public async ValueTask<Game> GetGameAsync(Guid gameId, CancellationToken cancellationToken = default)
     {
-        var game = await _dataRepository.GetGameAsync(id, cancellationToken);
+        var game = await _dataRepository.GetGameAsync(gameId, cancellationToken);
+        CodebreakerException.ThrowIfNull(game);
         return game;
     }
 
@@ -41,39 +44,20 @@ public class GamesService(IGamesRepository dataRepository) : IGamesService
         await _dataRepository.DeleteGameAsync(id, cancellationToken);
     }
 
-    public async Task<IEnumerable<Game>> GetMyGamesAsync(string playerName, CancellationToken cancellationToken = default)
+    public async Task<Game> EndGameAsync(Guid gameId, CancellationToken cancellationToken = default)
     {
-        var games = await _dataRepository.GetGamesByPlayerAsync(playerName, cancellationToken);
-        return games;
+        Game? game = await _dataRepository.GetGameAsync(gameId, cancellationToken);
+        CodebreakerException.ThrowIfNull(game);
+       
+
+        game.EndTime = DateTime.Now;
+        game.Duration = game.EndTime - game.StartTime;
+        game = await _dataRepository.UpdateGameAsync(game);
+        return game;
     }
 
-    public Task<Game> EndGameAsync(Guid gameId)
+    public async Task<IEnumerable<Game>> GetGamesAsync(GamesQuery gamesQuery, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
-    }
-
-    public async Task<IEnumerable<Game>> GetRunningGamesByPlayerAsync(string playerName, CancellationToken cancellationToken = default)
-    {
-        return await _dataRepository.GetRunningGamesByPlayerAsync(playerName, cancellationToken);
-    }
-
-    public async Task<IEnumerable<Game>> GetAllMyGamesAsync(string playerName, CancellationToken cancellationToken = default)
-    {
-        return await _dataRepository.GetGamesByPlayerAsync(playerName, cancellationToken);
-    }
-
-    public async Task<IEnumerable<Game>> GetGamesRankByDateAsync(GameType gameType, DateOnly date, CancellationToken cancellationToken = default)
-    {
-        return await _dataRepository.GetGamesByDateAsync(gameType.ToString(), date, cancellationToken);      
-    }
-
-    public Task<Game> EndGameAsync(Guid gameId, CancellationToken cancellationToken = default)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<IEnumerable<Game>> GetCompletedGamesByPlayerAsync(string playerName, CancellationToken cancellationToken = default)
-    {
-        throw new NotImplementedException();
+        return await _dataRepository.GetGamesAsync(gamesQuery, cancellationToken);
     }
 }

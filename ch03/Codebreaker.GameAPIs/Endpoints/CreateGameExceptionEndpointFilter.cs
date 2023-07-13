@@ -13,7 +13,7 @@ public class CreateGameExceptionEndpointFilter(ILogger<CreateGameExceptionEndpoi
         {
             return await next(context);
         }
-        catch (GameTypeNotFoundException)
+        catch (CodebreakerException)
         {
             _logger.LogWarning("game type {gametype} not found", request.GameType);
             return Results.BadRequest("Gametype does not exist");

@@ -1,5 +1,4 @@
 using System.Runtime.CompilerServices;
-using System.Text.Json.Serialization;
 
 using Codebreaker.Data.Cosmos;
 using Codebreaker.Data.SqlServer;
@@ -12,16 +11,6 @@ using Microsoft.OpenApi.Models;
 [assembly: InternalsVisibleTo("Codbreaker.APIs.Tests")]
 
 var builder = WebApplication.CreateBuilder(args);
-
-builder.Services.ConfigureHttpJsonOptions(options =>
-{
-    options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
-});
-
-builder.Services.Configure<Microsoft.AspNetCore.Mvc.JsonOptions>(options =>
-{
-    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-});
 
 // Swagger/EndpointDocumentation
 builder.Services.AddEndpointsApiExplorer();
@@ -45,8 +34,6 @@ builder.Services.AddSwaggerGen(options =>
         }
     });
 
-    options.EnableAnnotations(enableAnnotationsForInheritance: true, enableAnnotationsForPolymorphism: true);
-    // options.UseOneOfForPolymorphism();
 });
 builder.Services.AddProblemDetails();
 
