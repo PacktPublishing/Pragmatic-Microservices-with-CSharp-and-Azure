@@ -19,7 +19,9 @@ public class GamesService(IGamesRepository dataRepository) : IGamesService
 
     public async Task<(Game Game, Move Move)> SetMoveAsync(Guid gameId, string[] guesses, int moveNumber, CancellationToken cancellationToken = default)
     {
-        Game game = await _dataRepository.GetGameAsync(gameId, cancellationToken) ?? throw new GameNotFoundException($"Game with id {gameId} not found");
+        Game? game = await _dataRepository.GetGameAsync(gameId, cancellationToken);
+        CodebreakerException.ThrowIfNull(game);
+        CodebreakerException.ThrowIfEnded(game);
 
         Move move = game.ApplyMove(guesses, moveNumber);
 
@@ -41,14 +43,16 @@ public class GamesService(IGamesRepository dataRepository) : IGamesService
         await _dataRepository.DeleteGameAsync(id, cancellationToken);
     }
 
-    public Task<Game> EndGameAsync(Guid gameId)
+    public async Task<Game> EndGameAsync(Guid gameId, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
-    }
+        Game? game = await _dataRepository.GetGameAsync(gameId, cancellationToken);
+        CodebreakerException.ThrowIfNull(game);
 
-    public Task<Game> EndGameAsync(Guid gameId, CancellationToken cancellationToken = default)
-    {
-        throw new NotImplementedException();
+
+        game.EndTime = DateTime.Now;
+        game.Duration = game.EndTime - game.StartTime;
+        game = await _dataRepository.UpdateGameAsync(game);
+        return game;
     }
 
     public async Task<IEnumerable<Game>> GetGamesAsync(GamesQuery gamesQuery, CancellationToken cancellationToken = default)

@@ -58,8 +58,7 @@ public class GamesCosmosContext : DbContext, IGamesRepository
     public async Task<IEnumerable<Game>> GetGamesAsync(GamesQuery gamesQuery, CancellationToken cancellationToken = default)
     {
         IQueryable<Game> query = Games
-            .TagWith(nameof(GetGamesAsync))
-            .Include(g => g.Moves);
+            .TagWith(nameof(GetGamesAsync));
 
         // Apply Game filters if provided.
         if (gamesQuery.Date.HasValue)
@@ -72,6 +71,8 @@ public class GamesCosmosContext : DbContext, IGamesRepository
             query = query.Where(g => g.PlayerName == gamesQuery.PlayerName);
         if (gamesQuery.GameType != null)
             query = query.Where(g => g.GameType == gamesQuery.GameType);
+        if (gamesQuery.RunningOnly)
+            query = query.Where(g => g.EndTime == null);
 
         if (gamesQuery.Ended == true)
         {
@@ -86,5 +87,12 @@ public class GamesCosmosContext : DbContext, IGamesRepository
         query = query.Take(MAXGAMESRETURNED);
 
         return await query.ToListAsync(cancellationToken);
+    }
+
+    public async Task<Game> UpdateGameAsync(Game game, CancellationToken cancellationToken = default)
+    {
+        Games.Add(game);
+        await SaveChangesAsync(cancellationToken);
+        return game;
     }
 }

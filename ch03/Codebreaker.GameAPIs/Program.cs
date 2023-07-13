@@ -1,5 +1,4 @@
 using System.Runtime.CompilerServices;
-using System.Text.Json.Serialization;
 
 using Codebreaker.Data.Cosmos;
 using Codebreaker.Data.SqlServer;
@@ -35,8 +34,6 @@ builder.Services.AddSwaggerGen(options =>
         }
     });
 
-    options.EnableAnnotations(enableAnnotationsForInheritance: true, enableAnnotationsForPolymorphism: true);
-    // options.UseOneOfForPolymorphism();
 });
 builder.Services.AddProblemDetails();
 
