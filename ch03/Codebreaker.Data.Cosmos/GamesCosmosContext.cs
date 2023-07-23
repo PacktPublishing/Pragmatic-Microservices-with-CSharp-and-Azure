@@ -40,7 +40,7 @@ public class GamesCosmosContext : DbContext, IGamesRepository
 
     public async Task<bool> DeleteGameAsync(Guid gameId, CancellationToken cancellationToken = default)
     {
-        var game = await Games.FindAsync(gameId, cancellationToken);
+        var game = await Games.FindAsync(new[] { gameId }, cancellationToken);
         if (game is null)
             return false;
         Games.Remove(game);
@@ -50,7 +50,7 @@ public class GamesCosmosContext : DbContext, IGamesRepository
 
     public async Task<Game?> GetGameAsync(Guid gameId, CancellationToken cancellationToken = default)
     {
-        var game = await Games.FindAsync(gameId, cancellationToken);
+        var game = await Games.FindAsync(new[] { gameId }, cancellationToken);
         return game;
     }
 
