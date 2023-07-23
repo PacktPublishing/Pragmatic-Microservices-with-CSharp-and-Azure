@@ -7,8 +7,8 @@ namespace Codebreaker.Data.Cosmos;
 
 public class GamesCosmosContext : DbContext, IGamesRepository
 {
-    private FieldValueValueConverter _fieldValueConverter = new();
-    private FieldValueComparer _fieldValueComparer = new();
+    private readonly FieldValueValueConverter _fieldValueConverter = new();
+    private readonly FieldValueComparer _fieldValueComparer = new();
 
     public GamesCosmosContext(DbContextOptions<GamesCosmosContext> options)
         : base(options)
@@ -40,7 +40,7 @@ public class GamesCosmosContext : DbContext, IGamesRepository
 
     public async Task<bool> DeleteGameAsync(Guid gameId, CancellationToken cancellationToken = default)
     {
-        var game = await Games.FindAsync(gameId, cancellationToken);
+        var game = await Games.FindAsync(new[] { gameId }, cancellationToken);
         if (game is null)
             return false;
         Games.Remove(game);
@@ -50,7 +50,7 @@ public class GamesCosmosContext : DbContext, IGamesRepository
 
     public async Task<Game?> GetGameAsync(Guid gameId, CancellationToken cancellationToken = default)
     {
-        var game = await Games.FindAsync(gameId, cancellationToken);
+        var game = await Games.FindAsync(new[] { gameId }, cancellationToken);
         return game;
     }
 

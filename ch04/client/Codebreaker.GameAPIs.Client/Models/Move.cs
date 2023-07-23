@@ -1,4 +1,5 @@
 ﻿namespace Codebreaker.GameAPIs.Client.Models;
+
 public class Move(Guid moveId, int moveNumber)
 {
     public Guid MoveId { get; private set; } = moveId;

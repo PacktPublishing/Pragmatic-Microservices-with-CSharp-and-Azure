@@ -1,4 +1,5 @@
 ﻿namespace Codebreaker.GameAPIs.Client.Models;
+
 public class Game(
     Guid gameId,
     string gameType,

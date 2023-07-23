@@ -1,6 +1,5 @@
 ﻿using System.Net.Http.Json;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 
 using Codebreaker.GameAPIs.Client.Models;
 
@@ -21,10 +20,10 @@ public class GamesClient
         {
             PropertyNameCaseInsensitive = true
         };
-        _jsonOptions.Converters.Add(new JsonStringEnumConverter());
     }
    
-    public async Task<(Guid GameId, int numberCodes, int maxMoves, IDictionary<string, string[]> FieldValues)> StartGameAsync(GameType gameType, string playerName, CancellationToken cancellationToken = default)
+    public async Task<(Guid GameId, int numberCodes, int maxMoves, IDictionary<string, string[]> FieldValues)> 
+        StartGameAsync(GameType gameType, string playerName, CancellationToken cancellationToken = default)
     {
         _gameType = gameType;
         _playerName = playerName;
@@ -45,11 +44,11 @@ public class GamesClient
         if (_playerName is null)
             throw new InvalidOperationException();
 
-        UpdateGameRequest setMoveRequest = new(_gameId, _gameType, _playerName, moveNumber)
+        UpdateGameRequest updateGameRequest = new(_gameId, _gameType, _playerName, moveNumber)
         {
             GuessPegs = guessPegs
         };
-        var response = await _httpClient.PatchAsJsonAsync($"/games/{_gameId}", setMoveRequest, cancellationToken);
+        var response = await _httpClient.PatchAsJsonAsync($"/games/{_gameId}", updateGameRequest, cancellationToken);
         response.EnsureSuccessStatusCode();
         var moveResponse = await response.Content.ReadFromJsonAsync<UpdateGameResponse>(_jsonOptions, cancellationToken);
         if (moveResponse is null)
@@ -58,13 +57,15 @@ public class GamesClient
         return (results, ended, isVictory);
     }
 
-    public async Task<Game> GetGameAsync(bool gameId)
+    public async Task<Game?> GetGameAsync(bool gameId)
     {
-        var response = await _httpClient.GetAsync($"/{gameId}");
-        response.EnsureSuccessStatusCode();
-        var gameResponse = await response.Content.ReadFromJsonAsync<Game>();
-        if (gameResponse is null)
-            throw new InvalidOperationException();
-        return gameResponse;
+        var game = await _httpClient.GetFromJsonAsync<Game>($"/{gameId}");
+        return game;
+    }
+
+    public async Task<IEnumerable<Game>> GetGamesAsync(GamesQuery query)
+    {
+        IEnumerable<Game> games = (await _httpClient.GetFromJsonAsync<IEnumerable<Game>>(query.AsUrlQuery())) ?? Enumerable.Empty<Game>();
+        return games;
     }
 }

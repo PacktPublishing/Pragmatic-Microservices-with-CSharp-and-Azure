@@ -34,5 +34,4 @@ internal class Runner(GamesClient client)
         string wonOrLost = isVictory ? "won" : "lost";
         Console.WriteLine($"You {wonOrLost} after {moveNumber} moves");
     }
-
 }
