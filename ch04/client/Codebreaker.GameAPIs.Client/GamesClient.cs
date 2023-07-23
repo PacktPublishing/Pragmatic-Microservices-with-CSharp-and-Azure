@@ -10,8 +10,8 @@ public class GamesClient
     private Guid _gameId;
     private string? _playerName;
 
-    private HttpClient _httpClient;
-    private JsonSerializerOptions _jsonOptions;
+    private readonly HttpClient _httpClient;
+    private readonly JsonSerializerOptions _jsonOptions;
 
     public GamesClient(HttpClient httpClient)
     {
@@ -31,9 +31,7 @@ public class GamesClient
         CreateGameRequest createGameRequest = new(_gameType, _playerName);
         var response = await _httpClient.PostAsJsonAsync("/games", createGameRequest, cancellationToken);
         response.EnsureSuccessStatusCode();
-        var gameResponse = await response.Content.ReadFromJsonAsync<CreateGameResponse>(_jsonOptions, cancellationToken);
-        if (gameResponse is null)
-            throw new InvalidOperationException();
+        var gameResponse = await response.Content.ReadFromJsonAsync<CreateGameResponse>(_jsonOptions, cancellationToken) ?? throw new InvalidOperationException();
         _gameId = gameResponse.GameId;
         _gameType = gameResponse.GameType;
         return (gameResponse.GameId, gameResponse.NumberCodes, gameResponse.MaxMoves, gameResponse.FieldValues); 
@@ -50,9 +48,8 @@ public class GamesClient
         };
         var response = await _httpClient.PatchAsJsonAsync($"/games/{_gameId}", updateGameRequest, cancellationToken);
         response.EnsureSuccessStatusCode();
-        var moveResponse = await response.Content.ReadFromJsonAsync<UpdateGameResponse>(_jsonOptions, cancellationToken);
-        if (moveResponse is null)
-            throw new InvalidOperationException();
+        var moveResponse = await response.Content.ReadFromJsonAsync<UpdateGameResponse>(_jsonOptions, cancellationToken) 
+            ?? throw new InvalidOperationException();
         (_, _, _, bool ended, bool isVictory, string[] results) = moveResponse;
         return (results, ended, isVictory);
     }

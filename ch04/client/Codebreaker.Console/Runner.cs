@@ -6,7 +6,7 @@ using Spectre.Console;
 namespace Codebreaker.Client;
 internal class Runner(GamesClient client)
 {
-    private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
+    private readonly CancellationTokenSource _cancellationTokenSource = new();
 
     public async Task StartAsync()
     {

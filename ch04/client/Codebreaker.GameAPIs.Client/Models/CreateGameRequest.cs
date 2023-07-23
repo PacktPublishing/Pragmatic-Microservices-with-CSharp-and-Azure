@@ -2,7 +2,11 @@
 
 namespace Codebreaker.GameAPIs.Client.Models;
 
+#if NET8_0_OR_GREATER
 [JsonConverter(typeof(JsonStringEnumConverter<GameType>))]
+#else
+[JsonConverter(typeof(JsonStringEnumConverter))]
+#endif
 public enum GameType
 {
     Game6x4,

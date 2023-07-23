@@ -38,7 +38,7 @@ internal class Inputs
         for (int i = 0; i < numberCodes; i++)
         {
             List<string> guessList = new();
-            foreach (var key in fieldValues.Keys)
+            foreach (string key in fieldValues.Keys)
             {
                 string guess = AnsiConsole.Prompt(new SelectionPrompt<string>()
                     .Title($"{key.ToLower()} {i + 1}")
