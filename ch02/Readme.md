@@ -20,3 +20,4 @@ These changes will be reflected in the next version of the book chapter:
 * new JsonStringEnumConverter<T> instead of JsonStringEnumMemberConverter now used as attibute instead of method invocations
 * UpdateGameRequest and UpdateGameResponse instead of SetMoveRequest and SetMoveResponse
 * GamesQuery for querying games
+* The analyzer package has the new name CNinnovation.Codebreaker.Analyzers 
