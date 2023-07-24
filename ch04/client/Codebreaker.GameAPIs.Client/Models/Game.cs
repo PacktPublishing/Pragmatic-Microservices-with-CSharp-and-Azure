@@ -23,7 +23,7 @@ public class Game(
     public required IDictionary<string, IEnumerable<string>> FieldValues { get; init; }
 
     public required string[] Codes { get; init; }
-    public ICollection<Move> Moves { get; } = new List<Move>();
+    public ICollection<Move> Moves { get; init; } = new List<Move>();
 
     public override string ToString() => $"{GameId}:{GameType} - {StartTime}";
 }

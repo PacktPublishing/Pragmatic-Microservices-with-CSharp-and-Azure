@@ -25,7 +25,8 @@ public record class GamesQuery(
         // Add condition for date
         if (Date != null)
         {
-            queryString += $"date={Date}&";
+            string dateString = Date.Value.ToString("yyyy-MM-dd");
+            queryString += $"date={dateString}&";
         }
 
         // Add condition for ended

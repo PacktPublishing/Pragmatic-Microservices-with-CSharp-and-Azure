@@ -54,15 +54,28 @@ public class GamesClient
         return (results, ended, isVictory);
     }
 
-    public async Task<Game?> GetGameAsync(bool gameId)
+    public async Task<Game?> GetGameAsync(Guid gameId)
     {
-        var game = await _httpClient.GetFromJsonAsync<Game>($"/{gameId}");
+        Game? game = default;
+        try
+        {
+            game = await _httpClient.GetFromJsonAsync<Game>($"{gameId}", _jsonOptions);
+        }
+        catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+        {
+            return default;
+        }
         return game;
     }
 
     public async Task<IEnumerable<Game>> GetGamesAsync(GamesQuery query)
     {
-        IEnumerable<Game> games = (await _httpClient.GetFromJsonAsync<IEnumerable<Game>>(query.AsUrlQuery())) ?? Enumerable.Empty<Game>();
+        IEnumerable<Game> games = (await _httpClient.GetFromJsonAsync<IEnumerable<Game>>(query.AsUrlQuery(), _jsonOptions)) ?? Enumerable.Empty<Game>();
         return games;
+    }
+
+    public async Task DeleteGameAsync(Guid gameId)
+    {
+        var response = await _httpClient.DeleteAsync("gameId");
     }
 }
