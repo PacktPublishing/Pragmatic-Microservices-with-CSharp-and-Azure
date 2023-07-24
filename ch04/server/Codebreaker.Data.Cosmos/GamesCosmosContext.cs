@@ -19,6 +19,7 @@ public class GamesCosmosContext : DbContext, IGamesRepository
     {
         modelBuilder.HasDefaultContainer("GamesV3");
         var gameModel = modelBuilder.Entity<Game>();
+        gameModel.HasKey(g => g.GameId);
         gameModel.HasPartitionKey(g => g.GameId);
         gameModel.Property(g => g.FieldValues)
             .HasConversion(_fieldValueConverter, _fieldValueComparer);
@@ -40,7 +41,10 @@ public class GamesCosmosContext : DbContext, IGamesRepository
 
     public async Task<bool> DeleteGameAsync(Guid gameId, CancellationToken cancellationToken = default)
     {
-        var game = await Games.FindAsync(new[] { gameId }, cancellationToken);
+        var game = await Games
+            .WithPartitionKey(gameId.ToString())
+            .SingleOrDefaultAsync(g => g.GameId == gameId, cancellationToken);
+
         if (game is null)
             return false;
         Games.Remove(game);
@@ -50,7 +54,9 @@ public class GamesCosmosContext : DbContext, IGamesRepository
 
     public async Task<Game?> GetGameAsync(Guid gameId, CancellationToken cancellationToken = default)
     {
-        var game = await Games.FindAsync(new[] { gameId }, cancellationToken);
+        var game = await Games
+            .WithPartitionKey(gameId.ToString())
+            .SingleOrDefaultAsync(g => g.GameId == gameId, cancellationToken);
         return game;
     }
 

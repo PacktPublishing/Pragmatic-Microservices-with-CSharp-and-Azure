@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Codebreaker.Data.Cosmos", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Codebreaker.Data.SqlServer", "Codebreaker.Data.SqlServer\Codebreaker.Data.SqlServer.csproj", "{126842C7-7C02-4DBB-911A-BD8EFDA4CE33}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Codebreaker.Data.SqlServer.Tests", "Codebreaker.Data.SqlServer.Tests\Codebreaker.Data.SqlServer.Tests.csproj", "{FF82EB8F-CA9F-4593-8AED-4432ECA9F16A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Codebreaker.Data.SqlServer.Tests", "Codebreaker.Data.SqlServer.Tests\Codebreaker.Data.SqlServer.Tests.csproj", "{FF82EB8F-CA9F-4593-8AED-4432ECA9F16A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
