@@ -96,7 +96,7 @@ internal class Runner(GamesClient client)
             moveNumber++;
             string[] guesses = Inputs.GetFieldChoices(numberCodes, fields);
             await Console.Out.WriteAsync($"{moveNumber}. {string.Join(" ", guesses.Select(s => s.PadRight(8, ' ')))}");
-            (string[] results, ended, isVictory) = await client.SetMoveAsync(gameId, moveNumber, guesses);
+            (string[] results, ended, isVictory) = await client.SetMoveAsync(gameId, playerName, gameType, moveNumber, guesses);
             await Console.Out.WriteLineAsync($" ** {string.Join(' ', results)}");
         } while (!ended);
         await Console.Out.WriteLineAsync($"Victory: {isVictory}");
