@@ -6,10 +6,22 @@ namespace Codebreaker.Client;
 
 internal class Inputs
 {
+    public static MainOptions GetMainSelection()
+    {
+        var option = AnsiConsole.Prompt(
+            new SelectionPrompt<MainOptions>()
+            .Title("Select")
+            .AddChoices(Enum.GetValues<MainOptions>()));
+        return option;
+    }
+
     public static GameType GetGameType() =>
         AnsiConsole.Prompt(new SelectionPrompt<GameType>()
                        .Title("Select the game type")
                        .AddChoices(Enum.GetValues<GameType>()));
+
+    public static Guid GetGameId() =>
+        AnsiConsole.Ask<Guid>("Enter game id");
 
     public static string GetPlayername() =>
         AnsiConsole.Ask<string>("Enter player name");
@@ -51,4 +63,13 @@ internal class Inputs
 
         return selections.ToArray();
     }
+}
+
+public enum MainOptions
+{
+    Play,
+    QueryGame,
+    QueryList,
+    Delete,
+    Exit
 }

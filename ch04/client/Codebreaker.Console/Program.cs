@@ -15,4 +15,4 @@ builder.Services.AddTransient<Runner>();
 var app = builder.Build();
 
 var runner = app.Services.GetRequiredService<Runner>();
-await runner.StartAsync();
+await runner.RunAsync();
