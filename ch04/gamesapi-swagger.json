@@ -119,18 +119,18 @@
                 }
             }
         },
-        "/games/{gameId}/moves": {
+        "/games/{gameId}": {
             "patch": {
                 "tags": [
                     "Games API"
                 ],
-                "summary": "Sets a move for the game with the given id",
+                "summary": "End the game or set a move",
                 "operationId": "SetMove",
                 "parameters": [
                     {
                         "name": "gameId",
                         "in": "path",
-                        "description": "The id of the game to create a move for",
+                        "description": "The id of the game to set a move",
                         "required": true,
                         "style": "simple",
                         "schema": {
@@ -144,7 +144,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/SetMoveRequest"
+                                "$ref": "#/components/schemas/UpdateGameRequest"
                             }
                         }
                     },
@@ -156,7 +156,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/SetMoveResponse"
+                                    "$ref": "#/components/schemas/UpdateGameResponse"
                                 }
                             }
                         }
@@ -175,9 +175,7 @@
                         "description": "Not Found"
                     }
                 }
-            }
-        },
-        "/games/{gameId}": {
+            },
             "get": {
                 "tags": [
                     "Games API"
@@ -263,9 +261,10 @@
             },
             "CreateGameResponse": {
                 "required": [
-                    "fieldValues",
                     "gameId",
                     "gameType",
+                    "maxMoves",
+                    "numberCodes",
                     "playerName"
                 ],
                 "type": "object",
@@ -282,6 +281,14 @@
                         "minLength": 4,
                         "type": "string"
                     },
+                    "numberCodes": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "maxMoves": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
                     "fieldValues": {
                         "type": "object",
                         "additionalProperties": {
@@ -289,7 +296,8 @@
                             "items": {
                                 "type": "string"
                             }
-                        }
+                        },
+                        "nullable": true
                     }
                 },
                 "additionalProperties": false
@@ -300,6 +308,7 @@
                     "fieldValues",
                     "gameId",
                     "gameType",
+                    "isVictory",
                     "lastMoveNumber",
                     "maxMoves",
                     "moves",
@@ -318,7 +327,8 @@
                         "type": "string"
                     },
                     "playerName": {
-                        "minLength": 1,
+                        "maxLength": 25,
+                        "minLength": 4,
                         "type": "string"
                     },
                     "playerIsAuthenticated": {
@@ -442,70 +452,6 @@
                 },
                 "additionalProperties": false
             },
-            "SetMoveRequest": {
-                "required": [
-                    "gameId",
-                    "gameType",
-                    "guessPegs",
-                    "moveNumber",
-                    "playerName"
-                ],
-                "type": "object",
-                "properties": {
-                    "gameId": {
-                        "type": "string",
-                        "format": "uuid"
-                    },
-                    "gameType": {
-                        "$ref": "#/components/schemas/GameType"
-                    },
-                    "playerName": {
-                        "maxLength": 25,
-                        "minLength": 4,
-                        "type": "string"
-                    },
-                    "moveNumber": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    "guessPegs": {
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
-                    }
-                },
-                "additionalProperties": false
-            },
-            "SetMoveResponse": {
-                "required": [
-                    "gameId",
-                    "gameType",
-                    "moveNumber",
-                    "results"
-                ],
-                "type": "object",
-                "properties": {
-                    "gameId": {
-                        "type": "string",
-                        "format": "uuid"
-                    },
-                    "gameType": {
-                        "$ref": "#/components/schemas/GameType"
-                    },
-                    "moveNumber": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    "results": {
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
-                    }
-                },
-                "additionalProperties": false
-            },
             "TimeSpan": {
                 "type": "object",
                 "properties": {
@@ -582,6 +528,81 @@
                         "type": "number",
                         "format": "double",
                         "readOnly": true
+                    }
+                },
+                "additionalProperties": false
+            },
+            "UpdateGameRequest": {
+                "required": [
+                    "gameId",
+                    "gameType",
+                    "moveNumber",
+                    "playerName"
+                ],
+                "type": "object",
+                "properties": {
+                    "gameId": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "gameType": {
+                        "$ref": "#/components/schemas/GameType"
+                    },
+                    "playerName": {
+                        "maxLength": 25,
+                        "minLength": 4,
+                        "type": "string"
+                    },
+                    "moveNumber": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "end": {
+                        "type": "boolean"
+                    },
+                    "guessPegs": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "nullable": true
+                    }
+                },
+                "additionalProperties": false
+            },
+            "UpdateGameResponse": {
+                "required": [
+                    "ended",
+                    "gameId",
+                    "gameType",
+                    "isVictory",
+                    "moveNumber",
+                    "results"
+                ],
+                "type": "object",
+                "properties": {
+                    "gameId": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "gameType": {
+                        "$ref": "#/components/schemas/GameType"
+                    },
+                    "moveNumber": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "ended": {
+                        "type": "boolean"
+                    },
+                    "isVictory": {
+                        "type": "boolean"
+                    },
+                    "results": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
                     }
                 },
                 "additionalProperties": false
