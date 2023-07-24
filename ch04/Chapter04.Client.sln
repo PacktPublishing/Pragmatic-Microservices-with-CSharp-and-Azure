@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Codebreaker.GameAPIs.Client
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Codebreaker.Console", "client\Codebreaker.Console\Codebreaker.Console.csproj", "{A68D9F9A-517B-4857-9149-A1FB3C783435}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Codebreaker.GameApis.KiotaClient", "client\Codebreaker.GameApis.KiotaClient\Codebreaker.GameApis.KiotaClient.csproj", "{ED48054D-A39B-42CA-B2B6-AFE722EBC438}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{A68D9F9A-517B-4857-9149-A1FB3C783435}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A68D9F9A-517B-4857-9149-A1FB3C783435}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A68D9F9A-517B-4857-9149-A1FB3C783435}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ED48054D-A39B-42CA-B2B6-AFE722EBC438}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ED48054D-A39B-42CA-B2B6-AFE722EBC438}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ED48054D-A39B-42CA-B2B6-AFE722EBC438}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ED48054D-A39B-42CA-B2B6-AFE722EBC438}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

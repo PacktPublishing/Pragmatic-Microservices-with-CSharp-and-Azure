@@ -1,8 +1,8 @@
 {
-  "descriptionHash": "A2F9A87BF9189EEE63DA50163747C570F9A5E1C3F88D2B04B4F2F36C36501EA8A25B881B810A178AA9F754030D27010323814440F7CE27EDBAC9B785AEC8BCE3",
-  "descriptionLocation": "C:\\githubcodebreaker\\PragmaticMicroservices\\ch04\\Codebreaker.GameAPIs.KiotaClient\\..\\gamesapi-swagger.json",
+  "descriptionHash": "E7BDE31BDC27A5C97CF9D29EF94A7378921B55D7D66250F9496E8A104660E24BB057037E3A87BA7A7C6F15D75F23C01EE4349C3CCDCFADAB45075F9A80181D72",
+  "descriptionLocation": "C:\\githubcodebreaker\\Pragmatic-Microservices-With-C-Sharp-and-Azure\\ch04\\client\\Codebreaker.GameApis.KiotaClient\\..\\..\\gamesapi-swagger.json",
   "lockFileVersion": "1.0.0",
-  "kiotaVersion": "1.3.0",
+  "kiotaVersion": "1.4.0",
   "clientClassName": "GamesAPIClient",
   "clientNamespaceName": "Codebreaker.Client",
   "language": "CSharp",
