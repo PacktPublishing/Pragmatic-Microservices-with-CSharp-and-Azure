@@ -1,0 +1,29 @@
+{
+  "descriptionHash": "E7BDE31BDC27A5C97CF9D29EF94A7378921B55D7D66250F9496E8A104660E24BB057037E3A87BA7A7C6F15D75F23C01EE4349C3CCDCFADAB45075F9A80181D72",
+  "descriptionLocation": "C:\\githubcodebreaker\\Pragmatic-Microservices-With-C-Sharp-and-Azure\\ch04\\client\\Codebreaker.GameApis.KiotaClient\\..\\..\\gamesapi-swagger.json",
+  "lockFileVersion": "1.0.0",
+  "kiotaVersion": "1.4.0",
+  "clientClassName": "GamesAPIClient",
+  "clientNamespaceName": "Codebreaker.Client",
+  "language": "CSharp",
+  "usesBackingStore": false,
+  "includeAdditionalData": true,
+  "serializers": [
+    "Microsoft.Kiota.Serialization.Json.JsonSerializationWriterFactory",
+    "Microsoft.Kiota.Serialization.Text.TextSerializationWriterFactory",
+    "Microsoft.Kiota.Serialization.Form.FormSerializationWriterFactory"
+  ],
+  "deserializers": [
+    "Microsoft.Kiota.Serialization.Json.JsonParseNodeFactory",
+    "Microsoft.Kiota.Serialization.Text.TextParseNodeFactory",
+    "Microsoft.Kiota.Serialization.Form.FormParseNodeFactory"
+  ],
+  "structuredMimeTypes": [
+    "application/json",
+    "text/plain",
+    "application/x-www-form-urlencoded"
+  ],
+  "includePatterns": [],
+  "excludePatterns": [],
+  "disabledValidationRules": []
+}
