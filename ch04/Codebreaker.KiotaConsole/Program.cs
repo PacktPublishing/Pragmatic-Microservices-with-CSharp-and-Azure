@@ -1,16 +1,9 @@
-﻿using System.Text;
-
-using Codebreaker.Client;
+﻿using Codebreaker.Client;
 
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 var builder = Host.CreateApplicationBuilder(args);
-//builder.Services.AddHttpClient<GamesClient>(client =>
-//{
-//    string gamesUrl = builder.Configuration["GamesApiUrl"] ?? throw new InvalidOperationException("GamesApiUrl not found");
-//    client.BaseAddress = new Uri(gamesUrl);
-//});
 
 builder.Services.Configure<RunnerOptions>(options =>
 {

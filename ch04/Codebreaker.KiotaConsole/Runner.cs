@@ -1,8 +1,5 @@
-﻿using System.Diagnostics;
-using System.Text.Json;
-using System.Text.Json.Nodes;
+﻿using System.Text.Json;
 
-using Codebreaker.Client.Games;
 using Codebreaker.Client.Models;
 
 using Microsoft.Extensions.Options;
@@ -11,8 +8,6 @@ using Microsoft.Kiota.Abstractions.Authentication;
 using Microsoft.Kiota.Http.HttpClientLibrary;
 
 using Spectre.Console;
-
-using static Codebreaker.Client.Games.GamesRequestBuilder;
 
 namespace Codebreaker.Client;
 
