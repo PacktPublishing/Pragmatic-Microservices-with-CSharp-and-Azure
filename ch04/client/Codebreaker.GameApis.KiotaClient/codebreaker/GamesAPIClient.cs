@@ -1,7 +1,10 @@
 using Codebreaker.Client.Games;
 
 using Microsoft.Kiota.Abstractions;
+using Microsoft.Kiota.Serialization.Form;
 using Microsoft.Kiota.Serialization.Json;
+using Microsoft.Kiota.Serialization.Text;
+
 namespace Codebreaker.Client;
 /// <summary>
 /// The main entry point of the SDK, exposes the configuration and the fluent API.
