@@ -25,13 +25,3 @@ To read and write your SQL Server data, within Visual Studio you can use the SQL
 To access Azure Cosmos DB, an emulator to run it locally is available. You can install this NoSQL database emulator with:
 
 `winget install Microsoft.Azure.CosmosEmulator`
-
-
-## Changes after first draft
-
-These changes will be reflected in the next version of the book chapter:
-
-* new JsonStringEnumConverter<T> instead of JsonStringEnumMemberConverter now used as attibute instead of method invocations
-* UpdateGameRequest and UpdateGameResponse instead of SetMoveRequest and SetMoveResponse
-* GamesQuery for querying games
-* The analyzer package has the new name CNinnovation.Codebreaker.Analyzers 
