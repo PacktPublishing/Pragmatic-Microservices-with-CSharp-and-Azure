@@ -7,6 +7,8 @@ namespace Codebreaker.Data.Cosmos;
 
 public class GamesCosmosContext : DbContext, IGamesRepository
 {
+    private const string PartitionKey = nameof(PartitionKey);
+    private const string ContainerName = "GamesV3";
     private readonly FieldValueValueConverter _fieldValueConverter = new();
     private readonly FieldValueComparer _fieldValueComparer = new();
 
@@ -27,14 +29,22 @@ public class GamesCosmosContext : DbContext, IGamesRepository
 
     public DbSet<Game> Games => Set<Game>();
 
+    public static string ComputePartitionKey(Game game) => game.GameId.ToString();
+
+    public void SetPartitionKey(Game game) =>
+        Entry(game).Property(PartitionKey).CurrentValue =
+            ComputePartitionKey(game);
+
     public async Task AddGameAsync(Game game, CancellationToken cancellationToken = default)
     {
+        SetPartitionKey(game);
         Games.Add(game);
         await SaveChangesAsync(cancellationToken);
     }
 
     public async Task AddMoveAsync(Game game, Move _, CancellationToken cancellationToken = default)
     {
+        SetPartitionKey(game);
         Games.Update(game);
         await SaveChangesAsync(cancellationToken);
     }
@@ -97,6 +107,7 @@ public class GamesCosmosContext : DbContext, IGamesRepository
 
     public async Task<Game> UpdateGameAsync(Game game, CancellationToken cancellationToken = default)
     {
+        SetPartitionKey(game);
         Games.Add(game);
         await SaveChangesAsync(cancellationToken);
         return game;
