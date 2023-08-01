@@ -8,10 +8,18 @@
     <LangVersion>preview</LangVersion>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <ContainerImageName>codebreaker/bot</ContainerImageName>
+    <ContainerImageTags>3.5.1;latest</ContainerImageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ContainerPort Include="8080" Type="tcp" />    
+  </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="CNinnovation.Codebreaker.GamesClient" Version="3.5.0-beta.11" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.0-preview.6.23329.11" />
-    <PackageReference Include="Microsoft.NET.Build.Containers" Version="8.0.100-preview.6.23330.7" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
   </ItemGroup>
 
