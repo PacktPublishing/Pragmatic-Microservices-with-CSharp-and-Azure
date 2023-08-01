@@ -26,12 +26,8 @@ To access Azure Cosmos DB, an emulator to run it locally is available. You can i
 
 `winget install Microsoft.Azure.CosmosEmulator`
 
+## Updates after draft
 
-## Changes after first draft
+The Cosmos partition key changed to be independent of `Game` objects.
 
-These changes will be reflected in the next version of the book chapter:
-
-* new JsonStringEnumConverter<T> instead of JsonStringEnumMemberConverter now used as attibute instead of method invocations
-* UpdateGameRequest and UpdateGameResponse instead of SetMoveRequest and SetMoveResponse
-* GamesQuery for querying games
-* The analyzer package has the new name CNinnovation.Codebreaker.Analyzers 
+The chapter will be changed.

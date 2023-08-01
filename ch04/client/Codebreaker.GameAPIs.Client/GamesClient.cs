@@ -19,7 +19,7 @@ public class GamesClient
         };
     }
    
-    public async Task<(Guid GameId, int numberCodes, int maxMoves, IDictionary<string, string[]> FieldValues)> 
+    public async Task<(Guid GameId, int NumberCodes, int MaxMoves, IDictionary<string, string[]> FieldValues)> 
         StartGameAsync(GameType gameType, string playerName, CancellationToken cancellationToken = default)
     {
         CreateGameRequest createGameRequest = new(gameType, playerName);
