@@ -81,13 +81,13 @@ public class GamesMemoryRepository(ILogger<GamesMemoryRepository> logger) : IGam
                     .Where(g => g.PlayerName == gamesQuery.PlayerName);
             }
 
-            if (gamesQuery.RunningOnly)
+            if (gamesQuery.IsFinished == false)
             {
                 filteredGames = filteredGames
                     .Where(g => !g.Ended());
             }
 
-            if (gamesQuery.Ended)
+            if (gamesQuery.IsFinished == true)
             {
                 filteredGames = filteredGames
                     .Where(g => g.Ended())

@@ -100,10 +100,10 @@ public class GamesSqlServerContext(DbContextOptions<GamesSqlServerContext> optio
             query = query.Where(g => g.PlayerName == gamesQuery.PlayerName);
         if (gamesQuery.GameType != null)
             query = query.Where(g => g.GameType == gamesQuery.GameType);
-        if (gamesQuery.RunningOnly)
+        if (gamesQuery.IsFinished == false)
             query = query.Where(g => g.EndTime == null);
 
-        if (gamesQuery.Ended)
+        if (gamesQuery.IsFinished == true)
         {
             query = query.Where(g => g.EndTime != null)
                 .OrderBy(g => g.Duration);

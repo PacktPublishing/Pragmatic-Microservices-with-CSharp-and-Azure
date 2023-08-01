@@ -126,10 +126,10 @@ public static class GameEndpoints
             string? gameType = default,
             string? playerName = default,
             DateOnly? date = default,
-            bool ended = false,
+            bool? isFinished = default,
             CancellationToken cancellationToken = default) => 
         {
-            GamesQuery query = new(gameType, playerName, date, Ended: ended);
+            GamesQuery query = new(gameType, playerName, date, IsFinished: isFinished);
             var games = await gameService.GetGamesAsync(query, cancellationToken);
             return TypedResults.Ok(games);
         })
