@@ -83,5 +83,6 @@ if (app.Environment.IsDevelopment())
 // -------------------------
 
 app.MapGameEndpoints();
+app.MapCreateDatabaseEndpoints(app.Logger);
 
 app.Run();
