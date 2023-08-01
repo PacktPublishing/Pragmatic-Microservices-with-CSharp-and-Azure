@@ -1,3 +1,4 @@
+using System.Data.Common;
 using System.Runtime.CompilerServices;
 
 using Codebreaker.Data.Cosmos;
@@ -55,6 +56,21 @@ else if (dataStorage == "SqlServer")
     builder.Services.AddDbContext<IGamesRepository, GamesSqlServerContext>(options =>
     {
         string connectionString = builder.Configuration.GetConnectionString("GamesSqlServerConnection") ?? throw new InvalidOperationException("Could not find GamesSqlServerConnection");
+        DbConnectionStringBuilder connectionStringBuilder = new()
+        {
+            ConnectionString = connectionString
+        };
+        if (connectionStringBuilder.ContainsKey("user id"))
+        {
+            if (File.Exists("/run/secrets/sqlpassword"))
+            {
+                string password = File.ReadAllText("/run/secrets/sqlpassword");
+                connectionStringBuilder.Add("password", password);
+            }
+            connectionString = connectionStringBuilder.ConnectionString;
+        }
+
+        Console.WriteLine($"using connection string {connectionString}");
         options.UseSqlServer(connectionString)
             .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
     });
@@ -68,15 +84,12 @@ builder.Services.AddScoped<IGamesService, GamesService>();
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
+app.UseSwagger();
+app.UseSwaggerUI(options =>
 {
-    app.UseSwagger();
-    app.UseSwaggerUI(options =>
-    {
-        // options.InjectStylesheet("/swagger-ui/swaggerstyle.css");
-        options.SwaggerEndpoint("/swagger/v3/swagger.json", "v3");
-    });
-}
+    // options.InjectStylesheet("/swagger-ui/swaggerstyle.css");
+    options.SwaggerEndpoint("/swagger/v3/swagger.json", "v3");
+});
 
 // -------------------------
 // Endpoints
