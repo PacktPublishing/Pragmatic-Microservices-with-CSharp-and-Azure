@@ -9,8 +9,8 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <ContainerImageName>codebreaker/bot</ContainerImageName>
-    <ContainerImageTags>3.5.1;latest</ContainerImageTags>
+    <ContainerRepository>codebreaker/bot</ContainerRepository>
+    <ContainerImageTags>3.5.2;latest</ContainerImageTags>
   </PropertyGroup>
 
   <ItemGroup>

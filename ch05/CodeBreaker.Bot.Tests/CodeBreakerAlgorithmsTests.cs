@@ -2,7 +2,6 @@ using System.Collections;
 
 using Xunit;
 
-
 namespace CodeBreaker.Bot.Tests;
 
 public class CodeBreakerAlgorithmsTests

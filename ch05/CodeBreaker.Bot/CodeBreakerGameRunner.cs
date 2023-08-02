@@ -54,7 +54,7 @@ public class CodeBreakerGameRunner(GamesClient gamesClient, ILogger<CodeBreakerG
 
     public async Task StartGameAsync()
     {
-        int NextKey(ref int key)
+        static int NextKey(ref int key)
         {
             int next = key;
             key <<= 1;
@@ -83,7 +83,6 @@ public class CodeBreakerGameRunner(GamesClient gamesClient, ILogger<CodeBreakerG
     {
         if (_possibleValues is null) throw new InvalidOperationException($"call {nameof(StartGameAsync)} before");
         Guid gameId = _gameId ?? throw new InvalidOperationException($"call {nameof(StartGameAsync)} before");
-
 
         bool ended = false;
         do
@@ -173,12 +172,12 @@ public enum KeyColors
 
 public record struct CodePeg(string Color)
 {
-    public override string ToString() => Color;
+    public override readonly string ToString() => Color;
 }
 
 public record struct KeyPeg(string Color)
 {
-    public override string ToString() => Color;
+    public override readonly string ToString() => Color;
 }
 
 public record struct Move(string GameId, int MoveNumber, IList<CodePeg> Codes, IList<KeyPeg> Keys);

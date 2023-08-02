@@ -3,11 +3,11 @@ using CodeBreaker.Bot.Exceptions;
 
 namespace CodeBreaker.Bot;
 
-public class CodeBreakerTimer
+public class CodeBreakerTimer(CodeBreakerGameRunner runner, ILogger<CodeBreakerTimer> logger)
 {
-    private readonly CodeBreakerGameRunner _gameRunner;
+    private readonly CodeBreakerGameRunner _gameRunner = runner;
 
-    private readonly ILogger _logger;
+    private readonly ILogger _logger = logger;
 
     private static readonly ConcurrentDictionary<Guid, CodeBreakerTimer> _bots = new();
 
@@ -17,22 +17,11 @@ public class CodeBreakerTimer
 
     private readonly CancellationTokenSource _cancellationTokenSource = new();
 
-    public CodeBreakerTimer(CodeBreakerGameRunner runner, ILogger<CodeBreakerTimer> logger)
-    {
-        _gameRunner = runner;
-        _logger = logger;
-    }
-
     public Guid Start(int delaySecondsBetweenGames, int numberGames, int thinkSeconds)
     {
-        if (delaySecondsBetweenGames < 0)
-            throw new ArgumentOutOfRangeException(nameof(delaySecondsBetweenGames));
-
-        if (numberGames < 1)
-            throw new ArgumentOutOfRangeException(nameof(numberGames));
-
-        if (thinkSeconds < 0)
-            throw new ArgumentOutOfRangeException(nameof(thinkSeconds));
+        ArgumentOutOfRangeException.ThrowIfNegative(delaySecondsBetweenGames);
+        ArgumentOutOfRangeException.ThrowIfLessThan(numberGames, 1);
+        ArgumentOutOfRangeException.ThrowIfNegative(thinkSeconds);
 
         _logger.StartGameRunner();
         Guid id = Guid.NewGuid();
@@ -80,8 +69,7 @@ public class CodeBreakerTimer
     public static void Stop(Guid id)
     {
         if (id == default)
-            throw new ArgumentException(nameof(id));
-
+            throw new ArgumentException("Invalid argument value {id}", nameof(id));
 
         if (_bots.TryGetValue(id, out CodeBreakerTimer? timer))
         {
@@ -95,7 +83,7 @@ public class CodeBreakerTimer
     public static StatusResponse Status(Guid id)
     {
         if (id == default)
-            throw new ArgumentException(nameof(id));
+            throw new ArgumentException("Invalid argument value {id}", nameof(id));
 
         if (_bots.TryGetValue(id, out CodeBreakerTimer? timer))
             return timer?.Status() ?? throw new UnknownStatusException("id found, but unknown status");
