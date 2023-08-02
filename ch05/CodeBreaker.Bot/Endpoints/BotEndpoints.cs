@@ -2,7 +2,6 @@
 using CodeBreaker.Bot.Exceptions;
 
 using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
 
 namespace CodeBreaker.Bot.Endpoints;
 
@@ -15,15 +14,15 @@ public static class BotEndpoints
 
         group.MapPost("/bots", Results<BadRequest, Accepted<Guid>> (
             CodeBreakerTimer timer,
-            int? delay,
-            int? count,
-            int? thinkTime) =>
+            int count = 3,
+            int delay = 60,
+            int thinkTime = 3) =>
         {
             Guid id;
 
             try
             {
-                id = timer.Start(delay ?? 60, count ?? 3, thinkTime ?? 3);
+                id = timer.Start(delay, count, thinkTime);
             }
             catch (ArgumentOutOfRangeException)
             {
@@ -36,9 +35,9 @@ public static class BotEndpoints
         .WithSummary("Starts a bot playing one or more games")
         .WithOpenApi(x =>
         {
-            x.Parameters[0].Description = "The delay between the games (seconds). If not specified, default values are used.";
-            x.Parameters[1].Description = "The number of games to play. If not specified, default values are used.";
-            x.Parameters[2].Description = "The think time between game moves (seconds). If not specified, default values are used.";
+            x.Parameters[0].Description = "The number of games to play.";
+            x.Parameters[1].Description = "The delay between the games (seconds).";
+            x.Parameters[2].Description = "The think time between game moves (seconds).";
             return x;
         });
 
