@@ -37,7 +37,7 @@ services:
 
 secrets:
   sqlpassword:
-    file: ./db_password.txt
+    file: ./sql_password.txt
 
 volumes:
   gamessqlstorage-volume:
