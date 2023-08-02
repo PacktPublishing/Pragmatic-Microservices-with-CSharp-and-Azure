@@ -70,7 +70,6 @@ else if (dataStorage == "SqlServer")
             connectionString = connectionStringBuilder.ConnectionString;
         }
 
-        Console.WriteLine($"using connection string {connectionString}");
         options.UseSqlServer(connectionString)
             .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
     });
