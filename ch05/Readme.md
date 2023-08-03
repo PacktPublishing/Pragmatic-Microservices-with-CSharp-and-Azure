@@ -17,3 +17,5 @@ In the ch05 folder you’ll see these projects:
 ## Changes after the draft
 
 These changes will be reflected in the next version of the book chapter:
+
+The Native AOT samples need updates with .NET 8 preview 7 or later.
