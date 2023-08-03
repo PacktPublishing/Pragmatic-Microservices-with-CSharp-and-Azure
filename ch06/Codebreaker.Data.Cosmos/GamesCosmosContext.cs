@@ -21,8 +21,11 @@ public class GamesCosmosContext : DbContext, IGamesRepository
     {
         modelBuilder.HasDefaultContainer("GamesV3");
         var gameModel = modelBuilder.Entity<Game>();
-        gameModel.HasKey(g => g.GameId);
-        gameModel.HasPartitionKey(g => g.GameId);
+
+        gameModel.Property<string>(PartitionKey);
+        gameModel.HasPartitionKey(PartitionKey);
+        gameModel.HasKey(nameof(Game.GameId), PartitionKey);
+
         gameModel.Property(g => g.FieldValues)
             .HasConversion(_fieldValueConverter, _fieldValueComparer);
     }
