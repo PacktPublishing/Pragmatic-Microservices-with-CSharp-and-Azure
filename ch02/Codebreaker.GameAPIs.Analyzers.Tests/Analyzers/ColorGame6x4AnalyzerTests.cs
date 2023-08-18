@@ -9,10 +9,10 @@ using static Codebreaker.GameAPIs.Models.Colors;
 
 namespace Codebreaker.GameAPIs.Algorithms.Tests;
 
-public class ColorGame6x4AlgorithmTests
+public class ColorGame6x4AnalyzerTests
 {
     [Fact]
-    public void SetMoveWithThreeWhite()
+    public void SetMoveShouldReturnThreeWhite()
     {
         ColorResult expectedKeyPegs = new(0, 3);
         ColorResult? resultKeyPegs = TestSkeleton(
@@ -66,7 +66,18 @@ public class ColorGame6x4AlgorithmTests
         });
     }
 
-    private static ColorResult TestSkeleton(string[] codes, string[] guesses)
+    [Fact]
+    public void ShouldThrowOnInvalidMoveNumber()
+    {
+        Assert.Throws<ArgumentException>(() =>
+        {
+            TestSkeleton(
+                new[] { Green, Yellow, Green, Black },
+                new[] { Yellow, Green, Black, Blue }, moveNumber: 2);
+        });
+    }
+
+    private static ColorResult TestSkeleton(string[] codes, string[] guesses, int moveNumber = 1)
     {
         MockColorGame game = new()
         {
@@ -81,7 +92,7 @@ public class ColorGame6x4AlgorithmTests
             Codes = codes
         };
 
-        ColorGameGuessAnalyzer analyzer = new(game,guesses.ToPegs<ColorField>().ToArray(), 1);
+        ColorGameGuessAnalyzer analyzer = new(game,guesses.ToPegs<ColorField>().ToArray(), moveNumber);
         return analyzer.GetResult();
     }
 }

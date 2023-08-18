@@ -1,4 +1,5 @@
-﻿using Codebreaker.GameAPIs.Models;
+﻿using Codebreaker.GameAPIs.Extensions;
+using Codebreaker.GameAPIs.Models;
 
 namespace Codebreaker.GameAPIs.Algorithms.Extensions;
 public static class PegExtensions
