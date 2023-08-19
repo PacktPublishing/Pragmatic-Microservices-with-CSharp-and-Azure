@@ -1,9 +1,6 @@
 using System.Collections;
 
-using Codebreaker.GameAPIs.Algorithms.Extensions;
-using Codebreaker.GameAPIs.Algorithms.Fields;
 using Codebreaker.GameAPIs.Analyzers;
-using Codebreaker.GameAPIs.Models;
 
 using static Codebreaker.GameAPIs.Models.Colors;
 

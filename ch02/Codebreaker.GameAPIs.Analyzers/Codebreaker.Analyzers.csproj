@@ -13,10 +13,12 @@
       See https://github.com/codebreakerapp for more information on the complete solution.
     </Description>
     <PackageReadmeFile>readme.md</PackageReadmeFile>
+    <PackageIcon>codebreaker.jpeg</PackageIcon>
   </PropertyGroup>
 
   <ItemGroup>
     <None Include="docs/readme.md" Pack="true" PackagePath="\" />
+    <None Include="Images/codebreaker.jpeg" Pack="true" PackagePath="\" />
   </ItemGroup>
 
 </Project>

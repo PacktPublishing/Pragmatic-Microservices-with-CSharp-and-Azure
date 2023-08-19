@@ -1,4 +1,5 @@
-﻿namespace Codebreaker.GameAPIs.Algorithms.Fields;
+﻿namespace Codebreaker.GameAPIs.Models;
+
 public class FieldCategories
 {
     public const string Colors = "colors";

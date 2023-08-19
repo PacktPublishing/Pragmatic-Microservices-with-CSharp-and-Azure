@@ -1,9 +1,4 @@
-﻿using Codebreaker.GameAPIs.Algorithms.Extensions;
-using Codebreaker.GameAPIs.Algorithms.Fields;
-using Codebreaker.GameAPIs.Contracts;
-using Codebreaker.GameAPIs.Models;
-
-namespace Codebreaker.GameAPIs.Analyzers;
+﻿namespace Codebreaker.GameAPIs.Analyzers;
 
 public class SimpleGameGuessAnalyzer : GameGuessAnalyzer<ColorField, SimpleColorResult>
 {

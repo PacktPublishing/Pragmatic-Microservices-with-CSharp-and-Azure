@@ -1,10 +1,11 @@
 ﻿namespace Codebreaker.GameAPIs.Extensions;
+
 public static class FieldExtensions
 {
     public static IEnumerable<T> ToFields<T>(this string[] fieldStrings)
         where T : IParsable<T>
     {
-        foreach (var fieldString in fieldStrings)
+        foreach (string fieldString in fieldStrings)
         {
             yield return T.Parse(fieldString, default);
         }

@@ -1,4 +1,5 @@
 ﻿namespace Codebreaker.GameAPIs.Models;
+
 public readonly partial record struct ColorResult : ISpanFormattable
 {
     public override string ToString() => ToString(default, default);

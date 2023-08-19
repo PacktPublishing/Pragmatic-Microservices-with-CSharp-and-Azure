@@ -1,9 +1,4 @@
-﻿using Codebreaker.GameAPIs.Algorithms.Extensions;
-using Codebreaker.GameAPIs.Algorithms.Fields;
-using Codebreaker.GameAPIs.Contracts;
-using Codebreaker.GameAPIs.Models;
-
-namespace Codebreaker.GameAPIs.Analyzers;
+﻿namespace Codebreaker.GameAPIs.Analyzers;
 
 public class ShapeGameGuessAnalyzer : GameGuessAnalyzer<ShapeAndColorField, ShapeAndColorResult>
 {
@@ -79,8 +74,8 @@ public class ShapeGameGuessAnalyzer : GameGuessAnalyzer<ShapeAndColorField, Shap
         // check white (either the shape or the color is correct on a wrong position)
         for (int i = 0; i < guessPegsToCheck.Count; i++)
         {
-            var colorCodes = codesToCheck.Select(c => c.Color).ToArray();
-            var shapeCodes = codesToCheck.Select(c => c.Shape).ToArray();
+            string[] colorCodes = codesToCheck.Select(c => c.Color).ToArray();
+            string[] shapeCodes = codesToCheck.Select(c => c.Shape).ToArray();
 
             if (colorCodes.Contains(guessPegsToCheck[i].Color) || shapeCodes.Contains(guessPegsToCheck[i].Shape))
             {

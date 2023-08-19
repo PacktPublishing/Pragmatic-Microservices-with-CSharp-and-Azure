@@ -1,6 +1,4 @@
-﻿using Codebreaker.GameAPIs.Contracts;
-
-namespace Codebreaker.GameAPIs.Algorithms.Tests;
+﻿namespace Codebreaker.GameAPIs.Algorithms.Tests;
 
 public class MockColorGame : IGame
 {

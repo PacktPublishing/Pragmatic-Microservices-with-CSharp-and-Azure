@@ -1,6 +1,4 @@
-﻿using Codebreaker.GameAPIs.Contracts;
-
-namespace Codebreaker.GameAPIs.Analyzers;
+﻿namespace Codebreaker.GameAPIs.Analyzers;
 
 /// <summary>
 /// Abstract base class for game guess analyzers.
