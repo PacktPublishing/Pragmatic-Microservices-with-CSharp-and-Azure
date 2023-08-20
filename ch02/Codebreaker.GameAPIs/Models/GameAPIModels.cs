@@ -13,7 +13,7 @@ public enum GameType
 
 public record class CreateGameRequest(GameType GameType, string PlayerName);
 
-public record class CreateGameResponse(Guid GameId, GameType GameType, string PlayerName)
+public record class CreateGameResponse(Guid GameId, GameType GameType, string PlayerName, int NumberCodes, int MaxMoves)
 {
     public required IDictionary<string, IEnumerable<string>> FieldValues { get; init; }
 }

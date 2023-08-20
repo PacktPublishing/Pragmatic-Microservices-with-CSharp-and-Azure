@@ -1,9 +1,4 @@
-﻿using Codebreaker.GameAPIs.Algorithms.Extensions;
-using Codebreaker.GameAPIs.Algorithms.Fields;
-using Codebreaker.GameAPIs.Contracts;
-using Codebreaker.GameAPIs.Models;
-
-namespace Codebreaker.GameAPIs.Analyzers;
+﻿namespace Codebreaker.GameAPIs.Analyzers;
 
 public class SimpleGameGuessAnalyzer : GameGuessAnalyzer<ColorField, SimpleColorResult>
 {
@@ -32,7 +27,7 @@ public class SimpleGameGuessAnalyzer : GameGuessAnalyzer<ColorField, SimpleColor
         }
 
         // check black
-        for (int i = 0; i < _game.Codes.Count(); i++)
+        for (int i = 0; i < _game.Codes.Length; i++)
         {
             // check black
             if (guessPegsToCheck[i] == codesToCheck[i])

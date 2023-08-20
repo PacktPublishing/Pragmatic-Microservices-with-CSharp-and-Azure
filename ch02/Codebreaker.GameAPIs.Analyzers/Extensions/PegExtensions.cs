@@ -1,12 +1,11 @@
-﻿using Codebreaker.GameAPIs.Models;
+﻿namespace Codebreaker.GameAPIs.Extensions;
 
-namespace Codebreaker.GameAPIs.Algorithms.Extensions;
 public static class PegExtensions
 {
     public static IEnumerable<T> ToPegs<T>(this string[] pegStrings)
         where T : IParsable<T>
     {
-        foreach (var pegString in pegStrings)
+        foreach (string pegString in pegStrings)
         {
             yield return T.Parse(pegString, default);
         }

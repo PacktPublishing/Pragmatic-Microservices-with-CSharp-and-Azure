@@ -1,18 +1,15 @@
 using System.Collections;
 
-using Codebreaker.GameAPIs.Algorithms.Extensions;
-using Codebreaker.GameAPIs.Algorithms.Fields;
 using Codebreaker.GameAPIs.Analyzers;
-using Codebreaker.GameAPIs.Models;
 
 using static Codebreaker.GameAPIs.Models.Colors;
 
 namespace Codebreaker.GameAPIs.Algorithms.Tests;
 
-public class ColorGame8x5AlgorithmTests
+public class ColorGame8x5AnalyzerTests
 {
     [Fact]
-    public void SetMoveWithThreeWhite()
+    public void SetMoveShouldReturnThreeWhite()
     {
         ColorResult expectedKeyPegs = new(0, 3);
         ColorResult? resultKeyPegs = TestSkeleton(

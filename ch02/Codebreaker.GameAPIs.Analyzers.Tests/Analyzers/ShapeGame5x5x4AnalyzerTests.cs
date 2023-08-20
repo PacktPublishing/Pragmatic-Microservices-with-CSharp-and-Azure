@@ -1,9 +1,6 @@
 using System.Collections;
 
-using Codebreaker.GameAPIs.Algorithms.Extensions;
-using Codebreaker.GameAPIs.Algorithms.Fields;
 using Codebreaker.GameAPIs.Analyzers;
-using Codebreaker.GameAPIs.Models;
 
 using static Codebreaker.GameAPIs.Models.Colors;
 using static Codebreaker.GameAPIs.Models.Shapes;
@@ -11,10 +8,10 @@ using static Codebreaker.GameAPIs.Models.Shapes;
 namespace Codebreaker.GameAPIs.Algorithms.Tests;
 
 // TODO: add more unit tests
-public class ShapeGame5x5x4AlgorithmTests
+public class ShapeGame5x5x4AnalyzerTests
 {
     [Fact]
-    public void SetMoveWithThreeBlue()
+    public void SetMoveShouldReturnThreeBlue()
     {
         ShapeAndColorResult expectedKeyPegs = new(0, 3, 0);
         ShapeAndColorResult? resultKeyPegs = TestSkeleton(

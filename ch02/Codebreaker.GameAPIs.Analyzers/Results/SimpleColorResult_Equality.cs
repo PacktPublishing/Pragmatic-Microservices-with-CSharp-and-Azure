@@ -1,4 +1,5 @@
 ﻿namespace Codebreaker.GameAPIs.Models;
+
 public readonly partial struct SimpleColorResult : IEquatable<SimpleColorResult>
 {
     public override bool Equals(object? obj)

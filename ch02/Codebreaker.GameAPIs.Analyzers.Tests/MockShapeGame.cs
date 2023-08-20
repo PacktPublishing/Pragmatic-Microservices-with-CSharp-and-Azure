@@ -1,8 +1,6 @@
-﻿using Codebreaker.GameAPIs.Contracts;
+﻿namespace Codebreaker.GameAPIs.Algorithms.Tests;
 
-namespace Codebreaker.GameAPIs.Algorithms.Tests;
-
-public class MockColorGame : IGame
+public class MockShapeGame : IGame
 {
     public Guid GameId { get; init; }
     public int NumberCodes { get; init; }
@@ -16,5 +14,5 @@ public class MockColorGame : IGame
     public DateTime StartTime { get; }
     public TimeSpan? Duration { get; set; }
     public int LastMoveNumber { get; set; }
-    public required string GameType { get; set; }
+    public required string GameType { get; init; }
 }
