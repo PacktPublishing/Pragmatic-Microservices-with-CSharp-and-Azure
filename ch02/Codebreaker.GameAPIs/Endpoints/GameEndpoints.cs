@@ -1,4 +1,3 @@
-﻿using Codebreaker.GameAPIs.Data;
 using Codebreaker.GameAPIs.Errors;
 using Codebreaker.GameAPIs.Exceptions;
 

@@ -1,5 +1,3 @@
-﻿using Codebreaker.GameAPIs.Algorithms.Extensions;
-using Codebreaker.GameAPIs.Algorithms.Fields;
 using Codebreaker.GameAPIs.Analyzers;
 using Codebreaker.GameAPIs.Exceptions;
 

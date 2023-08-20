@@ -1,8 +1,7 @@
 ﻿using System.Collections.Concurrent;
 
-using Codebreaker.GameAPIs.Exceptions;
-
 namespace Codebreaker.GameAPIs.Data.InMemory;
+
 public class GamesMemoryRepository(ILogger<GamesMemoryRepository> logger) : IGamesRepository
 {
     private readonly ConcurrentDictionary<Guid, Game> _games = new();
