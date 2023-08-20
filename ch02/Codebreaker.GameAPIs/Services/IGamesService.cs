@@ -1,4 +1,4 @@
-namespace Codebreaker.GameAPIs.Services;
+﻿namespace Codebreaker.GameAPIs.Services;
 
 /// <summary>
 /// Interface for Game Service

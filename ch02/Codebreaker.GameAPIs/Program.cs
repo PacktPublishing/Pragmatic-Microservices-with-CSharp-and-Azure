@@ -6,16 +6,6 @@ using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.ConfigureHttpJsonOptions(options =>
-{
-    options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
-});
-
-builder.Services.Configure<Microsoft.AspNetCore.Mvc.JsonOptions>(options =>
-{
-    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter<GameType>());
-});
-
 // Swagger/EndpointDocumentation
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
@@ -37,11 +27,7 @@ builder.Services.AddSwaggerGen(options =>
             Url= new Uri("https://www.cninnovation.com/apiusage")
         }
     });
-
-    options.EnableAnnotations(enableAnnotationsForInheritance: true, enableAnnotationsForPolymorphism: true);
-    // options.UseOneOfForPolymorphism();
 });
-builder.Services.AddProblemDetails();
 
 // Application Services
 
@@ -59,10 +45,6 @@ if (app.Environment.IsDevelopment())
         options.SwaggerEndpoint("/swagger/v3/swagger.json", "v3");
     });
 }
-
-// -------------------------
-// Endpoints
-// -------------------------
 
 app.MapGameEndpoints();
 

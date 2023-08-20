@@ -1,5 +1,4 @@
-using Codebreaker.GameAPIs.Errors;
-using Codebreaker.GameAPIs.Exceptions;
+﻿using Codebreaker.GameAPIs.Errors;
 
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -66,7 +65,7 @@ public static class GameEndpoints
                     return TypedResults.Ok(game.AsUpdateGameResponse(move.KeyPegs));
                 }
             }
-            catch (ArgumentException ex) when (ex.HResult is <= 4200 and >= 400)
+            catch (ArgumentException ex) when (ex.HResult is >= 4200 and <= 4500)
             {
                 string url = context.Request.GetDisplayUrl();
                 return ex.HResult switch
