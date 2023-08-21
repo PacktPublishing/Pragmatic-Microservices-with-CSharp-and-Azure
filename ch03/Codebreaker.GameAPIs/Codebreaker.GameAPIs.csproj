@@ -6,6 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <InvariantGlobalization>true</InvariantGlobalization>
     <LangVersion>preview</LangVersion>
+    <UserSecretsId>10385a16-970d-4395-b89d-b28be16e4ac9</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
