@@ -1,9 +1,4 @@
-﻿using Codebreaker.Data.Cosmos.Utilities;
-using Codebreaker.GameAPIs.Data;
-
-using Microsoft.EntityFrameworkCore;
-
-namespace Codebreaker.Data.Cosmos;
+﻿namespace Codebreaker.Data.Cosmos;
 
 public class GamesCosmosContext : DbContext, IGamesRepository
 {
