@@ -1,7 +1,4 @@
-﻿using Codebreaker.GameAPIs.Algorithms.Extensions;
-using Codebreaker.GameAPIs.Algorithms.Fields;
-using Codebreaker.GameAPIs.Analyzers;
-using Codebreaker.GameAPIs.Exceptions;
+﻿using Codebreaker.GameAPIs.Analyzers;
 
 namespace Codebreaker.GameAPIs.Services;
 
@@ -87,10 +84,10 @@ public static class GamesFactory
     public static Move ApplyMove(this Game game, string[] guesses, int moveNumber)
     {
         static TField[] GetGuesses<TField>(IEnumerable<string> guesses)
-            where TField: IParsable<TField>
-        {
-            return guesses.Select(g => TField.Parse(g, default)).ToArray();
-        }
+            where TField : IParsable<TField> => 
+            guesses
+                .Select(g => TField.Parse(g, default))
+                .ToArray();
 
         Move GetColorGameGuessAnalyzerResult()
         {
@@ -131,7 +128,7 @@ public static class GamesFactory
             GameTypes.Game8x5 => GetColorGameGuessAnalyzerResult(),
             GameTypes.Game6x4Mini => GetSimpleGameGuessAnalyzerResult(),
             GameTypes.Game5x5x4 => GetShapeGameGuessAnalyzerResult(), 
-            _ => throw new NotImplementedException()
+            _ => throw new CodebreakerException("Invalid game type") { Code = CodebreakerExceptionCodes.InvalidGameType }
         };
 
         game.Moves.Add(move);

@@ -1,9 +1,4 @@
-﻿using Codebreaker.GameAPIs.Data;
-using Codebreaker.GameAPIs.Exceptions;
-
-using Game = Codebreaker.GameAPIs.Models.Game;
-
-namespace Codebreaker.GameAPIs.Services;
+﻿namespace Codebreaker.GameAPIs.Services;
 
 public class GamesService(IGamesRepository dataRepository) : IGamesService
 {
@@ -32,9 +27,10 @@ public class GamesService(IGamesRepository dataRepository) : IGamesService
     }
 
     // get the game from the cache or the data repository
-    public async ValueTask<Game?> GetGameAsync(Guid id, CancellationToken cancellationToken = default)
+    public async ValueTask<Game> GetGameAsync(Guid gameId, CancellationToken cancellationToken = default)
     {
-        var game = await _dataRepository.GetGameAsync(id, cancellationToken);
+        var game = await _dataRepository.GetGameAsync(gameId, cancellationToken);
+        CodebreakerException.ThrowIfNull(game);
         return game;
     }
 
@@ -47,7 +43,7 @@ public class GamesService(IGamesRepository dataRepository) : IGamesService
     {
         Game? game = await _dataRepository.GetGameAsync(gameId, cancellationToken);
         CodebreakerException.ThrowIfNull(game);
-
+       
         game.EndTime = DateTime.Now;
         game.Duration = game.EndTime - game.StartTime;
         game = await _dataRepository.UpdateGameAsync(game, cancellationToken);
@@ -56,7 +52,6 @@ public class GamesService(IGamesRepository dataRepository) : IGamesService
 
     public async Task<IEnumerable<Game>> GetGamesAsync(GamesQuery gamesQuery, CancellationToken cancellationToken = default)
     {
-        var games = await _dataRepository.GetGamesAsync(gamesQuery, cancellationToken);
-        return games;
+        return await _dataRepository.GetGamesAsync(gamesQuery, cancellationToken);
     }
 }
