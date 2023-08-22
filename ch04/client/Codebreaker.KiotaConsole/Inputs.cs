@@ -1,6 +1,4 @@
-﻿using Codebreaker.Client.Models;
-
-using Spectre.Console;
+﻿
 
 namespace Codebreaker.Client;
 

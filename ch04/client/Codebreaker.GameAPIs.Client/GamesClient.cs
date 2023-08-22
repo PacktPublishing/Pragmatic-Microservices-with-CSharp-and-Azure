@@ -1,10 +1,4 @@
-﻿using System.Net;
-using System.Net.Http.Json;
-using System.Text.Json;
-
-using Codebreaker.GameAPIs.Client.Models;
-
-namespace Codebreaker.GameAPIs.Client;
+﻿namespace Codebreaker.GameAPIs.Client;
 public class GamesClient
 {
     private readonly HttpClient _httpClient;
