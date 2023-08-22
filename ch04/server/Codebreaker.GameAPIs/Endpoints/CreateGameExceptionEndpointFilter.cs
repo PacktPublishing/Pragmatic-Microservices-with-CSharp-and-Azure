@@ -1,6 +1,4 @@
-﻿using Codebreaker.GameAPIs.Exceptions;
-
-namespace Codebreaker.GameAPIs.Endpoints;
+﻿namespace Codebreaker.GameAPIs.Endpoints;
 
 public class CreateGameExceptionEndpointFilter(ILogger<CreateGameExceptionEndpointFilter> logger) : IEndpointFilter
 {
@@ -13,7 +11,7 @@ public class CreateGameExceptionEndpointFilter(ILogger<CreateGameExceptionEndpoi
         {
             return await next(context);
         }
-        catch (CodebreakerException)
+        catch (CodebreakerException ex) when (ex.Code == CodebreakerExceptionCodes.InvalidGameType)
         {
             _logger.LogWarning("game type {gametype} not found", request.GameType);
             return Results.BadRequest("Gametype does not exist");

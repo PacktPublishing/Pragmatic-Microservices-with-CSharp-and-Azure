@@ -4,13 +4,10 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <InvariantGlobalization>true</InvariantGlobalization>
     <LangVersion>preview</LangVersion>
-    <UserSecretsId>cbc04dc5-efef-4c1d-9c2b-f5db1e2d2e5b</UserSecretsId>
+    <UserSecretsId>10385a16-970d-4395-b89d-b28be16e4ac9</UserSecretsId>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Compile Remove="Endpoints\GameEndpointsPreOpenAPI.cs" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.0-preview.7.23375.9" />
@@ -19,8 +16,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Codebreaker.Data.Cosmos\Codebreaker.Data.Cosmos.csproj" />
-    <ProjectReference Include="..\Codebreaker.Data.SqlServer\Codebreaker.Data.SqlServer.csproj" />
     <ProjectReference Include="..\Codebreaker.GameAPIs.Models\Codebreaker.GameAPIs.Models.csproj" />
   </ItemGroup>
 
