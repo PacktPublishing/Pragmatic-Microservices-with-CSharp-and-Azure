@@ -1,9 +1,4 @@
-﻿using Codebreaker.GameAPIs.Data;
-using Codebreaker.GameAPIs.Exceptions;
-
-using Game = Codebreaker.GameAPIs.Models.Game;
-
-namespace Codebreaker.GameAPIs.Services;
+﻿namespace Codebreaker.GameAPIs.Services;
 
 public class GamesService(IGamesRepository dataRepository) : IGamesService
 {
@@ -49,10 +44,9 @@ public class GamesService(IGamesRepository dataRepository) : IGamesService
         Game? game = await _dataRepository.GetGameAsync(gameId, cancellationToken);
         CodebreakerException.ThrowIfNull(game);
        
-
         game.EndTime = DateTime.Now;
         game.Duration = game.EndTime - game.StartTime;
-        game = await _dataRepository.UpdateGameAsync(game);
+        game = await _dataRepository.UpdateGameAsync(game, cancellationToken);
         return game;
     }
 

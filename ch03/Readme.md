@@ -3,14 +3,15 @@
 ## Technical requirements
 
 The code for this chapter can be found in the following GitHub repository: https://github.com/PacktPublishing/Pragmatic-Microservices-With-CSharp-and-Azure
-The source code folder ch03 contains the code samples for this chapter. You’ll find the code for four projects:
+
+The source code folder ch03 contains the code samples for this chapter. You’ll find the code for the four core projects:
 
 * Codebreaker.Data.SqlServer – this is the new library to access Microsoft SQL Server.
 * Codebreaker.Data.Cosmos – this is the new library to access Azure Cosmos DB.
 * Codebreaker.GamesAPIs – this is the Web API project created in the previous chapter. In this chapter the dependency injection container to use the repository implementations 
 * Codebreaker.GamesAPIs.Models – a library for the data models. This is unchanged from the previous chapter.
 
-The algorithms libraries from the previous chapter are not included with this chapter. Here we’ll just use the NuGet package Codebreaker.GameAPIs.Algorithms.
+The algorithms libraries from the previous chapter are not included with this chapter. Here we’ll just use the NuGet package CNinnovation.Codebreaker.Analyzers.
 
 If you worked through the previous chapter to create the models and implemented the minimal API project, you can continue from there.  You can also copy the files from the folder ch02 if you didn’t complete the previous work, and start from there. Ch03 contains all the updates from this chapter.
 
@@ -26,12 +27,23 @@ To access Azure Cosmos DB, an emulator to run it locally is available. You can i
 
 `winget install Microsoft.Azure.CosmosEmulator`
 
+## Installing via Microsoft Installer
 
-## Changes after first draft
+Instead of using winget, you can also install the software using Microsoft Installers. With SQL Server, chose the Developer or Express editions.
 
-These changes will be reflected in the next version of the book chapter:
+* [Microsoft SQL Server][https://www.microsoft.com/en-us/sql-server/sql-server-downloads)
+* [Azure Cosmos DB Emulator](https://learn.microsoft.com/en-us/azure/cosmos-db/local-emulator?tabs=ssl-netstd21#install-the-emulator)
 
-* new JsonStringEnumConverter<T> instead of JsonStringEnumMemberConverter now used as attibute instead of method invocations
-* UpdateGameRequest and UpdateGameResponse instead of SetMoveRequest and SetMoveResponse
-* GamesQuery for querying games
-* The analyzer package has the new name CNinnovation.Codebreaker.Analyzers 
+## Using SQL Server and Azure Cosmos DB on Linux or Mac
+
+Using the Mac, you can use Docker to run SQL Server and Azure Cosmos DB. Read chapter 5 for more information on hosting SQL Server with Docker.
+
+* [Run SQL Server Linux container images with Docker](https://learn.microsoft.com/en-us/sql/linux/quickstart-install-connect-docker)
+* [Run the Azure Cosmos DB Linux Emulator on Docker](https://learn.microsoft.com/en-us/azure/cosmos-db/docker-emulator-linux)
+
+
+## Updates after draft
+
+The Cosmos partition key changed to be independent of `Game` objects.
+
+The chapter will be changed.

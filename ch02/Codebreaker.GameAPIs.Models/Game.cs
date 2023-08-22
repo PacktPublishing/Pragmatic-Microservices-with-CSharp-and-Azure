@@ -10,10 +10,10 @@ public class Game(
     int numberCodes,
     int maxMoves) : IGame
 {
-    public Guid GameId { get; private set; } = gameId;
-    public string GameType { get; private set; } = gameType;
-    public string PlayerName { get; private set; } = playerName;
-    public DateTime StartTime { get; private set; } = startTime;
+    public Guid GameId { get; } = gameId;
+    public string GameType { get; } = gameType;
+    public string PlayerName { get; } = playerName;
+    public DateTime StartTime { get; } = startTime;
     public DateTime? EndTime { get; set; }
     public TimeSpan? Duration { get; set; }
     public int LastMoveNumber { get; set; } = 0;
