@@ -1,6 +1,4 @@
-﻿using System.Text.Json.Serialization;
-
-namespace Codebreaker.GameAPIs.Client.Models;
+﻿namespace Codebreaker.GameAPIs.Client.Models;
 
 #if NET8_0_OR_GREATER
 [JsonConverter(typeof(JsonStringEnumConverter<GameType>))]
