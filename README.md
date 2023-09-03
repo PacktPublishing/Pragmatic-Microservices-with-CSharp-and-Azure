@@ -6,3 +6,4 @@ Pragmatic Microservices with CSharp and Azure, published by Packt
 * Chapter 3 - Writing data to relational and NoSQL databases
 * Chapter 4 - Creating Libraries for Client Applications
 * Chapter 5 - Containerization of Microservices
+* Chapter 6 - Microsoft Azure for Hosting of Applications

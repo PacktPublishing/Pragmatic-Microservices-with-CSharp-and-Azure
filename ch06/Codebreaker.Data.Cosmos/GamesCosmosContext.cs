@@ -1,43 +1,63 @@
-﻿using Codebreaker.GameAPIs.Data;
+﻿using Codebreaker.Data.Cosmos.Utilities;
+using Codebreaker.GameAPIs.Data;
 
-namespace Codebreaker.Data.SqlServer;
+using Microsoft.EntityFrameworkCore;
 
-public class GamesSqlServerContext(DbContextOptions<GamesSqlServerContext> options) : DbContext(options), IGamesRepository
+namespace Codebreaker.Data.Cosmos;
+
+public class GamesCosmosContext : DbContext, IGamesRepository
 {
-    internal const string GameId = nameof(GameId);
+    private const string PartitionKey = nameof(PartitionKey);
+    private const string ContainerName = "GamesV3";
+    private readonly FieldValueValueConverter _fieldValueConverter = new();
+    private readonly FieldValueComparer _fieldValueComparer = new();
+
+    public GamesCosmosContext(DbContextOptions<GamesCosmosContext> options)
+        : base(options)
+    {
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.HasDefaultSchema("codebreaker");
-        modelBuilder.ApplyConfiguration(new GameConfiguration());
-        modelBuilder.ApplyConfiguration(new MoveConfiguration());
+        modelBuilder.HasDefaultContainer("GamesV3");
+        var gameModel = modelBuilder.Entity<Game>();
 
-        modelBuilder.Entity<Game>()
-            .HasMany(g => g.Moves)
-            .WithOne()
-            .HasForeignKey(GameId);
+        gameModel.Property<string>(PartitionKey);
+        gameModel.HasPartitionKey(PartitionKey);
+        gameModel.HasKey(nameof(Game.GameId), PartitionKey);
+
+        gameModel.Property(g => g.FieldValues)
+            .HasConversion(_fieldValueConverter, _fieldValueComparer);
     }
 
     public DbSet<Game> Games => Set<Game>();
-    public DbSet<Move> Moves => Set<Move>();
+
+    public static string ComputePartitionKey(Game game) => game.GameId.ToString();
+
+    public void SetPartitionKey(Game game) =>
+        Entry(game).Property(PartitionKey).CurrentValue =
+            ComputePartitionKey(game);
 
     public async Task AddGameAsync(Game game, CancellationToken cancellationToken = default)
     {
+        SetPartitionKey(game);
         Games.Add(game);
         await SaveChangesAsync(cancellationToken);
     }
 
-    public async Task AddMoveAsync(Game game, Move move, CancellationToken cancellationToken = default)
+    public async Task AddMoveAsync(Game game, Move _, CancellationToken cancellationToken = default)
     {
-        Moves.Add(move);
+        SetPartitionKey(game);
         Games.Update(game);
-       
         await SaveChangesAsync(cancellationToken);
     }
 
     public async Task<bool> DeleteGameAsync(Guid gameId, CancellationToken cancellationToken = default)
     {
-        var game = await Games.FindAsync(new object?[] { gameId }, cancellationToken: cancellationToken);
+        var game = await Games
+            .WithPartitionKey(gameId.ToString())
+            .SingleOrDefaultAsync(g => g.GameId == gameId, cancellationToken);
+
         if (game is null)
             return false;
         Games.Remove(game);
@@ -48,46 +68,16 @@ public class GamesSqlServerContext(DbContextOptions<GamesSqlServerContext> optio
     public async Task<Game?> GetGameAsync(Guid gameId, CancellationToken cancellationToken = default)
     {
         var game = await Games
-            .Include("Moves")
-            .TagWith(nameof(GetGameAsync))
+            .WithPartitionKey(gameId.ToString())
             .SingleOrDefaultAsync(g => g.GameId == gameId, cancellationToken);
         return game;
     }
 
-    public async Task<IEnumerable<Game>> GetGamesByDateAsync(string gameType, DateOnly date, CancellationToken cancellationToken = default)
-    {
-        var d = date.ToDateTime(TimeOnly.MinValue);
-        var games = await Games
-            .Where(g => g.GameType == gameType && g.StartTime.Date == d)
-            .TagWith(nameof(GetGamesByDateAsync))
-            .ToListAsync(cancellationToken);
-                return games;
-    }
-
-    public async Task<IEnumerable<Game>> GetGamesByPlayerAsync(string playerName, CancellationToken cancellationToken = default)
-    {
-        var games = await Games
-            .Where(g => g.PlayerName == playerName)
-            .TagWith(nameof(GetGamesByPlayerAsync))
-            .ToListAsync(cancellationToken);
-        return games;
-    }
-
-    public async Task<IEnumerable<Game>> GetRunningGamesByPlayerAsync(string playerName, CancellationToken cancellationToken = default)
-    {
-        var games = await Games
-            .Where(g => g.PlayerName == playerName && g.EndTime == null)
-            .ToListAsync(cancellationToken);
-        return games;
-    }
-
-    private const int MaxGamesReturned = 500;
-
+    private const int MAXGAMESRETURNED = 500;
     public async Task<IEnumerable<Game>> GetGamesAsync(GamesQuery gamesQuery, CancellationToken cancellationToken = default)
     {
         IQueryable<Game> query = Games
-            .TagWith(nameof(GetGamesAsync))
-            .Include(g => g.Moves);
+            .TagWith(nameof(GetGamesAsync));
 
         // Apply Game filters if provided.
         if (gamesQuery.Date.HasValue)
@@ -113,14 +103,15 @@ public class GamesSqlServerContext(DbContextOptions<GamesSqlServerContext> optio
             query = query.OrderByDescending(g => g.StartTime);
         }
 
-        query = query.Take(MaxGamesReturned);
+        query = query.Take(MAXGAMESRETURNED);
 
         return await query.ToListAsync(cancellationToken);
     }
 
     public async Task<Game> UpdateGameAsync(Game game, CancellationToken cancellationToken = default)
     {
-        Games.Update(game);
+        SetPartitionKey(game);
+        Games.Add(game);
         await SaveChangesAsync(cancellationToken);
         return game;
     }
