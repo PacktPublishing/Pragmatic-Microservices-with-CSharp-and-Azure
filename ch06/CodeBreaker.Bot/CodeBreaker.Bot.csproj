@@ -9,9 +9,11 @@
   </PropertyGroup>
 
   <PropertyGroup>
+    <ContainerRegistry>codebreakertest.azurecr.io</ContainerRegistry>
     <ContainerRepository>codebreaker/bot</ContainerRepository>
-    <ContainerImageTags>3.5.2;latest</ContainerImageTags>
+    <ContainerImageTags>3.5.3;latest</ContainerImageTags>
   </PropertyGroup>
+
 
   <ItemGroup>
     <ContainerPort Include="8080" Type="tcp" />    
