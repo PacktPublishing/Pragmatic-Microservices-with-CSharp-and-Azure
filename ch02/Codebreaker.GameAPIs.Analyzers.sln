@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34004.107
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Codebreaker.Analyzers", "Codebreaker.GameAPIs.Analyzers\Codebreaker.Analyzers.csproj", "{4359FAF4-4884-4811-9AC6-11A4C8FC10C7}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Codebreaker.GameAPIs.Analyzers.Tests", "Codebreaker.GameAPIs.Analyzers.Tests\Codebreaker.GameAPIs.Analyzers.Tests.csproj", "{15C10D6A-D6F9-4F2F-80AE-CF599629AA2E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4359FAF4-4884-4811-9AC6-11A4C8FC10C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4359FAF4-4884-4811-9AC6-11A4C8FC10C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4359FAF4-4884-4811-9AC6-11A4C8FC10C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4359FAF4-4884-4811-9AC6-11A4C8FC10C7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{15C10D6A-D6F9-4F2F-80AE-CF599629AA2E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{15C10D6A-D6F9-4F2F-80AE-CF599629AA2E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{15C10D6A-D6F9-4F2F-80AE-CF599629AA2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{15C10D6A-D6F9-4F2F-80AE-CF599629AA2E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {73C2B531-8412-46BA-93BD-CE8ABA8B0155}
+	EndGlobalSection
+EndGlobal

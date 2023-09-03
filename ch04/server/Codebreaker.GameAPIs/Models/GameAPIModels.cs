@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace Codebreaker.GameAPIs.Models;
 
@@ -12,34 +11,24 @@ public enum GameType
     Game5x5x4
 }
 
-public record class CreateGameRequest(
-    [property: Required] GameType GameType, 
-    [property: Required, MinLength(4), MaxLength(25)] string PlayerName);
+public record class CreateGameRequest(GameType GameType, string PlayerName);
 
-public record class CreateGameResponse(
-    [property: Required] Guid GameId, 
-    [property: Required] GameType GameType, 
-    [property: Required, MinLength(4), MaxLength(25)] string PlayerName, 
-    [property: Required] int NumberCodes, 
-    [property: Required] int MaxMoves)
+public record class CreateGameResponse(Guid GameId, GameType GameType, string PlayerName, int NumberCodes, int MaxMoves)
 {
     public required IDictionary<string, IEnumerable<string>> FieldValues { get; init; }
 }
 
-public record class UpdateGameRequest(
-    [property: Required] Guid GameId, 
-    [property: Required] GameType GameType, 
-    [property: Required, MinLength(4), MaxLength(25)] string PlayerName, 
-    [property: Required] int MoveNumber, 
-    bool End = false)
+public record class UpdateGameRequest(Guid GameId, GameType GameType, string PlayerName, int MoveNumber, bool End = false)
 {
     public string[]? GuessPegs { get; set; }
 }
 
 public record class UpdateGameResponse(
-    [property: Required] Guid GameId,
-    [property: Required] GameType GameType,
-    [property: Required] int MoveNumber,
-    [property: Required] bool Ended,
-    [property: Required] bool IsVictory,
-    [property: Required] string[]? Results);
+    Guid GameId,
+    GameType GameType,
+    int MoveNumber,
+    bool Ended,
+    bool IsVictory,
+    string[]? Results);
+
+public record GameSummary(Guid GameId, string PlayerName, DateTime StartTime, int NumberMoves, bool Won, TimeSpan? Duration);

@@ -9,7 +9,17 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.0-preview.6.23329.11" />
+    <Compile Remove="Endpoints\GameEndpoints1.cs" />
+    <None Include="Endpoints\GameEndpoints1.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Endpoints\GameEndpoints2.cs" />
+    <None Include="Endpoints\GameEndpoints2.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.0-preview.7.23375.9" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
     <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.5.0" />
   </ItemGroup>

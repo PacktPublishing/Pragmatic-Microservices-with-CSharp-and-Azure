@@ -1,8 +1,4 @@
-﻿using Codebreaker.GameAPIs.Client.Models;
-
-using Spectre.Console;
-
-namespace Codebreaker.Client;
+﻿namespace Codebreaker.Client;
 
 internal class Inputs
 {

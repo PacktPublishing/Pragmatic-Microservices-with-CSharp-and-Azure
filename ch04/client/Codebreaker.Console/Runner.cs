@@ -1,9 +1,4 @@
-﻿using Codebreaker.GameAPIs.Client;
-using Codebreaker.GameAPIs.Client.Models;
-
-using Spectre.Console;
-
-namespace Codebreaker.Client;
+﻿namespace Codebreaker.Client;
 internal class Runner(GamesClient client)
 {
     private readonly CancellationTokenSource _cancellationTokenSource = new();

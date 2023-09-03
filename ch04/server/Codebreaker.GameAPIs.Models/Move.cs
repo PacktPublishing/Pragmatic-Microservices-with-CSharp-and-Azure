@@ -25,6 +25,6 @@ public class Move(Guid moveId, int moveNumber)
     public required string[] KeyPegs { get; init; }
 
     public override string ToString() => $"{MoveNumber}. " +
-        $"{string.Join('#',GuessPegs)} : " +
+        $"{string.Join('#', GuessPegs)} : " +
         $"{string.Join('#', KeyPegs)}";
 }

@@ -1,15 +1,4 @@
-﻿using System.Text.Json;
-
-using Codebreaker.Client.Models;
-
-using Microsoft.Extensions.Options;
-using Microsoft.Kiota.Abstractions;
-using Microsoft.Kiota.Abstractions.Authentication;
-using Microsoft.Kiota.Http.HttpClientLibrary;
-
-using Spectre.Console;
-
-namespace Codebreaker.Client;
+﻿namespace Codebreaker.Client;
 
 internal class RunnerOptions
 {

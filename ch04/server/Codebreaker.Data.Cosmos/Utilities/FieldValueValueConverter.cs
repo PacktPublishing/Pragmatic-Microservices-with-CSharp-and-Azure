@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-
 using System.Text.Json;
 
 namespace Codebreaker.Data.Cosmos.Utilities;

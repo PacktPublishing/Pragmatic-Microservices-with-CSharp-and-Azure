@@ -42,17 +42,17 @@ public static class MappingExtensions
     {
         Dictionary<string, List<string>> fields = new();
 
-        foreach (var pair in fieldsString.Split('#'))
+        foreach (string pair in fieldsString.Split('#'))
         {
-            var index = pair.IndexOf(':');
+            int index = pair.IndexOf(':');
 
             if (index < 0)
             {
                 throw new ArgumentException($"Field {pair} does not contain ':' delimiter.");
             }
 
-            var key = pair[..index];
-            var value = pair[(index + 1)..];
+            string key = pair[..index];
+            string value = pair[(index + 1)..];
 
             if (!fields.TryGetValue(key, out List<string>? list))
             {

@@ -1,10 +1,4 @@
-﻿using System.Net;
-using System.Net.Http.Json;
-using System.Text.Json;
-
-using Codebreaker.GameAPIs.Client.Models;
-
-namespace Codebreaker.GameAPIs.Client;
+﻿namespace Codebreaker.GameAPIs.Client;
 public class GamesClient
 {
     private readonly HttpClient _httpClient;
@@ -18,7 +12,27 @@ public class GamesClient
             PropertyNameCaseInsensitive = true
         };
     }
-   
+
+    public async Task<Game?> GetGameAsync(Guid gameId, CancellationToken cancellationToken = default)
+    {
+        Game? game = default;
+        try
+        {
+            game = await _httpClient.GetFromJsonAsync<Game>($"/games/{gameId}", _jsonOptions, cancellationToken);
+        }
+        catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.NotFound)
+        {
+            return default;
+        }
+        return game;
+    }
+
+    public async Task<IEnumerable<Game>> GetGamesAsync(GamesQuery query, CancellationToken cancellationToken = default)
+    {
+        IEnumerable<Game> games = (await _httpClient.GetFromJsonAsync<IEnumerable<Game>>($"/games/{query.AsUrlQuery()}", _jsonOptions, cancellationToken)) ?? Enumerable.Empty<Game>();
+        return games;
+    }
+
     public async Task<(Guid GameId, int NumberCodes, int MaxMoves, IDictionary<string, string[]> FieldValues)> 
         StartGameAsync(GameType gameType, string playerName, CancellationToken cancellationToken = default)
     {
@@ -41,26 +55,6 @@ public class GamesClient
             ?? throw new InvalidOperationException();
         (_, _, _, bool ended, bool isVictory, string[] results) = moveResponse;
         return (results, ended, isVictory);
-    }
-
-    public async Task<Game?> GetGameAsync(Guid gameId, CancellationToken cancellationToken = default)
-    {
-        Game? game = default;
-        try
-        {
-            game = await _httpClient.GetFromJsonAsync<Game>($"/games/{gameId}", _jsonOptions, cancellationToken);
-        }
-        catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.NotFound)
-        {
-            return default;
-        }
-        return game;
-    }
-
-    public async Task<IEnumerable<Game>> GetGamesAsync(GamesQuery query, CancellationToken cancellationToken = default)
-    {
-        IEnumerable<Game> games = (await _httpClient.GetFromJsonAsync<IEnumerable<Game>>($"/games/{query.AsUrlQuery()}", _jsonOptions, cancellationToken)) ?? Enumerable.Empty<Game>();
-        return games;
     }
 
     public async Task DeleteGameAsync(Guid gameId)
