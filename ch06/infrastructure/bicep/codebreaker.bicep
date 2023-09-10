@@ -1,42 +1,41 @@
-/*
-* Codebreaker Resource Group
-*/
+metadata description = 'Creates Azure resources for the Codebreaker solution'
 
 targetScope = 'resourceGroup'
 var resourceGroup = az.resourceGroup()
 
 // Parameters
-@description('Specifies the location used for the resources.')
-param location string
+@description('Specifies the environment for resources.')
+@allowed([
+  'dev'
+  'test'
+  'qa'
+  'stage'
+  'prod'
+])
+param environment string = 'dev'
 
-@description('The administrator password for the SQL server.\nEither specify this parameter OR the parameter "sqlAdminPasswordSecret" if the password is stored as secret in the keyVault.')
-@secure()
-param sqlAdminPassword string?
+@description('Specifies the location used for the resources. Default is the location of the resource.')
+param location string = az.resourceGroup().location
 
-@description('The required parameters to access the keyvault for the the SQL administrator password.')
-param sqlAdminPasswordSecret {
-  keyVaultName: string
-  sqlAdminPasswortSecretName: string
-}?
+@description('Specifies the name of the solution - is used as part of the Azure resource names.')
+@maxLength(20)
+param solutionName string
 
-@description('A string placed after the name of resources, which require a unique name across subscriptions.\nDefault: Unique string based on the subscription-id.')
-param nameSuffix string = uniqueString(subscription().subscriptionId)
+@description('Should the free-tier for Cosmos be used?')
+param cosmosFreeTier bool = true
+
+@description('A string placed after the name of resources, which require a unique name.\nDefault: Unique string based on the resource-id.')
+param nameSuffix string = uniqueString(az.resourceGroup().id)
 var dashNameSuffix = '${nameSuffix != '' ? '-' : null}${nameSuffix}' // Prepend a dash, if the nameSuffix is not empty
 
-@description('Specifies the principal ids of the developers, needing AAD access to some resources (e.g. Cosmos database account).')
-param developerPrincipleIds string[]
-
-resource keyVault 'Microsoft.KeyVault/vaults@2023-02-01' existing = if (sqlAdminPasswordSecret != null) {
-  name: sqlAdminPasswordSecret!.keyVaultName
-}
-
 // Modules
-module logAnalyticsWorkspace 'modules/misc/log-analytics-workspace.bicep' = {
+module logAnalyticsWorkspaceModule 'modules/logs/log-analytics-workspace.bicep' = {
   name: 'log-analytics-workspace'
   scope: resourceGroup
   params: {
-    name: 'codebreakerlogs'
     location: location
+    environment: environment
+    solutionName: solutionName
   }
 }
 
@@ -44,82 +43,55 @@ module containerRegistry 'modules/containers/container-registry.bicep' = {
   name: 'container-registry'
   scope: resourceGroup
   params: {
-    name: 'codebreaker${nameSuffix}'
+    solutionName: '${solutionName}${nameSuffix}' // dash is not allowed with the ACR name
     location: location
   }
 }
 
-var cosmosDatabaseAccountName = 'codebreaker-cosmos${dashNameSuffix}'
-var cosmosDatabaseName = 'codebreaker'
-module cosmos 'modules/cosmos/cosmos.bicep' = {
-  name: 'cosmos'
+module cosmosModule 'modules/cosmos/cosmos.bicep' = {
+  name: 'cosmos-accountanddatabase'
   scope: resourceGroup
   params: {
-    databaseAccountName: cosmosDatabaseAccountName
+    solutionName: '${solutionName}${dashNameSuffix}'
     location: location
-    freeTier: false
-    userPrincipalIds: developerPrincipleIds
-    databaseName: cosmosDatabaseName
+    freeTier: cosmosFreeTier
   }
 }
 
-module cosmosGameContainer 'modules/cosmos/cosmos-game-container.bicep' = {
-  name: 'cosmos-games'
-  dependsOn: [ cosmos ]
+module cosmosGameContainerModule 'modules/cosmos/cosmos-container.bicep' = {
+  name: 'cosmos-gamescontainer'
+  dependsOn: [ cosmosModule ]
   scope: resourceGroup
   params: {
-    databaseAccountName: cosmosDatabaseAccountName
-    databaseName: cosmosDatabaseName
+    gamesContainerName: 'Games-3'
+    databaseAccountName: cosmosModule.outputs.databaseAccountName
+    databaseName: cosmosModule.outputs.databaseName
   }
 }
 
-var sqlServerName = 'codebreaker-sql-server${dashNameSuffix}'
-module sql 'modules/sql/sql-server.bicep' = {
-  name: 'sql'
-  scope: resourceGroup
-  params: {
-    databaseServerName: sqlServerName
-    location: location
-    publicNetworkAccess: true
-    administratorLogin: 'sqladmin'
-    administratorLoginPassword: sqlAdminPassword != null ? sqlAdminPassword! : keyVault.getSecret(sqlAdminPasswordSecret!.sqlAdminPasswortSecretName)
-  }
-}
-
-module sqlGameDb 'modules/sql/sql-game-database.bicep' = {
-  name: 'sql-games'
-  dependsOn: [ sql ]
-  scope: resourceGroup
-  params: {
-    location: location
-    databaseServerName: sqlServerName
-    maxSizeBytes: 2147483648
-  }
-}
-
-module containerAppEnvironment 'modules/containers/container-app-environment.bicep' = {
+module containerAppEnvironmentModule 'modules/containers/container-app-environment.bicep' = {
   name: 'container-app-environment'
+  dependsOn: [ logAnalyticsWorkspaceModule ]
   scope: resourceGroup
   params: {
     name: 'codebreakerenv'
     location: location
-    logAnalyticsWorkspaceName:logAnalyticsWorkspace.outputs.name
+    logAnalyticsWorkspaceName:logAnalyticsWorkspaceModule.outputs.name
   }
 }
 
-module gameApiContainerApp 'modules/containers/game-api-container-app.bicep' = {
-  name: 'codebreaker-gamesapi'
-  dependsOn: [ cosmosGameContainer ]
+module containerAppModule 'modules/containers/container-app.bicep' = {
+  name: 'hello'
+  dependsOn: [ containerAppEnvironmentModule, cosmosGameContainerModule ]
   scope: resourceGroup
   params: {
-    containerAppEnvironmentId: containerAppEnvironment.outputs.id
-    name: 'codebreaker-gamesapi'
+    containerAppEnvironmentId: containerAppEnvironmentModule.outputs.id
+    name: 'hello'
     location: location
-    databaseAccountName: cosmosDatabaseAccountName
-    cpu: '0.5'
-    memory: '1'
-    port: 8080
-    minReplicas: 1
+    cpu: '0.25'
+    memory: '0.5'
+    targetPort: 80
+    minReplicas: 0
     maxReplicas: 3
   }
 }
