@@ -1,26 +1,35 @@
-/*
-* GameAPI Container App
-*/
+metadata description = 'Creates an Azure Container App'
 
 // Parameters
 @description('The id of the container app environment')
 param containerAppEnvironmentId string
 
 @description('The name for the container app')
-param name string = 'game-api'
+@maxLength(16)
+param name string
 
 @description('Specifies the container image to deploy for the container app\nExample: \'mcr.microsoft.com/azuredocs/containerapps-helloworld:latest\'')
 param containerImage string = 'mcr.microsoft.com/azuredocs/containerapps-helloworld:latest'
 
-@description('Azure Cosmos DB account name')
-@maxLength(44)
-param databaseAccountName string
+// @description('Azure Cosmos DB account name')
+// @maxLength(44)
+// param databaseAccountName string
 
 @description('The location for the container app')
 param location string = resourceGroup().location
 
+@description('Specifies the environment for resources.')
+@allowed([
+  'dev'
+  'test'
+  'qa'
+  'stage'
+  'prod'
+])
+param environment string = 'dev'
+
 @description('The target port for the container app')
-param port int = 443
+param targetPort int = 80
 
 @description('Number of CPU cores the container can use. Can be with a maximum of two decimals.')
 param cpu string = '0.25'
@@ -31,26 +40,41 @@ param memory string = '0.5'
 @description('Minimum number of replicas the container app will be deployed')
 @minValue(0)
 @maxValue(300)
-param minReplicas int = 0
+param minReplicas int = 1
 
 @description('Maximum number of replicas the container app will be deployed')
 @minValue(1)
 @maxValue(300)
-param maxReplicas int = 10
+param maxReplicas int = 3
+
+@description('Environment variables for the container app')
+param envVars array = []
+
+var regionCodes = {
+  centralus: 'cus'
+  southcentralus: 'scus'
+  northeurope: 'northeu'
+  westeurope: 'westeu'
+  australiacentral: 'auc'
+  southeastasia: 'seasia'
+}
+
+// remove space and make sure all lower case
+var sanitizedLocation = toLower(replace(location, ' ', ''))
+
+// get the region code
+var regionCode = contains(regionCodes, sanitizedLocation) ? regionCodes[sanitizedLocation] : sanitizedLocation
 
 // Resources
-resource gameApiContainerApp 'Microsoft.App/containerApps@2023-05-01' = {
-  name: name
+resource containerApp 'Microsoft.App/containerApps@2023-05-01' = {
+  name: '${name}-${regionCode}-${environment}'
   location: location
-  identity: {
-    type: 'SystemAssigned'
-  }
   properties: {
     managedEnvironmentId: containerAppEnvironmentId
     configuration: {
       ingress: {
         external: true
-        targetPort: port
+        targetPort: targetPort
         allowInsecure: false
         traffic: [
           {
@@ -65,8 +89,9 @@ resource gameApiContainerApp 'Microsoft.App/containerApps@2023-05-01' = {
         {
           name: name
           image: containerImage
+          env: envVars
           resources: {
-            cpu: json(cpu)
+            cpu: json(cpu)  // Convert cpu to a number with the json() function
             memory: '${memory}Gi'
           }
         }
@@ -79,13 +104,5 @@ resource gameApiContainerApp 'Microsoft.App/containerApps@2023-05-01' = {
   }
 }
 
-module cosmosDataContributorRoleAssignment '../cosmos/cosmos-data-contributor-role-assignment.bicep' = {
-  name: 'gameapi-cosmos-data-contributor-role-assignment'
-  params: {
-    databaseAccountName: databaseAccountName
-    principalId: gameApiContainerApp.identity.principalId
-  }
-}
-
 // Outputs
-output name string = gameApiContainerApp.name
+output name string = containerApp.name

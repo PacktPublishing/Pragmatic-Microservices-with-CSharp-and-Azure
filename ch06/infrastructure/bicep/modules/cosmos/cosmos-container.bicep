@@ -1,6 +1,4 @@
-/*
-* Cosmos Game Container
-*/
+metadata description = 'Creates a Cosmos DB container.'
 
 // Parameters
 @description('Specifies the name of the database account.')
@@ -9,11 +7,13 @@ param databaseAccountName string
 @description('Specifies the name of the database.')
 param databaseName string
 
-@description('Specifies the name of the games-container.')
-param gamesContainerName string = 'Games'
+@description('Specifies the name of the container.')
+param gamesContainerName string
 
 @description('Specifies the throughput of the games container.')
-param gamesThroughput int = 400
+@minValue(400)
+@maxValue(1000000)
+param containerThroughput int = 400
 
 // Resources
 resource databaseAccount 'Microsoft.DocumentDB/databaseAccounts@2023-04-15' existing = {
@@ -68,11 +68,7 @@ resource databaseThroughput 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases/
   name: 'default'
   properties: {
     resource: {
-      throughput: gamesThroughput
-      // OR
-      // autoscaleSettings: {
-      //   maxThroughput: gamesThroughput
-      // }
+      throughput: containerThroughput
     }
   }
 }

@@ -1,31 +1,36 @@
-/*
-* Cosmos DatabaseAccount and Cosmos Database
-*/
+metadata description = 'Creates a Cosmos DB account and a database.'
+
+targetScope = 'resourceGroup'
 
 // Parameters
 @description('Specifies the location for resources.')
 param location string = resourceGroup().location
 
-@description('Specifies the name of the database account.')
-param databaseAccountName string
+@description('Specifies the environment for resources.')
+@allowed([
+  'dev'
+  'test'
+  'qa'
+  'stage'
+  'prod'
+])
+param environment string = 'dev'
 
-@description('Specifies the name of the database.')
-param databaseName string
+@description('Specifies the name of the solution (including a possible suffix) - it is used as part of the database account name.')
+@maxLength(35)
+param solutionName string
 
-@description('The AAD-PrincipalIds of the developers, needing read-write access to the database')
-param userPrincipalIds string[]
+@description('Specifies the name of the database, default the name of the solution')
+param databaseName string = solutionName
 
 @description('Whether the free-tier should be enabled or not.')
-param freeTier bool = false
+param freeTier bool = true
 
 // Resources
 resource databaseAccount 'Microsoft.DocumentDB/databaseAccounts@2023-04-15' = {
-  name: toLower(databaseAccountName)
+  name: 'cosmos-${toLower(solutionName)}-${environment}'
   location: location
   kind: 'GlobalDocumentDB'
-  identity: {
-    type: 'SystemAssigned'
-  }
   properties: {
     enableFreeTier: freeTier
     databaseAccountOfferType: 'Standard'
@@ -54,61 +59,6 @@ resource database 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases@2023-04-15
   }
 }
 
-resource cosmosDataReaderRole 'Microsoft.DocumentDB/databaseAccounts/sqlRoleDefinitions@2023-04-15' = {
-  parent: databaseAccount
-  name: '00000000-0000-0000-0000-000000000001'
-  properties: {
-    roleName: 'Cosmos DB Built-in Data Reader'
-    type: 'BuiltInRole'
-    assignableScopes: [
-      databaseAccount.id
-    ]
-    permissions: [
-      {
-        dataActions: [
-          'Microsoft.DocumentDB/databaseAccounts/readMetadata'
-          'Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers/executeQuery'
-          'Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers/readChangeFeed'
-          'Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers/items/read'
-        ]
-        notDataActions: []
-      }
-    ]
-  }
-}
-
-resource cosmosDataContributorRole 'Microsoft.DocumentDB/databaseAccounts/sqlRoleDefinitions@2023-04-15' = {
-  parent: databaseAccount
-  name: '00000000-0000-0000-0000-000000000002'
-  properties: {
-    roleName: 'Cosmos DB Built-in Data Contributor'
-    type: 'BuiltInRole'
-    assignableScopes: [
-      databaseAccount.id
-    ]
-    permissions: [
-      {
-        dataActions: [
-          'Microsoft.DocumentDB/databaseAccounts/readMetadata'
-          'Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers/*'
-          'Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers/items/*'
-        ]
-        notDataActions: []
-      }
-    ]
-  }
-}
-
-resource userRoleAssignments 'Microsoft.DocumentDB/databaseAccounts/sqlRoleAssignments@2023-04-15' = [for principalId in userPrincipalIds: {
-  parent: databaseAccount
-  name: principalId
-  properties: {
-    roleDefinitionId: cosmosDataContributorRole.id
-    principalId: principalId
-    scope: databaseAccount.id
-  }
-}]
-
 // Outputs
 output databaseAccountName string = databaseAccount.name
-output databaseId string = database.name
+output databaseName string = database.name
