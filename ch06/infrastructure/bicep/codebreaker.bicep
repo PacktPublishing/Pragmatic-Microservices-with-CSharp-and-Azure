@@ -44,6 +44,7 @@ module containerRegistry 'modules/containers/container-registry.bicep' = {
   scope: resourceGroup
   params: {
     solutionName: '${solutionName}${nameSuffix}' // dash is not allowed with the ACR name
+    environment: environment
     location: location
   }
 }
@@ -54,6 +55,7 @@ module cosmosModule 'modules/cosmos/cosmos.bicep' = {
   params: {
     solutionName: '${solutionName}${dashNameSuffix}'
     location: location
+    environment: environment
     freeTier: cosmosFreeTier
   }
 }
@@ -76,18 +78,20 @@ module containerAppEnvironmentModule 'modules/containers/container-app-environme
   params: {
     name: 'codebreakerenv'
     location: location
+    environment: environment
     logAnalyticsWorkspaceName:logAnalyticsWorkspaceModule.outputs.name
   }
 }
 
 module containerAppModule 'modules/containers/container-app.bicep' = {
   name: 'hello'
-  dependsOn: [ containerAppEnvironmentModule, cosmosGameContainerModule ]
+  dependsOn: [ containerAppEnvironmentModule ]
   scope: resourceGroup
   params: {
     containerAppEnvironmentId: containerAppEnvironmentModule.outputs.id
     name: 'hello'
     location: location
+    environment: environment
     cpu: '0.25'
     memory: '0.5'
     targetPort: 80
