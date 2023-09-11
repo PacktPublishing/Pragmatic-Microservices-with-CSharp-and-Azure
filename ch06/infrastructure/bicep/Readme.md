@@ -7,7 +7,7 @@ This can e.g. be done via the Azure portal or via the Azure CLI, as shown in the
 
 ```
 az group create --name <resource-group-name> --location <location>
-e.g.  az group create --name rg-my-codebreaker-sample --location westeurope
+// e.g.  az group create --name rg-my-codebreaker-sample --location westeurope
 ```
 
 ## Codebreaker
@@ -17,6 +17,7 @@ Before running that script, have a look at the parameter file _codebreaker.bicep
 It specifies the minimum necessary parameters for _codebreaker.bicep_.
 
 After that, you can deploy the resources by running the following command:
+
 ```
 az deployment group create -g <resource-group-name> -f codebreaker.bicep -p codebreaker.bicepparam
 ```

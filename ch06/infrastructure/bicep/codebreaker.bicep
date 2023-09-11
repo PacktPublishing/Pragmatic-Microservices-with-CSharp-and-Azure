@@ -29,7 +29,7 @@ param nameSuffix string = uniqueString(az.resourceGroup().id)
 var dashNameSuffix = '${nameSuffix != '' ? '-' : null}${nameSuffix}' // Prepend a dash, if the nameSuffix is not empty
 
 // Modules
-module logAnalyticsWorkspaceModule 'modules/logs/log-analytics-workspace.bicep' = {
+module logAnalyticsWorkspaceModule 'modules/loganalytics/log-analytics-workspace.bicep' = {
   name: 'log-analytics-workspace'
   scope: resourceGroup
   params: {

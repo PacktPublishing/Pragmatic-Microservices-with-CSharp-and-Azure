@@ -11,10 +11,6 @@ param name string
 @description('Specifies the container image to deploy for the container app\nExample: \'mcr.microsoft.com/azuredocs/containerapps-helloworld:latest\'')
 param containerImage string = 'mcr.microsoft.com/azuredocs/containerapps-helloworld:latest'
 
-// @description('Azure Cosmos DB account name')
-// @maxLength(44)
-// param databaseAccountName string
-
 @description('The location for the container app')
 param location string = resourceGroup().location
 
