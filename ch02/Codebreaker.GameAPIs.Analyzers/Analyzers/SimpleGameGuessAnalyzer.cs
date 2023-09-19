@@ -1,12 +1,7 @@
 ﻿namespace Codebreaker.GameAPIs.Analyzers;
 
-public class SimpleGameGuessAnalyzer : GameGuessAnalyzer<ColorField, SimpleColorResult>
+public class SimpleGameGuessAnalyzer(IGame game, ColorField[] guesses, int moveNumber) : GameGuessAnalyzer<ColorField, SimpleColorResult>(game, guesses, moveNumber)
 {
-    public SimpleGameGuessAnalyzer(IGame game, ColorField[] guesses, int moveNumber)
-        : base(game, guesses, moveNumber)
-    {
-    }
-
     protected override void ValidateGuessValues()
     {
         if (Guesses.Any(guessPeg => !_game.FieldValues[FieldCategories.Colors].Contains(guessPeg.ToString())))

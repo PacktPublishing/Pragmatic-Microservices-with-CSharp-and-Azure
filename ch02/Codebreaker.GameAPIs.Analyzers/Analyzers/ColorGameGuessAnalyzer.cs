@@ -1,12 +1,7 @@
 ﻿namespace Codebreaker.GameAPIs.Analyzers;
 
-public class ColorGameGuessAnalyzer : GameGuessAnalyzer<ColorField, ColorResult>
+public class ColorGameGuessAnalyzer(IGame game, ColorField[] guesses, int moveNumber) : GameGuessAnalyzer<ColorField, ColorResult>(game, guesses, moveNumber)
 {
-    public ColorGameGuessAnalyzer(IGame game, ColorField[] guesses, int moveNumber)
-        : base(game, guesses, moveNumber)
-    {
-    }
-
     protected override void ValidateGuessValues()
     {
         if (Guesses.Any(guessPeg => !_game.FieldValues[FieldCategories.Colors].Contains(guessPeg.ToString())))
@@ -23,7 +18,7 @@ public class ColorGameGuessAnalyzer : GameGuessAnalyzer<ColorField, ColorResult>
         List<ColorField> codesToCheck = new(_game.Codes.ToPegs<ColorField>());
         List<ColorField> guessPegsToCheck = new(Guesses);
         int black = 0;
-        List<string> whitePegs = new();
+        List<string> whitePegs = [];
 
         // check black
         for (int i = 0; i < guessPegsToCheck.Count; i++)
