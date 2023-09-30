@@ -1,12 +1,7 @@
 ﻿namespace Codebreaker.GameAPIs.Analyzers;
 
-public class ShapeGameGuessAnalyzer : GameGuessAnalyzer<ShapeAndColorField, ShapeAndColorResult>
+public class ShapeGameGuessAnalyzer(IGame game, ShapeAndColorField[] guesses, int moveNumber) : GameGuessAnalyzer<ShapeAndColorField, ShapeAndColorResult>(game, guesses, moveNumber)
 {
-    public ShapeGameGuessAnalyzer(IGame game, ShapeAndColorField[] guesses, int moveNumber)
-        : base(game, guesses, moveNumber)
-    {
-    }
-
     protected override void ValidateGuessValues()
     {
         // check for valid colors
@@ -27,8 +22,8 @@ public class ShapeGameGuessAnalyzer : GameGuessAnalyzer<ShapeAndColorField, Shap
         // Check black and white keyPegs
         List<ShapeAndColorField> codesToCheck = new(_game.Codes.ToPegs<ShapeAndColorField>());
         List<ShapeAndColorField> guessPegsToCheck = new(Guesses);
-        List<ShapeAndColorField> remainingCodesToCheck = new();
-        List<ShapeAndColorField> remainingGuessPegsToCheck = new();
+        List<ShapeAndColorField> remainingCodesToCheck = [];
+        List<ShapeAndColorField> remainingGuessPegsToCheck = [];
 
         byte black = 0;
         byte blue = 0;
@@ -51,7 +46,7 @@ public class ShapeGameGuessAnalyzer : GameGuessAnalyzer<ShapeAndColorField, Shap
         codesToCheck = remainingCodesToCheck;
         remainingCodesToCheck = new(codesToCheck);
         guessPegsToCheck = remainingGuessPegsToCheck;
-        remainingGuessPegsToCheck = new();
+        remainingGuessPegsToCheck = [];
 
         // check blue (correct shape and color on a wrong position)
         for (int i = 0; i < guessPegsToCheck.Count; i++)

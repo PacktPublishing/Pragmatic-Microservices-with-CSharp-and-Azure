@@ -40,36 +40,30 @@ public class ColorGame6x4AnalyzerTests
     [Fact]
     public void ShouldThrowOnInvalidGuessCount()
     {
-        Assert.Throws<ArgumentException>(() =>
-        {
+        Assert.Throws<ArgumentException>(() => 
             TestSkeleton(
                 new[] { "Black", "Black", "Black", "Black" },
                 new[] { "Black" }
-            );
-        });
+            ));
     }
 
     [Fact]
     public void ShouldThrowOnInvalidGuessValues()
     {
-        Assert.Throws<ArgumentException>(() =>
-        {
+        Assert.Throws<ArgumentException>(() => 
             TestSkeleton(
                 new[] { "Black", "Black", "Black", "Black" },
                 new[] { "Black", "Der", "Blue", "Yellow" }      // "Der" is the wrong value
-            );
-        });
+            ));
     }
 
     [Fact]
     public void ShouldThrowOnInvalidMoveNumber()
     {
-        Assert.Throws<ArgumentException>(() =>
-        {
+        Assert.Throws<ArgumentException>(() => 
             TestSkeleton(
                 new[] { Green, Yellow, Green, Black },
-                new[] { Yellow, Green, Black, Blue }, moveNumber: 2);
-        });
+                new[] { Yellow, Green, Black, Blue }, moveNumber: 2));
     }
 
     private static ColorResult TestSkeleton(string[] codes, string[] guesses, int moveNumber = 1)

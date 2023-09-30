@@ -8,7 +8,7 @@ public class MappingExtensionsTests
     public void TestToFieldCollection()
     {
         string input = "Red#Green#Blue";
-        ColorField[] expected = { "Red", "Green", "Blue" };
+        ColorField[] expected = ["Red", "Green", "Blue"];
         ICollection<ColorField> actual = input.ToFieldCollection<ColorField>();
         Assert.Equal(expected, actual);
     }
@@ -16,7 +16,7 @@ public class MappingExtensionsTests
     [Fact]
     public void TestToFieldString()
     {
-        ColorField[] fields = { "Red", "Green", "Blue" };
+        ColorField[] fields = ["Red", "Green", "Blue"];
         string expected = "Red#Green#Blue";
         string actual = fields.ToFieldString();
         Assert.Equal(expected, actual);

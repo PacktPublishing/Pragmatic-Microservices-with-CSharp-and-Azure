@@ -1,7 +1,5 @@
 using System.Collections;
 
-using Codebreaker.GameAPIs.Analyzers;
-
 using static Codebreaker.GameAPIs.Models.Colors;
 using static Codebreaker.GameAPIs.Models.Shapes;
 
