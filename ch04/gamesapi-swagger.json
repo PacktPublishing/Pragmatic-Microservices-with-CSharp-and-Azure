@@ -2,7 +2,7 @@
     "openapi": "3.0.1",
     "info": {
         "title": "Codebreaker Games API",
-        "description": "An ASP.NET Core minimal API to play Codebreaker games",
+        "description": "An ASP.NET Core minimal APIs to play Codebreaker games",
         "termsOfService": "https://www.cninnovation.com/terms",
         "contact": {
             "name": "Christian Nagel",
@@ -242,31 +242,19 @@
     "components": {
         "schemas": {
             "CreateGameRequest": {
-                "required": [
-                    "gameType",
-                    "playerName"
-                ],
                 "type": "object",
                 "properties": {
                     "gameType": {
                         "$ref": "#/components/schemas/GameType"
                     },
                     "playerName": {
-                        "maxLength": 25,
-                        "minLength": 4,
-                        "type": "string"
+                        "type": "string",
+                        "nullable": true
                     }
                 },
                 "additionalProperties": false
             },
             "CreateGameResponse": {
-                "required": [
-                    "gameId",
-                    "gameType",
-                    "maxMoves",
-                    "numberCodes",
-                    "playerName"
-                ],
                 "type": "object",
                 "properties": {
                     "gameId": {
@@ -277,9 +265,8 @@
                         "$ref": "#/components/schemas/GameType"
                     },
                     "playerName": {
-                        "maxLength": 25,
-                        "minLength": 4,
-                        "type": "string"
+                        "type": "string",
+                        "nullable": true
                     },
                     "numberCodes": {
                         "type": "integer",
@@ -533,12 +520,6 @@
                 "additionalProperties": false
             },
             "UpdateGameRequest": {
-                "required": [
-                    "gameId",
-                    "gameType",
-                    "moveNumber",
-                    "playerName"
-                ],
                 "type": "object",
                 "properties": {
                     "gameId": {
@@ -549,9 +530,8 @@
                         "$ref": "#/components/schemas/GameType"
                     },
                     "playerName": {
-                        "maxLength": 25,
-                        "minLength": 4,
-                        "type": "string"
+                        "type": "string",
+                        "nullable": true
                     },
                     "moveNumber": {
                         "type": "integer",
@@ -571,14 +551,6 @@
                 "additionalProperties": false
             },
             "UpdateGameResponse": {
-                "required": [
-                    "ended",
-                    "gameId",
-                    "gameType",
-                    "isVictory",
-                    "moveNumber",
-                    "results"
-                ],
                 "type": "object",
                 "properties": {
                     "gameId": {
@@ -602,7 +574,8 @@
                         "type": "array",
                         "items": {
                             "type": "string"
-                        }
+                        },
+                        "nullable": true
                     }
                 },
                 "additionalProperties": false
