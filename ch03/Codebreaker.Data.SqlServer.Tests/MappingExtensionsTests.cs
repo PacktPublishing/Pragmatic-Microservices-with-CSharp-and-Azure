@@ -28,14 +28,14 @@ public class MappingExtensionsTests
         // Arrange
         IDictionary<string, IEnumerable<string>> dict = new Dictionary<string, IEnumerable<string>>()
             {
-                { "colors", new[] {"Red", "Green", "Blue"} },
-                { "shapes", new[] {"Rectangle", "Circle"} }
+                { "colors", ["Red", "Green", "Blue"] },
+                { "shapes", ["Rectangle", "Circle"] }
             };
 
-        var expected = "colors:Red#colors:Green#colors:Blue#shapes:Rectangle#shapes:Circle";
+        string expected = "colors:Red#colors:Green#colors:Blue#shapes:Rectangle#shapes:Circle";
 
         // Act
-        var result = MappingExtensions.ToFieldsString(dict);
+        string result = MappingExtensions.ToFieldsString(dict);
 
         // Assert
         Assert.Equal(expected, result);
@@ -45,11 +45,11 @@ public class MappingExtensionsTests
     public void ToFieldsDictionary_ShouldReturnCorrectDictionary()
     {
         // Arrange
-        var input = "colors:Red#colors:Green#colors:Blue#shapes:Rectangle#shapes:Circle";
+        string input = "colors:Red#colors:Green#colors:Blue#shapes:Rectangle#shapes:Circle";
         Dictionary<string, IEnumerable<string>> expected = new ()
             {
-                { "colors", new[] {"Red", "Green", "Blue"} },
-                { "shapes", new[] {"Rectangle", "Circle"} }
+                { "colors", ["Red", "Green", "Blue"] },
+                { "shapes", ["Rectangle", "Circle"] }
             };
 
         // Act
