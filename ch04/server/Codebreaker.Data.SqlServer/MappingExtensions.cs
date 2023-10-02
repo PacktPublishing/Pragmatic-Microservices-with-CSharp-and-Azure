@@ -40,7 +40,7 @@ public static class MappingExtensions
 
     public static IDictionary<string, IEnumerable<string>> FromFieldsString(this string fieldsString)
     {
-        Dictionary<string, List<string>> fields = new();
+        Dictionary<string, List<string>> fields = [];
 
         foreach (string pair in fieldsString.Split('#'))
         {
@@ -56,7 +56,7 @@ public static class MappingExtensions
 
             if (!fields.TryGetValue(key, out List<string>? list))
             {
-                list = new();
+                list = [];
                 fields[key] = list;
             }
 
