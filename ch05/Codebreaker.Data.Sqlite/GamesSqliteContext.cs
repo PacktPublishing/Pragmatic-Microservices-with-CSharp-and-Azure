@@ -100,10 +100,10 @@ public class GamesSqliteContext(DbContextOptions<GamesSqliteContext> options) : 
             query = query.Where(g => g.PlayerName == gamesQuery.PlayerName);
         if (gamesQuery.GameType != null)
             query = query.Where(g => g.GameType == gamesQuery.GameType);
-        if (gamesQuery.IsFinished == false)
+        if (gamesQuery.Ended == false)
             query = query.Where(g => g.EndTime == null);
 
-        if (gamesQuery.IsFinished == true)
+        if (gamesQuery.Ended == true)
         {
             query = query.Where(g => g.EndTime != null)
                 .OrderBy(g => g.Duration);
