@@ -1,6 +1,4 @@
-﻿
-
-var builder = Host.CreateApplicationBuilder(args);
+﻿var builder = Host.CreateApplicationBuilder(args);
 
 builder.Services.Configure<RunnerOptions>(options =>
 {

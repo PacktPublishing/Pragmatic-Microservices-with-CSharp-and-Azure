@@ -1,9 +1,9 @@
 ﻿namespace Codebreaker.GameAPIs.Client.Models;
 
 public record class GamesQuery(
-    GameType? GameType = default, 
-    string? PlayerName = default, 
-    DateOnly? Date = default, 
+    GameType? GameType = default,
+    string? PlayerName = default,
+    DateOnly? Date = default,
     bool? Ended = false)
 {
     public string AsUrlQuery()

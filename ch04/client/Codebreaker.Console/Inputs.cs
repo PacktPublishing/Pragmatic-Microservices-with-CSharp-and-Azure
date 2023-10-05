@@ -41,11 +41,11 @@ internal class Inputs
 
     public static string[] GetFieldChoices(int numberCodes, IDictionary<string, string[]> fieldValues)
     {
-        List<string> selections = new();
+        List<string> selections = [];
 
         for (int i = 0; i < numberCodes; i++)
         {
-            List<string> guessList = new();
+            List<string> guessList = [];
             foreach (string key in fieldValues.Keys)
             {
                 string guess = AnsiConsole.Prompt(new SelectionPrompt<string>()
@@ -57,7 +57,7 @@ internal class Inputs
             selections.Add(string.Join('#', guessList));
         }
 
-        return selections.ToArray();
+        return [.. selections];
     }
 }
 

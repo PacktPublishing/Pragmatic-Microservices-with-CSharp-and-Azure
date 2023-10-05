@@ -85,9 +85,7 @@ internal class Runner
         var games = await _client.Games.GetAsync(config =>
         {
             config.QueryParameters.Date = new Date(DateTime.Today);
-        }, _cancellationTokenSource.Token);
-        if (games is null)
-            throw new InvalidOperationException();
+        }, _cancellationTokenSource.Token) ?? throw new InvalidOperationException();
 
         foreach (var game in games)
         {
@@ -101,16 +99,16 @@ internal class Runner
         GameType gameType = Inputs.GetGameType();
         string playerName = Inputs.GetPlayername();
 
-        string[] ToStringArray(object o)
+        static string[] ToStringArray(object o)
         {
-            List<string> values = new();
+            List<string> values = [];
             if (o is JsonElement je)
             {
                 foreach (var s in je.EnumerateArray())
                 {
                     values.Add(s.GetString() ?? string.Empty);
                 }
-                return values.ToArray();
+                return [.. values];
             }
             else
             {
@@ -125,11 +123,9 @@ internal class Runner
                 PlayerName = playerName,
                 GameType = gameType
             };
-            var response = await _client.Games.PostAsync(request, cancellationToken: _cancellationTokenSource.Token);
-            if (response is null)
-            {
-                throw new InvalidOperationException();
-            }
+            var response =
+                await _client.Games.PostAsync(request, cancellationToken: _cancellationTokenSource.Token)
+                    ?? throw new InvalidOperationException();
 
             IDictionary<string, string[]> fieldValues = response?.FieldValues?.AdditionalData
             .ToDictionary(
@@ -150,11 +146,11 @@ internal class Runner
             UpdateGameRequest updateGameRequest = new()
             {
                 MoveNumber = moveNumber,
-                GuessPegs = guesses.ToList()
+                GuessPegs = [.. guesses]
             };
-            UpdateGameResponse? response = await _client.Games[gameId.ToString()].PatchAsync(updateGameRequest, cancellationToken: _cancellationTokenSource.Token);
-            if (response is null)
-                throw new InvalidOperationException();
+            UpdateGameResponse? response =
+                await _client.Games[gameId.ToString()].PatchAsync(updateGameRequest, cancellationToken: _cancellationTokenSource.Token)
+                    ?? throw new InvalidOperationException();
 
             await Console.Out.WriteLineAsync($" ** {string.Join(' ', response.Results ?? Enumerable.Empty<string>())}");
         } while (!ended);
