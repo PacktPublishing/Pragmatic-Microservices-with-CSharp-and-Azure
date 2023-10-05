@@ -52,7 +52,7 @@ public class CodeBreakerGameRunner(GamesClient gamesClient, ILogger<CodeBreakerG
         return list4;
     }
 
-    public async Task StartGameAsync()
+    public async Task StartGameAsync(CancellationToken cancellationToken = default)
     {
         static int NextKey(ref int key)
         {
@@ -65,7 +65,7 @@ public class CodeBreakerGameRunner(GamesClient gamesClient, ILogger<CodeBreakerG
         _moves.Clear();
         _moveNumber = 0;
 
-        (_gameId, _, _, IDictionary<string, string[]> fieldValues) = await _gamesClient.StartGameAsync(GameType.Game6x4, "Bot");
+        (_gameId, _, _, IDictionary<string, string[]> fieldValues) = await _gamesClient.StartGameAsync(GameType.Game6x4, "Bot", cancellationToken);
         int key = 1;
         _colorNames = fieldValues["colors"]
             .ToDictionary(keySelector: c => NextKey(ref key), elementSelector: color => color);
@@ -79,7 +79,7 @@ public class CodeBreakerGameRunner(GamesClient gamesClient, ILogger<CodeBreakerG
     /// <param name="thinkSeconds">The seconds to simulate thinking before setting the next move</param>
     /// <returns>a task</returns>
     /// <exception cref="InvalidOperationException">throws if initialization was not done, or with invalid game state</exception>
-    public async Task RunAsync(int thinkSeconds)
+    public async Task RunAsync(int thinkSeconds, CancellationToken cancellationToken = default)
     {
         if (_possibleValues is null) throw new InvalidOperationException($"call {nameof(StartGameAsync)} before");
         Guid gameId = _gameId ?? throw new InvalidOperationException($"call {nameof(StartGameAsync)} before");
@@ -91,7 +91,7 @@ public class CodeBreakerGameRunner(GamesClient gamesClient, ILogger<CodeBreakerG
             (string[] guessPegs, int selection) = GetNextMoves();
             _logger.SendMove(string.Join(':', guessPegs), gameId.ToString());
 
-            (string[] results, ended, bool isVictory) = await _gamesClient.SetMoveAsync(gameId, PlayerName, GameType.Game6x4, _moveNumber, guessPegs);
+            (string[] results, ended, bool isVictory) = await _gamesClient.SetMoveAsync(gameId, PlayerName, GameType.Game6x4, _moveNumber, guessPegs, cancellationToken);
 
             if (isVictory)
             {
@@ -124,7 +124,7 @@ public class CodeBreakerGameRunner(GamesClient gamesClient, ILogger<CodeBreakerG
                 _logger.ReducedPossibleValues(_possibleValues.Count, "White", gameId.ToString());
             }
 
-            await Task.Delay(TimeSpan.FromSeconds(thinkSeconds));  // thinking delay
+            await Task.Delay(TimeSpan.FromSeconds(thinkSeconds), cancellationToken);  // thinking delay
         } while (!ended);
 
         _logger.FinishedRun(_moveNumber, gameId.ToString());

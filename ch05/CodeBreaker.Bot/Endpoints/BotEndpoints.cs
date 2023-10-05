@@ -15,7 +15,7 @@ public static class BotEndpoints
         group.MapPost("/bots", Results<BadRequest, Accepted<Guid>> (
             CodeBreakerTimer timer,
             int count = 3,
-            int delay = 60,
+            int delay = 10,
             int thinkTime = 3) =>
         {
             Guid id;
