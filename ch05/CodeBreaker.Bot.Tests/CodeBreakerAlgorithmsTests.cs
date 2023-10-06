@@ -9,10 +9,8 @@ public class CodeBreakerAlgorithmsTests
     [Fact]
     public void SelectPegTestThrowsException()
     {
-        Assert.Throws<InvalidOperationException>(() =>
-        {
-            CodeBreakerAlgorithms.SelectPeg(44, 4);
-        });
+        Assert.Throws<InvalidOperationException>(() => 
+            CodeBreakerAlgorithms.SelectPeg(44, 4));
     }
 
     [Theory]
