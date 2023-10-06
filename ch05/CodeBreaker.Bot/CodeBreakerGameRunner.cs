@@ -18,7 +18,7 @@ public class CodeBreakerGameRunner(GamesClient gamesClient, ILogger<CodeBreakerG
     {
         static List<int> Create8Colors(int shift)
         {
-            List<int> pin = new();
+            List<int> pin = [];
             for (int i = 0; i < 6; i++)
             {
                 int x = 1 << i + shift;
@@ -81,8 +81,10 @@ public class CodeBreakerGameRunner(GamesClient gamesClient, ILogger<CodeBreakerG
     /// <exception cref="InvalidOperationException">throws if initialization was not done, or with invalid game state</exception>
     public async Task RunAsync(int thinkSeconds, CancellationToken cancellationToken = default)
     {
-        if (_possibleValues is null) throw new InvalidOperationException($"call {nameof(StartGameAsync)} before");
-        Guid gameId = _gameId ?? throw new InvalidOperationException($"call {nameof(StartGameAsync)} before");
+        if (_possibleValues is null) 
+            throw new InvalidOperationException($"call {nameof(StartGameAsync)} before");
+        Guid gameId = _gameId ?? 
+            throw new InvalidOperationException($"call {nameof(StartGameAsync)} before");
 
         bool ended = false;
         do
@@ -137,10 +139,11 @@ public class CodeBreakerGameRunner(GamesClient gamesClient, ILogger<CodeBreakerG
     /// <exception cref="InvalidOperationException">Throws if there are no calculated possible values left to chose from</exception>
     private (string[] Colors, int Selection) GetNextMoves()
     {
-        if (_possibleValues?.Count is null or 0) throw new InvalidOperationException("invalid number of possible values - 0");
+        if (_possibleValues?.Count is null or 0) 
+            throw new InvalidOperationException("invalid number of possible values - 0");
 
         int random = Random.Shared.Next(_possibleValues.Count);
-        var value = _possibleValues[random];
+        int value = _possibleValues[random];
 
         return (IntToColors(value), value);
     }
