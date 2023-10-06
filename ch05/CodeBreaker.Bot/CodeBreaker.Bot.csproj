@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -6,6 +6,11 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>4053495e-84a4-48c2-91d3-4b8290310020</UserSecretsId>
     <LangVersion>preview</LangVersion>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <ContainerRepository>codebreaker/bot</ContainerRepository>
+    <ContainerImageTags>3.5.3;latest</ContainerImageTags>
   </PropertyGroup>
 
   <ItemGroup>
