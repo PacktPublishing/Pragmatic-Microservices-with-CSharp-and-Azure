@@ -1,5 +1,4 @@
 ﻿using Codebreaker.Data.SqlServer;
-using Codebreaker.GameAPIs.Data;
 
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
@@ -19,7 +18,7 @@ public static class CreateDatabaseEndpoint
             }
             else
             {
-                logger.LogError("/createsqldb invoked, but SQL Server is not configured");
+                logger.LogError("/updatesql invoked, but SQL Server is not configured");
                 return TypedResults.UnprocessableEntity("SQL Server is not configured");
             }
         }).WithTags("Database");

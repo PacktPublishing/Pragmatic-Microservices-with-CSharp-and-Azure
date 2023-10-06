@@ -1,6 +1,4 @@
-﻿using Codebreaker.GameAPIs.Data;
-using Codebreaker.GameAPIs.Errors;
-using Codebreaker.GameAPIs.Exceptions;
+﻿using Codebreaker.GameAPIs.Errors;
 
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -27,7 +25,7 @@ public static class GameEndpoints
             }
             catch (CodebreakerException ex) when (ex.Code == CodebreakerExceptionCodes.InvalidGameType)
             {
-                GameError error = new(ErrorCodes.InvalidGameType, $"Game type {request.GameType} does not exist", context.Request.GetDisplayUrl(), Enum.GetNames<GameType>());
+                GameError error = new(ErrorCodes.InvalidGameType, $"Game type {request.GameType} does not exist", context.Request.GetDisplayUrl(),   Enum.GetNames<GameType>());
                 return TypedResults.BadRequest(error);
             }
             return TypedResults.Created($"/games/{game.GameId}", game.AsCreateGameResponse());
@@ -67,7 +65,7 @@ public static class GameEndpoints
                     return TypedResults.Ok(game.AsUpdateGameResponse(move.KeyPegs));
                 }
             }
-            catch (ArgumentException ex) when (ex.HResult is <= 4200 and >= 400)
+            catch (ArgumentException ex) when (ex.HResult is >= 4200 and <= 4500)
             {
                 string url = context.Request.GetDisplayUrl();
                 return ex.HResult switch
@@ -75,7 +73,7 @@ public static class GameEndpoints
                     4200 => TypedResults.BadRequest(new GameError(ErrorCodes.InvalidGuessNumber, "Invalid number of guesses received", url)),
                     4300 => TypedResults.BadRequest(new GameError(ErrorCodes.UnexpectedMoveNumber, "Unexpected move number received", url)),
                     4400 => TypedResults.BadRequest(new GameError(ErrorCodes.InvalidGuess, "Invalid guess values received!", url)),
-                    _ => TypedResults.BadRequest(new GameError(ErrorCodes.InvalidMove, "Invalid move received!", url))
+                    _ => TypedResults.BadRequest(new GameError(ErrorCodes.InvalidMove,"Invalid move received!", url))
                 };
             }
             catch (CodebreakerException ex) when (ex.Code == CodebreakerExceptionCodes.GameNotFound)
@@ -126,23 +124,23 @@ public static class GameEndpoints
             string? gameType = default,
             string? playerName = default,
             DateOnly? date = default,
-            bool? isFinished = default,
-            CancellationToken cancellationToken = default) => 
-        {
-            GamesQuery query = new(gameType, playerName, date, IsFinished: isFinished);
-            var games = await gameService.GetGamesAsync(query, cancellationToken);
-            return TypedResults.Ok(games);
-        })
-        .WithName("GetGames")
-        .WithSummary("Get games based on query parameters")
-        .WithOpenApi(op =>
-        {
-            op.Parameters[0].Description = "The game type to filter by";
-            op.Parameters[1].Description = "The player name to filter by";
-            op.Parameters[2].Description = "The date to filter by";
-            op.Parameters[3].Description = "Whether to filter by ended games";
-            return op;
-        });
+            bool ended = false,
+            CancellationToken cancellationToken = default) =>
+                {
+                    GamesQuery query = new(gameType, playerName, date, Ended: ended);
+                    var games = await gameService.GetGamesAsync(query, cancellationToken);
+                    return TypedResults.Ok(games);
+                })
+                .WithName("GetGames")
+                .WithSummary("Get games based on query parameters")
+                .WithOpenApi(op =>
+                {
+                    op.Parameters[0].Description = "The game type to filter by";
+                    op.Parameters[1].Description = "The player name to filter by";
+                    op.Parameters[2].Description = "The date to filter by";
+                    op.Parameters[3].Description = "Whether to filter by ended games";
+                    return op;
+                });
 
         group.MapDelete("/{gameId:guid}", async (
             Guid gameId,

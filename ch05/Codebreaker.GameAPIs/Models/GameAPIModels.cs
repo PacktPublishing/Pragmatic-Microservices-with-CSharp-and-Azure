@@ -43,3 +43,5 @@ public record class UpdateGameResponse(
     [property: Required] bool Ended,
     [property: Required] bool IsVictory,
     [property: Required] string[]? Results);
+
+public record GameSummary(Guid GameId, string PlayerName, DateTime StartTime, int NumberMoves, bool Won, TimeSpan? Duration);

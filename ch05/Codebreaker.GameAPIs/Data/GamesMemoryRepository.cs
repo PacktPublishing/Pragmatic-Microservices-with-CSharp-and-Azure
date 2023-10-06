@@ -1,8 +1,7 @@
 ﻿using System.Collections.Concurrent;
 
-using Codebreaker.GameAPIs.Exceptions;
-
 namespace Codebreaker.GameAPIs.Data.InMemory;
+
 public class GamesMemoryRepository(ILogger<GamesMemoryRepository> logger) : IGamesRepository
 {
     private readonly ConcurrentDictionary<Guid, Game> _games = new();
@@ -45,63 +44,37 @@ public class GamesMemoryRepository(ILogger<GamesMemoryRepository> logger) : IGam
         return Task.FromResult<IEnumerable<Game>>(games);
     }
 
-    public Task<IEnumerable<Game>> GetRunningGamesByPlayerAsync(string playerName, CancellationToken cancellationToken = default)
-    {
-        var games = _games.Values
-            .Where(g => g.PlayerName == playerName && g.StartTime >= DateTime.Today.AddDays(-1) && !g.Ended())
-            .ToArray();
-        return Task.FromResult<IEnumerable<Game>>(games);
-    }
-
     public Task AddMoveAsync(Game game, Move move, CancellationToken cancellationToken = default)
     {
         _games[game.GameId] = game;
         return Task.CompletedTask;
     }
 
-    public Task<IEnumerable<Game>> GetGamesAsync(GamesQuery? gamesQuery = null, CancellationToken cancellationToken = default)
+    public Task<IEnumerable<Game>> GetGamesAsync(GamesQuery gamesQuery, CancellationToken cancellationToken = default)
     {
         IEnumerable<Game> filteredGames = _games.Values;
 
-        if (gamesQuery != null)
+        if (!string.IsNullOrEmpty(gamesQuery.PlayerName))
         {
-            if (!string.IsNullOrEmpty(gamesQuery.GameType))
-            {
-                filteredGames = filteredGames.Where(g => g.GameType == gamesQuery.GameType);
-            }
-
-            if (gamesQuery.Date != null)
-            {
-                filteredGames = filteredGames.Where(g => DateOnly.FromDateTime(g.StartTime.Date) == gamesQuery.Date);
-            }
-
-            if (!string.IsNullOrEmpty(gamesQuery.PlayerName))
-            {
-                filteredGames = filteredGames
-                    .Where(g => g.PlayerName == gamesQuery.PlayerName);
-            }
-
-            if (gamesQuery.IsFinished == false)
-            {
-                filteredGames = filteredGames
-                    .Where(g => !g.Ended());
-            }
-
-            if (gamesQuery.IsFinished == true)
-            {
-                filteredGames = filteredGames
-                    .Where(g => g.Ended())
-                    .OrderBy(g => g.Duration);
-            }
-            else
-            {
-                filteredGames = filteredGames
-                    .OrderByDescending(g => g.StartTime);
-            }
-
+            filteredGames = filteredGames.Where(g => g.PlayerName.Equals(gamesQuery.PlayerName));
         }
 
-        return Task.FromResult(filteredGames.AsEnumerable());
+        if (gamesQuery.Date != null)
+        {
+            filteredGames = filteredGames.Where(g => DateOnly.FromDateTime(g.StartTime) == gamesQuery.Date);
+        }
+
+        if (gamesQuery.RunningOnly)
+        {
+            filteredGames = filteredGames.Where(g => !g.Ended());
+        }
+
+        if (gamesQuery.Ended)
+        {
+            filteredGames = filteredGames.Where(g => g.Ended());
+        }
+
+        return Task.FromResult(filteredGames);
     }
 
     public Task<Game> UpdateGameAsync(Game game, CancellationToken cancellationToken = default)
@@ -114,7 +87,9 @@ public class GamesMemoryRepository(ILogger<GamesMemoryRepository> logger) : IGam
             return Task.FromResult(game);
         }
 
-        CodebreakerException.ThrowUpdateFailed(game);
-        throw new Exception("unreachable");
+        throw new CodebreakerException($"Game update failed with game id {game.GameId}") 
+        { 
+            Code = CodebreakerExceptionCodes.GameUpdateFailed 
+        };
     }
 }
