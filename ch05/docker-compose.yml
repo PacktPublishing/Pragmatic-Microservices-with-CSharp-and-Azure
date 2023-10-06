@@ -5,7 +5,7 @@ services:
     hostname: codebreakersql
     env_file:
       - sql.env
-#    environment:
+#    environment: // use this if you don't want to use a .env file
 #      SA_PASSWORD: "<enteryoursapassword>"
 #      ACCEPT_EULA: "Y"
     ports:
