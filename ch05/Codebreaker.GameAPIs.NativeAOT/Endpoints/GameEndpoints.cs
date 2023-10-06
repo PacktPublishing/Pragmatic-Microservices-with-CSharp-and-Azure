@@ -1,8 +1,4 @@
-﻿using Codebreaker.GameAPIs.Data;
-using Codebreaker.GameAPIs.Errors;
-using Codebreaker.GameAPIs.Exceptions;
-
-using Microsoft.AspNetCore.Http.Extensions;
+﻿using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace Codebreaker.GameAPIs.Endpoints;
@@ -99,15 +95,16 @@ public static class GameEndpoints
             return TypedResults.Ok(game);
         });
 
+        // TODO: bool and CancellationToken parameters have an issue with the RequestDelegateGenerator using .NET 8 RC 1; update with a later version of .NET 8
         group.MapGet("/", async (
             IGamesService gameService,
-            string? gameType = default,
+            CancellationToken cancellationToken,
+            string ? gameType = default,
             string? playerName = default,
             DateOnly? date = default,
-            bool ended = default,
-            CancellationToken cancellationToken = default) =>
+            bool? ended = default) =>
         {
-            GamesQuery query = new(gameType, playerName, date, Ended: ended);
+            GamesQuery query = new(gameType, playerName, date, Ended: ended ?? false);
             var games = await gameService.GetGamesAsync(query, cancellationToken);
             return TypedResults.Ok(games);
         });
