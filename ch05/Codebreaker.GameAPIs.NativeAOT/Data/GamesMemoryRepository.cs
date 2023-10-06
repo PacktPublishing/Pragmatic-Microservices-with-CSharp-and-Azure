@@ -81,13 +81,13 @@ public class GamesMemoryRepository(ILogger<GamesMemoryRepository> logger) : IGam
                     .Where(g => g.PlayerName == gamesQuery.PlayerName);
             }
 
-            if (gamesQuery.IsFinished == false)
+            if (gamesQuery.Ended == false)
             {
                 filteredGames = filteredGames
                     .Where(g => !g.Ended());
             }
 
-            if (gamesQuery.IsFinished == true)
+            if (gamesQuery.Ended == true)
             {
                 filteredGames = filteredGames
                     .Where(g => g.Ended())
@@ -114,7 +114,9 @@ public class GamesMemoryRepository(ILogger<GamesMemoryRepository> logger) : IGam
             return Task.FromResult(game);
         }
 
-        CodebreakerException.ThrowUpdateFailed(game);
-        throw new Exception("unreachable");
+        throw new CodebreakerException($"Game update failed with game id {game.GameId}")
+        {
+            Code = CodebreakerExceptionCodes.GameUpdateFailed
+        };
     }
 }

@@ -31,13 +31,6 @@ public static class GameEndpoints
                 return TypedResults.BadRequest(error);
             }
             return TypedResults.Created($"/games/{game.GameId}", game.AsCreateGameResponse());
-        })
-        .WithName("CreateGame")
-        .WithSummary("Creates and starts a game")
-        .WithOpenApi(op =>
-        {
-            op.RequestBody.Description = "The game type and the player name of the game to create";
-            return op;
         });
 
         // Update the game resource with a move
@@ -87,14 +80,6 @@ public static class GameEndpoints
                 string url = context.Request.GetDisplayUrl();
                 return TypedResults.BadRequest(new GameError(ErrorCodes.GameNotActive, "The game already ended", url));
             }
-        })
-        .WithName("SetMove")
-        .WithSummary("End the game or set a move")
-        .WithOpenApi(op =>
-        {
-            op.Parameters[0].Description = "The id of the game to set a move";
-            op.RequestBody.Description = "The data for creating the move";
-            return op;
         });
 
         // Get game by id
@@ -112,13 +97,6 @@ public static class GameEndpoints
             }
 
             return TypedResults.Ok(game);
-        })
-        .WithName("GetGame")
-        .WithSummary("Gets a game by the given id")
-        .WithOpenApi(op =>
-        {
-            op.Parameters[0].Description = "The id of the game to get";
-            return op;
         });
 
         group.MapGet("/", async (
@@ -126,41 +104,23 @@ public static class GameEndpoints
             string? gameType = default,
             string? playerName = default,
             DateOnly? date = default,
-            bool? isFinished = default,
-            CancellationToken cancellationToken = default) => 
+            bool ended = default,
+            CancellationToken cancellationToken = default) =>
         {
-            GamesQuery query = new(gameType, playerName, date, IsFinished: isFinished);
+            GamesQuery query = new(gameType, playerName, date, Ended: ended);
             var games = await gameService.GetGamesAsync(query, cancellationToken);
             return TypedResults.Ok(games);
-        })
-        .WithName("GetGames")
-        .WithSummary("Get games based on query parameters")
-        .WithOpenApi(op =>
-        {
-            op.Parameters[0].Description = "The game type to filter by";
-            op.Parameters[1].Description = "The player name to filter by";
-            op.Parameters[2].Description = "The date to filter by";
-            op.Parameters[3].Description = "Whether to filter by ended games";
-            return op;
         });
 
         group.MapDelete("/{gameId:guid}", async (
             Guid gameId,
-            IGamesService gameService, 
+            IGamesService gameService,
             CancellationToken cancellationToken
         ) =>
         {
             await gameService.DeleteGameAsync(gameId, cancellationToken);
 
             return TypedResults.NoContent();
-        })
-        .WithName("DeleteGame")
-        .WithSummary("Deletes the game with the given id")
-        .WithDescription("Deletes a game from the database")
-        .WithOpenApi(op =>
-        {
-            op.Parameters[0].Description = "The id of the game to delete or cancel";
-            return op;
         });
     }
 }

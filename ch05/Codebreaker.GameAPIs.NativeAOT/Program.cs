@@ -1,4 +1,3 @@
-using System.Runtime.CompilerServices;
 using System.Text.Json.Serialization;
 
 using Codebreaker.Data.Sqlite;
@@ -6,8 +5,6 @@ using Codebreaker.GameAPIs.Data;
 using Codebreaker.GameAPIs.Data.InMemory;
 
 using Microsoft.EntityFrameworkCore;
-
-[assembly: InternalsVisibleTo("Codbreaker.APIs.Tests")]
 
 var builder = WebApplication.CreateSlimBuilder(args);
 
@@ -43,7 +40,6 @@ var app = builder.Build();
 // -------------------------
 
 app.MapGameEndpoints();
-app.MapCreateDatabaseEndpoints(app.Logger);
 
 app.Run();
 
