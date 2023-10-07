@@ -25,4 +25,6 @@ In the ch05 folder you’ll see these projects:
 * Codebreaker.Bot - this is the new project that implements a REST API and calls the games API to automatically play games with random game moves. This project makes use of the client-library we created in Chapter 4 – it has a reference to the NuGet package CNinnovation.Coldebreaker.Client to call the games API.
 * Codebreaker.GameAPIs.NativeAOT – a new project which offers the same games API with some changes to support native AOT with .NET 8
 
-Check the 
+### Diagram
+
+[Docker Containers](Containers.md)
