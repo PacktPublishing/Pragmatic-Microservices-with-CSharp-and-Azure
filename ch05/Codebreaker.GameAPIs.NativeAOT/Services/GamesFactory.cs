@@ -1,6 +1,4 @@
-﻿using Codebreaker.GameAPIs.Algorithms.Extensions;
-using Codebreaker.GameAPIs.Algorithms.Fields;
-using Codebreaker.GameAPIs.Analyzers;
+﻿using Codebreaker.GameAPIs.Analyzers;
 using Codebreaker.GameAPIs.Exceptions;
 
 namespace Codebreaker.GameAPIs.Services;
@@ -10,10 +8,10 @@ namespace Codebreaker.GameAPIs.Services;
 /// </summary>
 public static class GamesFactory
 {
-    private static readonly string[] s_colors6 = { Colors.Red, Colors.Green, Colors.Blue, Colors.Yellow, Colors.Purple, Colors.Orange };
-    private static readonly string[] s_colors8 = { Colors.Red, Colors.Green, Colors.Blue, Colors.Yellow, Colors.Purple, Colors.Orange, Colors.Pink, Colors.Brown };
-    private static readonly string[] s_colors5 = { Colors.Red, Colors.Green, Colors.Blue, Colors.Yellow, Colors.Purple };
-    private static readonly string[] s_shapes5 = { Shapes.Circle, Shapes.Square, Shapes.Triangle, Shapes.Star, Shapes.Rectangle };
+    private static readonly string[] s_colors6 = [Colors.Red, Colors.Green, Colors.Blue, Colors.Yellow, Colors.Purple, Colors.Orange];
+    private static readonly string[] s_colors8 = [Colors.Red, Colors.Green, Colors.Blue, Colors.Yellow, Colors.Purple, Colors.Orange, Colors.Pink, Colors.Brown];
+    private static readonly string[] s_colors5 = [Colors.Red, Colors.Green, Colors.Blue, Colors.Yellow, Colors.Purple];
+    private static readonly string[] s_shapes5 = [Shapes.Circle, Shapes.Square, Shapes.Triangle, Shapes.Star, Shapes.Rectangle];
 
     /// <summary>
     /// Creates a game object with specified gameType and playerName.
@@ -92,48 +90,38 @@ public static class GamesFactory
             return guesses.Select(g => TField.Parse(g, default)).ToArray();
         }
 
-        Move GetColorGameGuessAnalyzerResult()
+        string[] GetColorGameGuessAnalyzerResult()
         {
-            ColorGameGuessAnalyzer analyzer = new (game, GetGuesses<ColorField>(guesses), moveNumber);
-            ColorResult result = analyzer.GetResult();
-            return new(Guid.NewGuid(), moveNumber)
-            {
-                GuessPegs = guesses,
-                KeyPegs = result.ToStringResults()
-            };
+            ColorGameGuessAnalyzer analyzer = new(game, GetGuesses<ColorField>(guesses), moveNumber);
+            return analyzer.GetResult().ToStringResults();
         }
 
-        Move GetSimpleGameGuessAnalyzerResult()
+        string[] GetSimpleGameGuessAnalyzerResult()
         {
             SimpleGameGuessAnalyzer analyzer = new(game, GetGuesses<ColorField>(guesses), moveNumber);
-            SimpleColorResult result = analyzer.GetResult();
-            return new(Guid.NewGuid(), moveNumber)
-            {
-                GuessPegs = guesses,
-                KeyPegs = result.ToStringResults()
-            };
+            return analyzer.GetResult().ToStringResults();
         }
 
-        Move GetShapeGameGuessAnalyzerResult()
+        string[] GetShapeGameGuessAnalyzerResult()
         {
             ShapeGameGuessAnalyzer analyzer = new(game, GetGuesses<ShapeAndColorField>(guesses), moveNumber);
-            ShapeAndColorResult result = analyzer.GetResult();
-            return new(Guid.NewGuid(), moveNumber)
-            {
-                GuessPegs = guesses,
-                KeyPegs = result.ToStringResults()
-            };
+            return analyzer.GetResult().ToStringResults();
         }
 
-        Move move = game.GameType switch
+        string[] results = game.GameType switch
         {
             GameTypes.Game6x4 => GetColorGameGuessAnalyzerResult(),
             GameTypes.Game8x5 => GetColorGameGuessAnalyzerResult(),
             GameTypes.Game6x4Mini => GetSimpleGameGuessAnalyzerResult(),
-            GameTypes.Game5x5x4 => GetShapeGameGuessAnalyzerResult(), 
-            _ => throw new NotImplementedException()
+            GameTypes.Game5x5x4 => GetShapeGameGuessAnalyzerResult(),
+            _ => throw new CodebreakerException("Invalid game type") { Code = CodebreakerExceptionCodes.InvalidGameType }
         };
 
+        Move move = new(Guid.NewGuid(), moveNumber)
+        {
+            GuessPegs = guesses,
+            KeyPegs = results
+        };
         game.Moves.Add(move);
         return move;
     }

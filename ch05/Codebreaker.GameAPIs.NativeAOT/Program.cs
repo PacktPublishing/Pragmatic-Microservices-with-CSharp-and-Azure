@@ -1,13 +1,9 @@
-using System.Runtime.CompilerServices;
 using System.Text.Json.Serialization;
 
 using Codebreaker.Data.Sqlite;
-using Codebreaker.GameAPIs.Data;
 using Codebreaker.GameAPIs.Data.InMemory;
 
 using Microsoft.EntityFrameworkCore;
-
-[assembly: InternalsVisibleTo("Codbreaker.APIs.Tests")]
 
 var builder = WebApplication.CreateSlimBuilder(args);
 
@@ -20,17 +16,27 @@ builder.Services.ConfigureHttpJsonOptions(options =>
 
 string dataStorage = builder.Configuration["DataStorage"] ??= "InMemory";
 
+var loggerFactory = LoggerFactory.Create(b => b.AddConsole());
+var logger = loggerFactory.CreateLogger("Program");
 if (dataStorage == "Sqlite")
 {
-    builder.Services.AddDbContext<IGamesRepository, GamesSqliteContext>(options =>
+    logger.LogInformation("Using Sqlite");
+    builder.Services.AddScoped<IGamesRepository>(provider =>
     {
         string connectionString = builder.Configuration.GetConnectionString("GamesSqliteConnection") ?? throw new InvalidOperationException("Could not find GamesSqliteConnection");
-        options.UseSqlite(connectionString)
-            .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+        return new GamesSqliteContext(connectionString);
     });
+
+    //builder.Services.AddDbContext<IGamesRepository, GamesSqliteContext>(options =>
+    //{
+    //    string connectionString = builder.Configuration.GetConnectionString("GamesSqliteConnection") ?? throw new InvalidOperationException("Could not find GamesSqliteConnection");
+    //    options.UseSqlite(connectionString)
+    //        .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+    //});
 }
 else
 {
+    logger.LogInformation("Using InMemory");
     builder.Services.AddSingleton<IGamesRepository, GamesMemoryRepository>();
 }
 
@@ -43,7 +49,6 @@ var app = builder.Build();
 // -------------------------
 
 app.MapGameEndpoints();
-app.MapCreateDatabaseEndpoints(app.Logger);
 
 app.Run();
 

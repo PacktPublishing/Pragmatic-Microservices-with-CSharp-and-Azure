@@ -1,6 +1,4 @@
-﻿using Codebreaker.GameAPIs.Data;
-
-namespace Codebreaker.GameAPIs.Services;
+﻿namespace Codebreaker.GameAPIs.Services;
 
 /// <summary>
 /// Interface for Game Service
@@ -32,7 +30,7 @@ public interface IGamesService
     /// <param name="id">the id of the game</param>
     /// <param name="cancellationToken">cancellation token</param>
     /// <returns>the game with the given id</returns>
-    ValueTask<Game?> GetGameAsync(Guid id, CancellationToken cancellationToken = default);
+    ValueTask<Game> GetGameAsync(Guid id, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Delete a game with the given id
@@ -56,5 +54,5 @@ public interface IGamesService
     /// <param name="gamesQuery">optional games query</param>
     /// <param name="cancellationToken">cancellation token</param>
     /// <returns>IEnumerable of Game</returns>
-    Task<IEnumerable<Game>> GetGamesAsync(GamesQuery gamesQuery, CancellationToken cancellationToken = default); 
+    Task<IEnumerable<Game>> GetGamesAsync(GamesQuery gamesQuery, CancellationToken cancellationToken = default);
 }

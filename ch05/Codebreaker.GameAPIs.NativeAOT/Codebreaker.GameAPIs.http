@@ -1,4 +1,4 @@
-﻿@Codebreaker.GameAPIs_HostAddress = http://localhost:9400
+﻿@Codebreaker.GameAPIs_HostAddress = http://localhost:8088
 @ContentType = application/json
 
 ### Create the database
@@ -16,7 +16,7 @@ Content-Type: {{ContentType}}
 
 ### Set a move
 
-@gameid = bb01a548-9dba-4108-8bb4-e84d3e3de75e
+@gameid = 2951b35d-bc2c-4524-8154-36441193cf6f
 
 PATCH {{Codebreaker.GameAPIs_HostAddress}}/games/{{gameid}}
 Content-Type: {{ContentType}}

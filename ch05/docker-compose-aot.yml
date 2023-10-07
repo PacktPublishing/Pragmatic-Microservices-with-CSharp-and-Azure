@@ -1,0 +1,19 @@
+services:
+  codebreaker.gameapis.aot:
+    image: codebreaker/gamesapi-aot:latest
+    container_name: codebreaker.gameapis-aot
+    hostname: gamesapi-aot
+    ports:
+      - "8087:8080"
+    env_file:
+      - gameapis-aot.env
+  codebreaker.bot:
+    image: codebreaker/bot:latest
+    container_name: codebreaker.bot
+    hostname: bot
+    depends_on:
+      - codebreaker.gameapis.aot
+    ports:
+      - "8088:8080"     
+    environment:
+      APIBase: "http://gamesapi:8087"

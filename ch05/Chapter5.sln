@@ -19,6 +19,21 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Codebreaker.GameAPIs.Native
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Codebreaker.Data.Sqlite", "Codebreaker.Data.Sqlite\Codebreaker.Data.Sqlite.csproj", "{572174D8-A80D-46C6-BF89-FA1660D7CA2D}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6E161EE2-AEC0-455F-973D-C064735C0A25}"
+	ProjectSection(SolutionItems) = preProject
+		docker-compose-aot-sqlite.yml = docker-compose-aot-sqlite.yml
+		docker-compose-aot.yml = docker-compose-aot.yml
+		docker-compose.yml = docker-compose.yml
+		gameapis-aot-sqlite.env = gameapis-aot-sqlite.env
+		gameapis-aot.env = gameapis-aot.env
+		gameapis.env = gameapis.env
+		Readme.md = Readme.md
+		sql.env = sql.env
+		sql_password.txt = sql_password.txt
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Codebreaker.Data.CreateSqlite", "Codebreaker.Data.CreateSqlite\Codebreaker.Data.CreateSqlite.csproj", "{2D67189C-9BEC-47FC-BA5A-F8625EDBD63B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -57,6 +72,10 @@ Global
 		{572174D8-A80D-46C6-BF89-FA1660D7CA2D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{572174D8-A80D-46C6-BF89-FA1660D7CA2D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{572174D8-A80D-46C6-BF89-FA1660D7CA2D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2D67189C-9BEC-47FC-BA5A-F8625EDBD63B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2D67189C-9BEC-47FC-BA5A-F8625EDBD63B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2D67189C-9BEC-47FC-BA5A-F8625EDBD63B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2D67189C-9BEC-47FC-BA5A-F8625EDBD63B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

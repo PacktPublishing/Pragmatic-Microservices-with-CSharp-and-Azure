@@ -18,7 +18,7 @@ public class CodeBreakerGameRunner(GamesClient gamesClient, ILogger<CodeBreakerG
     {
         static List<int> Create8Colors(int shift)
         {
-            List<int> pin = new();
+            List<int> pin = [];
             for (int i = 0; i < 6; i++)
             {
                 int x = 1 << i + shift;
@@ -52,7 +52,7 @@ public class CodeBreakerGameRunner(GamesClient gamesClient, ILogger<CodeBreakerG
         return list4;
     }
 
-    public async Task StartGameAsync()
+    public async Task StartGameAsync(CancellationToken cancellationToken = default)
     {
         static int NextKey(ref int key)
         {
@@ -65,7 +65,7 @@ public class CodeBreakerGameRunner(GamesClient gamesClient, ILogger<CodeBreakerG
         _moves.Clear();
         _moveNumber = 0;
 
-        (_gameId, _, _, IDictionary<string, string[]> fieldValues) = await _gamesClient.StartGameAsync(GameType.Game6x4, "Bot");
+        (_gameId, _, _, IDictionary<string, string[]> fieldValues) = await _gamesClient.StartGameAsync(GameType.Game6x4, "Bot", cancellationToken);
         int key = 1;
         _colorNames = fieldValues["colors"]
             .ToDictionary(keySelector: c => NextKey(ref key), elementSelector: color => color);
@@ -79,10 +79,12 @@ public class CodeBreakerGameRunner(GamesClient gamesClient, ILogger<CodeBreakerG
     /// <param name="thinkSeconds">The seconds to simulate thinking before setting the next move</param>
     /// <returns>a task</returns>
     /// <exception cref="InvalidOperationException">throws if initialization was not done, or with invalid game state</exception>
-    public async Task RunAsync(int thinkSeconds)
+    public async Task RunAsync(int thinkSeconds, CancellationToken cancellationToken = default)
     {
-        if (_possibleValues is null) throw new InvalidOperationException($"call {nameof(StartGameAsync)} before");
-        Guid gameId = _gameId ?? throw new InvalidOperationException($"call {nameof(StartGameAsync)} before");
+        if (_possibleValues is null) 
+            throw new InvalidOperationException($"call {nameof(StartGameAsync)} before");
+        Guid gameId = _gameId ?? 
+            throw new InvalidOperationException($"call {nameof(StartGameAsync)} before");
 
         bool ended = false;
         do
@@ -91,7 +93,7 @@ public class CodeBreakerGameRunner(GamesClient gamesClient, ILogger<CodeBreakerG
             (string[] guessPegs, int selection) = GetNextMoves();
             _logger.SendMove(string.Join(':', guessPegs), gameId.ToString());
 
-            (string[] results, ended, bool isVictory) = await _gamesClient.SetMoveAsync(gameId, PlayerName, GameType.Game6x4, _moveNumber, guessPegs);
+            (string[] results, ended, bool isVictory) = await _gamesClient.SetMoveAsync(gameId, PlayerName, GameType.Game6x4, _moveNumber, guessPegs, cancellationToken);
 
             if (isVictory)
             {
@@ -124,7 +126,7 @@ public class CodeBreakerGameRunner(GamesClient gamesClient, ILogger<CodeBreakerG
                 _logger.ReducedPossibleValues(_possibleValues.Count, "White", gameId.ToString());
             }
 
-            await Task.Delay(TimeSpan.FromSeconds(thinkSeconds));  // thinking delay
+            await Task.Delay(TimeSpan.FromSeconds(thinkSeconds), cancellationToken);  // thinking delay
         } while (!ended);
 
         _logger.FinishedRun(_moveNumber, gameId.ToString());
@@ -137,10 +139,11 @@ public class CodeBreakerGameRunner(GamesClient gamesClient, ILogger<CodeBreakerG
     /// <exception cref="InvalidOperationException">Throws if there are no calculated possible values left to chose from</exception>
     private (string[] Colors, int Selection) GetNextMoves()
     {
-        if (_possibleValues?.Count is null or 0) throw new InvalidOperationException("invalid number of possible values - 0");
+        if (_possibleValues?.Count is null or 0) 
+            throw new InvalidOperationException("invalid number of possible values - 0");
 
         int random = Random.Shared.Next(_possibleValues.Count);
-        var value = _possibleValues[random];
+        int value = _possibleValues[random];
 
         return (IntToColors(value), value);
     }

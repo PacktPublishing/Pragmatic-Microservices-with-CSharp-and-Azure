@@ -2,21 +2,36 @@
 
 namespace Codebreaker.Data.Sqlite;
 
-public class GamesSqliteContext(DbContextOptions<GamesSqliteContext> options) : DbContext(options), IGamesRepository
+public class GamesSqliteContext : DbContext, IGamesRepository
 {
     internal const string GameId = nameof(GameId);
+    private readonly string _connectionString;
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
-        modelBuilder.HasDefaultSchema("codebreaker");
-        modelBuilder.ApplyConfiguration(new GameConfiguration());
-        modelBuilder.ApplyConfiguration(new MoveConfiguration());
-
-        modelBuilder.Entity<Game>()
-            .HasMany(g => g.Moves)
-            .WithOne()
-            .HasForeignKey(GameId);
+    public GamesSqliteContext() : this(null)
+    {        
     }
+
+    public GamesSqliteContext(string? connectionString)
+    {
+        _connectionString = connectionString ?? "Data Source=codebreaker.db";
+    }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        optionsBuilder.UseSqlite(_connectionString);
+        // optionsBuilder.UseModel() TODO: use the model instead of OnModelCreating for nativeAOT!
+    }
+
+    //protected override void OnModelCreating(ModelBuilder modelBuilder)
+    //{
+    //    modelBuilder.ApplyConfiguration(new GameConfiguration());
+    //    modelBuilder.ApplyConfiguration(new MoveConfiguration());
+
+    //    modelBuilder.Entity<Game>()
+    //        .HasMany(g => g.Moves)
+    //        .WithOne()
+    //        .HasForeignKey(GameId);
+    //}
 
     public DbSet<Game> Games => Set<Game>();
     public DbSet<Move> Moves => Set<Move>();
@@ -37,7 +52,7 @@ public class GamesSqliteContext(DbContextOptions<GamesSqliteContext> options) : 
 
     public async Task<bool> DeleteGameAsync(Guid gameId, CancellationToken cancellationToken = default)
     {
-        var game = await Games.FindAsync(new object?[] { gameId }, cancellationToken: cancellationToken);
+        var game = await Games.FindAsync(new object[] { gameId }, cancellationToken: cancellationToken);
         if (game is null)
             return false;
         Games.Remove(game);
@@ -100,10 +115,10 @@ public class GamesSqliteContext(DbContextOptions<GamesSqliteContext> options) : 
             query = query.Where(g => g.PlayerName == gamesQuery.PlayerName);
         if (gamesQuery.GameType != null)
             query = query.Where(g => g.GameType == gamesQuery.GameType);
-        if (gamesQuery.IsFinished == false)
+        if (gamesQuery.Ended == false)
             query = query.Where(g => g.EndTime == null);
 
-        if (gamesQuery.IsFinished == true)
+        if (gamesQuery.Ended == true)
         {
             query = query.Where(g => g.EndTime != null)
                 .OrderBy(g => g.Duration);

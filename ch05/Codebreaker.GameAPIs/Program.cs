@@ -1,10 +1,7 @@
-using System.Data.Common;
 using System.Runtime.CompilerServices;
 
 using Codebreaker.Data.Cosmos;
 using Codebreaker.Data.SqlServer;
-using Codebreaker.GameAPIs.Data;
-using Codebreaker.GameAPIs.Data.InMemory;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
@@ -21,7 +18,7 @@ builder.Services.AddSwaggerGen(options =>
     {
         Version = "v3",
         Title = "Codebreaker Games API",
-        Description = "An ASP.NET Core minimal API to play Codebreaker games",
+        Description = "An ASP.NET Core minimal APIs to play Codebreaker games",
         TermsOfService = new Uri("https://www.cninnovation.com/terms"),
         Contact = new OpenApiContact
         {
@@ -34,9 +31,7 @@ builder.Services.AddSwaggerGen(options =>
             Url= new Uri("https://www.cninnovation.com/apiusage")
         }
     });
-
 });
-builder.Services.AddProblemDetails();
 
 // Application Services
 
@@ -48,7 +43,7 @@ if (dataStorage == "Cosmos")
     {
         string connectionString = builder.Configuration.GetConnectionString("GamesCosmosConnection") ?? throw new InvalidOperationException("Could not find GamesCosmosConnection");
         options.UseCosmos(connectionString, databaseName: "codebreaker")
-            .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+                .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
     });
 }
 else if (dataStorage == "SqlServer")
@@ -56,22 +51,8 @@ else if (dataStorage == "SqlServer")
     builder.Services.AddDbContext<IGamesRepository, GamesSqlServerContext>(options =>
     {
         string connectionString = builder.Configuration.GetConnectionString("GamesSqlServerConnection") ?? throw new InvalidOperationException("Could not find GamesSqlServerConnection");
-        DbConnectionStringBuilder connectionStringBuilder = new()
-        {
-            ConnectionString = connectionString
-        };
-        if (connectionStringBuilder.ContainsKey("user id"))
-        {
-            if (File.Exists("/run/secrets/sqlpassword"))
-            {
-                string password = File.ReadAllText("/run/secrets/sqlpassword");
-                connectionStringBuilder.Add("password", password);
-            }
-            connectionString = connectionStringBuilder.ConnectionString;
-        }
-
         options.UseSqlServer(connectionString)
-            .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+                .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
     });
 }
 else
@@ -83,18 +64,20 @@ builder.Services.AddScoped<IGamesService, GamesService>();
 
 var app = builder.Build();
 
-app.UseSwagger();
-app.UseSwaggerUI(options =>
+if (app.Environment.IsDevelopment())
 {
-    // options.InjectStylesheet("/swagger-ui/swaggerstyle.css");
-    options.SwaggerEndpoint("/swagger/v3/swagger.json", "v3");
-});
-
-// -------------------------
-// Endpoints
-// -------------------------
+    app.UseSwagger();
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint("/swagger/v3/swagger.json", "v3");
+    });
+}
 
 app.MapGameEndpoints();
-app.MapCreateDatabaseEndpoints(app.Logger);
+
+if (bool.TryParse(builder.Configuration["AllowCreateDatabase"], out bool allowCreateDatabase) && allowCreateDatabase)
+{
+    app.MapCreateDatabaseEndpoints(app.Logger);
+}
 
 app.Run();
