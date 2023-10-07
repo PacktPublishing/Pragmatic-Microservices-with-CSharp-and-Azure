@@ -9,6 +9,12 @@
     <PublishAot>true</PublishAot>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <ContainerRepository>codebreaker/gamesapi-native</ContainerRepository>
+    <ContainerImageTags>3.5.4;latest</ContainerImageTags>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+  </PropertyGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\Codebreaker.Data.Sqlite\Codebreaker.Data.Sqlite.csproj" />
   </ItemGroup>
