@@ -43,9 +43,9 @@ C4Container
     }
 
     Rel(tester, codebreaker.bot, "Uses", "HTTP")
-    UpdateRelStyle(tester, codebreaker.bot, $offsetY="-40")
+    UpdateRelStyle(tester, codebreaker.bot, $offsetX="4" $offsetY="-60")
     Rel(player, codebreaker.gameapis, "Uses", "HTTP")
-    UpdateRelStyle(player, codebreaker.gameapis, $offsetX="-20", $offsetY="-40")
+    UpdateRelStyle(player, codebreaker.gameapis, $offsetY="-60")
 
     Rel(codebreaker.bot, codebreaker.gameapis, "Uses", "HTTP")
     UpdateRelStyle(codebreaker.bot, codebreaker.gameapis, $offsetX="-20" $offsetY="-40")
