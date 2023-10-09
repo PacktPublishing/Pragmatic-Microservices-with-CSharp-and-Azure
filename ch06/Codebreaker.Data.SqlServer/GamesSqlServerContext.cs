@@ -37,7 +37,7 @@ public class GamesSqlServerContext(DbContextOptions<GamesSqlServerContext> optio
 
     public async Task<bool> DeleteGameAsync(Guid gameId, CancellationToken cancellationToken = default)
     {
-        var game = await Games.FindAsync(new object?[] { gameId }, cancellationToken: cancellationToken);
+        var game = await Games.FindAsync(new object[] { gameId }, cancellationToken);
         if (game is null)
             return false;
         Games.Remove(game);
@@ -100,10 +100,10 @@ public class GamesSqlServerContext(DbContextOptions<GamesSqlServerContext> optio
             query = query.Where(g => g.PlayerName == gamesQuery.PlayerName);
         if (gamesQuery.GameType != null)
             query = query.Where(g => g.GameType == gamesQuery.GameType);
-        if (gamesQuery.IsFinished == false)
+        if (gamesQuery.RunningOnly)
             query = query.Where(g => g.EndTime == null);
 
-        if (gamesQuery.IsFinished == true)
+        if (gamesQuery.Ended)
         {
             query = query.Where(g => g.EndTime != null)
                 .OrderBy(g => g.Duration);

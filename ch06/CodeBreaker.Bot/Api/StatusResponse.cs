@@ -1,5 +1,6 @@
 ﻿namespace CodeBreaker.Bot.Api;
 
 public record StatusResponse(
-    int Loop
+    int GameNumber,
+    string Message
 );

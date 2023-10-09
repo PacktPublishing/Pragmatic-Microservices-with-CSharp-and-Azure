@@ -1,25 +1,17 @@
-﻿using Codebreaker.Data.Cosmos.Utilities;
-using Codebreaker.GameAPIs.Data;
+﻿namespace Codebreaker.Data.Cosmos;
 
-using Microsoft.EntityFrameworkCore;
-
-namespace Codebreaker.Data.Cosmos;
-
-public class GamesCosmosContext : DbContext, IGamesRepository
+public class GamesCosmosContext(DbContextOptions<GamesCosmosContext> options) : DbContext(options), IGamesRepository
 {
-    private const string PartitionKey = nameof(PartitionKey);
-    private const string ContainerName = "GamesV3";
     private readonly FieldValueValueConverter _fieldValueConverter = new();
     private readonly FieldValueComparer _fieldValueComparer = new();
+    private const string PartitionKey = nameof(PartitionKey);
+    private const string ContainerName = "GamesV3";
 
-    public GamesCosmosContext(DbContextOptions<GamesCosmosContext> options)
-        : base(options)
-    {
-    }
+    public DbSet<Game> Games => Set<Game>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.HasDefaultContainer("GamesV3");
+        modelBuilder.HasDefaultContainer(ContainerName);
         var gameModel = modelBuilder.Entity<Game>();
 
         gameModel.Property<string>(PartitionKey);
@@ -29,8 +21,6 @@ public class GamesCosmosContext : DbContext, IGamesRepository
         gameModel.Property(g => g.FieldValues)
             .HasConversion(_fieldValueConverter, _fieldValueComparer);
     }
-
-    public DbSet<Game> Games => Set<Game>();
 
     public static string ComputePartitionKey(Game game) => game.GameId.ToString();
 
@@ -90,10 +80,10 @@ public class GamesCosmosContext : DbContext, IGamesRepository
             query = query.Where(g => g.PlayerName == gamesQuery.PlayerName);
         if (gamesQuery.GameType != null)
             query = query.Where(g => g.GameType == gamesQuery.GameType);
-        if (gamesQuery.IsFinished == false)
+        if (gamesQuery.RunningOnly)
             query = query.Where(g => g.EndTime == null);
 
-        if (gamesQuery.IsFinished == true)
+        if (gamesQuery.Ended == true)
         {
             query = query.Where(g => g.EndTime != null)
                 .OrderBy(g => g.Duration);

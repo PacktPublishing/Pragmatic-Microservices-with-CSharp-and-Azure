@@ -14,6 +14,7 @@ public class CodeBreakerTimer(CodeBreakerGameRunner runner, ILogger<CodeBreakerT
     private PeriodicTimer? _timer;
 
     private int _loop = 0;
+    private string _statusMessage = "running";
 
     private readonly CancellationTokenSource _cancellationTokenSource = new();
 
@@ -28,6 +29,7 @@ public class CodeBreakerTimer(CodeBreakerGameRunner runner, ILogger<CodeBreakerT
         _bots.TryAdd(id, this);
 
         _timer = new PeriodicTimer(TimeSpan.FromSeconds(delaySecondsBetweenGames));
+     
         Task _ = Task.Factory.StartNew(async () =>
         {
             try
@@ -39,8 +41,8 @@ public class CodeBreakerTimer(CodeBreakerGameRunner runner, ILogger<CodeBreakerT
                     if (await _timer.WaitForNextTickAsync(_cancellationTokenSource.Token)) // simulate some waiting time
                     {
                         _logger.TimerTickFired(_loop);
-                        await _gameRunner.StartGameAsync();
-                        await _gameRunner.RunAsync(thinkSeconds);
+                        await _gameRunner.StartGameAsync(_cancellationTokenSource.Token);  // start the game
+                        await _gameRunner.RunAsync(thinkSeconds, _cancellationTokenSource.Token); // play the game until finished
                         _loop++;
                     }
 
@@ -48,6 +50,7 @@ public class CodeBreakerTimer(CodeBreakerGameRunner runner, ILogger<CodeBreakerT
             }
             catch (HttpRequestException ex)
             {
+                _statusMessage = ex.Message;
                 _logger.Error(ex, ex.Message);
             }
 
@@ -58,12 +61,13 @@ public class CodeBreakerTimer(CodeBreakerGameRunner runner, ILogger<CodeBreakerT
 
     public void Stop()
     {
+        _statusMessage = "stopped";
         _timer?.Dispose();
     }
 
     public StatusResponse Status()
     {
-        return new StatusResponse(_loop);
+        return new StatusResponse(_loop + 1, _statusMessage);
     }
 
     public static void Stop(Guid id)
@@ -73,8 +77,8 @@ public class CodeBreakerTimer(CodeBreakerGameRunner runner, ILogger<CodeBreakerT
 
         if (_bots.TryGetValue(id, out CodeBreakerTimer? timer))
         {
-            timer?.Stop();
-            _bots.TryRemove(id, out CodeBreakerTimer? _);
+            timer.Stop();
+            _bots.TryRemove(id, out _);
         }
 
         throw new BotNotFoundException();

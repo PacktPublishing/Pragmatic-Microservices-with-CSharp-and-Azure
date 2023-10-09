@@ -16,7 +16,6 @@ public class Game(
     public Guid GameId { get; private set; } = gameId;
     [Required]
     public string GameType { get; private set; } = gameType;
-    [Required, MinLength(4), MaxLength(25)]
     public string PlayerName { get; private set; } = playerName;
     public bool PlayerIsAuthenticated { get; set; } = false;
     [Required]
