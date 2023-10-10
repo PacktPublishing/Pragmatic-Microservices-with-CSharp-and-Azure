@@ -21,10 +21,10 @@ public static class CodeBreakerAlgorithms
         var c2 = (CodeColors)i2;
         var c3 = (CodeColors)i3;
         var c4 = (CodeColors)i4;
-        var colorNames = new[]
-        {
+        string[] colorNames =
+        [
             c4.ToString(), c3.ToString(), c2.ToString(), c1.ToString()
-        };
+        ];
 
         return colorNames;
     }
@@ -52,16 +52,20 @@ public static class CodeBreakerAlgorithms
             int n4 = selection & C1000;
             int matches = 0;
             bool match1 = (value & n1) == n1;
-            if (match1) matches++;
-            if ((value & n2) == n2) matches++;
-            if ((value & n3) == n3) matches++;
-            if ((value & n4) == n4) matches++;
+            if (match1) 
+                matches++;
+            if ((value & n2) == n2) 
+                matches++;
+            if ((value & n3) == n3) 
+                matches++;
+            if ((value & n4) == n4) 
+                matches++;
             return (matches == blackhits);
         }
 
         List<int> result = new(capacity: values.Count);
 
-        foreach (var value in values)
+        foreach (int value in values)
         {
             if (IsMatch(value, blackHits, selection))
             {
@@ -81,7 +85,7 @@ public static class CodeBreakerAlgorithms
     public static List<int> HandleWhiteMatches(this IList<int> values, int whiteHits, int selection)
     {
         List<int> newValues = new(values.Count);
-        foreach (var value in values)
+        foreach (int value in values)
         {
             // need to have clean selections with every run
             var selections = new KeyPegWithFlag[4];
@@ -144,7 +148,7 @@ public static class CodeBreakerAlgorithms
             .Select(i => selection.SelectPeg(i))
             .ToArray();
 
-        foreach (var value in values)
+        foreach (int value in values)
         {
             if (!Contains(selections, value))
             {

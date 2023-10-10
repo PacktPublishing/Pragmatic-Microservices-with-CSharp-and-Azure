@@ -5,17 +5,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Codebreaker.Data.Cosmos;
 
-public class GamesCosmosContext : DbContext, IGamesRepository
+public class GamesCosmosContext(DbContextOptions<GamesCosmosContext> options) : DbContext(options), IGamesRepository
 {
     private const string PartitionKey = nameof(PartitionKey);
     private const string ContainerName = "GamesV3";
     private readonly FieldValueValueConverter _fieldValueConverter = new();
     private readonly FieldValueComparer _fieldValueComparer = new();
-
-    public GamesCosmosContext(DbContextOptions<GamesCosmosContext> options)
-        : base(options)
-    {
-    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
