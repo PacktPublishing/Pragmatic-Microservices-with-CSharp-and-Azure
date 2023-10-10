@@ -1,9 +1,9 @@
-metadata description = 'Creates a Cosmos DB account and a database.'
+metadata description = 'Creates a Cosmos DB account, database, and container with permissions to read and write to the container.'
 
 targetScope = 'resourceGroup'
 
 // Parameters
-@description('Specifies the location for resources.')
+@description('Specifies the location for the resources.')
 param location string = resourceGroup().location
 
 @description('Specifies the environment for resources.')
@@ -16,11 +16,11 @@ param location string = resourceGroup().location
 ])
 param environment string = 'dev'
 
-@description('Specifies the name of the solution (including a possible suffix) - it is used as part of the database account name.')
+@description('Specifies the name of the solution including a probably suffix - is used as part of the database account name.')
 @maxLength(35)
 param solutionName string
 
-@description('Specifies the name of the database, default the name of the solution')
+@description('Specifies the name of the database, default the name of the solution.')
 param databaseName string = solutionName
 
 @description('Whether the free-tier should be enabled or not.')

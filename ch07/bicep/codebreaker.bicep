@@ -49,6 +49,15 @@ module containerRegistry 'modules/containers/container-registry.bicep' = {
   }
 }
 
+module managedIdentityModule 'modules/managedidentity/managedidentity.bicep' = {
+  name: 'managed-identity'
+  scope: resourceGroup
+  params: {
+    identityName: 'id-codebreaker-${environment}'
+    location: location
+  }
+}
+
 module cosmosModule 'modules/cosmos/cosmos.bicep' = {
   name: 'cosmos-accountanddatabase'
   scope: resourceGroup
@@ -68,6 +77,27 @@ module cosmosGameContainerModule 'modules/cosmos/cosmos-container.bicep' = {
     gamesContainerName: 'Games-3'
     databaseAccountName: cosmosModule.outputs.databaseAccountName
     databaseName: cosmosModule.outputs.databaseName
+  }
+}
+
+module sqlRoleModule 'modules/cosmos/sqlrole.bicep' = {
+  name: 'sql-role'
+  dependsOn: [ cosmosModule, cosmosGameContainerModule, managedIdentityModule ]
+  scope: resourceGroup
+  params: {
+    principalId: managedIdentityModule.outputs.principalId
+    databaseAccountName: cosmosModule.outputs.databaseAccountName
+  }
+}
+
+module appConfigurationModule 'modules/appconfiguration/appconfiguration.bicep' = {
+  name: 'appconfiguration'
+  dependsOn: [ managedIdentityModule ]
+  scope: resourceGroup
+  params: {
+    configStoreName: 'acs-${solutionName}-${nameSuffix}-${environment}'
+    location: location
+    principalId: managedIdentityModule.outputs.principalId
   }
 }
 

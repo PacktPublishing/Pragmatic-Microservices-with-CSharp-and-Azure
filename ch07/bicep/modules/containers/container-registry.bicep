@@ -21,7 +21,7 @@ param solutionName string
 
 // Resources
 resource containerRegistry 'Microsoft.ContainerRegistry/registries@2022-12-01' = {
-  name: '${toLower(solutionName)}${environment}'
+  name: '${toLower(solutionName)}${environment}'  // dash is not allowed with the ACR name
   location: location
   sku: {
     name: 'Basic'
