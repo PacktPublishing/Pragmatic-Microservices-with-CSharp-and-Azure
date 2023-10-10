@@ -178,7 +178,6 @@ public static class CodeBreakerAlgorithms
         };
 }
 
-
 [InlineArray(4)]
 internal struct KeyPegArray
 {
