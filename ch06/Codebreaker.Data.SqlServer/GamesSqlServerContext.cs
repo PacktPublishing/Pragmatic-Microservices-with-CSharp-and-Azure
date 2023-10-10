@@ -37,7 +37,7 @@ public class GamesSqlServerContext(DbContextOptions<GamesSqlServerContext> optio
 
     public async Task<bool> DeleteGameAsync(Guid gameId, CancellationToken cancellationToken = default)
     {
-        var game = await Games.FindAsync(new object?[] { gameId }, cancellationToken: cancellationToken);
+        var game = await Games.FindAsync([gameId], cancellationToken: cancellationToken);
         if (game is null)
             return false;
         Games.Remove(game);
