@@ -1,4 +1,4 @@
-metadata description = 'Creates a Cosmos DB account, database, and container with permissions to read and write to the container.'
+metadata description = 'Creates the role definition and role assignments to read and write from the Azure Cosmos DB database.'
 
 targetScope = 'resourceGroup'
 
@@ -17,7 +17,7 @@ resource databaseAccount 'Microsoft.DocumentDB/databaseAccounts@2023-09-15' exis
   name: databaseAccountName
 }
 
-resource sqlRoleDefinition 'Microsoft.DocumentDB/databaseAccounts/sqlRoleDefinitions@2021-04-15' = {
+resource sqlRoleDefinition 'Microsoft.DocumentDB/databaseAccounts/sqlRoleDefinitions@2023-09-15' = {
   name: roleDefinitionId
   parent: databaseAccount
   properties: {
@@ -37,7 +37,7 @@ resource sqlRoleDefinition 'Microsoft.DocumentDB/databaseAccounts/sqlRoleDefinit
   }
 }
 
-resource sqlRoleAssignment 'Microsoft.DocumentDB/databaseAccounts/sqlRoleAssignments@2021-04-15' = {
+resource sqlRoleAssignment 'Microsoft.DocumentDB/databaseAccounts/sqlRoleAssignments@2023-09-15' = {
   name: roleAssignmentId
   parent: databaseAccount
   properties: {

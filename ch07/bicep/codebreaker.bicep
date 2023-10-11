@@ -17,7 +17,7 @@ param environment string = 'dev'
 @description('Specifies the location used for the resources. Default is the location of the resource.')
 param location string = az.resourceGroup().location
 
-@description('Specifies the name of the solution - is used as part of the Azure resource names.')
+@description('Specifies the name of the solution - it is used as part of the Azure resource names.')
 @maxLength(20)
 param solutionName string
 
