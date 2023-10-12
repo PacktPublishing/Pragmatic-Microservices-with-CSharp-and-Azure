@@ -7,7 +7,7 @@ public class CodeBreakerGameRunner(GamesClient gamesClient, ILogger<CodeBreakerG
     private const string PlayerName = "Bot";
     private Guid? _gameId;
     private int _moveNumber = 0;
-    private readonly List<Move> _moves = new();
+    private readonly List<Move> _moves = [];
     private List<int>? _possibleValues;
     private Dictionary<int, string>? _colorNames;
     private readonly ILogger _logger = logger;

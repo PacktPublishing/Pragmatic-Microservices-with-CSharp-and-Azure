@@ -1,4 +1,6 @@
-﻿namespace Codebreaker.Data.Cosmos;
+using Microsoft.EntityFrameworkCore;
+
+namespace Codebreaker.Data.Cosmos;
 
 public class GamesCosmosContext(DbContextOptions<GamesCosmosContext> options) : DbContext(options), IGamesRepository
 {

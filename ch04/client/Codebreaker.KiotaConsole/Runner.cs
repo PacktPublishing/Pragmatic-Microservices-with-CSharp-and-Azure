@@ -52,13 +52,14 @@ internal class Runner
     private async Task DeleteGameAsync()
     {
         Guid gameId = Inputs.GetGameId();
-        await _client.Games[gameId.ToString()].DeleteAsync();
+        await _client.Games[gameId].DeleteAsync();
     }
 
     private async Task ShowGameAsync()
     {
         Guid gameId = Inputs.GetGameId();
-        var game = await _client.Games[gameId.ToString()].GetAsync(cancellationToken: _cancellationTokenSource.Token);
+        var game = await _client.Games[gameId].GetAsync(cancellationToken: _cancellationTokenSource.Token);
+      
         if (game is null)
         {
             await Console.Out.WriteLineAsync($"Game {gameId} not found");
@@ -149,7 +150,7 @@ internal class Runner
                 GuessPegs = [.. guesses]
             };
             UpdateGameResponse? response =
-                await _client.Games[gameId.ToString()].PatchAsync(updateGameRequest, cancellationToken: _cancellationTokenSource.Token)
+                await _client.Games[gameId].PatchAsync(updateGameRequest, cancellationToken: _cancellationTokenSource.Token)
                     ?? throw new InvalidOperationException();
 
             await Console.Out.WriteLineAsync($" ** {string.Join(' ', response.Results ?? Enumerable.Empty<string>())}");
