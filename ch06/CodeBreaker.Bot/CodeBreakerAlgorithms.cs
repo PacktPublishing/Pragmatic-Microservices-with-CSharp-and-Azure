@@ -1,4 +1,6 @@
-﻿namespace CodeBreaker.Bot;
+﻿using System.Runtime.CompilerServices;
+
+namespace CodeBreaker.Bot;
 
 public record struct KeyPegWithFlag(int Value, bool Used);
 
@@ -88,13 +90,13 @@ public static class CodeBreakerAlgorithms
         foreach (int value in values)
         {
             // need to have clean selections with every run
-            var selections = new KeyPegWithFlag[4];
+            KeyPegArray selections = new();
             for (int i = 0; i < 4; i++)
             {
                 selections[i] = new KeyPegWithFlag(selection.SelectPeg(i), false);
             }
 
-            var matches = new KeyPegWithFlag[4];
+            KeyPegArray matches = new();
             for (int i = 0; i < 4; i++)
             {
                 matches[i] = new KeyPegWithFlag(value.SelectPeg(i), false);
@@ -174,4 +176,11 @@ public static class CodeBreakerAlgorithms
             3 => (code >> 18) & 0b111111,
             _ => throw new InvalidOperationException("invalid peg number")
         };
+}
+
+
+[InlineArray(4)]
+internal struct KeyPegArray
+{
+    private KeyPegWithFlag _keyPegWithFlag;
 }

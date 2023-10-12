@@ -1,0 +1,40 @@
+<mxfile host="Electron" modified="2023-10-08T08:21:12.914Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/22.0.2 Chrome/114.0.5735.289 Electron/25.8.4 Safari/537.36" etag="MrfdNHnJ67UMzoMnIO4f" version="22.0.2" type="device">
+  <diagram name="Page-1" id="YJaVd2mRH7kxd35NQ7zP">
+    <mxGraphModel dx="1164" dy="851" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="c-2LaEQzB04zMDGG6wzM-16" value="Common Services" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=bottom;" vertex="1" parent="1">
+          <mxGeometry x="180.82" y="414" width="590" height="290" as="geometry" />
+        </mxCell>
+        <mxCell id="c-2LaEQzB04zMDGG6wzM-1" value="Key Vault" style="image;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/azure2/security/Key_Vaults.svg;" vertex="1" parent="1">
+          <mxGeometry x="537.64" y="485" width="120" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="c-2LaEQzB04zMDGG6wzM-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="c-2LaEQzB04zMDGG6wzM-2" target="c-2LaEQzB04zMDGG6wzM-10">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c-2LaEQzB04zMDGG6wzM-18" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="c-2LaEQzB04zMDGG6wzM-2" target="c-2LaEQzB04zMDGG6wzM-16">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c-2LaEQzB04zMDGG6wzM-2" value="Container App&lt;br&gt;Games API" style="image;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/azure2/other/Worker_Container_App.svg;" vertex="1" parent="1">
+          <mxGeometry x="414" y="200" width="123.64" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="c-2LaEQzB04zMDGG6wzM-17" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="c-2LaEQzB04zMDGG6wzM-4" target="c-2LaEQzB04zMDGG6wzM-16">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c-2LaEQzB04zMDGG6wzM-4" value="Container App&lt;br&gt;Bot Service" style="image;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/azure2/other/Worker_Container_App.svg;" vertex="1" parent="1">
+          <mxGeometry x="120" y="200" width="123.64" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="c-2LaEQzB04zMDGG6wzM-5" value="App Configuration" style="image;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/azure2/integration/App_Configuration.svg;" vertex="1" parent="1">
+          <mxGeometry x="260" y="480" width="112.94" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="c-2LaEQzB04zMDGG6wzM-6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=-0.032;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="c-2LaEQzB04zMDGG6wzM-4" target="c-2LaEQzB04zMDGG6wzM-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c-2LaEQzB04zMDGG6wzM-10" value="Cosmos DB" style="image;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/azure2/databases/Azure_Cosmos_DB.svg;" vertex="1" parent="1">
+          <mxGeometry x="680" y="200" width="120" height="120" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

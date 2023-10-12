@@ -51,8 +51,8 @@ public static class MappingExtensions
                 throw new ArgumentException($"Field {pair} does not contain ':' delimiter.");
             }
 
-            var key = pair[..index];
-            var value = pair[(index + 1)..];
+            string key = pair[..index];
+            string value = pair[(index + 1)..];
 
             if (!fields.TryGetValue(key, out List<string>? list))
             {

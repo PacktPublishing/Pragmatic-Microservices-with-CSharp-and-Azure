@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Codebreaker.Data.SqlServer.Migrations
 {
     [DbContext(typeof(GamesSqlServerContext))]
-    [Migration("20230709114237_InitGames")]
-    partial class InitGames
+    [Migration("20230930151504_AddPlayerIsAuthenticated")]
+    partial class AddPlayerIsAuthenticated
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -21,7 +21,7 @@ namespace Codebreaker.Data.SqlServer.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema("codebreaker")
-                .HasAnnotation("ProductVersion", "8.0.0-preview.5.23280.1")
+                .HasAnnotation("ProductVersion", "8.0.0-rc.1.23419.6")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -65,6 +65,9 @@ namespace Codebreaker.Data.SqlServer.Migrations
 
                     b.Property<int>("NumberCodes")
                         .HasColumnType("int");
+
+                    b.Property<bool>("PlayerIsAuthenticated")
+                        .HasColumnType("bit");
 
                     b.Property<string>("PlayerName")
                         .IsRequired()
