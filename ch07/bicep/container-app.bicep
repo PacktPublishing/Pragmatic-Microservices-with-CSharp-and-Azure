@@ -8,6 +8,12 @@ param containerAppEnvironmentName string
 @maxLength(16)
 param name string
 
+@description('Specifies the name of the user managed identity to use.')
+param identityName string = 'myUserManagedIdentity'
+
+@description('Specifies the container registry server to use')
+param registryServer string = 'mcr.microsoft.com'
+
 @description('Specifies the container image to deploy for the container app\nExample: \'mcr.microsoft.com/azuredocs/containerapps-helloworld:latest\'')
 param containerImage string = 'mcr.microsoft.com/azuredocs/containerapps-helloworld:latest'
 
@@ -63,13 +69,24 @@ var regionCode = contains(regionCodes, sanitizedLocation) ? regionCodes[sanitize
 
 // Resources
 
+resource identity 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-01-31' existing = {
+  name: identityName
+}
+
 resource containerAppEnvironment 'Microsoft.App/managedEnvironments@2023-05-01' existing = {
   name: containerAppEnvironmentName
 }
 
-resource containerApp 'Microsoft.App/containerApps@2023-05-01' = {
+resource containerApp 'Microsoft.App/containerApps@2023-05-02-preview' = {
   name: '${name}-${regionCode}-${environment}'
   location: location
+  identity: {
+    type: 'UserAssigned'
+    userAssignedIdentities: {
+      '${identity.id}': {}
+    }
+  }
+  
   properties: {
     managedEnvironmentId: containerAppEnvironment.id
     configuration: {
@@ -84,6 +101,12 @@ resource containerApp 'Microsoft.App/containerApps@2023-05-01' = {
           }
         ]
       }
+      registries: [
+        { 
+          server: registryServer
+          identity: identity.id
+        }
+      ]
     }
     template: {
       containers: [

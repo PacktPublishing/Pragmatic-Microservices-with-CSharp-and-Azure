@@ -63,6 +63,7 @@ module cosmosModule 'modules/cosmos/cosmos.bicep' = {
   scope: resourceGroup
   params: {
     solutionName: '${solutionName}${dashNameSuffix}'
+    databaseName: 'codebreaker'
     location: location
     environment: environment
     freeTier: cosmosFreeTier
@@ -74,7 +75,7 @@ module cosmosGameContainerModule 'modules/cosmos/cosmos-container.bicep' = {
   dependsOn: [ cosmosModule ]
   scope: resourceGroup
   params: {
-    gamesContainerName: 'Games-3'
+    gamesContainerName: 'GamesV3'
     databaseAccountName: cosmosModule.outputs.databaseAccountName
     databaseName: cosmosModule.outputs.databaseName
   }

@@ -1,4 +1,4 @@
 using 'keyvault.bicep'
 
-param vaultName = 'kv-cbtestwesteu'
-param managedIdentityName = 'id-test42'
+param vaultName = 'kv-detestwesteu'
+param managedIdentityName = 'id-codebreaker-dev'
