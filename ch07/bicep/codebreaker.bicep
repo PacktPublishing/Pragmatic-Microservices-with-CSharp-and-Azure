@@ -106,7 +106,7 @@ module keyVaultModel 'modules/keyvault/keyvault.bicep' = {
   dependsOn: [ managedIdentityModule ]
   scope: resourceGroup
   params:{
-    vaultName: 'kv${substring(solutionName, 0, 5)}${nameSuffix}${environment}${location}'
+    vaultName: 'kv${nameSuffix}${environment}${location}'
     location: location
     managedIdentityName: managedIdentityModule.outputs.identityName
   }
