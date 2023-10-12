@@ -9,9 +9,9 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <ContainerRegistry>codebreakerp5d6qfdaq37hedev.azurecr.io</ContainerRegistry>
+    <ContainerRegistry>codebreaker2j65mk73a46zmdev.azurecr.io</ContainerRegistry>
     <ContainerRepository>codebreaker/bot</ContainerRepository>
-    <ContainerImageTags>3.5.5;latest</ContainerImageTags>
+    <ContainerImageTags>3.5.8;latest</ContainerImageTags>
   </PropertyGroup>
 
   <ItemGroup>

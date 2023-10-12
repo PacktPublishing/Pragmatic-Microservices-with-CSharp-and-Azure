@@ -2,6 +2,8 @@ using Azure.Identity;
 
 using CodeBreaker.Bot.Endpoints;
 
+using Microsoft.Extensions.Configuration.AzureAppConfiguration;
+
 var builder = WebApplication.CreateBuilder(args);
 
 string? solutionEnvironment = builder.Configuration["SolutionEnvironment"];
@@ -14,7 +16,9 @@ if (solutionEnvironment == "Azure")
 
     builder.Configuration.AddAzureAppConfiguration(options =>
     {
-        options.Connect(new Uri(endpoint), credential);
+        options.Connect(new Uri(endpoint), credential)
+            .Select("BotService*", labelFilter: LabelFilter.Null)
+            .Select("BotService*", builder.Environment.EnvironmentName);
     });
 }
 

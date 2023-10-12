@@ -14,6 +14,7 @@ using Microsoft.OpenApi.Models;
 var builder = WebApplication.CreateBuilder(args);
 
 string? solutionEnvironment = builder.Configuration["SolutionEnvironment"];
+string? managedIdentityClientId = builder.Configuration["ManagedIdentityClientId"];
 
 #if DEBUG
 using AzureEventSourceListener listener = AzureEventSourceListener.CreateConsoleLogger();
@@ -32,13 +33,26 @@ DefaultAzureCredentialOptions credentialOptions = new()
     ExcludeEnvironmentCredential = true,
     ExcludeInteractiveBrowserCredential = true,
     ExcludeAzureCliCredential = false,
-    ExcludeManagedIdentityCredential = true,
-    ExcludeVisualStudioCredential = true
+    ExcludeManagedIdentityCredential = false,
+    ExcludeVisualStudioCredential = false
 };
 
 DefaultAzureCredential credential = new(credentialOptions);
 #else
-DefaultAzureCredential credential = new();
+DefaultAzureCredentialOptions credentialOptions = new()
+{
+    ManagedIdentityClientId = managedIdentityClientId,
+    ExcludeSharedTokenCacheCredential = true,
+    ExcludeAzurePowerShellCredential = true,
+    ExcludeVisualStudioCodeCredential = true,
+    ExcludeEnvironmentCredential = true,
+    ExcludeInteractiveBrowserCredential = true,
+    ExcludeAzureCliCredential = false,
+    ExcludeManagedIdentityCredential = false,
+    ExcludeVisualStudioCredential = false
+};
+
+DefaultAzureCredential credential = new(credentialOptions);
 #endif
 
 if (solutionEnvironment == "Azure")
@@ -47,7 +61,12 @@ if (solutionEnvironment == "Azure")
 
     builder.Configuration.AddAzureAppConfiguration(options =>
     {
-        options.Connect(new Uri(endpoint), credential);
+        options.Connect(new Uri(endpoint), credential)
+            .Select("GamesAPI*")
+            .ConfigureKeyVault(kv =>
+            {
+                kv.SetCredential(credential);
+            });
     });
 }
 
@@ -76,15 +95,20 @@ builder.Services.AddSwaggerGen(options =>
 
 // Application Services
 
-string dataStorage = builder.Configuration["DataStorage"] ??= "Cosmos";
+string dataStorage = builder.Configuration.GetSection("GamesAPI")["DataStorage"] ??= "InMemory";
 
 if (dataStorage == "Cosmos")
 {
     builder.Services.AddDbContext<IGamesRepository, GamesCosmosContext>(options =>
     {
-        string cosmosEndpoint = builder.Configuration.GetSection("GamesAPI").GetConnectionString("GamesCosmosEndpoint") ?? throw new InvalidOperationException("Could not read GamesCosmosEndpoint");
-        options.UseCosmos(cosmosEndpoint, credential, databaseName: "codebreaker")
+        // this configuration is using the secret from the Key Vault via the Azure App Configuration
+        string cosmosConnectionString = builder.Configuration.GetSection("GamesAPI").GetConnectionString("CosmosConnectionString") ?? throw new InvalidOperationException("Could not read CosmosConnectionString");
+        options.UseCosmos(cosmosConnectionString, databaseName: "codebreaker")
             .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+
+        //string cosmosEndpoint = builder.Configuration.GetSection("GamesAPI").GetConnectionString("GamesCosmosEndpoint") ?? throw new InvalidOperationException("Could not read GamesCosmosEndpoint");
+        //options.UseCosmos(cosmosEndpoint, credential, databaseName: "codebreaker")
+        //    .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
     });
 }
 else if (dataStorage == "SqlServer")
