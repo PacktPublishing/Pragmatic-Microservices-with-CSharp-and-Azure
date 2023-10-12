@@ -7,10 +7,15 @@ using Microsoft.Extensions.Configuration.AzureAppConfiguration;
 var builder = WebApplication.CreateBuilder(args);
 
 string? solutionEnvironment = builder.Configuration["SolutionEnvironment"];
+string? managedIdentityClientId = builder.Configuration["ManagedIdentityClientId"];
 
 if (solutionEnvironment == "Azure")
 {
-    DefaultAzureCredential credential = new();
+    DefaultAzureCredentialOptions credentialOptions = new()
+    {
+        ManagedIdentityClientId = managedIdentityClientId
+    };
+    DefaultAzureCredential credential = new(credentialOptions);
 
     string endpoint = builder.Configuration["AzureAppConfigurationUri"] ?? throw new InvalidOperationException("Could not read AzureAppConfigurationUri");
 
