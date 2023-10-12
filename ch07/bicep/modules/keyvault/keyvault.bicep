@@ -3,6 +3,7 @@ metadata description = 'Creates an Azure Key Vault'
 targetScope = 'resourceGroup'
 
 @description('Specifies the name of the Key Vault.')
+@maxLength(24)
 param vaultName string = 'kv${uniqueString((resourceGroup().id))}'
 
 @description('Specifies the Azure location where the app configuration store should be created.')
@@ -31,7 +32,6 @@ resource keyVault 'Microsoft.KeyVault/vaults@2023-02-01' = {
 resource managedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-01-31' existing = {
   name: managedIdentityName
 }
-
 
 var roleAssignmentId = guid(substring(vaultName, 0, 10), managedIdentity.id, 'KeyVaultSecretsUser')
 

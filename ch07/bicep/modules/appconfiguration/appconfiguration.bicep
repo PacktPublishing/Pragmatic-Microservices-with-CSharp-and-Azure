@@ -11,8 +11,8 @@ param location string = resourceGroup().location
 @description('Specifies the SKU of the app configuration store.')
 param skuName string = 'Standard'
 
-@description('Specifies the name of the principal id (GUID) that gets permission to access the app configuration.')
-param principalId string
+@description('The managed identity to get access to the key vault secrets.')
+param managedIdentityName string
 
 resource appConfig 'Microsoft.AppConfiguration/configurationStores@2023-03-01' = {
   name: configStoreName
@@ -26,7 +26,7 @@ resource gamesAPIConfigValue 'Microsoft.AppConfiguration/configurationStores/key
   parent: appConfig
   name: 'GamesAPI'
   properties: {
-    value: 'value1'
+    value: 'sample value 1'
   }
 }
 
@@ -34,17 +34,22 @@ resource botConfigValue 'Microsoft.AppConfiguration/configurationStores/keyValue
   parent: appConfig
   name: 'BotService'
   properties: {
-    value: 'value2'
+    value: 'sample value 2'
   }
 }
 
-var roleAssignmentId = guid(substring(configStoreName, 0, 10), principalId, 'AppConfigDataReader')
+// create a role assignment to have the principalId read access to the app configuration store
+resource managedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-01-31' existing = {
+  name: managedIdentityName
+}
+
+var roleAssignmentId = guid(substring(configStoreName, 0, 10), managedIdentity.name, 'AppConfigDataReader')
 
 resource roleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
   name: roleAssignmentId
   scope: appConfig
   properties: {
-    principalId: principalId
+    principalId: managedIdentity.properties.principalId
     roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '516239f1-63e1-4d78-a4de-a74fb236a071') // App Configuration Reader role ID https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles
   }
 }

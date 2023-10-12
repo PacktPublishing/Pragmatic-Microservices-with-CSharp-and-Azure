@@ -1,5 +1,5 @@
 using 'appconfiguration.bicep'
 
-param configStoreName = 'appcs-codebreaker-dev2'
+param configStoreName = 'appcs-codebreaker-dev'
 param skuName = 'Standard'
-param principalId = 'id-codebreaker-dev'
+param managedIdentityName = 'id-codebreaker-dev'

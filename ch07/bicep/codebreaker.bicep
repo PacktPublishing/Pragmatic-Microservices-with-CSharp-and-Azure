@@ -29,6 +29,15 @@ param nameSuffix string = uniqueString(az.resourceGroup().id)
 var dashNameSuffix = '${nameSuffix != '' ? '-' : null}${nameSuffix}' // Prepend a dash, if the nameSuffix is not empty
 
 // Modules
+module managedIdentityModule 'modules/managedidentity/managedidentity.bicep' = {
+  name: 'managed-identity'
+  scope: resourceGroup
+  params: {
+    identityName: 'id-codebreaker-${environment}'
+    location: location
+  }
+}
+
 module logAnalyticsWorkspaceModule 'modules/loganalytics/log-analytics-workspace.bicep' = {
   name: 'log-analytics-workspace'
   scope: resourceGroup
@@ -45,15 +54,6 @@ module containerRegistry 'modules/containers/container-registry.bicep' = {
   params: {
     solutionName: '${solutionName}${nameSuffix}' // dash is not allowed with the ACR name
     environment: environment
-    location: location
-  }
-}
-
-module managedIdentityModule 'modules/managedidentity/managedidentity.bicep' = {
-  name: 'managed-identity'
-  scope: resourceGroup
-  params: {
-    identityName: 'id-codebreaker-${environment}'
     location: location
   }
 }
@@ -85,7 +85,7 @@ module sqlRoleModule 'modules/cosmos/sqlrole.bicep' = {
   dependsOn: [ cosmosModule, cosmosGameContainerModule, managedIdentityModule ]
   scope: resourceGroup
   params: {
-    principalId: managedIdentityModule.outputs.principalId
+    managedIdentityName: managedIdentityModule.outputs.identityName
     databaseAccountName: cosmosModule.outputs.databaseAccountName
   }
 }
@@ -97,7 +97,18 @@ module appConfigurationModule 'modules/appconfiguration/appconfiguration.bicep' 
   params: {
     configStoreName: 'acs-${solutionName}-${nameSuffix}-${environment}'
     location: location
-    principalId: managedIdentityModule.outputs.principalId
+    managedIdentityName: managedIdentityModule.outputs.identityName
+  }
+}
+
+module keyVaultModel 'modules/keyvault/keyvault.bicep' = {
+  name: 'keyvault'
+  dependsOn: [ managedIdentityModule ]
+  scope: resourceGroup
+  params:{
+    vaultName: 'kv${substring(solutionName, 0, 5)}${nameSuffix}${environment}${location}'
+    location: location
+    managedIdentityName: managedIdentityModule.outputs.identityName
   }
 }
 

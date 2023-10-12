@@ -6,22 +6,26 @@ targetScope = 'resourceGroup'
 @description('Specifies the name of the existing database account name.')
 param databaseAccountName string
 
-@description('Specifies the principal id (GUID) for the managed identity.')
-param principalId string
-
-var roleDefinitionId = guid('sql-role-definition-', principalId, databaseAccount.id)
-var roleAssignmentId = guid(roleDefinitionId, principalId, databaseAccount.id)
+@description('The managed identity to get access to the key vault secrets.')
+param managedIdentityName string
 
 // Resources
 resource databaseAccount 'Microsoft.DocumentDB/databaseAccounts@2023-09-15' existing = {
   name: databaseAccountName
 }
 
-resource sqlRoleDefinition 'Microsoft.DocumentDB/databaseAccounts/sqlRoleDefinitions@2023-09-15' = {
+resource managedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-01-31' existing = {
+  name: managedIdentityName
+}
+
+var roleDefinitionId = guid('sql-role-definition-', managedIdentity.name, databaseAccount.id)
+var roleAssignmentId = guid(roleDefinitionId, managedIdentity.name, databaseAccount.id)
+
+resource cosmosReadWriteRoleDefinition 'Microsoft.DocumentDB/databaseAccounts/sqlRoleDefinitions@2023-09-15' = {
   name: roleDefinitionId
   parent: databaseAccount
   properties: {
-    roleName: 'Codebreaker Read-Write Role'
+    roleName: 'Cosmos Read-Write Role'
     type: 'CustomRole'
     assignableScopes: [
       databaseAccount.id
@@ -31,22 +35,24 @@ resource sqlRoleDefinition 'Microsoft.DocumentDB/databaseAccounts/sqlRoleDefinit
         dataActions: [
           'Microsoft.DocumentDB/databaseAccounts/readMetadata'
           'Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers/items/*'
+          'Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers/*'
         ]
+        notDataActions: []
       }
     ]
   }
 }
 
-resource sqlRoleAssignment 'Microsoft.DocumentDB/databaseAccounts/sqlRoleAssignments@2023-09-15' = {
+resource cosmosRoleAssignment 'Microsoft.DocumentDB/databaseAccounts/sqlRoleAssignments@2023-09-15' = {
   name: roleAssignmentId
   parent: databaseAccount
   properties: {
-    principalId: principalId
-    roleDefinitionId: sqlRoleDefinition.id
+    principalId: managedIdentity.properties.principalId
+    roleDefinitionId: cosmosReadWriteRoleDefinition.id
     scope: databaseAccount.id 
   }
 }
 
 // Outputs
-output sqlRoleAssignmentId string = sqlRoleAssignment.id
-output sqlRoleDefinitionId string = sqlRoleDefinition.id
+output sqlRoleAssignmentId string = cosmosRoleAssignment.id
+output sqlRoleDefinitionId string = cosmosReadWriteRoleDefinition.id
