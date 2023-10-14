@@ -137,9 +137,4 @@ app.UseSwaggerUI(options =>
 
 app.MapGameEndpoints();
 
-if (bool.TryParse(builder.Configuration["AllowCreateDatabase"], out bool allowCreateDatabase) && allowCreateDatabase)
-{
-    app.MapCreateDatabaseEndpoints(app.Logger);
-}
-
 app.Run();

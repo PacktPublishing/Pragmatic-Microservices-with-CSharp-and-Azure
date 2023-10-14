@@ -1,5 +1,4 @@
 ﻿using Codebreaker.GameAPIs.Analyzers;
-using Codebreaker.GameAPIs.Exceptions;
 
 namespace Codebreaker.GameAPIs.Services;
 
@@ -85,10 +84,8 @@ public static class GamesFactory
     public static Move ApplyMove(this Game game, string[] guesses, int moveNumber)
     {
         static TField[] GetGuesses<TField>(IEnumerable<string> guesses)
-            where TField: IParsable<TField>
-        {
-            return guesses.Select(g => TField.Parse(g, default)).ToArray();
-        }
+            where TField : IParsable<TField> => 
+                guesses.Select(g => TField.Parse(g, default)).ToArray();
 
         string[] GetColorGameGuessAnalyzerResult()
         {
