@@ -1,0 +1,62 @@
+﻿@Codebreaker.GameAPIs_HostAddress = http://localhost:9400
+@ContentType = application/json
+
+### Create a game
+POST {{Codebreaker.GameAPIs_HostAddress}}/games/
+Content-Type: {{ContentType}}
+
+{
+  "gameType": "Game6x4",
+  "playerName": "test"
+}
+
+### Set a move
+
+@gameid = e59087b0-ca6f-4e52-8813-3af9f96d822e
+
+PATCH {{Codebreaker.GameAPIs_HostAddress}}/games/{{gameid}}
+Content-Type: {{ContentType}}
+
+{
+  "gameType": "Game6x4",
+  "playerName": "test",
+  "moveNumber": 1,
+  "guessPegs": [
+    "Red",
+    "Green",
+    "Blue",
+    "Yellow"
+  ]
+}
+
+### Get game information
+
+GET {{Codebreaker.GameAPIs_HostAddress}}/games/{{gameid}}
+
+### Get games by date
+
+GET {{Codebreaker.GameAPIs_HostAddress}}/games/?date=2023-07-13
+
+### Get games by player
+
+GET {{Codebreaker.GameAPIs_HostAddress}}/games/?playerName=test&ended=false
+
+### Get games by date and player
+
+GET {{Codebreaker.GameAPIs_HostAddress}}/games/?date=2023-07-13&playerName=test
+
+### Get games by player
+
+GET {{Codebreaker.GameAPIs_HostAddress}}/games/?playerName=test
+
+### Stop a game
+
+PATCH {{Codebreaker.GameAPIs_HostAddress}}/games/{{gameid}}
+Content-Type: {{ContentType}}
+
+{
+  "gameType": "Game6x4",
+  "playerName": "test",
+  "moveNumber": 1,
+  "end": true
+}
