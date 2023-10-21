@@ -7,13 +7,40 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Codebreaker.GameAPIs", "Cod
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeBreaker.Bot", "CodeBreaker.Bot\CodeBreaker.Bot.csproj", "{D38F570C-830D-45D9-8836-15E79EB6332D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeBreaker.Bot.Tests", "CodeBreaker.Bot.Tests\CodeBreaker.Bot.Tests.csproj", "{63D2D69C-9425-488B-9841-47B8A8AD4291}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{BB9B60C7-AC6C-4C95-8C17-D74EBA477941}"
+	ProjectSection(SolutionItems) = preProject
+		Readme.md = Readme.md
+	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Codebreaker.Data.Cosmos", "Codebreaker.Data.Cosmos\Codebreaker.Data.Cosmos.csproj", "{B00E0B3F-BA9C-4EC1-8790-5711B34E9C9E}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "bicep", "bicep", "{699C23E8-AA58-469B-B40B-E086A843B76C}"
+	ProjectSection(SolutionItems) = preProject
+		bicep\bicepconfig.json = bicep\bicepconfig.json
+		bicep\codebreaker.bicep = bicep\codebreaker.bicep
+		bicep\codebreaker.bicepparam = bicep\codebreaker.bicepparam
+		bicep\cosmos.bicep = bicep\cosmos.bicep
+		bicep\cosmos.bicepparam = bicep\cosmos.bicepparam
+		bicep\Readme.md = bicep\Readme.md
+	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Codebreaker.Data.SqlServer", "Codebreaker.Data.SqlServer\Codebreaker.Data.SqlServer.csproj", "{14BE1241-3554-452B-A53F-9E105E4FD54B}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "modules", "modules", "{1625E4E8-75CC-4CB1-A3BD-920BD9F2B892}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Codebreaker.GameAPIs.Models", "Codebreaker.GameAPIs.Models\Codebreaker.GameAPIs.Models.csproj", "{C9B53B9A-A1D3-41EA-B40E-1944339708C6}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "containers", "containers", "{F87CA76D-202C-40B5-9DC5-0E8ECE0C3AAE}"
+	ProjectSection(SolutionItems) = preProject
+		bicep\modules\containers\container-app-environment.bicep = bicep\modules\containers\container-app-environment.bicep
+		bicep\modules\containers\container-app.bicep = bicep\modules\containers\container-app.bicep
+		bicep\modules\containers\container-registry.bicep = bicep\modules\containers\container-registry.bicep
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "cosmos", "cosmos", "{5EBB7C46-B7B1-4707-BA24-7C11F69C183D}"
+	ProjectSection(SolutionItems) = preProject
+		bicep\modules\cosmos\cosmos-container.bicep = bicep\modules\cosmos\cosmos-container.bicep
+		bicep\modules\cosmos\cosmos.bicep = bicep\modules\cosmos\cosmos.bicep
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "loganalytics", "loganalytics", "{4FC2E6A9-6554-4198-86A1-46C9092DD8F5}"
+	ProjectSection(SolutionItems) = preProject
+		bicep\modules\loganalytics\log-analytics-workspace.bicep = bicep\modules\loganalytics\log-analytics-workspace.bicep
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,25 +56,16 @@ Global
 		{D38F570C-830D-45D9-8836-15E79EB6332D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D38F570C-830D-45D9-8836-15E79EB6332D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D38F570C-830D-45D9-8836-15E79EB6332D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{63D2D69C-9425-488B-9841-47B8A8AD4291}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{63D2D69C-9425-488B-9841-47B8A8AD4291}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{63D2D69C-9425-488B-9841-47B8A8AD4291}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{63D2D69C-9425-488B-9841-47B8A8AD4291}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B00E0B3F-BA9C-4EC1-8790-5711B34E9C9E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B00E0B3F-BA9C-4EC1-8790-5711B34E9C9E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B00E0B3F-BA9C-4EC1-8790-5711B34E9C9E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B00E0B3F-BA9C-4EC1-8790-5711B34E9C9E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{14BE1241-3554-452B-A53F-9E105E4FD54B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{14BE1241-3554-452B-A53F-9E105E4FD54B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{14BE1241-3554-452B-A53F-9E105E4FD54B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{14BE1241-3554-452B-A53F-9E105E4FD54B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C9B53B9A-A1D3-41EA-B40E-1944339708C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C9B53B9A-A1D3-41EA-B40E-1944339708C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C9B53B9A-A1D3-41EA-B40E-1944339708C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C9B53B9A-A1D3-41EA-B40E-1944339708C6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{699C23E8-AA58-469B-B40B-E086A843B76C} = {BB9B60C7-AC6C-4C95-8C17-D74EBA477941}
+		{1625E4E8-75CC-4CB1-A3BD-920BD9F2B892} = {699C23E8-AA58-469B-B40B-E086A843B76C}
+		{F87CA76D-202C-40B5-9DC5-0E8ECE0C3AAE} = {1625E4E8-75CC-4CB1-A3BD-920BD9F2B892}
+		{5EBB7C46-B7B1-4707-BA24-7C11F69C183D} = {1625E4E8-75CC-4CB1-A3BD-920BD9F2B892}
+		{4FC2E6A9-6554-4198-86A1-46C9092DD8F5} = {1625E4E8-75CC-4CB1-A3BD-920BD9F2B892}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {28F17425-D04C-47D4-97BF-2EB69871FA61}
