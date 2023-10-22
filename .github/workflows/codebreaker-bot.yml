@@ -29,7 +29,7 @@ jobs:
     with:
       solution-path: 'ch08/BotService.sln'
       container-image-name: 'codebreaker/bot'
-      registry-login-server: ${{ env.REGISTRY_LOGIN_SERVER }}
+      registry-login-server: $REGISTRY_LOGIN_SERVER
       version-suffix: beta.1.${{ github.run_number }}
     secrets:
       REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
