@@ -1,0 +1,45 @@
+name: Shared workflow to build and test a .NET project
+
+on:
+  workflow_call:
+    inputs:
+      project-name:
+        description: 'The name of the project to build'
+        required: true
+        type: string
+      solution-path:
+        description: 'The solution file of the project to build'
+        required: true
+        type: string
+      dotnet-version:
+        description: 'The version of .NET to use'
+        required: false
+        type: string
+        default: '8.0.x'
+      
+jobs:
+  run-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout to the branch
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with: 
+          dotnet-version: ${{ inputs.dotnet-version }}
+          dotnet-quality: 'preview'
+
+      - name: Restore NuGet Packages
+        run: dotnet restore ${{ inputs.solution-path }}
+
+      - name: Run unit tests
+        run: dotnet test --logger trx --results-directory "TestResults-${{ inputs.project-name}}" --no-restore ${{ inputs.solution-path }}
+
+      - name: Upload the test results
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-results-${{ inputs.project-name}}}
+          path: TestResults-${{ inputs.project-name}}
+        if: always()
