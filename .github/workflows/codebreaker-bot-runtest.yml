@@ -14,7 +14,7 @@ on:
       
 jobs:
   build-and-test:
-    uses: ./.github/workflows/shared/shared-test.yml
+    uses: ./.github/workflows/shared-test.yml
     with:
       project-name: 'Codebreaker.Bot'
       solution-path: 'ch08/BotService.sln'
