@@ -17,5 +17,5 @@ jobs:
     uses: ./.github/workflows/shared-test.yml
     with:
       project-name: 'Codebreaker.Bot'
-      solution: 'ch08/BotService.sln'
+      solution-path: 'ch08/BotService.sln'
      
