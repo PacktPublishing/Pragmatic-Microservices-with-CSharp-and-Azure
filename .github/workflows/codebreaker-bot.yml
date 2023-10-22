@@ -23,6 +23,8 @@ jobs:
   build-and-publish:
     needs:  build-and-test
     uses: ./.github/workflows/shared-build-image.yml
+    env:
+      REGISTRY_LOGIN_SERVER: ${{ vars.REGISTRY_LOGIN_SERVER }}
     with:
       solution-path: 'ch08/BotService.sln'
       container-image-name: 'codebreaker/bot'
