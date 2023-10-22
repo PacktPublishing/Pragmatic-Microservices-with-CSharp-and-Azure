@@ -9,10 +9,13 @@ on:
     - 'ch08/Codebreaker.Bot.Tests/**'
     - '.github/workflows/shared-test.yml'
     - '.github/workflows/shared-build-image.yml'
-    - '.github/workflows/codebreaker-bot-runtest.yml'
+    - '.github/workflows/codebreaker-bot.yml'
 
   workflow_dispatch:
-      
+
+env:
+  REGISTRY_LOGIN_SERVER: ${{ vars.REGISTRY_LOGIN_SERVER }}
+    
 jobs:
   build-and-test:
     uses: ./.github/workflows/shared-test.yml
@@ -23,8 +26,6 @@ jobs:
   build-and-publish:
     needs:  build-and-test
     uses: ./.github/workflows/shared-build-image.yml
-    env:
-      REGISTRY_LOGIN_SERVER: ${{ vars.REGISTRY_LOGIN_SERVER }}
     with:
       solution-path: 'ch08/BotService.sln'
       container-image-name: 'codebreaker/bot'
