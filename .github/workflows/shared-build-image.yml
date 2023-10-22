@@ -26,9 +26,6 @@ on:
         required: true
         type: string
     secrets:
-      AZURE_CREDENTIALS:
-        description: 'Azure credentials'
-        required: true
       REGISTRY_USERNAME:
         description: 'The username of the ACR'
         required: true
