@@ -27,9 +27,9 @@ jobs:
     needs:  build-and-test
     uses: ./.github/workflows/shared-build-image.yml
     with:
-      project-path: 'ch08/Codebreaker.Bot/Codebreaker.Bot.csproj'
-      container-repository: '$REGISTRY_LOGIN_SERVER/codebreaker/bot'
-      registry-login-server: $REGISTRY_LOGIN_SERVER
+      project-path: 'ch08/CodeBreaker.Bot/CodeBreaker.Bot.csproj'
+      container-repository: ${{ vars.REGISTRY_LOGIN_SERVER }}/codebreaker/bot
+      registry-login-server: ${{ vars.REGISTRY_LOGIN_SERVER }}
       version-suffix: beta.1.${{ github.run_number }}
       image-tags: '3.8.0-beta${{ github.run_number }};latest'
     secrets:
