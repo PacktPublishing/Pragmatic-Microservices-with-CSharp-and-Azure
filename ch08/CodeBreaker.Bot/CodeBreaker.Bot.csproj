@@ -8,12 +8,6 @@
     <LangVersion>preview</LangVersion>
   </PropertyGroup>
 
-  <PropertyGroup>
-    <ContainerRegistry>codebreaker2j65mk73a46zmdev.azurecr.io</ContainerRegistry>
-    <ContainerRepository>codebreaker/bot</ContainerRepository>
-    <ContainerImageTags>3.5.8;latest</ContainerImageTags>
-  </PropertyGroup>
-
   <ItemGroup>
     <ContainerPort Include="8080" Type="tcp" />    
   </ItemGroup>
