@@ -28,7 +28,7 @@ jobs:
     uses: ./.github/workflows/shared-build-image.yml
     with:
       project-path: 'ch08/CodeBreaker.Bot/CodeBreaker.Bot.csproj'
-      container-repository: ${{ vars.REGISTRY_LOGIN_SERVER }}/codebreaker/bot
+      container-repository: codebreaker/bot
       registry-login-server: ${{ vars.REGISTRY_LOGIN_SERVER }}
       version-suffix: beta.1.${{ github.run_number }}
       image-tags: '3.8.0-beta${{ github.run_number }};latest'
