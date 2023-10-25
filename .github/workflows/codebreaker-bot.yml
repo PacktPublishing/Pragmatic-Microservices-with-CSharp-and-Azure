@@ -5,8 +5,8 @@ on:
     branches: 
       [ main ]
     paths:
-    - 'ch08/Codebreaker.Bot/**'
-    - 'ch08/Codebreaker.Bot.Tests/**'
+    - 'ch08/CodeBreaker.Bot/**'
+    - 'ch08/CodeBreaker.Bot.Tests/**'
     - '.github/workflows/shared-test.yml'
     - '.github/workflows/shared-build-image.yml'
     - '.github/workflows/codebreaker-bot.yml'
