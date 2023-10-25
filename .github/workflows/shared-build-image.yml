@@ -68,7 +68,7 @@ jobs:
           echo '${{ inputs.image-tags }}'
 
       - name: Build and push image to Azure Container Registry
-        run: dotnet publish -c Release ${{ inputs.project-path }} --os linux --arch x64 --version-suffix ${{ inputs.version-suffix }} -p:PublishProfile=DefaultContainer -p:ContainerRepository=${{ inputs.container-repository }} -p:ContainerImageTags='${{ inputs.image-tags }}' -p:ContainerRegistry=${{ inputs.registry-login-server }} -p:ContainerRegistryUsername=${{ secrets.REGISTRY_USERNAME }} -p:ContainerRegistryPassword=${{ secrets.REGISTRY_PASSWORD }} -p:ContainerRegistryUseSSL=true
+        run: dotnet publish -c Release ${{ inputs.project-path }} --os linux --arch x64 --version-suffix ${{ inputs.version-suffix }} -p:PublishProfile=DefaultContainer -p:ContainerRepository=${{ inputs.container-repository }} -p:ContainerImageTags="${{ inputs.image-tags }}" -p:ContainerRegistry=${{ inputs.registry-login-server }} -p:ContainerRegistryUsername=${{ secrets.REGISTRY_USERNAME }} -p:ContainerRegistryPassword=${{ secrets.REGISTRY_PASSWORD }} -p:ContainerRegistryUseSSL=true
 
       - name: Upload artifcat
         uses: actions/upload-artifact@v3
