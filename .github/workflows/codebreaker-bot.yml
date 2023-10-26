@@ -40,7 +40,7 @@ jobs:
       container-repository: 'codebreaker/bot'
       acr-name: ${{ vars.ACR_NAME }}
       container-appname: 'codebreaker-bot'
-      image-tag: $3.9.0-beta.{{ github.run_number }}'
+      image-tag: '3.9.0-beta.{{ github.run_number }}'
       resource-group: 'rg-codebreaker-dev'
     secrets:
       REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
