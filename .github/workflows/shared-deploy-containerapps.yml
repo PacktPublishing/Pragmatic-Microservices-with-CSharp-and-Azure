@@ -14,7 +14,7 @@ on:
       acr-name:
         description: 'The name of the ACR (not the login server)'
         required: true
-        type: string
+        type: string       
       container-appname:
         description: 'The name of the container app'
         required: true
@@ -69,8 +69,8 @@ jobs:
       - name: Build and push container image to registry
         uses: azure/container-apps-deploy-action@v2
         with:
-          imageToDeploy:  ${{ inputs.container-repository }}:latest
-          acrName: ${{ inputs.acr-name }}
+          imageToDeploy:  ${{ inputs.registry-login-server }}/${{ inputs.container-repository }}:latest
+          registryUrl: ${{ inputs.registry-login-server }}
           registryUsername: ${{ secrets.REGISTRY_USERNAME }}
           registryPassword: ${{ secrets.REGISTRY_PASSWORD }}
           containerAppName: ${{ inputs.container-appname }}
