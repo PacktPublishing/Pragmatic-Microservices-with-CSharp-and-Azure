@@ -33,10 +33,10 @@ jobs:
     needs:  build-and-test
     uses: ./.github/workflows/shared-build-image.yml
     with:
-      project-path: $PROJECT_PATH
-      container-repository: $CONTAINER_REPOSITORY
+      project-path: ${{ env.PROJECT_PATH }}
+      container-repository: ${{ env.CONTAINER_REPOSITORY }}
       registry-login-server: ${{ vars.REGISTRY_LOGIN_SERVER }}
-      image-tags: '$VERSION_PREFIX{ github.run_number }};latest'
+      image-tags: '${{ env.VERSION_PREFIX}}${{ github.run_number }};latest'
     secrets:
       REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
       REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
