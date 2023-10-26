@@ -7,6 +7,10 @@ on:
         description: 'The name of the Docker image'
         required: true
         type: string
+      registry-login-server:
+        description: 'The login server of the ACR'
+        required: true
+        type: string        
       acr-name:
         description: 'The name of the ACR (not the login server)'
         required: true
@@ -46,6 +50,13 @@ jobs:
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}  
+
+      - name: login to Azure Container Registry
+        uses: azure/docker-login@v1
+        with:
+          login-server: ${{ inputs.registry-login-server }}
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}    
 
       - name: Build and push container image to registry
         uses: azure/container-apps-deploy-action@v1
