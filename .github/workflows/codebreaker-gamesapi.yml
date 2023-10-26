@@ -1,12 +1,11 @@
-name: bot service
+name: gameapis service
 
 on:
   push:
     branches: 
       [ main ]
     paths:
-    - 'ch08/CodeBreaker.Bot/**'
-    - 'ch08/CodeBreaker.Bot.Tests/**'
+    - 'ch08/Codebreaker.GameAPIs/**'
     - '.github/workflows/shared-test.yml'
     - '.github/workflows/shared-build-image.yml'
     - '.github/workflows/shared-deploy-containerapps.yml'
@@ -18,15 +17,15 @@ jobs:
   build-and-test:
     uses: ./.github/workflows/shared-test.yml
     with:
-      project-name: 'Codebreaker.Bot'
-      solution-path: 'ch08/BotService.sln'
+      project-name: 'Codebreaker.GameAPIs'
+      solution-path: 'ch08/GamesService.sln'
 
   build-and-publish:
     needs:  build-and-test
     uses: ./.github/workflows/shared-build-image.yml
     with:
-      project-path: 'ch08/CodeBreaker.Bot/CodeBreaker.Bot.csproj'
-      container-repository: 'codebreaker/bot'
+      project-path: 'ch08/Codebreaker.GameAPIs/Codebreaker.GameAPIs.csproj'
+      container-repository: 'codebreaker/gameapis'
       registry-login-server: ${{ vars.REGISTRY_LOGIN_SERVER }}
       image-tags: '3.9.0-beta.${{ github.run_number }};latest'
     secrets:
@@ -37,10 +36,10 @@ jobs:
     needs: build-and-publish
     uses: ./.github/workflows/shared-deploy-containerapps.yml
     with:
-      container-repository: 'codebreaker/bot'
+      container-repository: 'codebreaker/gameapis'
       acr-name: ${{ vars.ACR_NAME }}
       registry-login-server: ${{ vars.REGISTRY_LOGIN_SERVER }}      
-      container-appname: 'codebreaker-bot-v3'
+      container-appname: 'codebreaker-gameapis-v3'
       containerapps-environment: ${{ vars.CONTAINERAPPS_ENVIRONMENT }}
       image-tag: '3.9.0-beta.${{ github.run_number }}'
       resource-group: 'rg-codebreaker-dev'
