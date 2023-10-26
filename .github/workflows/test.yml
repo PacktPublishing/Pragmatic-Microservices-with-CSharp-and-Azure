@@ -1,0 +1,14 @@
+name: test workflow
+
+on:
+  workflow_dispatch:
+
+env:
+  TEST: "abc"
+
+jobs:
+  test_job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: test step
+        run: echo $TEST
