@@ -13,30 +13,22 @@ on:
     - '.github/workflows/codebreaker-bot.yml'
 
   workflow_dispatch:
-
-env:
-  PROJECT_NAME: 'Codebreaker.Bot'
-  CONTAINER_REPOSITORY: 'codebreaker/bot'
-  CONTAINER_APPNAME: 'codebreaker-bot'
-  VERSION_PREFIX: '3.9.0-beta$'
-  SOLUTION_PATH: 'ch08/BotService.sln'
-  PROJECT_PATH: 'ch08/CodeBreaker.Bot/CodeBreaker.Bot.csproj'
     
 jobs:
   build-and-test:
     uses: ./.github/workflows/shared-test.yml
     with:
-      project-name: $PROJECT_NAME
-      solution-path: $SOLUTION_PATH
+      project-name: 'Codebreaker.Bot'
+      solution-path: 'ch08/BotService.sln'
 
   build-and-publish:
     needs:  build-and-test
     uses: ./.github/workflows/shared-build-image.yml
     with:
-      project-path: ${{ env.PROJECT_PATH }}
-      container-repository: ${{ env.CONTAINER_REPOSITORY }}
+      project-path: 'ch08/CodeBreaker.Bot/CodeBreaker.Bot.csproj'
+      container-repository: 'codebreaker/bot'
       registry-login-server: ${{ vars.REGISTRY_LOGIN_SERVER }}
-      image-tags: '${{ env.VERSION_PREFIX}}${{ github.run_number }};latest'
+      image-tags: '3.9.0-beta${{ github.run_number }};latest'
     secrets:
       REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
       REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
@@ -45,10 +37,10 @@ jobs:
     needs: build-and-publish
     uses: ./.github/workflows/shared-deploy-containerapps.yml
     with:
-      container-repository: $CONTAINER_REPOSITORY
+      container-repository: 'codebreaker/bot'
       registry-login-server: ${{ vars.REGISTRY_LOGIN_SERVER }}
-      container-appname: $CONTAINER_APPNAME
-      image-tag: $VERSION_PREFIX{{ github.run_number }}'
+      container-appname: 'codebreaker-bot'
+      image-tag: $3.9.0-beta{{ github.run_number }}'
       resource-group: 'rg-codebreaker-dev'
     secrets:
       REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
