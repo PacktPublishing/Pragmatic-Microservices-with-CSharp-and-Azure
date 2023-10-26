@@ -7,8 +7,8 @@ on:
         description: 'The name of the Docker image'
         required: true
         type: string
-      registry-login-server:
-        description: 'The login server of the ACR'
+      acr-name:
+        description: 'The name of the ACR (not the login server)'
         required: true
         type: string
       container-appname:
@@ -50,9 +50,11 @@ jobs:
       - name: Build and push container image to registry
         uses: azure/container-apps-deploy-action@v1
         with:
-          imageToDeploy:  ${{ inputs.registry-login-server }}/${{ inputs.container-repository }}:${{ inputs.image-tag }}
-          acrName: ${{ inputs.registry-login-server }}
+          imageToDeploy:  ${{ inputs.container-repository }}:${{ inputs.image-tag }}
+          acrName: ${{ inputs.acr-name }}
           acrUsername: ${{ secrets.REGISTRY_USERNAME }}
           acrPassword: ${{ secrets.REGISTRY_PASSWORD }}
           containerAppName: ${{ inputs.container-appname }}
           resourceGroup: ${{ inputs.resource-group }}
+          targetPort: 8080
+          ingress: external

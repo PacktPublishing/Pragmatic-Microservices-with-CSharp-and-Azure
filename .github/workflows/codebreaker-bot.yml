@@ -28,7 +28,7 @@ jobs:
       project-path: 'ch08/CodeBreaker.Bot/CodeBreaker.Bot.csproj'
       container-repository: 'codebreaker/bot'
       registry-login-server: ${{ vars.REGISTRY_LOGIN_SERVER }}
-      image-tags: '3.9.0-beta${{ github.run_number }};latest'
+      image-tags: '3.9.0-beta.${{ github.run_number }};latest'
     secrets:
       REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
       REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
@@ -38,9 +38,9 @@ jobs:
     uses: ./.github/workflows/shared-deploy-containerapps.yml
     with:
       container-repository: 'codebreaker/bot'
-      registry-login-server: ${{ vars.REGISTRY_LOGIN_SERVER }}
+      acr-name: ${{ vars.ACR_NAME }}
       container-appname: 'codebreaker-bot'
-      image-tag: $3.9.0-beta{{ github.run_number }}'
+      image-tag: $3.9.0-beta.{{ github.run_number }}'
       resource-group: 'rg-codebreaker-dev'
     secrets:
       REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
