@@ -27,6 +27,10 @@ on:
         description: 'The name of the resource group'
         required: true
         type: string
+      containerapps-environment:
+        description: 'The name of the container app environment'
+        required: true
+        type: string
     secrets:
       REGISTRY_USERNAME:
         description: 'The username of the ACR'
@@ -59,13 +63,14 @@ jobs:
           password: ${{ secrets.REGISTRY_PASSWORD }}    
 
       - name: Build and push container image to registry
-        uses: azure/container-apps-deploy-action@v1
+        uses: azure/container-apps-deploy-action@v2
         with:
-          imageToDeploy:  ${{ inputs.container-repository }}:${{ inputs.image-tag }}
+          imageToDeploy:  ${{ inputs.container-repository }}:latest
           acrName: ${{ inputs.acr-name }}
-          acrUsername: ${{ secrets.REGISTRY_USERNAME }}
-          acrPassword: ${{ secrets.REGISTRY_PASSWORD }}
+          registryUsername: ${{ secrets.REGISTRY_USERNAME }}
+          registryPassword: ${{ secrets.REGISTRY_PASSWORD }}
           containerAppName: ${{ inputs.container-appname }}
+          containerAppEnvironment: ${{ inputs.containerapps-environment }}
           resourceGroup: ${{ inputs.resource-group }}
           targetPort: 8080
           ingress: external
