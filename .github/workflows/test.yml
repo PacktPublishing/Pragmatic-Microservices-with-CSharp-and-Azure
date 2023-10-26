@@ -9,6 +9,10 @@ env:
 jobs:
   test_job:
     runs-on: ubuntu-latest
+    env:
+      TEST1: $TEST
     steps:
       - name: test step
         run: echo $TEST
+      - name: test2
+        run: echo $TEST1
