@@ -26,7 +26,7 @@ jobs:
     uses: ./.github/workflows/shared-build-image.yml
     with:
       project-path: 'ch08/CodeBreaker.Bot/CodeBreaker.Bot.csproj'
-      container-repository: 'codebreaker/bot'
+      container-repository: 'codebreakerbot'
       registry-login-server: ${{ vars.REGISTRY_LOGIN_SERVER }}
       image-tags: '3.9.0-beta.${{ github.run_number }};latest'
     secrets:
@@ -37,7 +37,7 @@ jobs:
     needs: build-and-publish
     uses: ./.github/workflows/shared-deploy-containerapps.yml
     with:
-      container-repository: 'codebreaker/bot'
+      container-repository: 'codebreakerbot'
       acr-name: ${{ vars.ACR_NAME }}
       registry-login-server: ${{ vars.REGISTRY_LOGIN_SERVER }}      
       container-appname: 'codebreaker-bot'
