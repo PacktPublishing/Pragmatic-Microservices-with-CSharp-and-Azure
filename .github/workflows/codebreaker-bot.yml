@@ -41,9 +41,10 @@ jobs:
       acr-name: ${{ vars.ACR_NAME }}
       registry-login-server: ${{ vars.REGISTRY_LOGIN_SERVER }}      
       container-appname: 'codebreaker-bot'
-      containerapps-environment: ${{ vars.CONTAINERAPPS_ENVIRONMENT }}}
+      containerapps-environment: ${{ vars.CONTAINERAPPS_ENVIRONMENT }}
       image-tag: '3.9.0-beta.${{ github.run_number }}'
       resource-group: 'rg-codebreaker-dev'
+      location: 'westeurope'
     secrets:
       REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
       REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}

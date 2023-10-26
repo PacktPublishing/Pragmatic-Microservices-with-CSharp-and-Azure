@@ -27,6 +27,10 @@ on:
         description: 'The name of the resource group'
         required: true
         type: string
+      location:
+        description: 'The location of the resource group'
+        required: true
+        type: string
       containerapps-environment:
         description: 'The name of the container app environment'
         required: true
@@ -72,5 +76,6 @@ jobs:
           containerAppName: ${{ inputs.container-appname }}
           containerAppEnvironment: ${{ inputs.containerapps-environment }}
           resourceGroup: ${{ inputs.resource-group }}
+          location: ${{ inputs.location }}
           targetPort: 8080
           ingress: external
