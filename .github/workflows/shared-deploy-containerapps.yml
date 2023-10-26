@@ -57,14 +57,7 @@ jobs:
       - name: Azure Login
         uses: azure/login@v1
         with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}  
-
-      - name: login to Azure Container Registry
-        uses: azure/docker-login@v1
-        with:
-          login-server: ${{ inputs.registry-login-server }}
-          username: ${{ secrets.REGISTRY_USERNAME }}
-          password: ${{ secrets.REGISTRY_PASSWORD }}    
+          creds: ${{ secrets.AZURE_CREDENTIALS }} 
 
       - name: Build and push container image to registry
         uses: azure/container-apps-deploy-action@v2
