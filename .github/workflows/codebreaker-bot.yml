@@ -9,35 +9,48 @@ on:
     - 'ch08/CodeBreaker.Bot.Tests/**'
     - '.github/workflows/shared-test.yml'
     - '.github/workflows/shared-build-image.yml'
+    - '.github/workflows/shared-deploy-containerapps.yml'
     - '.github/workflows/codebreaker-bot.yml'
 
   workflow_dispatch:
 
 env:
-  REGISTRY_LOGIN_SERVER: ${{ vars.REGISTRY_LOGIN_SERVER }}
+  PROJECT_NAME: 'Codebreaker.Bot'
+  CONTAINER_REPOSITORY: 'codebreaker/bot'
+  CONTAINER_APPNAME: 'codebreaker-bot'
+  VERSION_PREFIX: '3.9.0-beta$'
+  SOLUTION_PATH: 'ch08/BotService.sln'
+  PROJECT_PATH: 'ch08/CodeBreaker.Bot/CodeBreaker.Bot.csproj'
     
 jobs:
   build-and-test:
     uses: ./.github/workflows/shared-test.yml
     with:
-      project-name: 'Codebreaker.Bot'
-      solution-path: 'ch08/BotService.sln'
+      project-name: $PROJECT_NAME
+      solution-path: $SOLUTION_PATH
 
   build-and-publish:
     needs:  build-and-test
     uses: ./.github/workflows/shared-build-image.yml
     with:
-      project-path: 'ch08/CodeBreaker.Bot/CodeBreaker.Bot.csproj'
-      container-repository: codebreaker/bot
+      project-path: $PROJECT_PATH
+      container-repository: $CONTAINER_REPOSITORY
       registry-login-server: ${{ vars.REGISTRY_LOGIN_SERVER }}
-      version-suffix: beta.1.${{ github.run_number }}
-      image-tags: '3.8.0-beta${{ github.run_number }};latest'
+      image-tags: '$VERSION_PREFIX{ github.run_number }};latest'
     secrets:
       REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
       REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
 
-    
-#  deploy:
-#    needs: build-and-publish
-#    uses: ./.github/workflows/shared-deploy-containerapps.yml
-     
+  deploy:
+    needs: build-and-publish
+    uses: ./.github/workflows/shared-deploy-containerapps.yml
+    with:
+      container-repository: $CONTAINER_REPOSITORY
+      registry-login-server: ${{ vars.REGISTRY_LOGIN_SERVER }}
+      container-appname: $CONTAINER_APPNAME
+      image-tag: $VERSION_PREFIX{{ github.run_number }}'
+      resource-group: 'rg-codebreaker-dev'
+    secrets:
+      REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
+      REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
+      AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}

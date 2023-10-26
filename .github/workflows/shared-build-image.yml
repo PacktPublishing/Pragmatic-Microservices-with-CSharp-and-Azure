@@ -1,6 +1,5 @@
 name: Shared workflow to build and publish a Docker container image to ACR
 
-# When this action will be executed
 on:
   workflow_call:
     inputs:
@@ -19,10 +18,6 @@ on:
         type: string
       registry-login-server:
         description: 'The login server of the ACR'
-        required: true
-        type: string
-      version-suffix:
-        description: 'The version suffix to use'
         required: true
         type: string
       image-tags:
@@ -59,5 +54,4 @@ jobs:
           password: ${{ secrets.REGISTRY_PASSWORD }}
 
       - name: Build and push image to Azure Container Registry
-        run: dotnet publish -c Release ${{ inputs.project-path }} --os linux --arch x64 --version-suffix ${{ inputs.version-suffix }} -p:PublishProfile=DefaultContainer -p:ContainerRepository=${{ inputs.container-repository }} -p:ContainerImageTags='"${{ inputs.image-tags }}"' -p:ContainerRegistry=${{ inputs.registry-login-server }} -p:ContainerRegistryUsername=${{ secrets.REGISTRY_USERNAME }} -p:ContainerRegistryPassword=${{ secrets.REGISTRY_PASSWORD }} -p:ContainerRegistryUseSSL=true
-        
+        run: dotnet publish -c Release ${{ inputs.project-path }} --os linux --arch x64 -p:PublishProfile=DefaultContainer -p:ContainerRepository=${{ inputs.container-repository }} -p:ContainerImageTags='"${{ inputs.image-tags }}"' -p:ContainerRegistry=${{ inputs.registry-login-server }} -p:ContainerRegistryUsername=${{ secrets.REGISTRY_USERNAME }} -p:ContainerRegistryPassword=${{ secrets.REGISTRY_PASSWORD }} -p:ContainerRegistryUseSSL=true
