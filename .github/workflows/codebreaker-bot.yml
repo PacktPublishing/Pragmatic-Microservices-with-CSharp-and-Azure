@@ -21,17 +21,17 @@ jobs:
       project-name: 'Codebreaker.Bot'
       solution-path: 'ch08/BotService.sln'
 
-#  build-and-publish:
-#    needs:  build-and-test
-#    uses: ./.github/workflows/shared-build-image.yml
-#    with:
-#      project-path: 'ch08/CodeBreaker.Bot/CodeBreaker.Bot.csproj'
-#      container-repository: 'codebreaker/bot'
-#      registry-login-server: ${{ vars.REGISTRY_LOGIN_SERVER }}
-#      image-tags: '3.9.0-beta.${{ github.run_number }};latest'
-#    secrets:
-#      REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
-#      REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
+  build-and-publish:
+    needs:  build-and-test
+    uses: ./.github/workflows/shared-build-image.yml
+    with:
+      project-path: 'ch08/CodeBreaker.Bot/CodeBreaker.Bot.csproj'
+      container-repository: 'codebreaker/bot'
+      registry-login-server: ${{ vars.REGISTRY_LOGIN_SERVER }}
+      image-tags: '3.9.0-beta.${{ github.run_number }};latest'
+    secrets:
+      REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
+      REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
 
 #  deploy:
 #    needs: build-and-publish
