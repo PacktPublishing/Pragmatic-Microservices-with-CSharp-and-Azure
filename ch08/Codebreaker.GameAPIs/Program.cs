@@ -7,6 +7,8 @@ using Codebreaker.Data.Cosmos;
 using Codebreaker.Data.SqlServer;
 
 using Microsoft.EntityFrameworkCore;
+using Microsoft.FeatureManagement;
+using Microsoft.FeatureManagement.FeatureFilters;
 using Microsoft.OpenApi.Models;
 
 [assembly: InternalsVisibleTo("Codbreaker.APIs.Tests")]
@@ -55,6 +57,10 @@ DefaultAzureCredentialOptions credentialOptions = new()
 DefaultAzureCredential credential = new(credentialOptions);
 #endif
 
+builder.Services.AddFeatureManagement()
+    .AddFeatureFilter<TargetingFilter>()
+    .AddFeatureFilter<TimeWindowFilter>();
+
 if (solutionEnvironment == "Azure")
 {
     string endpoint = builder.Configuration["AzureAppConfigurationUri"] ?? throw new InvalidOperationException("Could not read AzureAppConfigurationUri");
@@ -66,8 +72,13 @@ if (solutionEnvironment == "Azure")
             .ConfigureKeyVault(kv =>
             {
                 kv.SetCredential(credential);
-            });
+            })
+            .UseFeatureFlags();
     });
+}
+else
+{
+    builder.Services.AddFeatureManagement(builder.Configuration.GetSection("FeatureManagement"));
 }
 
 // Swagger/EndpointDocumentation

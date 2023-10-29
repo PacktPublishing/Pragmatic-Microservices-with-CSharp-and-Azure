@@ -10,4 +10,5 @@ public class ErrorCodes
     public const string InvalidGuess = nameof(InvalidGuess);
     public const string InvalidMove = nameof(InvalidMove);
     public const string GameNotActive = nameof(GameNotActive);
+    public const string GameTypeCurrentlyNotAvailable = nameof(GameTypeCurrentlyNotAvailable);
 }

@@ -28,6 +28,12 @@ public static class GameEndpoints
                 GameError error = new(ErrorCodes.InvalidGameType, $"Game type {request.GameType} does not exist", context.Request.GetDisplayUrl(),   Enum.GetNames<GameType>());
                 return TypedResults.BadRequest(error);
             }
+            // TODO: update to strongly typed exception code with a model library update
+            catch (CodebreakerException ex) when (ex.Code == "CGTNA")
+            {
+                GameError error = new(ErrorCodes.GameTypeCurrentlyNotAvailable, $"Game type currently not available {request.GameType}", context.Request.GetDisplayUrl(), Enum.GetNames<GameType>());
+                return TypedResults.BadRequest(error);
+            }
             return TypedResults.Created($"/games/{game.GameId}", game.AsCreateGameResponse());
         })
         .WithName("CreateGame")

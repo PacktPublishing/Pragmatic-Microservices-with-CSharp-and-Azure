@@ -1,0 +1,59 @@
+name: Shared workflow to build and publish a Docker container image to ACR
+
+on:
+  workflow_call:
+    inputs:
+      project-path:
+        description: 'The project file to build'
+        required: true
+        type: string
+      dotnet-version:
+          description: 'The version of .NET to use'
+          required: false
+          type: string
+          default: '8.0.x'
+      container-repository:
+        description: 'The name of the Docker image'
+        required: true
+        type: string
+      image-tags:
+        description: 'The tags to use for the Docker image'
+        required: true
+        type: string
+      environment:
+        description: 'The environment to use'
+        required: false
+        type: string
+        default: 'dev'
+    secrets:
+      REGISTRY_USERNAME:
+        description: 'The username of the ACR'
+        required: true
+      REGISTRY_PASSWORD:
+        description: 'The password of the ACR'
+        required: true
+      
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+
+    steps:
+      - name: Checkout to the branch
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with: 
+          dotnet-version: ${{ inputs.dotnet-version }}
+          dotnet-quality: 'preview'
+
+      - name: login to Azure Container Registry
+        uses: azure/docker-login@v1
+        with:
+          login-server: ${{ vars.REGISTRY_LOGIN_SERVER }}
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
+
+      - name: Build and push image to Azure Container Registry
+        run: dotnet publish -c Release ${{ inputs.project-path }} --os linux --arch x64 -p:PublishProfile=DefaultContainer -p:ContainerRepository=${{ inputs.container-repository }} -p:ContainerImageTags='"${{ inputs.image-tags }}"' -p:ContainerRegistry=${{ vars.REGISTRY_LOGIN_SERVER }} -p:ContainerRegistryUsername=${{ secrets.REGISTRY_USERNAME }} -p:ContainerRegistryPassword=${{ secrets.REGISTRY_PASSWORD }} -p:ContainerRegistryUseSSL=true

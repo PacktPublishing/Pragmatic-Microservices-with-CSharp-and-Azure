@@ -1,0 +1,21 @@
+name: Codebreaker.Bot - run the shared test workflow
+
+on:
+  push:
+    branches: 
+      [ main ]
+    paths:
+    - 'ch08/Codebreaker.Bot/**'
+    - 'ch08/Codebreaker.Bot.Tests/**'
+    - '.github/workflows/shared-test.yml'
+    - '.github/workflows/codebreaker-bot-runtest.yml'
+
+  workflow_dispatch:
+      
+jobs:
+  build-and-test:
+    uses: ./.github/workflows/shared-test.yml
+    with:
+      project-name: 'Codebreaker.Bot'
+      solution-path: 'ch08/BotService.sln'
+     
