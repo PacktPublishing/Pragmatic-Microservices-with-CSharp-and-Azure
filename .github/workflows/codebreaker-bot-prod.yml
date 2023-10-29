@@ -31,7 +31,7 @@ jobs:
 
   deploy:
     needs: build-and-publish
-    uses: ./.github/workflows/deploy-containerapps.yml
+    uses: ./.github/workflows/shared-deploy-containerapps.yml
     with:
       container-repository: 'codebreaker/bot'
       acr-name: ${{ vars.ACR_NAME }}
