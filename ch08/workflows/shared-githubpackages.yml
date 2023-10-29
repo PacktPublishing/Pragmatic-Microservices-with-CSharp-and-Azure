@@ -1,0 +1,46 @@
+name: Shared workflow to publish NuGet packages to GitHub Packages
+
+on:
+  workflow_call:
+    inputs:
+      artifact-name:
+        required: true
+        type: string
+      dotnet-version:
+        description: The version of the .NET SDK to use.
+        required: false
+        type: string
+        default: 8.0.x  
+      username:
+        description: The username to use for the NuGet source.
+        required: true
+        type: string      
+      namespace:
+        description: The personal or organization name of the GitHub Packages repository.
+        required: true
+        type: string
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    env:
+      ARTIFACTS_URL: https://nuget.pkg.github.com
+    
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: ${{ inputs.artifact-name }}
+          path: packages
+    
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with: 
+          dotnet-version: ${{ inputs.dotnet-version }}
+          dotnet-quality: 'preview'
+
+      - name: Setup NuGet source
+        run: dotnet nuget add source --username ${{ inputs.username }} --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github "${{ env.ARTIFACTS_URL }}/${{ inputs.namespace}}/index.json"
+        
+      - name: Publish to GitHub Packages (nupkg and snupkg)
+        run: dotnet nuget push "packages/*.nupkg" --api-key ${{ secrets.PAT_PUBLISHPACKAGE }} --source github

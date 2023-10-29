@@ -4,9 +4,6 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-  </PropertyGroup>
-
-  <PropertyGroup>
     <PackageId>CNinnovation.Codebreaker.KiotaClient</PackageId>
     <PackageTags>Codebreaker;CNinnovation;Kiota</PackageTags>
     <Description>

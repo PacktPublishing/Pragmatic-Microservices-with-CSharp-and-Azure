@@ -1,0 +1,89 @@
+name: shared workflow to create nuget artifact
+
+on:
+  workflow_call:
+    inputs:
+      version-suffix:
+        description: The quality to add to the version number (beta.|preview.)
+        default: ""
+        required: false
+        type: string
+      build-number:
+        description: The number to add to the version after the suffix.
+        required: true
+        type: string
+      build-offset:
+        description: The offset to add to the build number.
+        default: 0
+        required: false
+        type: number
+      solutionfile-path:
+        description: The path to the solution file.
+        required: true
+        type: string
+      projectfile-path:
+        description: The path to the project file.
+        required: true
+        type: string
+      dotnet-version:
+        description: The version of the .NET SDK to use.
+        required: false
+        type: string
+        default: 8.0.x
+      artifact-name:
+        description: The name of the artifact to create.
+        required: true
+        type: string
+      branch-name:
+        description: The name of the branch to checkout.
+        default: main
+        required: false
+        type: string
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout to the branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.branch-name }}
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with: 
+          dotnet-version: ${{ inputs.dotnet-version }}
+          dotnet-quality: 'preview'
+
+      - name: Calculate build number suffix with offset
+        id: build-number
+        env:
+          BUILD: ${{ inputs.build-number }}
+          BUILD_OFFSET: ${{ inputs.build-offset }}  
+        run: |
+          echo "build-number-with-offset=$(($BUILD + $BUILD_OFFSET))" >> "$GITHUB_OUTPUT"
+
+      - name: Concatenate version suffix
+        id: version-suffix
+        env:
+          VERSION_SUFFIX: ${{ inputs.version-suffix }}
+          VERSION_NUMBER_WITH_OFFSET: ${{ steps.build-number.outputs.build-number-with-offset }}
+        run: |
+          echo "version-suffix-string=$VERSION_SUFFIX$VERSION_NUMBER_WITH_OFFSET" >> "$GITHUB_OUTPUT"
+
+      - name: Build the library
+        run: dotnet build --version-suffix ${{ steps.version-suffix.outputs.version-suffix-string }} -c Release ${{ inputs.solutionfile-path }}
+
+      - name: Run the unit tests
+        run: dotnet test ${{ inputs.solutionfile-path }}
+        
+      - name: Create a Package
+        run: dotnet pack --version-suffix ${{ steps.version-suffix.outputs.version-suffix-string }} -c Release ${{ inputs.projectfile-path }} -o packages
+        
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ inputs.artifact-name }}
+          path: packages/*
+          retention-days: 3
