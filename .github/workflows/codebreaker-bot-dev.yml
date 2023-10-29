@@ -10,7 +10,7 @@ on:
     - '.github/workflows/shared-test.yml'
     - '.github/workflows/shared-build-image.yml'
     - '.github/workflows/shared-deploy-containerapps.yml'
-    - '.github/workflows/codebreaker-bot.yml'
+    - '.github/workflows/codebreaker-bot-dev.yml'
 
   workflow_dispatch:
     

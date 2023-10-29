@@ -35,6 +35,11 @@ on:
         description: 'The name of the container app environment'
         required: true
         type: string
+      environment:
+        description: 'The environment to use'
+        required: false
+        type: string
+        default: 'dev'
     secrets:
       REGISTRY_USERNAME:
         description: 'The username of the ACR'
@@ -49,6 +54,7 @@ on:
 jobs:
   build-and-publish:
     runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
 
     steps:
       - name: Checkout to the branch

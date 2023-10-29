@@ -1,0 +1,49 @@
+name: production bot service
+
+on:
+  push:
+    branches: 
+      [ main ]
+    tags:
+      - 'releases/*'
+    paths:
+    - 'ch08/CodeBreaker.Bot/**'
+    - 'ch08/CodeBreaker.Bot.Tests/**'
+    - '.github/workflows/shared-test.yml'
+    - '.github/workflows/shared-build-image.yml'
+    - '.github/workflows/shared-deploy-containerapps.yml'
+    - '.github/workflows/codebreaker-bot-prod.yml'
+
+  workflow_dispatch:
+    
+jobs:
+  build-and-publish:
+    uses: ./.github/workflows/shared-build-image.yml
+    with:
+      project-path: 'ch08/CodeBreaker.Bot/CodeBreaker.Bot.csproj'
+      container-repository: 'codebreaker/bot'
+      registry-login-server: ${{ vars.REGISTRY_LOGIN_SERVER }}
+      image-tags: '3.9.0-beta.${{ github.run_number }};latest'
+      environment: 'Production'
+    secrets:
+      REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
+      REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
+
+  deploy:
+    needs: build-and-publish
+    uses: ./.github/workflows/deploy-containerapps.yml
+    with:
+      container-repository: 'codebreaker/bot'
+      acr-name: ${{ vars.ACR_NAME }}
+      registry-login-server: ${{ vars.REGISTRY_LOGIN_SERVER }}      
+      container-appname: 'codebreaker-bot-v3'
+      containerapps-environment: ${{ vars.CONTAINERAPPS_ENVIRONMENT }}
+      image-tag: '3.9.0.${{ github.run_number }}'
+      resource-group: 'rg-codebreaker-prod'
+      location: 'westeurope'
+      environment: 'Production'
+    secrets:
+      REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
+      REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
+      AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+      
