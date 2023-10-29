@@ -43,4 +43,4 @@ jobs:
         run: dotnet nuget add source --username ${{ inputs.username }} --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github "${{ env.ARTIFACTS_URL }}/${{ inputs.namespace}}/index.json"
         
       - name: Publish to GitHub Packages (nupkg and snupkg)
-        run: dotnet nuget push "packages/*.nupkg" --api-key ${{ secrets.GITHUB_TOKEN }} --source ${{ env.ARTIFACTS_URL }}
+        run: dotnet nuget push "packages/*.nupkg" --api-key ${{ secrets.PAT_PUBLISHPACKAGE }} --source ${{ env.ARTIFACTS_URL }}
