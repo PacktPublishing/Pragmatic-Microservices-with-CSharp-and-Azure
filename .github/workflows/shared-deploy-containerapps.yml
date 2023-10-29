@@ -6,14 +6,6 @@ on:
       container-repository:
         description: 'The name of the Docker image'
         required: true
-        type: string
-      registry-login-server:
-        description: 'The login server of the ACR'
-        required: true
-        type: string        
-      acr-name:
-        description: 'The name of the ACR (not the login server)'
-        required: true
         type: string       
       container-appname:
         description: 'The name of the container app'
@@ -29,10 +21,6 @@ on:
         type: string
       location:
         description: 'The location of the resource group'
-        required: true
-        type: string
-      containerapps-environment:
-        description: 'The name of the container app environment'
         required: true
         type: string
       environment:
@@ -69,11 +57,11 @@ jobs:
         uses: azure/container-apps-deploy-action@v2
         with:
           imageToDeploy:  ${{ inputs.registry-login-server }}/${{ inputs.container-repository }}:${{ inputs.image-tag }}
-          registryUrl: ${{ inputs.registry-login-server }}
+          registryUrl: ${{ vars.REGISTRY_LOGIN_SERVER }} 
           registryUsername: ${{ secrets.REGISTRY_USERNAME }}
           registryPassword: ${{ secrets.REGISTRY_PASSWORD }}
           containerAppName: ${{ inputs.container-appname }}
-          containerAppEnvironment: ${{ inputs.containerapps-environment }}
+          containerAppEnvironment: ${{ vars.CONTAINERAPPS_ENVIRONMENT }}
           resourceGroup: ${{ inputs.resource-group }}
           location: ${{ inputs.location }}
           targetPort: 8080

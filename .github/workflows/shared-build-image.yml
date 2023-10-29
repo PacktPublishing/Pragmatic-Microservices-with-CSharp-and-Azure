@@ -16,10 +16,6 @@ on:
         description: 'The name of the Docker image'
         required: true
         type: string
-      registry-login-server:
-        description: 'The login server of the ACR'
-        required: true
-        type: string
       image-tags:
         description: 'The tags to use for the Docker image'
         required: true
@@ -55,7 +51,7 @@ jobs:
       - name: login to Azure Container Registry
         uses: azure/docker-login@v1
         with:
-          login-server: ${{ inputs.registry-login-server }}
+          login-server: ${{ vars.REGISTRY_LOGIN_SERVER }}
           username: ${{ secrets.REGISTRY_USERNAME }}
           password: ${{ secrets.REGISTRY_PASSWORD }}
 
