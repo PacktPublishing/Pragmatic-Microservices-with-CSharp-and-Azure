@@ -16,13 +16,16 @@ jobs:
     build-and-test:
         uses: ./.github/workflows/shared-create-nuget.yml
         with:
-          version-number: '1.0.0'
+          version-suffix: beta.
+          build-number: ${{ github.run_number }}
+          build-offset: 42
           solutionfile-path: 'ch08/ClientLib.sln'
           projectfile-path: 'ch08/Codebreaker.GameAPIs.KiotaClient/Codebreaker.GameAPIs.KiotaClient.csproj'
           artifact-name: 'KiotaLib'
 
     publish-to-github-packages:
         uses: ./.github/workflows/shared-githubpackages.yml
+        needs: build-and-test
         with:
             artifact-name: 'KiotaLib'
             username: 'christiannagel'

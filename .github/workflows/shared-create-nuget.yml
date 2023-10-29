@@ -8,12 +8,12 @@ on:
         default: ""
         required: false
         type: string
-      version-number:
+      build-number:
         description: The number to add to the version after the suffix.
         required: true
         type: string
-      version-offset:
-        description: The offset to add to the version number.
+      build-offset:
+        description: The offset to add to the build number.
         default: 0
         required: false
         type: number
@@ -56,19 +56,19 @@ jobs:
           dotnet-version: ${{ inputs.dotnet-version }}
           dotnet-quality: 'preview'
 
-      - name: Calculate version suffix with offset
-        id: version
+      - name: Calculate build number suffix with offset
+        id: build-number
         env:
-          VERSION_NUMBER: ${{ inputs.version-number }}
-          VERSION_OFFSET: ${{ inputs.version-offset }}  
+          BUILD: ${{ inputs.build-number }}
+          BUILD_OFFSET: ${{ inputs.build-offset }}  
         run: |
-          echo "version-number-with-offset=$(($VERSION_NUMBER + $VERSION_OFFSET))" >> "$GITHUB_OUTPUT"
+          echo "build-number-with-offset=$(($BUILD + $BUILD_OFFSET))" >> "$GITHUB_OUTPUT"
 
       - name: Concatenate version suffix
         id: version-suffix
         env:
           VERSION_SUFFIX: ${{ inputs.version-suffix }}
-          VERSION_NUMBER_WITH_OFFSET: ${{ steps.version.outputs.version-number-with-offset }}
+          VERSION_NUMBER_WITH_OFFSET: ${{ steps.build-number.outputs.build-number-with-offset }}
         run: |
           echo "version-suffix-string=$VERSION_SUFFIX$VERSION_NUMBER_WITH_OFFSET" >> "$GITHUB_OUTPUT"
 
