@@ -25,5 +25,6 @@ jobs:
         uses: ./.github/workflows/shared-githubpackages.yml
         with:
             artifact-name: 'KiotaLib'
+            username: 'christiannagel'
             namespace: 'codebreakerapp'
         secrets: inherit
