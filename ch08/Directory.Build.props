@@ -7,9 +7,12 @@
     <Copyright>(c) CN innovation</Copyright>
     <IncludeSymbols>True</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <PackageReleaseNotes>https://github.com/codebreakerapp/Codebreaker.Backend/releases</PackageReleaseNotes>
   </PropertyGroup>
 
   <PropertyGroup>
-    <VersionPrefix>3.5</VersionPrefix>
+    <VersionPrefix>3.6</VersionPrefix>
   </PropertyGroup>
 </Project>
