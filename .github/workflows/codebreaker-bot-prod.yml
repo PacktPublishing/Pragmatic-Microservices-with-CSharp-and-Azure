@@ -24,8 +24,7 @@ jobs:
       container-repository: 'codebreaker/bot'
       image-tags: '3.9.0.${{ github.run_number }};latest'
       environment: 'Production'
-    secrets:
-      inherit: true
+    secrets: inherit
 
   deploy:
     needs: build-and-publish
@@ -37,6 +36,5 @@ jobs:
       resource-group: 'rg-codebreaker-prod'
       location: 'westeurope'
       environment: 'Production'
-    secrets:
-      inherit: true
+    secrets: inherit
       

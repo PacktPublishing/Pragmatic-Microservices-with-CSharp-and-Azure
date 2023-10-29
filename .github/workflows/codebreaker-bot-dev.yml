@@ -28,8 +28,7 @@ jobs:
       project-path: 'ch08/CodeBreaker.Bot/CodeBreaker.Bot.csproj'
       container-repository: 'codebreaker/bot'
       image-tags: '3.9.0-beta.${{ github.run_number }};latest'
-    secrets:
-      inherit: true
+    secrets: inherit
 
   deploy:
     needs: build-and-publish
@@ -40,6 +39,5 @@ jobs:
       image-tag: '3.9.0-beta.${{ github.run_number }}'
       resource-group: 'rg-codebreaker-dev'
       location: 'westeurope'
-    secrets:
-      inherit: true
+    secrets: inherit
       
