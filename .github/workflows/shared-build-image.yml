@@ -56,4 +56,4 @@ jobs:
           password: ${{ secrets.REGISTRY_PASSWORD }}
 
       - name: Build and push image to Azure Container Registry
-        run: dotnet publish -c Release ${{ inputs.project-path }} --os linux --arch x64 -p:PublishProfile=DefaultContainer -p:ContainerRepository=${{ inputs.container-repository }} -p:ContainerImageTags='"${{ inputs.image-tags }}"' -p:ContainerRegistry=${{ inputs.registry-login-server }} -p:ContainerRegistryUsername=${{ secrets.REGISTRY_USERNAME }} -p:ContainerRegistryPassword=${{ secrets.REGISTRY_PASSWORD }} -p:ContainerRegistryUseSSL=true
+        run: dotnet publish -c Release ${{ inputs.project-path }} --os linux --arch x64 -p:PublishProfile=DefaultContainer -p:ContainerRepository=${{ inputs.container-repository }} -p:ContainerImageTags='"${{ inputs.image-tags }}"' -p:ContainerRegistry=${{ vars.REGISTRY_LOGIN_SERVER }} -p:ContainerRegistryUsername=${{ secrets.REGISTRY_USERNAME }} -p:ContainerRegistryPassword=${{ secrets.REGISTRY_PASSWORD }} -p:ContainerRegistryUseSSL=true

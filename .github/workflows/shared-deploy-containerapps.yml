@@ -56,7 +56,7 @@ jobs:
       - name: Build and push container image to registry
         uses: azure/container-apps-deploy-action@v2
         with:
-          imageToDeploy:  ${{ inputs.registry-login-server }}/${{ inputs.container-repository }}:${{ inputs.image-tag }}
+          imageToDeploy:  ${{ vars.REGISTRY_LOGIN_SERVER }}/${{ inputs.container-repository }}:${{ inputs.image-tag }}
           registryUrl: ${{ vars.REGISTRY_LOGIN_SERVER }} 
           registryUsername: ${{ secrets.REGISTRY_USERNAME }}
           registryPassword: ${{ secrets.REGISTRY_PASSWORD }}
