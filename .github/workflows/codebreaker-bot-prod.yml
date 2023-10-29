@@ -23,7 +23,7 @@ jobs:
       project-path: 'ch08/CodeBreaker.Bot/CodeBreaker.Bot.csproj'
       container-repository: 'codebreaker/bot'
       registry-login-server: ${{ vars.REGISTRY_LOGIN_SERVER }}
-      image-tags: '3.9.0-beta.${{ github.run_number }};latest'
+      image-tags: '3.9.0.${{ github.run_number }};latest'
       environment: 'Production'
     secrets:
       REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
