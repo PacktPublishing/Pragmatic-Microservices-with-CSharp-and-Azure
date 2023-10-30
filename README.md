@@ -8,3 +8,4 @@ Pragmatic Microservices with CSharp and Azure, published by Packt
 * Chapter 5 - Containerization of Microservices
 * Chapter 6 - Microsoft Azure for Hosting of Applications
 * Chapter 7 - Flexible Configuration
+* Chapter 8 - DevOps with GitHub Actions
