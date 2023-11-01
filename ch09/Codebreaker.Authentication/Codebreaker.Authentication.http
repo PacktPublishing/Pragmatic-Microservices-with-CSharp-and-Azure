@@ -1,0 +1,6 @@
+@Codebreaker.Authentication_HostAddress = http://localhost:5124
+
+GET {{Codebreaker.Authentication_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
