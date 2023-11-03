@@ -18,7 +18,7 @@ public static class FeatureManagerExtensions
         }
 
         string featureName = $"Feature{gameType}";
-        if ((s_featureNames ?? await GetFeatureNamesAsync()).Contains(featureName))
+        if ((s_featureNames ??= await GetFeatureNamesAsync()).Contains(featureName))
         {
             return await featureManager.IsEnabledAsync(featureName);
         }
