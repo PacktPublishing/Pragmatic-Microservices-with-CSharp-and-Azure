@@ -13,7 +13,7 @@ if (solutionEnvironment == "Azure")
 {
     DefaultAzureCredentialOptions credentialOptions = new()
     {
-        ManagedIdentityClientId = managedIdentityClientId
+       //  ManagedIdentityClientId = managedIdentityClientId
     };
     DefaultAzureCredential credential = new(credentialOptions);
 
