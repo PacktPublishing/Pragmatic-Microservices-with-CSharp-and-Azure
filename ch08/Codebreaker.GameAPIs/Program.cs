@@ -57,9 +57,9 @@ DefaultAzureCredentialOptions credentialOptions = new()
 DefaultAzureCredential credential = new(credentialOptions);
 #endif
 
-builder.Services.AddFeatureManagement()
-    .AddFeatureFilter<TargetingFilter>()
-    .AddFeatureFilter<TimeWindowFilter>();
+//builder.Services.AddFeatureManagement()
+//    .AddFeatureFilter<TargetingFilter>()
+//    .AddFeatureFilter<TimeWindowFilter>();
 
 if (solutionEnvironment == "Azure")
 {
@@ -78,7 +78,7 @@ if (solutionEnvironment == "Azure")
 }
 else
 {
-    builder.Services.AddFeatureManagement(builder.Configuration.GetSection("FeatureManagement"));
+   // builder.Services.AddFeatureManagement(builder.Configuration.GetSection("FeatureManagement"));
 }
 
 // Swagger/EndpointDocumentation
