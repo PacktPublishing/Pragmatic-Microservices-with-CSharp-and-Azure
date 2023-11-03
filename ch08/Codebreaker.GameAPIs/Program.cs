@@ -43,7 +43,7 @@ DefaultAzureCredential credential = new(credentialOptions);
 #else
 DefaultAzureCredentialOptions credentialOptions = new()
 {
-    ManagedIdentityClientId = managedIdentityClientId,
+    // ManagedIdentityClientId = managedIdentityClientId,
     ExcludeSharedTokenCacheCredential = true,
     ExcludeAzurePowerShellCredential = true,
     ExcludeVisualStudioCodeCredential = true,
