@@ -72,8 +72,8 @@ if (solutionEnvironment == "Azure")
             .ConfigureKeyVault(kv =>
             {
                 kv.SetCredential(credential);
-            })
-            .UseFeatureFlags();
+            });
+//            .UseFeatureFlags();
     });
 }
 else
