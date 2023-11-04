@@ -2,6 +2,7 @@
 
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.FeatureManagement;
 
 namespace Codebreaker.GameAPIs.Endpoints;
 
@@ -15,12 +16,20 @@ public static class GameEndpoints
         group.MapPost("/", async Task<Results<Created<CreateGameResponse>, BadRequest<GameError>>> (
             CreateGameRequest request,
             IGamesService gameService,
+            IFeatureManager featureManager,
             HttpContext context,
             CancellationToken cancellationToken) =>
         {
             Game game;
             try
             {
+                bool featureAvailable = await featureManager.IsGameTypeAvailable(request.GameType);
+                if (!featureAvailable)
+                {
+                    GameError error = new(ErrorCodes.GameTypeCurrentlyNotAvailable, "Game type currently not available", context.Request.GetDisplayUrl());
+                    return TypedResults.BadRequest(error);
+                }
+
                 game = await gameService.StartGameAsync(request.GameType.ToString(), request.PlayerName, cancellationToken);
             }
             catch (CodebreakerException ex) when (ex.Code == CodebreakerExceptionCodes.InvalidGameType)

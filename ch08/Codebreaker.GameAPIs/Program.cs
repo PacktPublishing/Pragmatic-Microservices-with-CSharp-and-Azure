@@ -116,10 +116,6 @@ if (dataStorage == "Cosmos")
         string cosmosConnectionString = builder.Configuration.GetSection("GamesAPI").GetConnectionString("CosmosConnectionString") ?? throw new InvalidOperationException("Could not read CosmosConnectionString");
         options.UseCosmos(cosmosConnectionString, databaseName: "codebreaker")
             .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
-
-        //string cosmosEndpoint = builder.Configuration.GetSection("GamesAPI").GetConnectionString("GamesCosmosEndpoint") ?? throw new InvalidOperationException("Could not read GamesCosmosEndpoint");
-        //options.UseCosmos(cosmosEndpoint, credential, databaseName: "codebreaker")
-        //    .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
     });
 }
 else if (dataStorage == "SqlServer")
