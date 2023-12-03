@@ -79,7 +79,7 @@ if (solutionEnvironment == "Azure")
 else
 {
     builder.Services.AddFeatureManagement(builder.Configuration.GetSection("FeatureManagement"))
-        .AddFeatureFilter<TargetingFilter>()
+        .AddFeatureFilter<ContextualTargetingFilter>()
         .AddFeatureFilter<TimeWindowFilter>();
 }
 
