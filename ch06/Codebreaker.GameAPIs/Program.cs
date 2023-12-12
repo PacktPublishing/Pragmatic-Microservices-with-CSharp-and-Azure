@@ -1,3 +1,4 @@
+using System.Data.Common;
 using System.Runtime.CompilerServices;
 
 using Codebreaker.Data.Cosmos;
@@ -51,8 +52,21 @@ else if (dataStorage == "SqlServer")
     builder.Services.AddDbContext<IGamesRepository, GamesSqlServerContext>(options =>
     {
         string connectionString = builder.Configuration.GetConnectionString("GamesSqlServerConnection") ?? throw new InvalidOperationException("Could not find GamesSqlServerConnection");
+        DbConnectionStringBuilder connectionStringBuilder = new()
+        {
+            ConnectionString = connectionString
+        };
+        if (connectionStringBuilder.ContainsKey("user id"))
+        {
+            if (File.Exists("/run/secrets/sqlpassword"))
+            {
+                string password = File.ReadAllText("/run/secrets/sqlpassword");
+                connectionStringBuilder.Add("password", password);
+            }
+        }
+
         options.UseSqlServer(connectionString)
-                .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+            .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
     });
 }
 else
