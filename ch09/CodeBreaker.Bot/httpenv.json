@@ -1,0 +1,10 @@
+{
+  "dev": {
+    "Template_HostAddress": "http://localhost:5141",
+    "Bot_HostAddress": "http://localhost:5141"
+  },
+  "remote": {
+    "Template_HostAddress": "http://localhost:5147",
+    "Bot_HostAddress": "http://localhost:5147"
+  }
+}

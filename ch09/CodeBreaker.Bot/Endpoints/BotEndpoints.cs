@@ -1,6 +1,9 @@
-﻿using CodeBreaker.Bot.Api;
+﻿using System.Security.Claims;
+
+using CodeBreaker.Bot.Api;
 using CodeBreaker.Bot.Exceptions;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace CodeBreaker.Bot.Endpoints;
@@ -10,10 +13,12 @@ public static class BotEndpoints
     public static void MapBotEndpoints(this IEndpointRouteBuilder routes)
     {
         var group = routes.MapGroup("/bot")
+            .RequireAuthorization("botpolicy")
             .WithTags("Bot API");
 
         group.MapPost("/bots", Results<BadRequest, Accepted<Guid>> (
             CodeBreakerTimer timer,
+            //ClaimsIdentity identity,
             int count = 3,
             int delay = 10,
             int thinkTime = 3) =>
@@ -64,7 +69,7 @@ public static class BotEndpoints
         .WithSummary("Gets the status of a bot")
         .WithOpenApi(x =>
         {
-            x.Parameters[0].Description = "The id of the bot";
+            x.Parameters[0].Description = "The id of the bot instance           ";
             return x;
         });
 

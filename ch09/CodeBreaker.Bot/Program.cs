@@ -1,13 +1,51 @@
-using Azure.Identity;
-
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Identity.Web;
 using CodeBreaker.Bot.Endpoints;
 
 using Microsoft.Extensions.Configuration.AzureAppConfiguration;
+using Azure.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
-string? solutionEnvironment = builder.Configuration["SolutionEnvironment"];
-string? managedIdentityClientId = builder.Configuration["ManagedIdentityClientId"];
+var codebreakerBotSection = builder.Configuration.GetSection("CodebreakerBot");
+string? solutionEnvironment = codebreakerBotSection["SolutionEnvironment"];
+string? authentication = codebreakerBotSection["Authentication"];
+string? gamesapiScope = codebreakerBotSection["GamesAPIScope"];
+
+string? managedIdentityClientId = codebreakerBotSection["ManagedIdentityClientId"];
+
+if (authentication == "AADB2C")
+{
+    builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+        .AddMicrosoftIdentityWebApi(options =>
+        {
+            // bearer options
+            codebreakerBotSection.Bind("AzureAdB2C", options);
+
+            options.TokenValidationParameters.NameClaimType = "name";
+        }, options =>
+        {  // identity options
+            codebreakerBotSection.Bind("AzureADB2C", options);
+        })
+        .EnableTokenAcquisitionToCallDownstreamApi(options =>
+        {
+
+        }).AddDownstreamApi("gamesapi", builder.Configuration.GetSection("GamesAPIScope"))
+        .AddInMemoryTokenCaches();
+   
+
+    var authorizationBuilder = builder.Services.AddAuthorizationBuilder();
+    authorizationBuilder.AddPolicy("BotPolicy", config =>
+    {
+        config.RequireAuthenticatedUser().RequireRole("BotUsers");
+        config.Requirements.Add(
+            new ScopeAuthorizationRequirement()
+            {
+
+            });
+    });
+
+}
 
 if (solutionEnvironment == "Azure")
 {
@@ -48,6 +86,10 @@ builder.Services.AddScoped<CodeBreakerGameRunner>();
 
 app = builder.Build();
 
+app.UseAuthentication();
+app.UseAuthorization();
+
+//app.MapSwagger().RequireAuthorization();
 app.UseSwagger();
 app.UseSwaggerUI();
 
