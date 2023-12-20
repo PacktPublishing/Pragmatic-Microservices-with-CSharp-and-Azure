@@ -1,9 +1,16 @@
 ﻿namespace Codebreaker.GameAPIs.Client.Models;
 
+/// <summary>
+/// Filter based on game type, player name, date, and ended
+/// </summary>
+/// <param name="GameType">The game type with one of the <see cref="GameType"/>enum values</param>
+/// <param name="PlayerName">The name of the player</param>
+/// <param name="Date">The start time of the game</param>
+/// <param name="Ended">Only ended or running games</param>
 public record class GamesQuery(
-    GameType? GameType = default,
-    string? PlayerName = default,
-    DateOnly? Date = default,
+    GameType? GameType = default, 
+    string? PlayerName = default, 
+    DateOnly? Date = default, 
     bool? Ended = false)
 {
     public string AsUrlQuery()
