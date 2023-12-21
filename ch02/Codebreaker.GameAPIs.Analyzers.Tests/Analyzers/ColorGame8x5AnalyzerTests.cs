@@ -2,7 +2,7 @@ using System.Collections;
 
 using static Codebreaker.GameAPIs.Models.Colors;
 
-namespace Codebreaker.GameAPIs.Algorithms.Tests;
+namespace Codebreaker.GameAPIs.Analyzer.Tests;
 
 public class ColorGame8x5AnalyzerTests
 {
@@ -11,8 +11,8 @@ public class ColorGame8x5AnalyzerTests
     {
         ColorResult expectedKeyPegs = new(0, 3);
         ColorResult? resultKeyPegs = TestSkeleton(
-            new[] { Green, Yellow, Green, Black, Orange },
-            new[] { Yellow, Green, Black, Blue, Blue }
+            [Green, Yellow, Green, Black, Orange],
+            [Yellow, Green, Black, Blue, Blue]
         );
 
         Assert.Equal(expectedKeyPegs, resultKeyPegs);
@@ -23,7 +23,7 @@ public class ColorGame8x5AnalyzerTests
     [Theory]
     public void SetMoveUsingVariousData(int expectedBlack, int expectedWhite, params string[] guessValues)
     {
-        string[] code = new[] { Red, Green, Blue, Red, Brown };
+        string[] code = [Red, Green, Blue, Red, Brown];
         ColorResult expectedKeyPegs = new (expectedBlack, expectedWhite);
         ColorResult resultKeyPegs = TestSkeleton(code, guessValues);
         Assert.Equal(expectedKeyPegs, resultKeyPegs);
@@ -42,8 +42,8 @@ public class ColorGame8x5AnalyzerTests
     {
         Assert.Throws<ArgumentException>(() => 
             TestSkeleton(
-                new[] { "Black", "Black", "Black", "Black", "Black" },
-                new[] { "Black" }
+                ["Black", "Black", "Black", "Black", "Black"],
+                ["Black"]
             ));
     }
 
@@ -52,8 +52,8 @@ public class ColorGame8x5AnalyzerTests
     {
         Assert.Throws<ArgumentException>(() => 
             TestSkeleton(
-                new[] { "Black", "Black", "Black", "Black", "Black" },
-                new[] { "Black", "Der", "Blue", "Yellow", "Black" }      // "Der" is the wrong value
+                ["Black", "Black", "Black", "Black", "Black"],
+                ["Black", "Der", "Blue", "Yellow", "Black"]      // "Der" is the wrong value
             ));
     }
 
@@ -79,7 +79,7 @@ public class ColorGame8x5AnalyzerTests
 
 public class TestData8x5 : IEnumerable<object[]>
 {
-    public static readonly string[] Colors8 = new string[] { Red, Blue, Green, Yellow, Black, White, Purple, Orange };
+    public static readonly string[] Colors8 = [Red, Blue, Green, Yellow, Black, White, Purple, Orange];
 
     public IEnumerator<object[]> GetEnumerator()
     {

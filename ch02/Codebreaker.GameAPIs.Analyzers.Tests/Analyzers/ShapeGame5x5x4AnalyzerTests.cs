@@ -3,7 +3,7 @@ using System.Collections;
 using static Codebreaker.GameAPIs.Models.Colors;
 using static Codebreaker.GameAPIs.Models.Shapes;
 
-namespace Codebreaker.GameAPIs.Algorithms.Tests;
+namespace Codebreaker.GameAPIs.Analyzer.Tests;
 
 // TODO: add more unit tests
 public class ShapeGame5x5x4AnalyzerTests
@@ -13,8 +13,8 @@ public class ShapeGame5x5x4AnalyzerTests
     {
         ShapeAndColorResult expectedKeyPegs = new(0, 3, 0);
         ShapeAndColorResult? resultKeyPegs = TestSkeleton(
-            new string[] { "Rectangle;Green", "Circle;Yellow", "Rectangle;Green", "Star;Blue"},
-            new string[] {"Circle;Yellow", "Rectangle;Green", "Star;Blue", "Square;Purple"}
+            ["Rectangle;Green", "Circle;Yellow", "Rectangle;Green", "Star;Blue"],
+            ["Circle;Yellow", "Rectangle;Green", "Star;Blue", "Square;Purple"]
         );
 
         Assert.Equal(expectedKeyPegs, resultKeyPegs);
@@ -86,8 +86,8 @@ public class ShapeGame5x5x4AnalyzerTests
 
 public class TestData5x5x4 : IEnumerable<object[]>
 {
-    public static readonly string[] Colors5 = { Red, Green, Blue, Yellow, Purple };
-    public static readonly string[] Shapes5 = { Circle, Square, Triangle, Star, Rectangle };
+    public static readonly string[] Colors5 = [Red, Green, Blue, Yellow, Purple];
+    public static readonly string[] Shapes5 = [Circle, Square, Triangle, Star, Rectangle];
 
     public IEnumerator<object[]> GetEnumerator()
     {

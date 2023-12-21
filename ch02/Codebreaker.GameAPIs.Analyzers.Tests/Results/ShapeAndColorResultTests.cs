@@ -1,6 +1,4 @@
-using Codebreaker.GameAPIs.Models;
-
-namespace Codebreaker.GameAPIs.Algorithms.Tests;
+namespace Codebreaker.GameAPIs.Analyzer.Tests;
 
 public class ShapeAndColorResultTests
 { 

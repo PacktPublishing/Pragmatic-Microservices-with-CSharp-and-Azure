@@ -43,12 +43,12 @@ public abstract class GameGuessAnalyzer<TField, TResult> : IGameGuessAnalyzer<TR
 
         ValidateGuessValues();
 
-        _game.LastMoveNumber++;
-
-        if (_game.LastMoveNumber != _moveNumber)
+        if ((_game.LastMoveNumber + 1) != _moveNumber)
         {
             throw new ArgumentException($"Incorrect move number received {_moveNumber}") { HResult = 4300 };
         }
+
+        _game.LastMoveNumber++;
     }
 
     /// <summary>

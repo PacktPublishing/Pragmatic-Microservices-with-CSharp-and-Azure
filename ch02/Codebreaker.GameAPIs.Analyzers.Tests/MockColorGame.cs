@@ -1,4 +1,4 @@
-﻿namespace Codebreaker.GameAPIs.Algorithms.Tests;
+﻿namespace Codebreaker.GameAPIs.Analyzer.Tests;
 
 public class MockColorGame : IGame
 {
