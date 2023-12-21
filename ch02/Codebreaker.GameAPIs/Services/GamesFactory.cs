@@ -54,10 +54,10 @@ public static class GamesFactory
             new(Guid.NewGuid(), gameType, playerName, DateTime.Now, 4, 14)
             {
                 FieldValues = new Dictionary<string, IEnumerable<string>>()
-                    {
-                        { FieldCategories.Colors, s_colors5 },
-                        { FieldCategories.Shapes, s_shapes5 }
-                    },
+                {
+                    { FieldCategories.Colors, s_colors5 },
+                    { FieldCategories.Shapes, s_shapes5 }
+                },
                 Codes = Random.Shared.GetItems(s_shapes5, 4)
                     .Zip(Random.Shared.GetItems(s_colors5, 4))
                     .Select((s, c) => string.Join(';', s, c))
