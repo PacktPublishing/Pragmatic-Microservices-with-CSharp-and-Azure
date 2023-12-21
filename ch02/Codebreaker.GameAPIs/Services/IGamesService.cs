@@ -29,8 +29,8 @@ public interface IGamesService
     /// </summary>
     /// <param name="id">the id of the game</param>
     /// <param name="cancellationToken">cancellation token</param>
-    /// <returns>the game with the given id</returns>
-    ValueTask<Game> GetGameAsync(Guid id, CancellationToken cancellationToken = default);
+    /// <returns>the game with the given id or null if the game was not found</returns>
+    ValueTask<Game?> GetGameAsync(Guid id, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Delete a game with the given id
