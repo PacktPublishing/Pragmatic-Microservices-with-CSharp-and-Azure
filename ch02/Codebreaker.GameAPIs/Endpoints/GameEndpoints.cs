@@ -28,7 +28,7 @@ public static class GameEndpoints
                 GameError error = new(ErrorCodes.InvalidGameType, $"Game type {request.GameType} does not exist", context.Request.GetDisplayUrl(),   Enum.GetNames<GameType>());
                 return TypedResults.BadRequest(error);
             }
-            return TypedResults.Created($"/games/{game.GameId}", game.AsCreateGameResponse());
+            return TypedResults.Created($"/games/{game.Id}", game.AsCreateGameResponse());
         })
         .WithName("CreateGame")
         .WithSummary("Creates and starts a game")
@@ -72,7 +72,7 @@ public static class GameEndpoints
                 {
                     4200 => TypedResults.BadRequest(new GameError(ErrorCodes.InvalidGuessNumber, "Invalid number of guesses received", url)),
                     4300 => TypedResults.BadRequest(new GameError(ErrorCodes.UnexpectedMoveNumber, "Unexpected move number received", url)),
-                    4400 => TypedResults.BadRequest(new GameError(ErrorCodes.InvalidGuess, "Invalid guess values received!", url)),
+                    > 4400 and < 4490 => TypedResults.BadRequest(new GameError(ErrorCodes.InvalidGuess, "Invalid guess values received!", url)),
                     _ => TypedResults.BadRequest(new GameError(ErrorCodes.InvalidMove,"Invalid move received!", url))
                 };
             }
