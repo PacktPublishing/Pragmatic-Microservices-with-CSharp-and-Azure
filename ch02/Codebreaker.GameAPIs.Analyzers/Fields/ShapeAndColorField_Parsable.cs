@@ -12,7 +12,7 @@ public partial record class ShapeAndColorField : IParsable<ShapeAndColorField>
         }
         else
         {
-            throw new ArgumentException($"Cannot parse value {s} - use ';' to separate shape and color", nameof(s)) { HResult = 4404 };
+            throw new ArgumentException($"Cannot parse value {s} - use '{Separator}' to separate shape and color", nameof(s)) { HResult = 4404 };
         }
     }
 
@@ -23,7 +23,7 @@ public partial record class ShapeAndColorField : IParsable<ShapeAndColorField>
         {
             return false;
         }
-        string[] parts = s.Split(';');
+        string[] parts = s.Split(Separator);
         if (parts.Length != 2)
         {
             return false;
