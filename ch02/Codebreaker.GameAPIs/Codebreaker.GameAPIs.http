@@ -12,7 +12,7 @@ Content-Type: {{ContentType}}
 
 ### Set a move
 
-@gameid = a5789d1e-54a6-40d5-87dd-cc3c9125ac4d
+@gameid = 9e1aba87-46c2-4bf2-a033-af7f49eddd55
 
 PATCH {{Codebreaker.GameAPIs_HostAddress}}/games/{{gameid}}
 Content-Type: {{ContentType}}
@@ -28,6 +28,61 @@ Content-Type: {{ContentType}}
     "Yellow"
   ]
 }
+
+### Create a 8x5 game
+POST {{Codebreaker.GameAPIs_HostAddress}}/games/
+Content-Type: {{ContentType}}
+
+{
+  "gameType": "Game8x5",
+  "playerName": "test"
+}
+
+### Set a 8x5 move
+
+PATCH {{Codebreaker.GameAPIs_HostAddress}}/games/{{gameid}}
+Content-Type: {{ContentType}}
+
+{
+  "gameType": "Game8x5",
+  "playerName": "test",
+  "moveNumber": 1,
+  "guessPegs": [
+    "Green",
+    "Green",
+    "Yellow",
+    "Purple",
+    "Pink"
+  ]
+}
+
+### Create a 5x5x4 game
+POST {{Codebreaker.GameAPIs_HostAddress}}/games/
+Content-Type: {{ContentType}}
+
+{
+  "gameType": "Game5x5x4",
+  "playerName": "test"
+}
+
+### Set a 5x5x4 move
+
+PATCH {{Codebreaker.GameAPIs_HostAddress}}/games/{{gameid}}
+Content-Type: {{ContentType}}
+
+{
+  "gameType": "Game5x5x4",
+  "playerName": "test",
+  "moveNumber": 3,
+  "guessPegs": [
+    "Square;Red",
+    "Rectangle;Red",
+    "Circle;Green",
+    "Rectangle;Purple"
+  ]
+}
+
+
 
 ### Get game information
 
