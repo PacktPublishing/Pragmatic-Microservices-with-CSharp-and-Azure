@@ -8,7 +8,7 @@ public interface IGame
     /// <summary>
     /// The unique identifier for the game
     /// </summary>
-    Guid GameId { get; }
+    Guid Id { get; }
 
     /// <summary>
     /// The type of game - a string to allow for future expansion

@@ -2,7 +2,7 @@
 
 public class MockShapeGame : IGame
 {
-    public Guid GameId { get; init; }
+    public Guid Id { get; init; }
     public int NumberCodes { get; init; }
     public int MaxMoves { get; init; }
     public DateTime? EndTime { get; set; }
