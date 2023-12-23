@@ -28,10 +28,4 @@ public class CodebreakerException : Exception
             throw new CodebreakerException("Game is not active") { Code = CodebreakerExceptionCodes.GameNotActive };
         }
     }
-
-    [DoesNotReturn]
-    public static void ThrowUpdateFailed(Game game)
-    {
-        throw new CodebreakerException("Game update failed") { Code = CodebreakerExceptionCodes.GameUpdateFailed };
-    }
 }
