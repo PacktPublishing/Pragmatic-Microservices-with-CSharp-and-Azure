@@ -28,7 +28,7 @@ public static class GameEndpoints
                 GameError error = new(ErrorCodes.InvalidGameType, $"Game type {request.GameType} does not exist", context.Request.GetDisplayUrl(),   Enum.GetNames<GameType>());
                 return TypedResults.BadRequest(error);
             }
-            return TypedResults.Created($"/games/{game.Id}", game.AsCreateGameResponse());
+            return TypedResults.Created($"/games/{game.Id}", game.ToCreateGameResponse());
         })
         .WithName("CreateGame")
         .WithSummary("Creates and starts a game")
@@ -39,8 +39,8 @@ public static class GameEndpoints
         });
 
         // Update the game resource with a move
-        group.MapPatch("/{gameId:guid}", async Task<Results<Ok<UpdateGameResponse>, NotFound, BadRequest<GameError>>> (
-            Guid gameId,
+        group.MapPatch("/{id:guid}", async Task<Results<Ok<UpdateGameResponse>, NotFound, BadRequest<GameError>>> (
+            Guid id,
             UpdateGameRequest request,
             IGamesService gameService,
             HttpContext context,
@@ -54,15 +54,15 @@ public static class GameEndpoints
             {
                 if (request.End)
                 {
-                    Game? game = await gameService.EndGameAsync(gameId, cancellationToken);
+                    Game? game = await gameService.EndGameAsync(id, cancellationToken);
                     if (game is null)
                         return TypedResults.NotFound();
-                    return TypedResults.Ok(game.AsUpdateGameResponse());
+                    return TypedResults.Ok(game.ToUpdateGameResponse());
                 }
                 else
                 {
-                    (Game game, Move move) = await gameService.SetMoveAsync(gameId, request.GuessPegs!, request.MoveNumber, cancellationToken);
-                    return TypedResults.Ok(game.AsUpdateGameResponse(move.KeyPegs));
+                    (Game game, Move move) = await gameService.SetMoveAsync(id, request.GuessPegs!, request.MoveNumber, cancellationToken);
+                    return TypedResults.Ok(game.ToUpdateGameResponse(move.KeyPegs));
                 }
             }
             catch (ArgumentException ex) when (ex.HResult is >= 4200 and <= 4500)
@@ -96,13 +96,13 @@ public static class GameEndpoints
         });
 
         // Get game by id
-        group.MapGet("/{gameId:guid}", async Task<Results<Ok<Game>, NotFound>> (
-            Guid gameId,
+        group.MapGet("/{id:guid}", async Task<Results<Ok<Game>, NotFound>> (
+            Guid id,
             IGamesService gameService,
             CancellationToken cancellationToken
         ) =>
         {
-            Game? game = await gameService.GetGameAsync(gameId, cancellationToken);
+            Game? game = await gameService.GetGameAsync(id, cancellationToken);
 
             if (game is null)
             {
@@ -142,13 +142,13 @@ public static class GameEndpoints
                     return op;
                 });
 
-        group.MapDelete("/{gameId:guid}", async (
-            Guid gameId,
+        group.MapDelete("/{id:guid}", async (
+            Guid id,
             IGamesService gameService, 
             CancellationToken cancellationToken
         ) =>
         {
-            await gameService.DeleteGameAsync(gameId, cancellationToken);
+            await gameService.DeleteGameAsync(id, cancellationToken);
 
             return TypedResults.NoContent();
         })

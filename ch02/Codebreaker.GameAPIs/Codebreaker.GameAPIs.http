@@ -12,9 +12,9 @@ Content-Type: {{ContentType}}
 
 ### Set a move
 
-@gameid = 9e1aba87-46c2-4bf2-a033-af7f49eddd55
+@id = 9e1aba87-46c2-4bf2-a033-af7f49eddd55
 
-PATCH {{Codebreaker.GameAPIs_HostAddress}}/games/{{gameid}}
+PATCH {{Codebreaker.GameAPIs_HostAddress}}/games/{{id}}
 Content-Type: {{ContentType}}
 
 {
@@ -40,7 +40,7 @@ Content-Type: {{ContentType}}
 
 ### Set a 8x5 move
 
-PATCH {{Codebreaker.GameAPIs_HostAddress}}/games/{{gameid}}
+PATCH {{Codebreaker.GameAPIs_HostAddress}}/games/{{id}}
 Content-Type: {{ContentType}}
 
 {
@@ -67,13 +67,13 @@ Content-Type: {{ContentType}}
 
 ### Set a 5x5x4 move
 
-PATCH {{Codebreaker.GameAPIs_HostAddress}}/games/{{gameid}}
+PATCH {{Codebreaker.GameAPIs_HostAddress}}/games/{{id}}
 Content-Type: {{ContentType}}
 
 {
   "gameType": "Game5x5x4",
   "playerName": "test",
-  "moveNumber": 3,
+  "moveNumber": 1,
   "guessPegs": [
     "Square;Red",
     "Rectangle;Red",
@@ -86,11 +86,11 @@ Content-Type: {{ContentType}}
 
 ### Get game information
 
-GET {{Codebreaker.GameAPIs_HostAddress}}/games/{{gameid}}
+GET {{Codebreaker.GameAPIs_HostAddress}}/games/{{id}}
 
 ### Get games by date
 
-GET {{Codebreaker.GameAPIs_HostAddress}}/games/?date=2023-07-13
+GET {{Codebreaker.GameAPIs_HostAddress}}/games/?date=2024-07-14
 
 ### Get games by player
 
@@ -98,7 +98,7 @@ GET {{Codebreaker.GameAPIs_HostAddress}}/games/?playerName=test&ended=false
 
 ### Get games by date and player
 
-GET {{Codebreaker.GameAPIs_HostAddress}}/games/?date=2023-07-13&playerName=test
+GET {{Codebreaker.GameAPIs_HostAddress}}/games/?date=2024-07-14&playerName=test
 
 ### Get games by player
 
@@ -106,7 +106,7 @@ GET {{Codebreaker.GameAPIs_HostAddress}}/games/?playerName=test
 
 ### Stop a game
 
-PATCH {{Codebreaker.GameAPIs_HostAddress}}/games/{{gameid}}
+PATCH {{Codebreaker.GameAPIs_HostAddress}}/games/{{id}}
 Content-Type: {{ContentType}}
 
 {

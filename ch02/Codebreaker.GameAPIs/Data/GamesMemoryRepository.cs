@@ -11,7 +11,7 @@ public class GamesMemoryRepository(ILogger<GamesMemoryRepository> logger) : IGam
     {
         if (!_games.TryAdd(game.Id, game))
         {
-            _logger.LogWarning("gameid {gameId} already exists", game.Id);
+            _logger.LogWarning("id {id} already exists", game.Id);
         }
         return Task.CompletedTask;
     }
@@ -20,7 +20,7 @@ public class GamesMemoryRepository(ILogger<GamesMemoryRepository> logger) : IGam
     {
         if (!_games.TryRemove(id, out _))
         {
-            _logger.LogWarning("gamid {gameId} not available", id);
+            _logger.LogWarning("id {id} not available", id);
             return Task.FromResult(false);
         }
         return Task.FromResult(true);
