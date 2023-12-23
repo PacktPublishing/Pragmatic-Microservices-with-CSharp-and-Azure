@@ -6,6 +6,7 @@ namespace Codebreaker.GameAPIs.Exceptions;
 
 public class CodebreakerException : Exception
 {
+
     public string Code { get; set; } = string.Empty;
 
 	public CodebreakerException() { }
@@ -26,5 +27,11 @@ public class CodebreakerException : Exception
         {
             throw new CodebreakerException("Game is not active") { Code = CodebreakerExceptionCodes.GameNotActive };
         }
+    }
+
+    [DoesNotReturn]
+    public static void ThrowUpdateFailed(Game game)
+    {
+        throw new CodebreakerException("Game update failed") { Code = CodebreakerExceptionCodes.GameUpdateFailed };
     }
 }
