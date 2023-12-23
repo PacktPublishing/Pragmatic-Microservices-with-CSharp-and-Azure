@@ -12,7 +12,7 @@ public partial record class ShapeAndColorField : IParsable<ShapeAndColorField>
         }
         else
         {
-            throw new ArgumentException($"Cannot parse value {s}", nameof(s));
+            throw new ArgumentException($"Cannot parse value {s} - use ';' to separate shape and color", nameof(s)) { HResult = 4404 };
         }
     }
 
