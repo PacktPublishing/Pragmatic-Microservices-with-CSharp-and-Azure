@@ -4,18 +4,11 @@ namespace Codebreaker.Data.SqlServer;
 
 public class GamesSqlServerContext(DbContextOptions<GamesSqlServerContext> options) : DbContext(options), IGamesRepository
 {
-    internal const string GameId = nameof(GameId);
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.HasDefaultSchema("codebreaker");
         modelBuilder.ApplyConfiguration(new GameConfiguration());
         modelBuilder.ApplyConfiguration(new MoveConfiguration());
-
-        modelBuilder.Entity<Game>()
-            .HasMany(g => g.Moves)
-            .WithOne()
-            .HasForeignKey(GameId);
     }
 
     public DbSet<Game> Games => Set<Game>();
@@ -37,7 +30,7 @@ public class GamesSqlServerContext(DbContextOptions<GamesSqlServerContext> optio
 
     public async Task<bool> DeleteGameAsync(Guid gameId, CancellationToken cancellationToken = default)
     {
-        var game = await Games.FindAsync(new object[] { gameId }, cancellationToken);
+        var game = await Games.FindAsync([gameId], cancellationToken);
         if (game is null)
             return false;
         Games.Remove(game);
@@ -50,7 +43,7 @@ public class GamesSqlServerContext(DbContextOptions<GamesSqlServerContext> optio
         var game = await Games
             .Include("Moves")
             .TagWith(nameof(GetGameAsync))
-            .SingleOrDefaultAsync(g => g.GameId == gameId, cancellationToken);
+            .SingleOrDefaultAsync(g => g.Id == gameId, cancellationToken);
         return game;
     }
 

@@ -14,7 +14,7 @@ public class GamesCosmosContext(DbContextOptions<GamesCosmosContext> options) : 
 
         gameModel.Property<string>(PartitionKey);
         gameModel.HasPartitionKey(PartitionKey);
-        gameModel.HasKey(nameof(Game.GameId), PartitionKey);
+        gameModel.HasKey(nameof(Game.Id), PartitionKey);
 
         gameModel.Property(g => g.FieldValues)
             .HasConversion(_fieldValueConverter, _fieldValueComparer);
@@ -22,7 +22,7 @@ public class GamesCosmosContext(DbContextOptions<GamesCosmosContext> options) : 
 
     public DbSet<Game> Games => Set<Game>();
 
-    public static string ComputePartitionKey(Game game) => game.GameId.ToString();
+    public static string ComputePartitionKey(Game game) => game.Id.ToString();
 
     public void SetPartitionKey(Game game) =>
         Entry(game).Property(PartitionKey).CurrentValue =
@@ -46,7 +46,7 @@ public class GamesCosmosContext(DbContextOptions<GamesCosmosContext> options) : 
     {
         var game = await Games
             .WithPartitionKey(gameId.ToString())
-            .SingleOrDefaultAsync(g => g.GameId == gameId, cancellationToken);
+            .SingleOrDefaultAsync(g => g.Id == gameId, cancellationToken);
 
         if (game is null)
             return false;
@@ -59,7 +59,7 @@ public class GamesCosmosContext(DbContextOptions<GamesCosmosContext> options) : 
     {
         var game = await Games
             .WithPartitionKey(gameId.ToString())
-            .SingleOrDefaultAsync(g => g.GameId == gameId, cancellationToken);
+            .SingleOrDefaultAsync(g => g.Id == gameId, cancellationToken);
         return game;
     }
 
