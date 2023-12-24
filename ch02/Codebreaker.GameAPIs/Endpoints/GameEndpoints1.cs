@@ -26,12 +26,12 @@ public static class GameEndpoints
                 GameError error = new(ErrorCodes.InvalidGameType, $"Game type {request.GameType} does not exist", context.Request.GetDisplayUrl(), Enum.GetNames<GameType>());
                 return Results.BadRequest(error);
             }
-            return Results.Created($"/games/{game.GameId}", game.AsCreateGameResponse());
+            return Results.Created($"/games/{game.Id}", game.ToCreateGameResponse());
         });
 
         // Update the game resource with a move
-        group.MapPatch("/{gameId:guid}", async (
-            Guid gameId,
+        group.MapPatch("/{id:guid}", async (
+            Guid id,
             UpdateGameRequest request,
             IGamesService gameService,
             HttpContext context,
@@ -45,14 +45,14 @@ public static class GameEndpoints
             {
                 if (request.End)
                 {
-                    Game? game = await gameService.EndGameAsync(gameId, cancellationToken);
+                    Game? game = await gameService.EndGameAsync(id, cancellationToken);
                     if (game is null)
                         return Results.NotFound();
                     return Results.Ok(game.AsUpdateGameResponse());
                 }
                 else
                 {
-                    (Game game, Move move) = await gameService.SetMoveAsync(gameId, request.GuessPegs!, request.MoveNumber, cancellationToken);
+                    (Game game, Move move) = await gameService.SetMoveAsync(id, request.GuessPegs!, request.MoveNumber, cancellationToken);
                     return Results.Ok(game.AsUpdateGameResponse(move.KeyPegs));
                 }
             }
@@ -79,12 +79,12 @@ public static class GameEndpoints
         });
 
         // Get game by id
-        group.MapGet("/{gameId:guid}", async (
-            Guid gameId,
+        group.MapGet("/{id:guid}", async (
+            Guid id,
             IGamesService gameService,
             CancellationToken cancellationToken) =>
         {
-            Game? game = await gameService.GetGameAsync(gameId, cancellationToken);
+            Game? game = await gameService.GetGameAsync(id, cancellationToken);
 
             if (game is null)
             {
@@ -107,12 +107,12 @@ public static class GameEndpoints
             return Results.Ok(games);
         });
 
-        group.MapDelete("/{gameId:guid}", async (
-            Guid gameId,
+        group.MapDelete("/{id:guid}", async (
+            Guid id,
             IGamesService gameService,
             CancellationToken cancellationToken) =>
         {
-            await gameService.DeleteGameAsync(gameId, cancellationToken);
+            await gameService.DeleteGameAsync(id, cancellationToken);
 
             return Results.NoContent();
         });

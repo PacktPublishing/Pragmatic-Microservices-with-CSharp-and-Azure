@@ -12,7 +12,7 @@ public partial record class ColorField : IParsable<ColorField>
         }
         else
         {
-            throw new FormatException($"Cannot parse value {s}");
+            throw new ArgumentException($"Cannot parse value {s}") { HResult = 4404 };
         }
     }
 

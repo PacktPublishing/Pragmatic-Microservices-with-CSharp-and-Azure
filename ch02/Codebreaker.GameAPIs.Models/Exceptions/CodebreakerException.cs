@@ -6,6 +6,7 @@ namespace Codebreaker.GameAPIs.Exceptions;
 
 public class CodebreakerException : Exception
 {
+
     public string Code { get; set; } = string.Empty;
 
 	public CodebreakerException() { }
