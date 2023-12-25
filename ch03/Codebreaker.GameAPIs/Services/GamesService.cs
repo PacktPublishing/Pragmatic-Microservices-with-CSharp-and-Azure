@@ -10,11 +10,12 @@ public class GamesService(IGamesRepository dataRepository) : IGamesService
         return game;
     }
 
-    public async Task<(Game Game, Move Move)> SetMoveAsync(Guid id, string[] guesses, int moveNumber, CancellationToken cancellationToken = default)
+    public async Task<(Game Game, Move Move)> SetMoveAsync(Guid id, string gameType, string[] guesses, int moveNumber, CancellationToken cancellationToken = default)
     {
         Game? game = await dataRepository.GetGameAsync(id, cancellationToken);
         CodebreakerException.ThrowIfNull(game);
         CodebreakerException.ThrowIfEnded(game);
+        CodebreakerException.ThrowIfUnexpectedGameType(game, gameType);
 
         Move move = game.ApplyMove(guesses, moveNumber);
 

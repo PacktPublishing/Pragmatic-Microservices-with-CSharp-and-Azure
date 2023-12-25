@@ -61,7 +61,7 @@ public static class GameEndpoints
                 }
                 else
                 {
-                    (Game game, Move move) = await gameService.SetMoveAsync(id, request.GuessPegs!, request.MoveNumber, cancellationToken);
+                    (Game game, Move move) = await gameService.SetMoveAsync(id, request.GameType.ToString(), request.GuessPegs!, request.MoveNumber, cancellationToken);
                     return TypedResults.Ok(game.ToUpdateGameResponse(move.KeyPegs));
                 }
             }
@@ -79,6 +79,11 @@ public static class GameEndpoints
             catch (CodebreakerException ex) when (ex.Code == CodebreakerExceptionCodes.GameNotFound)
             {
                 return TypedResults.NotFound();
+            }
+            catch (CodebreakerException ex) when (ex.Code == CodebreakerExceptionCodes.UnepextedGameType)
+            {
+                string url = context.Request.GetDisplayUrl();
+                return TypedResults.BadRequest(new GameError(ErrorCodes.UnepextedGameType, "The game type specified with the move does not match the type of the running game", url));
             }
             catch (CodebreakerException ex) when (ex.Code == CodebreakerExceptionCodes.GameNotActive)
             {

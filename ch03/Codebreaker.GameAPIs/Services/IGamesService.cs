@@ -18,11 +18,12 @@ public interface IGamesService
     /// set new moves
     /// </summary>
     /// <param name="id">the id of the game</param>
+    /// <param name="gameType">the type of the game</param>
     /// <param name="guesses">an enumerable guesses of strings</param>
     /// <param name="moveNumber">the number of the move</param>
     /// <param name="cancellationToken">cancellation token</param>
     /// <returns>tuple consisting of the updated game and its result</returns>
-    Task<(Game Game, Move Move)> SetMoveAsync(Guid id, string[] guesses, int moveNumber, CancellationToken cancellationToken = default);
+    Task<(Game Game, Move Move)> SetMoveAsync(Guid id, string gameType, string[] guesses, int moveNumber, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Get the Game by id
