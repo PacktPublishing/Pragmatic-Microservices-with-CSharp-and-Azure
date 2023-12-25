@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Codebreaker.Data.SqlServer.Migrations
 {
     [DbContext(typeof(GamesSqlServerContext))]
-    [Migration("20231224142427_InitGames")]
+    [Migration("20231225095734_InitGames")]
     partial class InitGames
     {
         /// <inheritdoc />
@@ -65,9 +65,6 @@ namespace Codebreaker.Data.SqlServer.Migrations
 
                     b.Property<int>("NumberCodes")
                         .HasColumnType("int");
-
-                    b.Property<bool>("PlayerIsAuthenticated")
-                        .HasColumnType("bit");
 
                     b.Property<string>("PlayerName")
                         .IsRequired()

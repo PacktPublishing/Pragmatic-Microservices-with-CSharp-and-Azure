@@ -22,7 +22,6 @@ namespace Codebreaker.Data.SqlServer.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     GameType = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     PlayerName = table.Column<string>(type: "nvarchar(60)", maxLength: 60, nullable: false),
-                    PlayerIsAuthenticated = table.Column<bool>(type: "bit", nullable: false),
                     StartTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EndTime = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Duration = table.Column<TimeSpan>(type: "time", nullable: true),
