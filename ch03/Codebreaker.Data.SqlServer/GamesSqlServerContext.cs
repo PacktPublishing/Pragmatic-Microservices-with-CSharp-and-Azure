@@ -30,12 +30,10 @@ public class GamesSqlServerContext(DbContextOptions<GamesSqlServerContext> optio
 
     public async Task<bool> DeleteGameAsync(Guid gameId, CancellationToken cancellationToken = default)
     {
-        var game = await Games.FindAsync([gameId], cancellationToken);
-        if (game is null)
-            return false;
-        Games.Remove(game);
-        await SaveChangesAsync(cancellationToken);
-        return true;
+        var affected = await Games
+            .Where(g => g.Id == gameId)
+            .ExecuteDeleteAsync(cancellationToken);
+        return affected == 1;
     }
 
     public async Task<Game?> GetGameAsync(Guid gameId, CancellationToken cancellationToken = default)
