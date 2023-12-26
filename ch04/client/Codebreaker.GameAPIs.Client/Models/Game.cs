@@ -1,14 +1,14 @@
 ﻿namespace Codebreaker.GameAPIs.Client.Models;
 
 public class Game(
-    Guid gameId,
+    Guid id,
     string gameType,
     string playerName,
     DateTime startTime,
     int numberCodes,
     int maxMoves)
 {
-    public Guid GameId { get; private set; } = gameId;
+    public Guid Id { get; private set; } = id;
     public string GameType { get; private set; } = gameType;
     public string PlayerName { get; private set; } = playerName;
     public bool PlayerIsAuthenticated { get; set; } = false;
@@ -23,7 +23,7 @@ public class Game(
     public required IDictionary<string, IEnumerable<string>> FieldValues { get; init; }
 
     public required string[] Codes { get; init; }
-    public ICollection<Move> Moves { get; init; } = new List<Move>();
+    public ICollection<Move> Moves { get; init; } = [];
 
-    public override string ToString() => $"{GameId}:{GameType} - {StartTime}";
+    public override string ToString() => $"{Id}:{GameType} - {StartTime}";
 }
