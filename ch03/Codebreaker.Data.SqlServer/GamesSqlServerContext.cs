@@ -28,20 +28,20 @@ public class GamesSqlServerContext(DbContextOptions<GamesSqlServerContext> optio
         await SaveChangesAsync(cancellationToken);
     }
 
-    public async Task<bool> DeleteGameAsync(Guid gameId, CancellationToken cancellationToken = default)
+    public async Task<bool> DeleteGameAsync(Guid id, CancellationToken cancellationToken = default)
     {
         var affected = await Games
-            .Where(g => g.Id == gameId)
+            .Where(g => g.Id == id)
             .ExecuteDeleteAsync(cancellationToken);
         return affected == 1;
     }
 
-    public async Task<Game?> GetGameAsync(Guid gameId, CancellationToken cancellationToken = default)
+    public async Task<Game?> GetGameAsync(Guid id, CancellationToken cancellationToken = default)
     {
         var game = await Games
             .Include("Moves")
             .TagWith(nameof(GetGameAsync))
-            .SingleOrDefaultAsync(g => g.Id == gameId, cancellationToken);
+            .SingleOrDefaultAsync(g => g.Id == id, cancellationToken);
         return game;
     }
 
