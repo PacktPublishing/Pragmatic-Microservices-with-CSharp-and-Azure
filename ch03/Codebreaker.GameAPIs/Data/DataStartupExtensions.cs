@@ -5,26 +5,27 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Codebreaker.GameAPIs.Data;
 
-public static class StartupExtensions
+public static class DataStartupExtensions
 {
     public static void AddDataStores(this IHostApplicationBuilder builder)
     {
         static void ConfigureSqlServer(IHostApplicationBuilder builder)
         {
-            builder.AddSqlServerDbContext<GamesSqlServerContext>("GamesSqlServerConnection", configureDbContextOptions: options =>
-            {
-                options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
-            });
+            builder.AddSqlServerDbContext<GamesSqlServerContext>("GamesSqlServerConnection", 
+                configureDbContextOptions: options =>
+                {
+                    options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+                });
             builder.Services.AddScoped<IGamesRepository, SqlServerProxy>();
         }
 
         static void ConfigureCosmos(IHostApplicationBuilder builder)
         {
-            string connectionString = builder.Configuration.GetConnectionString("GamesCosmosConnection") ?? throw new InvalidOperationException("Could not find GamesCosmosConnection");
-            builder.AddCosmosDbContext<GamesCosmosContext>(connectionString, "datbasename", configureDbContextOptions: options =>
-            {
-                options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
-            });
+            builder.AddCosmosDbContext<GamesCosmosContext>("GamesCosmosConnection", "codebreaker", 
+                configureDbContextOptions: options =>
+                {
+                    options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+                });
 
             builder.Services.AddScoped<IGamesRepository, CosmosProxy>();
         }
@@ -45,7 +46,7 @@ public static class StartupExtensions
                 ConfigureSqlServer(builder);
                 break;
             default:
-                ConfigureInMemory(builder );
+                ConfigureInMemory(builder);
                 break;
         }
     }
