@@ -54,13 +54,13 @@ public static class GamesFactory
             new(Guid.NewGuid(), gameType, playerName, DateTime.Now, 4, 14)
             {
                 FieldValues = new Dictionary<string, IEnumerable<string>>()
-                    {
-                        { FieldCategories.Colors, s_colors5 },
-                        { FieldCategories.Shapes, s_shapes5 }
-                    },
+                {
+                    { FieldCategories.Colors, s_colors5 },
+                    { FieldCategories.Shapes, s_shapes5 }
+                },
                 Codes = Random.Shared.GetItems(s_shapes5, 4)
-                    .Zip(Random.Shared.GetItems(s_colors5, 4))
-                    .Select((s, c) => string.Join(';', s, c))
+                    .Zip(Random.Shared.GetItems(s_colors5, 4), (shape, color) => (Shape: shape, Color: color))
+                    .Select(item => string.Join(';', item.Shape, item.Color))
                     .ToArray()
             };
         
@@ -84,51 +84,41 @@ public static class GamesFactory
     public static Move ApplyMove(this Game game, string[] guesses, int moveNumber)
     {
         static TField[] GetGuesses<TField>(IEnumerable<string> guesses)
-            where TField : IParsable<TField> => 
-            guesses
+            where TField : IParsable<TField> => guesses
                 .Select(g => TField.Parse(g, default))
                 .ToArray();
 
-        Move GetColorGameGuessAnalyzerResult()
+        string[] GetColorGameGuessAnalyzerResult()
         {
-            ColorGameGuessAnalyzer analyzer = new (game, GetGuesses<ColorField>(guesses), moveNumber);
-            ColorResult result = analyzer.GetResult();
-            return new(Guid.NewGuid(), moveNumber)
-            {
-                GuessPegs = guesses,
-                KeyPegs = result.ToStringResults()
-            };
+            ColorGameGuessAnalyzer analyzer = new(game, GetGuesses<ColorField>(guesses), moveNumber);
+            return analyzer.GetResult().ToStringResults();
         }
 
-        Move GetSimpleGameGuessAnalyzerResult()
+        string[] GetSimpleGameGuessAnalyzerResult()
         {
             SimpleGameGuessAnalyzer analyzer = new(game, GetGuesses<ColorField>(guesses), moveNumber);
-            SimpleColorResult result = analyzer.GetResult();
-            return new(Guid.NewGuid(), moveNumber)
-            {
-                GuessPegs = guesses,
-                KeyPegs = result.ToStringResults()
-            };
+            return analyzer.GetResult().ToStringResults();
         }
 
-        Move GetShapeGameGuessAnalyzerResult()
+        string[] GetShapeGameGuessAnalyzerResult()
         {
             ShapeGameGuessAnalyzer analyzer = new(game, GetGuesses<ShapeAndColorField>(guesses), moveNumber);
-            ShapeAndColorResult result = analyzer.GetResult();
-            return new(Guid.NewGuid(), moveNumber)
-            {
-                GuessPegs = guesses,
-                KeyPegs = result.ToStringResults()
-            };
+            return analyzer.GetResult().ToStringResults();
         }
 
-        Move move = game.GameType switch
+        string[] results = game.GameType switch
         {
             GameTypes.Game6x4 => GetColorGameGuessAnalyzerResult(),
             GameTypes.Game8x5 => GetColorGameGuessAnalyzerResult(),
             GameTypes.Game6x4Mini => GetSimpleGameGuessAnalyzerResult(),
-            GameTypes.Game5x5x4 => GetShapeGameGuessAnalyzerResult(), 
+            GameTypes.Game5x5x4 => GetShapeGameGuessAnalyzerResult(),
             _ => throw new CodebreakerException("Invalid game type") { Code = CodebreakerExceptionCodes.InvalidGameType }
+        };
+
+        Move move = new(Guid.NewGuid(), moveNumber)
+        {
+            GuessPegs = guesses,
+            KeyPegs = results
         };
 
         game.Moves.Add(move);
