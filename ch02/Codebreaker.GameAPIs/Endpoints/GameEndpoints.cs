@@ -76,14 +76,16 @@ public static class GameEndpoints
                     _ => TypedResults.BadRequest(new GameError(ErrorCodes.InvalidMove,"Invalid move received!", url))
                 };
             }
-            catch (CodebreakerException ex) when (ex.Code == CodebreakerExceptionCodes.GameNotFound)
-            {
-                return TypedResults.NotFound();
-            }
-            catch (CodebreakerException ex) when (ex.Code == CodebreakerExceptionCodes.GameNotActive)
+            catch (CodebreakerException ex)
             {
                 string url = context.Request.GetDisplayUrl();
-                return TypedResults.BadRequest(new GameError(ErrorCodes.GameNotActive, "The game already ended", url));
+                return ex.Code switch
+                {
+                    CodebreakerExceptionCodes.GameNotFound => TypedResults.NotFound(),
+                    CodebreakerExceptionCodes.UnexpectedGameType => TypedResults.BadRequest(new GameError(ErrorCodes.UnexpectedGameType, "The game type specified with the move does not match the type of the running game", url)),
+                    CodebreakerExceptionCodes.GameNotActive => TypedResults.BadRequest(new GameError(ErrorCodes.GameNotActive, "The game already ended", url)),
+                    _ => TypedResults.BadRequest(new GameError("Unexpected", "Game error", url))
+                };
             }
         })
         .WithName("SetMove")

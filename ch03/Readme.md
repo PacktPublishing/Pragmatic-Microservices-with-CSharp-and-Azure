@@ -2,18 +2,22 @@
 
 ## Technical requirements
 
+### Source code repo
+
 The code for this chapter can be found in the following GitHub repository: https://github.com/PacktPublishing/Pragmatic-Microservices-With-CSharp-and-Azure
 
 The source code folder ch03 contains the code samples for this chapter. You’ll find the code for the four core projects:
 
-* Codebreaker.Data.SqlServer – this is the new library to access Microsoft SQL Server.
-* Codebreaker.Data.Cosmos – this is the new library to access Azure Cosmos DB.
-* Codebreaker.GamesAPIs – this is the Web API project created in the previous chapter. In this chapter the dependency injection container to use the repository implementations 
-* Codebreaker.GamesAPIs.Models – a library for the data models. This is unchanged from the previous chapter.
+* `Codebreaker.Data.SqlServer` – this is the new library to access Microsoft SQL Server.
+* `Codebreaker.Data.Cosmos` – this is the new library to access Azure Cosmos DB.
+* `Codebreaker.GamesAPIs` – this is the Web API project created in the previous chapter. In this chapter the dependency injection container to use the repository implementations 
+* These projects are used in this chapter but unchanged from the previous chapter: `Codebreaker.AppHost`, `Codebreaker.ServiceDefaults`, and `Codebreaker.GameAPIs.Models`.
 
 The games analyzer library from the previous chapter is not included with this chapter. Here we’ll just use the NuGet package CNinnovation.Codebreaker.Analyzers.
 
-If you worked through the previous chapter to create the models and implemented the minimal API project, you can continue from there.  You can also copy the files from the folder ch02 if you didn’t complete the previous work, and start from there. Ch03 contains all the updates from this chapter.
+> If you worked through the previous chapter to create the models and implemented the minimal API project, you can continue from there.  You can also copy the files from the folder ch02 if you didn’t complete the previous work, and start from there. Ch03 contains all the updates from this chapter.
+
+### Development tools used
 
 Other than a development environment, you need Microsoft SQL Server and Azure Cosmos DB. You don’t need an Azure subscription at this point. SQL Server is installed together with Visual Studio. You can also download the SQL Server 2022 Developer edition instead. This is easy via winget:
 
@@ -29,14 +33,14 @@ To access Azure Cosmos DB, an emulator to run it locally is available. You can i
 
 `winget install Microsoft.Azure.CosmosEmulator`
 
-## Installing via Microsoft Installer
+#### Installing via Microsoft Installer
 
 Instead of using winget, you can also install the software using Microsoft Installers. With SQL Server, chose the Developer or Express editions.
 
 * [Microsoft SQL Server][https://www.microsoft.com/en-us/sql-server/sql-server-downloads)
 * [Azure Cosmos DB Emulator](https://learn.microsoft.com/en-us/azure/cosmos-db/local-emulator?tabs=ssl-netstd21#install-the-emulator)
 
-## Using SQL Server and Azure Cosmos DB on Linux or Mac
+#### Using SQL Server and Azure Cosmos DB on Linux or Mac
 
 Using Azure Cosmos on non-Windows systems, you can use the Docker image for Azure Cosmos DB emulator, or use Azure Cosmos DB in the cloud.
 
@@ -44,3 +48,8 @@ Using Azure Cosmos on non-Windows systems, you can use the Docker image for Azur
 * [Run the Azure Cosmos DB Linux Emulator on Docker](https://learn.microsoft.com/en-us/azure/cosmos-db/docker-emulator-linux)
 
 To use Azure Cosmos DB with Microsoft Azure. Read chapter 6 for more information.
+
+## Codebreaker diagrams
+
+* [Components diagram](components.drawio)
+* [Create a game using SQL Server](CreateAGameWithSQLServer.md)

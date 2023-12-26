@@ -1,4 +1,4 @@
-# Create a game
+# Create a game using SQL Server
 
 ```mermaid
 sequenceDiagram
