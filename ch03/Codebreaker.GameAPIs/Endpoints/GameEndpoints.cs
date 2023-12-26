@@ -46,7 +46,7 @@ public static class GameEndpoints
             HttpContext context,
             CancellationToken cancellationToken) =>
         {
-            if (!request.End && request.GuessPegs == null)
+            if (request.GuessPegs == null && !request.End)
             {
                 return TypedResults.BadRequest(new GameError(ErrorCodes.InvalidMove, "End the game or set guesses", context.Request.GetDisplayUrl()));
             }
@@ -61,6 +61,7 @@ public static class GameEndpoints
                 }
                 else
                 {
+                    // guess pegs could only be null if request.End is true, checked above
                     (Game game, Move move) = await gameService.SetMoveAsync(id, request.GameType.ToString(), request.GuessPegs!, request.MoveNumber, cancellationToken);
                     return TypedResults.Ok(game.ToUpdateGameResponse(move.KeyPegs));
                 }
@@ -76,19 +77,16 @@ public static class GameEndpoints
                     _ => TypedResults.BadRequest(new GameError(ErrorCodes.InvalidMove,"Invalid move received!", url))
                 };
             }
-            catch (CodebreakerException ex) when (ex.Code == CodebreakerExceptionCodes.GameNotFound)
-            {
-                return TypedResults.NotFound();
-            }
-            catch (CodebreakerException ex) when (ex.Code == CodebreakerExceptionCodes.UnepextedGameType)
+            catch (CodebreakerException ex)
             {
                 string url = context.Request.GetDisplayUrl();
-                return TypedResults.BadRequest(new GameError(ErrorCodes.UnepextedGameType, "The game type specified with the move does not match the type of the running game", url));
-            }
-            catch (CodebreakerException ex) when (ex.Code == CodebreakerExceptionCodes.GameNotActive)
-            {
-                string url = context.Request.GetDisplayUrl();
-                return TypedResults.BadRequest(new GameError(ErrorCodes.GameNotActive, "The game already ended", url));
+                return ex.Code switch
+                {
+                    CodebreakerExceptionCodes.GameNotFound => TypedResults.NotFound(),
+                    CodebreakerExceptionCodes.UnexpectedGameType => TypedResults.BadRequest(new GameError(ErrorCodes.UnexpectedGameType, "The game type specified with the move does not match the type of the running game", url)),
+                    CodebreakerExceptionCodes.GameNotActive => TypedResults.BadRequest(new GameError(ErrorCodes.GameNotActive, "The game already ended", url)),
+                    _ => TypedResults.BadRequest(new GameError("Unexpected", "Game error", url))
+                };
             }
         })
         .WithName("SetMove")

@@ -25,7 +25,7 @@ public class CodebreakerException : Exception
     {
         if (game.GameType != gameType)
         {
-            throw new CodebreakerException("Game type not expected") { Code = CodebreakerExceptionCodes.UnepextedGameType };
+            throw new CodebreakerException("Game type not expected") { Code = CodebreakerExceptionCodes.UnexpectedGameType };
         }
     }
 
