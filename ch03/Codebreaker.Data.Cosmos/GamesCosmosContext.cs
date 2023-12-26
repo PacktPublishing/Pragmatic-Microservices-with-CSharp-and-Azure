@@ -2,8 +2,9 @@
 
 public class GamesCosmosContext(DbContextOptions<GamesCosmosContext> options) : DbContext(options), IGamesRepository
 {
-    private readonly FieldValueValueConverter _fieldValueConverter = new();
-    private readonly FieldValueComparer _fieldValueComparer = new();
+    private static readonly FieldValueValueConverter s_fieldValueConverter = new();
+    private static readonly FieldValueComparer s_fieldValueComparer = new();
+
     private const string PartitionKey = nameof(PartitionKey);
     private const string ContainerName = "GamesV3";
 
@@ -16,8 +17,11 @@ public class GamesCosmosContext(DbContextOptions<GamesCosmosContext> options) : 
         gameModel.HasPartitionKey(PartitionKey);
         gameModel.HasKey(nameof(Game.Id), PartitionKey);
 
+        gameModel.HasDiscriminator<string>("Discriminator")
+            .HasValue<Game>("Gamev2");
+
         gameModel.Property(g => g.FieldValues)
-            .HasConversion(_fieldValueConverter, _fieldValueComparer);
+            .HasConversion(s_fieldValueConverter, s_fieldValueComparer);
     }
 
     public DbSet<Game> Games => Set<Game>();
@@ -42,11 +46,11 @@ public class GamesCosmosContext(DbContextOptions<GamesCosmosContext> options) : 
         await SaveChangesAsync(cancellationToken);
     }
 
-    public async Task<bool> DeleteGameAsync(Guid gameId, CancellationToken cancellationToken = default)
+    public async Task<bool> DeleteGameAsync(Guid id, CancellationToken cancellationToken = default)
     {
         var game = await Games
-            .WithPartitionKey(gameId.ToString())
-            .SingleOrDefaultAsync(g => g.Id == gameId, cancellationToken);
+            .WithPartitionKey(id.ToString())
+            .SingleOrDefaultAsync(g => g.Id == id, cancellationToken);
 
         if (game is null)
             return false;
@@ -55,11 +59,11 @@ public class GamesCosmosContext(DbContextOptions<GamesCosmosContext> options) : 
         return true;
     }
 
-    public async Task<Game?> GetGameAsync(Guid gameId, CancellationToken cancellationToken = default)
+    public async Task<Game?> GetGameAsync(Guid id, CancellationToken cancellationToken = default)
     {
         var game = await Games
-            .WithPartitionKey(gameId.ToString())
-            .SingleOrDefaultAsync(g => g.Id == gameId, cancellationToken);
+            .WithPartitionKey(id.ToString())
+            .SingleOrDefaultAsync(g => g.Id == id, cancellationToken);
         return game;
     }
 
