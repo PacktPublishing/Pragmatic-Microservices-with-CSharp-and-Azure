@@ -21,6 +21,14 @@ public class CodebreakerException : Exception
         }
     }
 
+    public static void ThrowIfUnexpectedGameType(Game game, string gameType)
+    {
+        if (game.GameType != gameType)
+        {
+            throw new CodebreakerException("Game type not expected") { Code = CodebreakerExceptionCodes.UnexpectedGameType };
+        }
+    }
+
     public static void ThrowIfEnded(Game game)
     {
         if (game.Ended())

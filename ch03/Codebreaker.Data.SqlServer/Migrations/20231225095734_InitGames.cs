@@ -19,7 +19,7 @@ namespace Codebreaker.Data.SqlServer.Migrations
                 schema: "codebreaker",
                 columns: table => new
                 {
-                    GameId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     GameType = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     PlayerName = table.Column<string>(type: "nvarchar(60)", maxLength: 60, nullable: false),
                     StartTime = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -34,7 +34,7 @@ namespace Codebreaker.Data.SqlServer.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Games", x => x.GameId);
+                    table.PrimaryKey("PK_Games", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -42,7 +42,7 @@ namespace Codebreaker.Data.SqlServer.Migrations
                 schema: "codebreaker",
                 columns: table => new
                 {
-                    MoveId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     MoveNumber = table.Column<int>(type: "int", nullable: false),
                     GuessPegs = table.Column<string>(type: "nvarchar(120)", maxLength: 120, nullable: false),
                     KeyPegs = table.Column<string>(type: "nvarchar(60)", maxLength: 60, nullable: false),
@@ -50,13 +50,13 @@ namespace Codebreaker.Data.SqlServer.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Moves", x => x.MoveId);
+                    table.PrimaryKey("PK_Moves", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Moves_Games_GameId",
                         column: x => x.GameId,
                         principalSchema: "codebreaker",
                         principalTable: "Games",
-                        principalColumn: "GameId",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
