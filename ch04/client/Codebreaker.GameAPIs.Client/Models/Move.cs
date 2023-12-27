@@ -1,8 +1,8 @@
 ﻿namespace Codebreaker.GameAPIs.Client.Models;
 
-public class Move(Guid moveId, int moveNumber)
+public class Move(Guid id, int moveNumber)
 {
-    public Guid MoveId { get; private set; } = moveId;
+    public Guid Id { get; private set; } = id;
 
     /// <summary>
     /// The move number for this move within the associated game.

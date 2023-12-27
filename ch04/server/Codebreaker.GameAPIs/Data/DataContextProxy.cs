@@ -1,8 +1,9 @@
-﻿using Codebreaker.Data.Cosmos;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace Codebreaker.GameAPIs.Data;
 
-public class CosmosProxy(GamesCosmosContext context) : IGamesRepository
+public class DataContextProxy<TContext>(TContext context) : IGamesRepository
+    where TContext: DbContext, IGamesRepository
 {
     public Task AddGameAsync(Game game, CancellationToken cancellationToken = default) => context.AddGameAsync(game, cancellationToken);
     public Task AddMoveAsync(Game game, Move move, CancellationToken cancellationToken = default) => context.AddMoveAsync(game, move, cancellationToken);
