@@ -90,7 +90,7 @@ internal class Runner
 
         foreach (var game in games)
         {
-            await Console.Out.WriteLineAsync($"{game.GameId}, {game.GameType}");
+            await Console.Out.WriteLineAsync($"{game.Id}, {game.GameType}");
         }
         await Console.Out.WriteLineAsync();
     }
@@ -133,7 +133,7 @@ internal class Runner
                 entry => entry.Key,
                 entry => ToStringArray(entry.Value)) ?? throw new InvalidOperationException();
 
-            return (response.GameId!.Value, response.NumberCodes!.Value, response.MaxMoves!.Value, fieldValues);
+            return (response.Id!.Value, response.NumberCodes!.Value, response.MaxMoves!.Value, fieldValues);
         });
 
         int moveNumber = 0;
