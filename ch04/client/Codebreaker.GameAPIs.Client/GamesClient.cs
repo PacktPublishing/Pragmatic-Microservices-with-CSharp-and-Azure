@@ -1,17 +1,11 @@
 ﻿namespace Codebreaker.GameAPIs.Client;
-public class GamesClient
+public class GamesClient(HttpClient httpClient)
 {
-    private readonly HttpClient _httpClient;
-    private readonly JsonSerializerOptions _jsonOptions;
-
-    public GamesClient(HttpClient httpClient)
+    private readonly HttpClient _httpClient = httpClient;
+    private readonly JsonSerializerOptions _jsonOptions = new()
     {
-        _httpClient = httpClient;
-        _jsonOptions = new()
-        {
-            PropertyNameCaseInsensitive = true
-        };
-    }
+        PropertyNameCaseInsensitive = true
+    };
 
     public async Task<Game?> GetGameAsync(Guid id, CancellationToken cancellationToken = default)
     {
@@ -33,7 +27,7 @@ public class GamesClient
         return games;
     }
 
-    public async Task<(Guid GameId, int NumberCodes, int MaxMoves, IDictionary<string, string[]> FieldValues)>
+    public async Task<(Guid Id, int NumberCodes, int MaxMoves, IDictionary<string, string[]> FieldValues)>
         StartGameAsync(GameType gameType, string playerName, CancellationToken cancellationToken = default)
     {
         CreateGameRequest createGameRequest = new(gameType, playerName);
