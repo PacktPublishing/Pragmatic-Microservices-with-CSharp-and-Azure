@@ -16,7 +16,7 @@ public static class DataStartupExtensions
                 {
                     options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
                 });
-            builder.Services.AddScoped<IGamesRepository, SqlServerProxy>();
+            builder.Services.AddScoped<IGamesRepository, DataContextProxy<GamesSqlServerContext>>();
         }
 
         static void ConfigureCosmos(IHostApplicationBuilder builder)
@@ -27,7 +27,7 @@ public static class DataStartupExtensions
                     options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
                 });
 
-            builder.Services.AddScoped<IGamesRepository, CosmosProxy>();
+            builder.Services.AddScoped<IGamesRepository, DataContextProxy<GamesCosmosContext>>();
         }
 
         static void ConfigureInMemory(IHostApplicationBuilder builder)

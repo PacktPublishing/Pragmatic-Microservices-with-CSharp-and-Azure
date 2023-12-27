@@ -9,6 +9,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Codebreaker.AppHost", "serv
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Codebreaker.ServiceDefaults", "server\Codebreaker.ServiceDefaults\Codebreaker.ServiceDefaults.csproj", "{B1A504BD-8BF1-4555-B42D-B1AFFC3CC86A}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D52B8376-7D40-4277-887F-C864FAA7C4B7}"
+	ProjectSection(SolutionItems) = preProject
+		gamesapi-swagger.json = gamesapi-swagger.json
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Codebreaker.GameAPIs.Models", "server\Codebreaker.GameAPIs.Models\Codebreaker.GameAPIs.Models.csproj", "{FF1BD9BA-899A-4966-B76E-266434281BAF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Codebreaker.Data.Cosmos", "server\Codebreaker.Data.Cosmos\Codebreaker.Data.Cosmos.csproj", "{2597DDBF-8DC4-4881-8D55-674018F9C807}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Codebreaker.Data.SqlServer", "server\Codebreaker.Data.SqlServer\Codebreaker.Data.SqlServer.csproj", "{3E57B6DD-3591-40F4-A30F-BF925C49BEE9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +38,18 @@ Global
 		{B1A504BD-8BF1-4555-B42D-B1AFFC3CC86A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B1A504BD-8BF1-4555-B42D-B1AFFC3CC86A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B1A504BD-8BF1-4555-B42D-B1AFFC3CC86A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FF1BD9BA-899A-4966-B76E-266434281BAF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF1BD9BA-899A-4966-B76E-266434281BAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF1BD9BA-899A-4966-B76E-266434281BAF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF1BD9BA-899A-4966-B76E-266434281BAF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2597DDBF-8DC4-4881-8D55-674018F9C807}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2597DDBF-8DC4-4881-8D55-674018F9C807}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2597DDBF-8DC4-4881-8D55-674018F9C807}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2597DDBF-8DC4-4881-8D55-674018F9C807}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3E57B6DD-3591-40F4-A30F-BF925C49BEE9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E57B6DD-3591-40F4-A30F-BF925C49BEE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E57B6DD-3591-40F4-A30F-BF925C49BEE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E57B6DD-3591-40F4-A30F-BF925C49BEE9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

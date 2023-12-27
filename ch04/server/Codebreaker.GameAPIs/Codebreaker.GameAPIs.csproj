@@ -11,15 +11,16 @@
   <ItemGroup>
     <PackageReference Include="Aspire.Microsoft.EntityFrameworkCore.Cosmos" Version="8.0.0-preview.2.23619.3" />
     <PackageReference Include="Aspire.Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.0-preview.2.23619.3" />
-    <PackageReference Include="CNinnovation.Codebreaker.Cosmos" Version="3.6.0-beta.16" />
-    <PackageReference Include="CNinnovation.Codebreaker.SqlServer" Version="3.6.0-beta.16" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
     <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.5.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Codebreaker.Data.Cosmos\Codebreaker.Data.Cosmos.csproj" />
+    <ProjectReference Include="..\Codebreaker.Data.SqlServer\Codebreaker.Data.SqlServer.csproj" />
     <ProjectReference Include="..\Codebreaker.ServiceDefaults\Codebreaker.ServiceDefaults.csproj" />
+    <ProjectReference Include="..\Codebreaker.GameAPIs.Models\Codebreaker.GameAPIs.Models.csproj" />
   </ItemGroup>
 
 </Project>
