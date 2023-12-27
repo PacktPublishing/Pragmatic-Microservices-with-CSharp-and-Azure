@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Codebreaker.Data.SqlServer.Migrations
 {
     [DbContext(typeof(GamesSqlServerContext))]
-    [Migration("20230930151504_AddPlayerIsAuthenticated")]
+    [Migration("20231225095931_AddPlayerIsAuthenticated")]
     partial class AddPlayerIsAuthenticated
     {
         /// <inheritdoc />
@@ -21,14 +21,14 @@ namespace Codebreaker.Data.SqlServer.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema("codebreaker")
-                .HasAnnotation("ProductVersion", "8.0.0-rc.1.23419.6")
+                .HasAnnotation("ProductVersion", "8.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
             modelBuilder.Entity("Codebreaker.GameAPIs.Models.Game", b =>
                 {
-                    b.Property<Guid>("GameId")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
@@ -77,14 +77,14 @@ namespace Codebreaker.Data.SqlServer.Migrations
                     b.Property<DateTime>("StartTime")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("GameId");
+                    b.HasKey("Id");
 
                     b.ToTable("Games", "codebreaker");
                 });
 
             modelBuilder.Entity("Codebreaker.GameAPIs.Models.Move", b =>
                 {
-                    b.Property<Guid>("MoveId")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
@@ -104,7 +104,7 @@ namespace Codebreaker.Data.SqlServer.Migrations
                     b.Property<int>("MoveNumber")
                         .HasColumnType("int");
 
-                    b.HasKey("MoveId");
+                    b.HasKey("Id");
 
                     b.HasIndex("GameId");
 

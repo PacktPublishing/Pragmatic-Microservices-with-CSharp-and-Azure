@@ -2,10 +2,10 @@
 
 namespace Codebreaker.GameAPIs.Models;
 
-public class Move(Guid moveId, int moveNumber)
+public class Move(Guid id, int moveNumber)
 {
     [Required]
-    public Guid MoveId { get; private set; } = moveId;
+    public Guid Id { get; private set; } = id;
 
     /// <summary>
     /// The move number for this move within the associated game.
@@ -25,6 +25,6 @@ public class Move(Guid moveId, int moveNumber)
     public required string[] KeyPegs { get; init; }
 
     public override string ToString() => $"{MoveNumber}. " +
-        $"{string.Join('#', GuessPegs)} : " +
+        $"{string.Join('#',GuessPegs)} : " +
         $"{string.Join('#', KeyPegs)}";
 }

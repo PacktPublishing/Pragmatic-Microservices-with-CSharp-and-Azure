@@ -5,7 +5,7 @@ using Codebreaker.GameAPIs.Contracts;
 namespace Codebreaker.GameAPIs.Models;
 
 public class Game(
-    Guid gameId,
+    Guid id,
     string gameType,
     string playerName,
     DateTime startTime,
@@ -13,9 +13,10 @@ public class Game(
     int maxMoves) : IGame
 {
     [Required]
-    public Guid GameId { get; private set; } = gameId;
+    public Guid Id { get; private set; } = id;
     [Required]
     public string GameType { get; private set; } = gameType;
+    [Required, MinLength(4), MaxLength(25)]
     public string PlayerName { get; private set; } = playerName;
     public bool PlayerIsAuthenticated { get; set; } = false;
     [Required]
@@ -39,5 +40,5 @@ public class Game(
     [Required]
     public ICollection<Move> Moves { get; } = new List<Move>();
 
-    public override string ToString() => $"{GameId}:{GameType} - {StartTime}";
+    public override string ToString() => $"{Id}:{GameType} - {StartTime}";
 }
