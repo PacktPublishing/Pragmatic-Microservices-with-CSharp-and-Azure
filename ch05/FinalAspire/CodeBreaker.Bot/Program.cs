@@ -12,19 +12,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // HttpClient & Application Services
-
-builder.Services.AddHttpClient<GamesClient>(client =>
-{
-    client.BaseAddress = new Uri("http://gameapis");
-}).AddStandardResilienceHandler(config =>
-{
-    TimeSpan timeSpan = TimeSpan.FromMinutes(5);
-    config.AttemptTimeout.Timeout = timeSpan;
-    config.CircuitBreaker.SamplingDuration = timeSpan * 2;
-    config.TotalRequestTimeout.Timeout = timeSpan * 3;
-});
-builder.Services.AddScoped<CodeBreakerTimer>();
-builder.Services.AddScoped<CodeBreakerGameRunner>();
+builder.AddApplicationServices();
 
 var app = builder.Build();
 
