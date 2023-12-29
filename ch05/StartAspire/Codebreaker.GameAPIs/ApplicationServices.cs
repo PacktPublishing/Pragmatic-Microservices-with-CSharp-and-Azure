@@ -11,11 +11,8 @@ public static class ApplicationServices
     {
         static void ConfigureSqlServer(IHostApplicationBuilder builder)
         {
-            builder.AddSqlServerDbContext<GamesSqlServerContext>("CodebreakerSql",
-                configureDbContextOptions: options =>
-                {
-                    options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
-                });
+            // TODO 4: configure to retrieve the SQL Server connection string via service discovery with .NET Aspire
+
             builder.Services.AddScoped<IGamesRepository, DataContextProxy<GamesSqlServerContext>>();
         }
 
