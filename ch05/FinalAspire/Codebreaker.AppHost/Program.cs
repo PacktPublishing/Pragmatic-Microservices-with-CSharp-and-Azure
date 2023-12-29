@@ -12,5 +12,4 @@ var gameAPIs = builder.AddProject<Projects.Codebreaker_GameAPIs>("gameapis")
 builder.AddProject<Projects.CodeBreaker_Bot>("bot")
     .WithReference(gameAPIs);
 
-//var gameAPIsNative = builder.AddProject<Projects.Codebreaker_GameAPIs_NativeAOT>("codebreaker.gameapis.native");
 builder.Build().Run();

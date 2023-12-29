@@ -5,7 +5,7 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace Codebreaker.GameAPIs;
 
-public static class ApplicationStartup
+public static class ApplicationServices
 {
     public static void AddApplicationServices(this IHostApplicationBuilder builder)
     {
