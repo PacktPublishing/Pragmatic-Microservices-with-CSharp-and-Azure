@@ -148,13 +148,13 @@ public class CodeBreakerGameRunner(GamesClient gamesClient, ILogger<CodeBreakerG
         return (IntToColors(value), value);
     }
 
-    private string[] IntToColors(int value) => new[]
-    {
+    private string[] IntToColors(int value) =>
+    [
         _colorNames?[value & 0b111111] ?? string.Empty,
         _colorNames?[(value >> 6) & 0b111111] ?? string.Empty,
         _colorNames?[(value >> 12) & 0b111111] ?? string.Empty,
         _colorNames?[(value >> 18) & 0b111111] ?? string.Empty
-    };
+    ];
 }
 
 public enum CodeColors
