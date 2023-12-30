@@ -1,7 +1,7 @@
 ﻿using Codebreaker.Data.Cosmos;
 using Codebreaker.Data.SqlServer;
+
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace Codebreaker.GameAPIs;
 
@@ -38,7 +38,6 @@ public static class ApplicationServices
         string? dataStore = builder.Configuration.GetValue<string>("DataStore");
         switch (dataStore)
         {
-
             case "Cosmos":
                 ConfigureCosmos(builder);
                 break;
@@ -51,31 +50,5 @@ public static class ApplicationServices
         }
 
         builder.Services.AddScoped<IGamesService, GamesService>();
-        builder.AddDatabaseMigrationHealthChecks();
-    }
-
-    public static void AddDatabaseMigrationHealthChecks(this IHostApplicationBuilder builder)
-    {
-        builder.Services.AddHealthChecks().AddCheck("databasecreated", () =>
-        {
-            Console.WriteLine("My health check...");
-            return s_databaseCreated ? HealthCheckResult.Healthy("database created") : HealthCheckResult.Degraded("database not created");
-        }, ["ready"]);
-    }
-
-    private static bool s_databaseCreated = false;
-
-    public static IApplicationBuilder CreateDatabase(this IApplicationBuilder app)
-    {
-        using var scope = app.ApplicationServices.CreateScope();
-        var repo = scope.ServiceProvider.GetRequiredService<IGamesRepository>();
-
-        if (repo is GamesSqlServerContext sqlServerContext)
-        {
-            sqlServerContext.Database.Migrate();
-        }
-        s_databaseCreated = true;
-
-        return app;
     }
 }
