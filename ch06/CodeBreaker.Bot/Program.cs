@@ -1,34 +1,25 @@
 using System.Runtime.CompilerServices;
 using CodeBreaker.Bot.Endpoints;
 
-[assembly: InternalsVisibleTo("MMBot.Tests")]
+[assembly: InternalsVisibleTo("CodeBreaker.Bot.Tests")]
 
 var builder = WebApplication.CreateBuilder(args);
 
-WebApplication? app = null;
+builder.AddServiceDefaults();
 
 // Swagger & EndpointDocumentation
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // HttpClient & Application Services
-builder.Services.AddHttpClient<GamesClient>(options =>
-{
-    string codebreakeruri = builder.Configuration["ApiBase"]
-        ?? throw new InvalidOperationException("ApiBase configuration not available");
+builder.AddApplicationServices();
 
-    var apiUri = new Uri(codebreakeruri);
-
-    options.BaseAddress = apiUri;
-});
-builder.Services.AddScoped<CodeBreakerTimer>();
-builder.Services.AddScoped<CodeBreakerGameRunner>();
-
-app = builder.Build();
+var app = builder.Build();
 
 app.UseSwagger();
 app.UseSwaggerUI();
 
+app.MapDefaultEndpoints();
 app.MapBotEndpoints();
 
 app.Run();
