@@ -1,56 +1,26 @@
-using Azure.Identity;
-
+using System.Runtime.CompilerServices;
 using CodeBreaker.Bot.Endpoints;
 
-using Microsoft.Extensions.Configuration.AzureAppConfiguration;
+[assembly: InternalsVisibleTo("CodeBreaker.Bot.Tests")]
 
 var builder = WebApplication.CreateBuilder(args);
 
-string? solutionEnvironment = builder.Configuration["SolutionEnvironment"];
-string? managedIdentityClientId = builder.Configuration["ManagedIdentityClientId"];
-
-if (solutionEnvironment == "Azure")
-{
-    DefaultAzureCredentialOptions credentialOptions = new()
-    {
-        ManagedIdentityClientId = managedIdentityClientId
-    };
-    DefaultAzureCredential credential = new(credentialOptions);
-
-    string endpoint = builder.Configuration["AzureAppConfigurationUri"] ?? throw new InvalidOperationException("Could not read AzureAppConfigurationUri");
-
-    builder.Configuration.AddAzureAppConfiguration(options =>
-    {
-        options.Connect(new Uri(endpoint), credential)
-            .Select("BotService*", labelFilter: LabelFilter.Null)
-            .Select("BotService*", builder.Environment.EnvironmentName);
-    });
-}
-
-WebApplication? app = null;
+builder.AddServiceDefaults();
 
 // Swagger & EndpointDocumentation
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // HttpClient & Application Services
-builder.Services.AddHttpClient<GamesClient>(options =>
-{
-    string codebreakeruri = builder.Configuration.GetSection("BotService")["ApiBase"]
-        ?? throw new InvalidOperationException("ApiBase configuration not available");
+builder.AddAppConfiguration();
+builder.AddApplicationServices();
 
-    var apiUri = new Uri(codebreakeruri);
-
-    options.BaseAddress = apiUri;
-});
-builder.Services.AddScoped<CodeBreakerTimer>();
-builder.Services.AddScoped<CodeBreakerGameRunner>();
-
-app = builder.Build();
+var app = builder.Build();
 
 app.UseSwagger();
 app.UseSwaggerUI();
 
+app.MapDefaultEndpoints();
 app.MapBotEndpoints();
 
 app.Run();

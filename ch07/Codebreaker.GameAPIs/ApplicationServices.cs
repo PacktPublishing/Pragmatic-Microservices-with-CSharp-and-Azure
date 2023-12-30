@@ -51,4 +51,5 @@ public static class ApplicationServices
 
         builder.Services.AddScoped<IGamesService, GamesService>();
     }
+
 }
