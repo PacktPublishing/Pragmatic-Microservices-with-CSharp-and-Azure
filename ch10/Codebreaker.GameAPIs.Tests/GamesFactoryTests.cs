@@ -1,6 +1,3 @@
-using Codebreaker.GameAPIs.Models;
-using Codebreaker.GameAPIs.Services;
-
 namespace Codebreaker.GameAPIs.Tests;
 
 public class GamesFactoryTests
