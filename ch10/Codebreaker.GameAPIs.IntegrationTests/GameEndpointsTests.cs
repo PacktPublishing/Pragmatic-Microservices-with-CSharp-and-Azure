@@ -67,7 +67,7 @@ public class GameEndpointsTests
         Assert.Equal(HttpStatusCode.BadRequest, updateGameResponse.StatusCode);
     }
 
-    private async Task<CreateGameResponse> StartGameFixtureAsync(GamesApiApplication app)
+    private static async Task<CreateGameResponse> StartGameFixtureAsync(GamesApiApplication app)
     {
         var client = app.CreateClient();
         CreateGameRequest request = new(GameType.Game6x4, "test");
