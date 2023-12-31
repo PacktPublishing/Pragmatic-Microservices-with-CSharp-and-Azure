@@ -15,6 +15,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Codebreaker.GameAPIs.Tests"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Codebreaker.GameAPIs.IntegrationTests", "Codebreaker.GameAPIs.IntegrationTests\Codebreaker.GameAPIs.IntegrationTests.csproj", "{098845D3-0A6F-445F-BB83-00F1A5ED83F2}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Codebreaker.Analyzers", "Codebreaker.GameAPIs.Analyzers\Codebreaker.Analyzers.csproj", "{0C3B58DF-1358-4E14-98CC-7C383E5EA230}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Codebreaker.GameAPIs.Analyzers.Tests", "Codebreaker.GameAPIs.Analyzers.Tests\Codebreaker.GameAPIs.Analyzers.Tests.csproj", "{5C550BF7-B2CF-4BD8-9628-41A1AF2DB404}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Codebreaker.GameAPIs.PlaywrightTests", "Codebreaker.GameAPIs.PlaywrightTests\Codebreaker.GameAPIs.PlaywrightTests.csproj", "{9626A5C3-0474-4704-A84F-5F8AAE8D96B7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +51,18 @@ Global
 		{098845D3-0A6F-445F-BB83-00F1A5ED83F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{098845D3-0A6F-445F-BB83-00F1A5ED83F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{098845D3-0A6F-445F-BB83-00F1A5ED83F2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0C3B58DF-1358-4E14-98CC-7C383E5EA230}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0C3B58DF-1358-4E14-98CC-7C383E5EA230}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0C3B58DF-1358-4E14-98CC-7C383E5EA230}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0C3B58DF-1358-4E14-98CC-7C383E5EA230}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5C550BF7-B2CF-4BD8-9628-41A1AF2DB404}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C550BF7-B2CF-4BD8-9628-41A1AF2DB404}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C550BF7-B2CF-4BD8-9628-41A1AF2DB404}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C550BF7-B2CF-4BD8-9628-41A1AF2DB404}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9626A5C3-0474-4704-A84F-5F8AAE8D96B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9626A5C3-0474-4704-A84F-5F8AAE8D96B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9626A5C3-0474-4704-A84F-5F8AAE8D96B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9626A5C3-0474-4704-A84F-5F8AAE8D96B7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
