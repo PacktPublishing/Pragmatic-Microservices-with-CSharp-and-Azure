@@ -20,7 +20,8 @@ internal class GamesApiApplication(string environment = "Development") : WebAppl
                 
         });
 
-        Environment.SetEnvironmentVariable("DataStorage", "InMemory");
+        Environment.SetEnvironmentVariable("DataStore", "InMemory");
+        Environment.SetEnvironmentVariable("SolutionEnvironment", "Local");
         return base.CreateHost(builder);
     }
 }

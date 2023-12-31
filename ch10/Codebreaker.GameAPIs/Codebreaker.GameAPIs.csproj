@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <InternalsVisibleTo Include="Codebreaker.GameAPIs.Tests"/>
+    <InternalsVisibleTo Include="Codebreaker.GameAPIs.IntegrationTests"/>
   </ItemGroup>
 
   <ItemGroup>
