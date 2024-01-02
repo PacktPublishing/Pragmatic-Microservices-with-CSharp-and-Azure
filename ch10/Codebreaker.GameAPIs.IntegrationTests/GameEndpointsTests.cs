@@ -1,6 +1,3 @@
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
-
 namespace Codebreaker.GameAPIs.Tests;
 
 public class GameEndpointsTests
@@ -74,28 +71,32 @@ public class GameEndpointsTests
 
         string uri = $"/games/{updateGameRequest.Id}";
         var response = await client.PatchAsJsonAsync(uri, updateGameRequest);
+        var updateGameResponse = await response.Content.ReadFromJsonAsync<UpdateGameResponse>();
+        Assert.NotNull(updateGameResponse);
 
         // cheat to get the result
-
-        Game? game = await client.GetFromJsonAsync<Game?>(uri);
-        Assert.NotNull(game);
-       
-        // send the second move
-        moveNumber = 2;
-        updateGameRequest = new UpdateGameRequest(gameResponse.Id, gameResponse.GameType, gameResponse.PlayerName, moveNumber)
+        if (!updateGameResponse.IsVictory)
         {
-            GuessPegs = game.Codes     
-        };
-        response = await client.PatchAsJsonAsync(uri, updateGameRequest);
+            Game? game = await client.GetFromJsonAsync<Game?>(uri);
+            Assert.NotNull(game);
 
-        // check the result
-        Assert.True(response.IsSuccessStatusCode);
-        var updateGameResponse = await response.Content.ReadFromJsonAsync<UpdateGameResponse>();
+            // send the second move
+            moveNumber = 2;
+            updateGameRequest = new UpdateGameRequest(gameResponse.Id, gameResponse.GameType, gameResponse.PlayerName, moveNumber)
+            {
+                GuessPegs = game.Codes
+            };
+            response = await client.PatchAsJsonAsync(uri, updateGameRequest);
 
-        Assert.NotNull(updateGameResponse);
-        Assert.True(updateGameResponse.Ended);
-        Assert.True(updateGameResponse.IsVictory);
+            // check the result
+            Assert.True(response.IsSuccessStatusCode);
+            updateGameResponse = await response.Content.ReadFromJsonAsync<UpdateGameResponse>();
 
+            Assert.NotNull(updateGameResponse);
+            Assert.True(updateGameResponse.Ended);
+            Assert.True(updateGameResponse.IsVictory);
+
+        }
         // delete the game
         response = await client.DeleteAsync(uri);
         Assert.True(response.IsSuccessStatusCode);
