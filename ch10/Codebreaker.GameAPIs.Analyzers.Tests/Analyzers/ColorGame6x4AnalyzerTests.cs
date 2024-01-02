@@ -7,7 +7,7 @@ namespace Codebreaker.GameAPIs.Analyzer.Tests;
 public class ColorGame6x4AnalyzerTests
 {
     [Fact]
-    public void SetMoveShouldReturnThreeWhite()
+    public void GetResult_Should_ReturnThreeWhite()
     {
         ColorResult expectedKeyPegs = new(0, 3);
         ColorResult? resultKeyPegs = TestSkeleton(
@@ -21,7 +21,7 @@ public class ColorGame6x4AnalyzerTests
     [InlineData(1, 2, Red, Yellow, Red, Blue)]
     [InlineData(2, 0, White, White, Blue, Red)]
     [Theory]
-    public void SetMoveUsingVariousData(int expectedBlack, int expectedWhite, params string[] guessValues)
+    public void GetResult_ShouldReturn_InlineDataResults(int expectedBlack, int expectedWhite, params string[] guessValues)
     {
         string[] code = [Red, Green, Blue, Red];
         ColorResult expectedKeyPegs = new (expectedBlack, expectedWhite);
@@ -31,14 +31,14 @@ public class ColorGame6x4AnalyzerTests
 
     [Theory]
     [ClassData(typeof(TestData6x4))]
-    public void SetMoveUsingVariousDataUsingDataClass(string[] code, string[] guess, ColorResult expectedKeyPegs)
+    public void GetResult_ShouldReturn_UsingClassData(string[] code, string[] guess, ColorResult expectedKeyPegs)
     {
         ColorResult actualKeyPegs = TestSkeleton(code, guess);
         Assert.Equal(expectedKeyPegs, actualKeyPegs);
     }
 
     [Fact]
-    public void ShouldThrowOnInvalidGuessCount()
+    public void GetResult_Should_ThrowOnInvalidGuessCount()
     {
         Assert.Throws<ArgumentException>(() => 
             TestSkeleton(
@@ -48,7 +48,7 @@ public class ColorGame6x4AnalyzerTests
     }
 
     [Fact]
-    public void ShouldThrowOnInvalidGuessValues()
+    public void GetResult_Should_ThrowOnInvalidGuessValues()
     {
         Assert.Throws<ArgumentException>(() => 
             TestSkeleton(
@@ -58,7 +58,7 @@ public class ColorGame6x4AnalyzerTests
     }
 
     [Fact]
-    public void ShouldThrowOnInvalidMoveNumber()
+    public void GetResult_Should_ThrowOnInvalidMoveNumber()
     {
         Assert.Throws<ArgumentException>(() => 
             TestSkeleton(
@@ -67,57 +67,45 @@ public class ColorGame6x4AnalyzerTests
     }
 
     [Fact]
-    public void ShouldNotIncrementMoveNumberOnInvalidMove()
+    public void GetResult_Should_NotIncrementMoveNumberOnInvalidMove()
     {
-        IGame game = TestSkeletonWithGame(
+        IGame game = TestSkeletonCatchesArgumentException(
             [Green, Yellow, Green, Black],
             [Yellow, Green, Black, Blue], moveNumber: 2);
 
         Assert.Equal(0, game?.LastMoveNumber);
     }
 
+    private static MockColorGame CreateGame(string[] codes) => new()
+    {
+        GameType = GameTypes.Game6x4,
+        NumberCodes = 4,
+        MaxMoves = 12,
+        IsVictory = false,
+        FieldValues = new Dictionary<string, IEnumerable<string>>()
+        {
+            [FieldCategories.Colors] = TestData6x4.Colors6.ToList()
+        },
+        Codes = codes
+    };
+
     private static ColorResult TestSkeleton(string[] codes, string[] guesses, int moveNumber = 1)
     {
-        MockColorGame game = new()
-        {
-            GameType = GameTypes.Game6x4,
-            NumberCodes = 4,
-            MaxMoves = 12,
-            IsVictory = false,
-            FieldValues = new Dictionary<string, IEnumerable<string>>()
-            {
-                [FieldCategories.Colors ] = TestData6x4.Colors6.ToList()
-            },
-            Codes = codes
-        };
-
+        MockColorGame game = CreateGame(codes);
         ColorGameGuessAnalyzer analyzer = new(game,guesses.ToPegs<ColorField>().ToArray(), moveNumber);
         return analyzer.GetResult();
     }
 
-    private static IGame TestSkeletonWithGame(string[] codes, string[] guesses, int moveNumber = 1)
+    private static IGame TestSkeletonCatchesArgumentException(string[] codes, string[] guesses, int moveNumber = 1)
     {
-        MockColorGame game = new()
-        {
-            GameType = GameTypes.Game6x4,
-            NumberCodes = 4,
-            MaxMoves = 12,
-            IsVictory = false,
-            FieldValues = new Dictionary<string, IEnumerable<string>>()
-            {
-                [FieldCategories.Colors] = TestData6x4.Colors6.ToList()
-            },
-            Codes = codes
-        };
-
+        MockColorGame game = CreateGame(codes);
         ColorGameGuessAnalyzer analyzer = new(game, guesses.ToPegs<ColorField>().ToArray(), moveNumber);
         try
         {
             analyzer.GetResult();
         }
-        catch (ArgumentException)
+        catch (ArgumentException)  // catch ArgumentException to allow checking for the game move number not changed
         {
-
         }
         return game;
     }

@@ -8,7 +8,7 @@ namespace Codebreaker.GameAPIs.Analyzer.Tests;
 public class ShapeGame5x5x4AnalyzerTests
 {
     [Fact]
-    public void SetMoveShouldReturnTwoBlack()
+    public void GetResult_Should_ReturnTwoBlack()
     {
         ShapeAndColorResult expectedKeyPegs = new(2, 0, 0);
         ShapeAndColorResult? resultKeyPegs = TestSkeleton(
@@ -20,7 +20,7 @@ public class ShapeGame5x5x4AnalyzerTests
     }
 
     [Fact]
-    public void SetMoveShouldReturnOneBlackWithMultipleCorrectCodes()
+    public void GetResult_Should_ReturnOneBlack_WithMultipleCorrectCodes()
     {
         ShapeAndColorResult expectedKeyPegs = new(1, 0, 0);
         ShapeAndColorResult? resultKeyPegs = TestSkeleton(
@@ -32,7 +32,7 @@ public class ShapeGame5x5x4AnalyzerTests
     }
 
     [Fact]
-    public void SetMoveShouldReturnOneBlackWithMultipleCorrectPairGuesses()
+    public void GetResult_ShouldReturnOneBlack_WithMultipleCorrectPairGuesses()
     {
         ShapeAndColorResult expectedKeyPegs = new(1, 0, 0);
         ShapeAndColorResult? resultKeyPegs = TestSkeleton(
@@ -44,7 +44,7 @@ public class ShapeGame5x5x4AnalyzerTests
     }
 
     [Fact]
-    public void SetMoveShouldReturnThreeWhite()
+    public void GetResult_Should_ReturnThreeWhite()
     {
         ShapeAndColorResult expectedKeyPegs = new(0, 3, 0);
         ShapeAndColorResult? resultKeyPegs = TestSkeleton(
@@ -56,7 +56,7 @@ public class ShapeGame5x5x4AnalyzerTests
     }
 
     [Fact]
-    public void SetMoveShouldReturnOneWhiteWithMultipleCorrectPairIsGuesses()
+    public void GetResult_Should_ReturnOneWhite_WithMultipleCorrectPairGuesses()
     {
         ShapeAndColorResult expectedKeyPegs = new(0, 1, 0);
         ShapeAndColorResult? resultKeyPegs = TestSkeleton(
@@ -68,7 +68,7 @@ public class ShapeGame5x5x4AnalyzerTests
     }
 
     [Fact]
-    public void SetMoveShouldReturnTwoBlueForMatchingColors()
+    public void GetResult_Should_ReturnTwoBlue_ForMatchingColors()
     {
         // the second and third guess have a correct color in the correct position
         // all the shapes are incorrect
@@ -82,7 +82,7 @@ public class ShapeGame5x5x4AnalyzerTests
     }
 
     [Fact]
-    public void SetMoveShouldReturnTwoBlueForMatchingShapesAndColors()
+    public void GetResult_Should_ReturnTwoBlue_ForMatchingShapesAndColors()
     {
         // the first guess has a correct shape, and the second guess a correct color. All other guesses are wrong.
         ShapeAndColorResult expectedKeyPegs = new(0, 0, 2);
@@ -95,7 +95,7 @@ public class ShapeGame5x5x4AnalyzerTests
     }
 
     [Fact]
-    public void SetMoveShouldReturnTwoBlueForMatchingShapes()
+    public void GetResult_Should_ReturnTwoBlue_ForMatchingShapes()
     {
         // the first and second guess have a correct shape, but a wrong color
         // all the colors are incorrect
@@ -109,7 +109,7 @@ public class ShapeGame5x5x4AnalyzerTests
     }
 
     [Fact]
-    public void SetMoveShouldReturnOneBlackAndOneWhite()
+    public void GetResult_Should_ReturnOneBlackAndOneWhite()
     {
         // the first and second guess have a correct shape, but both in the wrong positon
         // all the colors are incorrect

@@ -7,7 +7,7 @@ namespace Codebreaker.GameAPIs.Analyzer.Tests;
 public class ColorGame8x5AnalyzerTests
 {
     [Fact]
-    public void SetMoveShouldReturnThreeWhite()
+    public void GetResult_Should_ReturnThreeWhite()
     {
         ColorResult expectedKeyPegs = new(0, 3);
         ColorResult? resultKeyPegs = TestSkeleton(
@@ -21,7 +21,7 @@ public class ColorGame8x5AnalyzerTests
     [InlineData(1, 2, Red, Yellow, Red, Blue, Orange)]
     [InlineData(2, 0, White, White, Blue, Red, White)]
     [Theory]
-    public void SetMoveUsingVariousData(int expectedBlack, int expectedWhite, params string[] guessValues)
+    public void GetResult_ShouldReturn_InlineDataResults(int expectedBlack, int expectedWhite, params string[] guessValues)
     {
         string[] code = [Red, Green, Blue, Red, Brown];
         ColorResult expectedKeyPegs = new (expectedBlack, expectedWhite);
@@ -31,14 +31,14 @@ public class ColorGame8x5AnalyzerTests
 
     [Theory]
     [ClassData(typeof(TestData8x5))]
-    public void SetMoveUsingVariousDataUsingDataClass(string[] code, string[] guess, ColorResult expectedKeyPegs)
+    public void GetResult_ShouldReturn_InlineClassData(string[] code, string[] guess, ColorResult expectedKeyPegs)
     {
         ColorResult actualKeyPegs = TestSkeleton(code, guess);
         Assert.Equal(expectedKeyPegs, actualKeyPegs);
     }
 
     [Fact]
-    public void ShouldThrowOnInvalidGuessCount()
+    public void GetResult_Should_ThrowOnInvalidGuessCount()
     {
         Assert.Throws<ArgumentException>(() => 
             TestSkeleton(
@@ -48,7 +48,7 @@ public class ColorGame8x5AnalyzerTests
     }
 
     [Fact]
-    public void ShouldThrowOnInvalidGuessValues()
+    public void GetResult_Should_ThrowOnInvalidGuessValues()
     {
         Assert.Throws<ArgumentException>(() => 
             TestSkeleton(
