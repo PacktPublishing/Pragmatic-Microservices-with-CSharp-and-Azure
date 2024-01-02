@@ -1,12 +1,8 @@
-using System.Runtime.CompilerServices;
-
 using Codebreaker.Data.SqlServer;
 using Codebreaker.GameAPIs;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
-
-//[assembly: InternalsVisibleTo("Codbreaker.GameAPIs.Tests")]
 
 var builder = WebApplication.CreateBuilder(args);
 
