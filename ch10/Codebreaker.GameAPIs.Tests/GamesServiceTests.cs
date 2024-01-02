@@ -40,9 +40,9 @@ public class GamesServiceTests
     [Fact]
     public async Task SetMoveAsync_Should_ThrowWithEndedGame()
     {
+        GamesService gamesService = new(_gamesRepositoryMock.Object);
         await Assert.ThrowsAsync<CodebreakerException>(async () =>
         {
-            GamesService gamesService = new(_gamesRepositoryMock.Object);
             await gamesService.SetMoveAsync(_endedGameId, "Game6x4", ["Red", "Green", "Blue", "Yellow"], 1, CancellationToken.None);
         });
 
@@ -50,11 +50,11 @@ public class GamesServiceTests
     }
 
     [Fact]
-    public async Task SetMoveAsync_Should_ThrowWithUnexpectedGAmeType()
+    public async Task SetMoveAsync_Should_ThrowWithUnexpectedGameType()
     {
+        GamesService gamesService = new(_gamesRepositoryMock.Object);
         await Assert.ThrowsAsync<CodebreakerException>(async () =>
         {
-            GamesService gamesService = new(_gamesRepositoryMock.Object);
             await gamesService.SetMoveAsync(_running6x4GameId, "Game8x5", ["Red", "Green", "Blue", "Yellow"], 1, CancellationToken.None);
         });
 
@@ -64,9 +64,9 @@ public class GamesServiceTests
     [Fact]
     public async Task SetMoveAsync_Should_ThrowWithNotFoundGame()
     {
+        GamesService gamesService = new(_gamesRepositoryMock.Object);
         await Assert.ThrowsAsync<CodebreakerException>(async () =>
         {
-            GamesService gamesService = new(_gamesRepositoryMock.Object);
             await gamesService.SetMoveAsync(_notFoundGameId, "Game6x4", ["Red", "Green", "Blue", "Yellow"], 1, CancellationToken.None);
         });
 
@@ -92,7 +92,7 @@ public class GamesServiceTests
     public async Task SetMoveAsync_Should_UpdateGameAndAddMove()
     {
         // Arrange
-        var gamesService = new GamesService(_gamesRepositoryMock.Object);
+        GamesService gamesService = new(_gamesRepositoryMock.Object);
 
         // Act
         var result = await gamesService.SetMoveAsync(_running6x4GameId, "Game6x4", ["Red", "Green", "Blue", "Yellow"], 1, CancellationToken.None);
