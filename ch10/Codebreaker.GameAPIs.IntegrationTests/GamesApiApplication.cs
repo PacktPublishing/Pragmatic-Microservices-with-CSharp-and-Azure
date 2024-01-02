@@ -1,27 +1,24 @@
-﻿using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.Extensions.Hosting;
+﻿[assembly: AssemblyTrait("Category", "SkipWhenLiveUnitTesting")]
 
 namespace Codebreaker.GameAPIs.Tests;
 
-internal class GamesApiApplication(string environment = "Development") : WebApplicationFactory<Program>
+internal class GamesApiApplication(string environment = "Development", string solutionEnvironment = "Local", string datastore = "InMemory") : WebApplicationFactory<Program>
 {
-    private readonly string _environment = environment;
-
     protected override IHost CreateHost(IHostBuilder builder)
     {
         builder.ConfigureHostOptions(webBuilder =>
         {
         });
 
-        builder.UseEnvironment(_environment);
+        builder.UseEnvironment(environment);
 
         builder.ConfigureServices(services =>
         {
                 
         });
 
-        Environment.SetEnvironmentVariable("DataStore", "InMemory");
-        Environment.SetEnvironmentVariable("SolutionEnvironment", "Local");
+        Environment.SetEnvironmentVariable("DataStore", datastore);
+        Environment.SetEnvironmentVariable("SolutionEnvironment", solutionEnvironment);
         return base.CreateHost(builder);
     }
 }

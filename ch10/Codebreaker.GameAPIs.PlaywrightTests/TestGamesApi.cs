@@ -1,6 +1,6 @@
-using System.Text.Json;
 
-using Microsoft.Playwright;
+
+[assembly: Category("SkipWhenLiveUnitTesting")]
 
 namespace Codebreaker.Apis.IntegrationTests;
 

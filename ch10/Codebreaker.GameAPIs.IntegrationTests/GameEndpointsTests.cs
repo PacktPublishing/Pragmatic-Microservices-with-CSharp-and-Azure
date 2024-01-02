@@ -1,21 +1,14 @@
-using System.Net;
-using System.Net.Http.Json;
-
-using Codebreaker.GameAPIs.Models;
-
 namespace Codebreaker.GameAPIs.Tests;
 
 public class GameEndpointsTests
 {
     [Fact]
-    public async Task SetMoveWithInvalidMoveNumberShouldReturnBadRequest()
+    public async Task SetMove_Should_ReturnBadRequest_WithInvalidMoveNumber()
     {
         await using GamesApiApplication app = new();
-        var client = app.CreateClient();
+        (HttpClient client, CreateGameResponse gameResponse) = await StartGameFixtureAsync(app);
 
         int moveNumber = 0;
-        CreateGameResponse gameResponse = await StartGameFixtureAsync(app);
-
         UpdateGameRequest updateGameRequest = new(gameResponse.Id, gameResponse.GameType, gameResponse.PlayerName, moveNumber)
         {
             GuessPegs = ["Red", "Red", "Red", "Red"]
@@ -28,17 +21,15 @@ public class GameEndpointsTests
     }
 
     [Fact]
-    public async Task SetMoveWithInvalidGuessNumberShouldReturnBadRequest()
+    public async Task SetMove_Should_ReturnBadRequest_WithInvalidGuessCount()
     {
         await using GamesApiApplication app = new();
-        var client = app.CreateClient();
+        (HttpClient client, CreateGameResponse gameResponse) = await StartGameFixtureAsync(app);
 
         int moveNumber = 1;
-        CreateGameResponse gameResponse = await StartGameFixtureAsync(app);
-
         UpdateGameRequest updateGameRequest = new(gameResponse.Id, gameResponse.GameType, gameResponse.PlayerName, moveNumber)
         {
-            GuessPegs = ["Red", "Red", "Red",]
+            GuessPegs = ["Red", "Red", "Red"]
         };
 
         string uri = $"/games/{updateGameRequest.Id}";
@@ -48,14 +39,12 @@ public class GameEndpointsTests
     }
 
     [Fact]
-    public async Task SetMoveWithWrongGuessesShouldReturnBadRequest()
+    public async Task SetMove_Should_ReturnBadRequest_WithWrongGuesses()
     {
         await using GamesApiApplication app = new();
-        var client = app.CreateClient();
+        (HttpClient client, CreateGameResponse gameResponse) = await StartGameFixtureAsync(app);
 
         int moveNumber = 1;
-        CreateGameResponse gameResponse = await StartGameFixtureAsync(app);
-
         UpdateGameRequest updateGameRequest = new(gameResponse.Id, gameResponse.GameType, gameResponse.PlayerName, moveNumber)
         {
             GuessPegs = ["Red", "Red", "Red", "Schwarz"]
@@ -67,15 +56,49 @@ public class GameEndpointsTests
         Assert.Equal(HttpStatusCode.BadRequest, updateGameResponse.StatusCode);
     }
 
-    private static async Task<CreateGameResponse> StartGameFixtureAsync(GamesApiApplication app)
+    [Fact]
+    public async Task SetMoves_Should_WinAGame()
     {
-        var client = app.CreateClient();
+        await using GamesApiApplication app = new();
+        (HttpClient client, CreateGameResponse gameResponse) = await StartGameFixtureAsync(app);
+
+        // send the first move
+        int moveNumber = 1;
+        UpdateGameRequest updateGameRequest = new(gameResponse.Id, gameResponse.GameType, gameResponse.PlayerName, moveNumber)
+        {
+            GuessPegs = ["Red", "Red", "Red", "Red"]
+        };
+
+        string uri = $"/games/{updateGameRequest.Id}";
+        var updateGameResponse = await client.PatchAsJsonAsync(uri, updateGameRequest);
+
+        // cheat to get the result
+
+        var getGameResponse = await client.GetAsync(uri);
+
+        // send the second move
+        moveNumber = 2;
+        updateGameRequest = new UpdateGameRequest(gameResponse.Id, gameResponse.GameType, gameResponse.PlayerName, moveNumber)
+        {
+
+        };
+
+        // check the result
+
+        // delete the game
+        Assert.Equal(HttpStatusCode.BadRequest, updateGameResponse.StatusCode);
+    }
+
+    private static async Task<(HttpClient Client, CreateGameResponse Response)> StartGameFixtureAsync(GamesApiApplication app)
+    {
+        HttpClient client = app.CreateClient();
         CreateGameRequest request = new(GameType.Game6x4, "test");
         var response = await client.PostAsJsonAsync("/games", request);
-        var gameReponse = await response.Content.ReadFromJsonAsync<CreateGameResponse>();
+        Assert.True(response.IsSuccessStatusCode);
 
-        if (gameReponse is null)
-            Assert.Fail("gameResponse is null");
-        return gameReponse;
+        var gameReponse = await response.Content.ReadFromJsonAsync<CreateGameResponse>();
+        Assert.NotNull(gameReponse);
+
+        return (client, gameReponse);
     }
 }
