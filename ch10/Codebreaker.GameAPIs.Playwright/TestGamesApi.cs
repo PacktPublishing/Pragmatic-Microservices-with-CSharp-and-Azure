@@ -1,28 +1,39 @@
-
+using Microsoft.Extensions.Configuration;
 
 [assembly: Category("SkipWhenLiveUnitTesting")]
 
-namespace Codebreaker.Apis.IntegrationTests;
+namespace Codebreaker.APIs.PlaywrightTests;
 
 [Parallelizable(ParallelScope.Self)]
 [TestFixture]
 public class TestGamesApi : PlaywrightTest
 {
-    private readonly string _baseUrl = "http://localhost:9400";
+
+    private string _baseUrl;
     private IAPIRequestContext? _request = default;
 
     [SetUp]
     public async Task SetupApiTesting()
     {
+        ConfigurationBuilder configurationBuilder = new();
+        configurationBuilder.SetBasePath(Directory.GetCurrentDirectory());
+        configurationBuilder.AddJsonFile("appsettings.json", optional: true);
+        var config = configurationBuilder.Build();
+        _baseUrl = config["BaseUrl"] ?? "abc";
+        
         await CreateAPIRequestContext();
     }
 
     private async Task CreateAPIRequestContext()
     {
         // setup authentication when needed
+        Dictionary<string, string> headers = new();
+        headers.Add("Accept", "application/json");
+
         _request = await Playwright.APIRequest.NewContextAsync(new()
         {
-            BaseURL = _baseUrl
+            BaseURL = _baseUrl,
+            ExtraHTTPHeaders = headers
         });
     }
 
@@ -36,7 +47,7 @@ public class TestGamesApi : PlaywrightTest
     }
 
     [Test]
-    public async Task ShouldCreateA6x4GameAndReturnMoveResult()
+    public async Task PlayTheGameToWin()
     {
         if (_request is null)
         {
@@ -45,23 +56,32 @@ public class TestGamesApi : PlaywrightTest
         }
 
         string playerName = "test";
-        Guid id = await CreateGameAsync(playerName);
+        (Guid id, string[] colors) = await CreateGameAsync(playerName);
 
-        await SetFirstMoveAsync(id, playerName);
+        int moveNumber = 1;
+        bool gameEnded = false;
 
-        string[] codes = await GetTheGameAsync(id);
+        while (moveNumber < 10 && !gameEnded)
+        {
+            string[] guesses = Random.Shared.GetItems<string>(colors, 4).ToArray();
+            gameEnded = await SetMoveAsync(id, playerName, moveNumber++, guesses);
+        }
 
-        // set the winning move
-        await SetWinningMoveAsync(id, playerName, codes);
+        if (!gameEnded)
+        {
+            string[] correctCodes = await GetTheGameAsync(id, moveNumber - 1);
+            gameEnded = await SetMoveAsync(id, playerName, moveNumber++, correctCodes);
+        }
 
+        Assert.That(gameEnded, Is.True);
     }
 
-    private async Task<Guid> CreateGameAsync(string playerName)
+    private async Task<(Guid Id, string[] Colors)> CreateGameAsync(string playerName)
     {
         if (_request is null)
         {
             Assert.Fail();
-            return Guid.Empty;
+            return (Guid.Empty, []);
         }
 
         Dictionary<string, string> request = new()
@@ -75,7 +95,7 @@ public class TestGamesApi : PlaywrightTest
         {
             DataObject = request
         });
-        Assert.That(response.Ok, Is.True);
+        Assert.That(response.Ok, Is.True);  // Playwright Ok is 200-299
 
         var json = await response.JsonAsync();
         Assert.DoesNotThrow(() =>
@@ -93,9 +113,11 @@ public class TestGamesApi : PlaywrightTest
 
         int maxMoves = int.Parse(json.Value.GetProperty("maxMoves").ToString());
 
+        string[] colorFields = json.Value.GetProperty("fieldValues").GetProperty("colors").EnumerateArray().Select(color => color.ToString()).ToArray();
+
         Assert.Multiple(() =>
         {
-            // holes should be 4 with this game type
+            // codes should be 4 with this game type
             Assert.That(numberCodes, Is.EqualTo(4));
 
             // max moves should be 12 with this game type
@@ -103,17 +125,20 @@ public class TestGamesApi : PlaywrightTest
 
             // username returned should contain the username requested
             Assert.That(json.Value.GetProperty("playerName").ToString(), Is.EqualTo(playerName));
+
+            // this game containers colors
+            Assert.That(json.Value.GetProperty("fieldValues").GetProperty("colors").EnumerateArray().Count(), Is.EqualTo(6));
         });
 
-        return id;
+        return (id, colorFields);
     }
 
-    private async Task SetFirstMoveAsync(Guid id, string playerName)
+    private async Task<bool> SetMoveAsync(Guid id, string playerName, int moveNumber, string[] guesses)
     {
         if (_request is null)
         {
             Assert.Fail();
-            return;
+            return false;
         }
 
         Dictionary<string, object> request = new()
@@ -121,8 +146,8 @@ public class TestGamesApi : PlaywrightTest
             ["id"] = id.ToString(),
             ["gameType"] = "Game6x4",
             ["playerName"] = playerName,
-            ["moveNumber"] = 1,
-            ["guessPegs"] = new string[] { "Red", "Blue", "Red", "Blue" }
+            ["moveNumber"] = moveNumber,
+            ["guessPegs"] = guesses
         };
 
         var response = await _request.PatchAsync($"{_baseUrl}/games/{id}", new()
@@ -139,9 +164,12 @@ public class TestGamesApi : PlaywrightTest
             Assert.That(results.EnumerateArray().Count(), Is.LessThanOrEqualTo(4));
             Assert.That(results.EnumerateArray().All(x => x.ToString() is "Black" or "White"));
         });
+
+        bool hasEnded = bool.Parse(json.Value.GetProperty("ended").ToString());
+        return hasEnded;
     }
 
-    private async Task<string[]> GetTheGameAsync(Guid id)
+    private async Task<string[]> GetTheGameAsync(Guid id, int expectedMoveNumber)
     {
         if (_request is null)
         {
@@ -157,47 +185,11 @@ public class TestGamesApi : PlaywrightTest
 
         Assert.Multiple(() =>
         {
-            Assert.That(moveNumber, Is.EqualTo(1));
+            Assert.That(moveNumber, Is.EqualTo(expectedMoveNumber));
             Assert.That(codes.EnumerateArray().Count(), Is.EqualTo(4));
         });
 
         string[] codesArray = codes.Deserialize<string[]>()!; // codes is not null as it is checked above
         return codesArray;
     }
-
-    private async Task SetWinningMoveAsync(Guid id, string playerName, string[] guesses)
-    {
-        if (_request is null)
-        {
-            Assert.Fail();
-            return;
-        }
-
-        Dictionary<string, object> request = new()
-        {
-            ["id"] = id.ToString(),
-            ["gameType"] = "Game6x4",
-            ["playerName"] = playerName,
-            ["moveNumber"] = 2,
-            ["guessPegs"] = guesses
-        };
-
-        var response = await _request.PatchAsync($"{_baseUrl}/games/{id}", new()
-        {
-            DataObject = request
-        });
-
-        Assert.That(response.Ok, Is.True);
-
-        var json = await response.JsonAsync();
-        JsonElement results = json.Value.GetProperty("results");
-        bool victory = bool.Parse(json.Value.GetProperty("isVictory").ToString());
-        Assert.Multiple(() =>
-        {
-            Assert.That(results.EnumerateArray().Count(), Is.LessThanOrEqualTo(4));
-            Assert.That(results.EnumerateArray().All(x => x.ToString() is "Black" or "White"));
-            Assert.That(victory, Is.True);
-        });
-    }
-
 }
