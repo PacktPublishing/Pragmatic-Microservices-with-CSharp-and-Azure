@@ -44,7 +44,7 @@ public class TestGamesApi : PlaywrightTest
             return;
         }
 
-        string playerName = "testuser";
+        string playerName = "test";
         Guid id = await CreateGameAsync(playerName);
 
         await SetFirstMoveAsync(id, playerName);
