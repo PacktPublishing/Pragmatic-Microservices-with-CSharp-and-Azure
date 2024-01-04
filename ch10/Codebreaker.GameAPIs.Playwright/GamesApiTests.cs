@@ -1,38 +1,28 @@
-using Microsoft.Extensions.Configuration;
-
 [assembly: Category("SkipWhenLiveUnitTesting")]
 
 namespace Codebreaker.APIs.PlaywrightTests;
 
 [Parallelizable(ParallelScope.Self)]
-[TestFixture]
-public class TestGamesApi : PlaywrightTest
+public class GamesApiTests : PlaywrightTest
 {
-
-    private string _baseUrl;
-    private IAPIRequestContext? _request = default;
+    private IAPIRequestContext? _requestContext;
 
     [SetUp]
-    public async Task SetupApiTesting()
+    public async Task SetupAPITestingAsync()
     {
         ConfigurationBuilder configurationBuilder = new();
         configurationBuilder.SetBasePath(Directory.GetCurrentDirectory());
         configurationBuilder.AddJsonFile("appsettings.json", optional: true);
         var config = configurationBuilder.Build();
-        _baseUrl = config["BaseUrl"] ?? "abc";
-        
-        await CreateAPIRequestContext();
-    }
 
-    private async Task CreateAPIRequestContext()
-    {
-        // setup authentication when needed
-        Dictionary<string, string> headers = new();
-        headers.Add("Accept", "application/json");
-
-        _request = await Playwright.APIRequest.NewContextAsync(new()
+        Dictionary<string, string> headers = new()
         {
-            BaseURL = _baseUrl,
+            { "Accept", "application/json" }
+        };
+
+        _requestContext = await Playwright.APIRequest.NewContextAsync(new()
+        {
+            BaseURL = config["BaseUrl"] ?? "http://localhost",
             ExtraHTTPHeaders = headers
         });
     }
@@ -40,16 +30,17 @@ public class TestGamesApi : PlaywrightTest
     [TearDown]
     public async Task TearDownAPITesting()
     {
-        if (_request != null)
+        if (_requestContext != null)
         {
-            await _request.DisposeAsync();
+            await _requestContext.DisposeAsync();
         }
     }
 
     [Test]
-    public async Task PlayTheGameToWin()
+    [Repeat(5)]
+    public async Task PlayTheGameToWinAsync()
     {
-        if (_request is null)
+        if (_requestContext is null)
         {
             Assert.Fail();
             return;
@@ -63,22 +54,54 @@ public class TestGamesApi : PlaywrightTest
 
         while (moveNumber < 10 && !gameEnded)
         {
+            await Task.Delay(1000);
             string[] guesses = Random.Shared.GetItems<string>(colors, 4).ToArray();
             gameEnded = await SetMoveAsync(id, playerName, moveNumber++, guesses);
         }
 
         if (!gameEnded)
         {
-            string[] correctCodes = await GetTheGameAsync(id, moveNumber - 1);
+            await Task.Delay(1000);
+            string[] correctCodes = await GetGameAsync(id, moveNumber - 1);
             gameEnded = await SetMoveAsync(id, playerName, moveNumber++, correctCodes);
         }
 
         Assert.That(gameEnded, Is.True);
     }
 
+    [Test]
+    [Repeat(2)]
+    public async Task PlayTheGameToEnd()
+    {
+        if (_requestContext is null)
+        {
+            Assert.Fail();
+            return;
+        }
+
+        string playerName = "test";
+        (Guid id, string[] colors) = await CreateGameAsync(playerName);
+
+        int moveNumber = 1;
+        bool gameEnded = false;
+
+        // the service should end the game after 12 moves
+        while (!gameEnded)
+        {
+            await Task.Delay(1000);
+            string[] guesses = Random.Shared.GetItems<string>(colors, 4).ToArray();
+            gameEnded = await SetMoveAsync(id, playerName, moveNumber++, guesses);
+        }
+
+        Assert.That(gameEnded, Is.True);
+        Assert.That(moveNumber, Is.LessThanOrEqualTo(13));
+
+        await DeleteGameAsync(id);
+    }
+
     private async Task<(Guid Id, string[] Colors)> CreateGameAsync(string playerName)
     {
-        if (_request is null)
+        if (_requestContext is null)
         {
             Assert.Fail();
             return (Guid.Empty, []);
@@ -91,7 +114,7 @@ public class TestGamesApi : PlaywrightTest
         };
 
         // create a game
-        var response = await _request.PostAsync($"{_baseUrl}/games", new()
+        var response = await _requestContext.PostAsync($"/games", new()
         {
             DataObject = request
         });
@@ -135,7 +158,7 @@ public class TestGamesApi : PlaywrightTest
 
     private async Task<bool> SetMoveAsync(Guid id, string playerName, int moveNumber, string[] guesses)
     {
-        if (_request is null)
+        if (_requestContext is null)
         {
             Assert.Fail();
             return false;
@@ -150,7 +173,7 @@ public class TestGamesApi : PlaywrightTest
             ["guessPegs"] = guesses
         };
 
-        var response = await _request.PatchAsync($"{_baseUrl}/games/{id}", new()
+        var response = await _requestContext.PatchAsync($"/games/{id}", new()
         {
             DataObject = request
         });
@@ -169,15 +192,15 @@ public class TestGamesApi : PlaywrightTest
         return hasEnded;
     }
 
-    private async Task<string[]> GetTheGameAsync(Guid id, int expectedMoveNumber)
+    private async Task<string[]> GetGameAsync(Guid id, int expectedMoveNumber)
     {
-        if (_request is null)
+        if (_requestContext is null)
         {
             Assert.Fail();
             throw new InvalidOperationException();
         }
 
-        var response = await _request.GetAsync($"{_baseUrl}/games/{id}");
+        var response = await _requestContext.GetAsync($"/games/{id}");
         var json = await response.JsonAsync();
         int moveNumber = int.Parse(json.Value.GetProperty("lastMoveNumber").ToString());
         bool victory = bool.Parse(json.Value.GetProperty("isVictory").ToString());
@@ -191,5 +214,18 @@ public class TestGamesApi : PlaywrightTest
 
         string[] codesArray = codes.Deserialize<string[]>()!; // codes is not null as it is checked above
         return codesArray;
+    }
+
+    private async Task DeleteGameAsync(Guid id)
+    {
+        if (_requestContext is null)
+        {
+            Assert.Fail();
+            throw new InvalidOperationException();
+        }
+
+        var response = await _requestContext.DeleteAsync($"/games/{id}");
+
+        Assert.That(response.Ok, Is.True);
     }
 }
