@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <PackageId>CNinnovation.Codebreaker.Analyzers</PackageId>
+    <TargetFrameworks>net7.0;net8.0</TargetFrameworks>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <PackageTags>
+      Codebreaker;CNinnovation;GameAnalyzers;
+    </PackageTags>
+    <Description>
+      This library contains game analyzers for the Codebreaker app. Reference this library when creating a Codebreaker service.
+      See https://github.com/codebreakerapp for more information on the complete solution.
+    </Description>
+    <PackageReadmeFile>readme.md</PackageReadmeFile>
+    <PackageIcon>codebreaker.jpeg</PackageIcon>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <IsAotCompatible Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net8.0'))">true</IsAotCompatible>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="docs/readme.md" Pack="true" PackagePath="\" />
+    <None Include="Images/codebreaker.jpeg" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+</Project>
