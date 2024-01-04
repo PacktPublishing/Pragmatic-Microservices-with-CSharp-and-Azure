@@ -7,7 +7,7 @@ namespace CodeBreaker.Bot.Tests;
 public class CodeBreakerAlgorithmsTests
 {
     [Fact]
-    public void SelectPegTestThrowsException()
+    public void SelectPeg_Should_ThrowException()
     {
         Assert.Throws<InvalidOperationException>(() => 
             CodeBreakerAlgorithms.SelectPeg(44, 4));
@@ -25,7 +25,7 @@ public class CodeBreakerAlgorithmsTests
     }
 
     [Fact]
-    public void HandleBlackMatchesFind1BlackMatches()
+    public void HandleBlackMatches_Should_Find1BlackMatch()
     {
         List<int> toMatch =
         [
@@ -40,7 +40,7 @@ public class CodeBreakerAlgorithmsTests
     }
 
     [Fact]
-    public void HandleBlackMatchesFind2BlackMatches()
+    public void HandleBlackMatches_Should_Find2BlackMatches()
     {
         List<int> toMatch =
         [
@@ -55,7 +55,7 @@ public class CodeBreakerAlgorithmsTests
     }
 
     [Fact]
-    public void HandleBlackMatchesFind3BlackMatches()
+    public void HandleBlackMatches_Should_Find3BlackMatches()
     {
         List<int> toMatch =
         [
@@ -70,7 +70,7 @@ public class CodeBreakerAlgorithmsTests
     }
 
     [Fact]
-    public void HandleBlackMatchShouldNotInclude()
+    public void HandleBlackMatches_Should_BeEmpty()
     {
         List<int> toMatch =
         [
@@ -82,7 +82,7 @@ public class CodeBreakerAlgorithmsTests
     }
 
     [Fact]
-    public void HandleWhiteMatchesFind1WhiteMatches()
+    public void HandleWhiteMatches_Should_Find1WhiteMatches()
     {
         List<int> toMatch =
         [
@@ -97,7 +97,7 @@ public class CodeBreakerAlgorithmsTests
     }
 
     [Fact]
-    public void IntToColorsTest()
+    public void IntToColors_Should_ConvertToCorrectColor()
     {
         int value = 0b_000100_010000_000001_100000;
         string[] expected = ["Red", "Blue", "Black", "Yellow"];
@@ -106,7 +106,7 @@ public class CodeBreakerAlgorithmsTests
     }
 
     [Fact]
-    public void HandleNoMatchesTest()
+    public void HandleNoMatches_Should_MatchOneResult()
     {
         List<int> toMatch =
         [
