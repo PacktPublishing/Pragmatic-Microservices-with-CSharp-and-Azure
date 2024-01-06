@@ -1,5 +1,9 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
+builder.AddContainer("prometheus", "prom/prometheus")
+       .WithVolumeMount("../prometheus", "/etc/prometheus")
+       .WithServiceBinding(9090, hostPort: 9090);
+
 var appConfiguration = builder.AddAzureAppConfiguration("CodebreakerAppConfiguration");
 
 string cosmosConnectionString = builder.Configuration["CosmosConnectionString"] ?? throw new InvalidOperationException("Could not find CosmosConnectionString");
