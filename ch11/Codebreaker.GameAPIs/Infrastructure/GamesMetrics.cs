@@ -3,19 +3,19 @@ using System.Diagnostics.Metrics;
 
 namespace Codebreaker.GameAPIs.Infrastructure;
 
-// TODO: add gametype tag
 public sealed class GamesMetrics : IDisposable
 {
     public const string MeterName = "Codebreaker.Games";
     public const string Version = "1.0";
     private readonly Meter _meter;
     private readonly UpDownCounter<long> _activeGamesCounter;
-    private readonly ConcurrentDictionary<Guid, DateTime> _moveStartTimes = new();
+    private readonly ConcurrentDictionary<Guid, DateTime> _moveTimes = new();
     private readonly Histogram<double> _gameDuration;
     private readonly Histogram<double> _moveThinkTime;
     private readonly Histogram<int> _movesPerGameWin;
     private readonly Counter<long> _invalidMoveCounter;
     private readonly Counter<long> _gamesWonCounter;
+    private readonly Counter<long> _gamesLostCounter;
 
     public GamesMetrics(IMeterFactory meterFactory)
     {
@@ -37,8 +37,8 @@ public sealed class GamesMetrics : IDisposable
             description: "Think time of a move in seconds.");
 
         _movesPerGameWin = _meter.CreateHistogram<int>(
-            "codebreaker.game_movesforwin",
-            unit: "moves",
+            "codebreaker.game_moves-per-win",
+            unit: "{moves}",
             description: "The number of moves needed for a game win");
 
         _invalidMoveCounter = _meter.CreateCounter<long>(
@@ -50,6 +50,11 @@ public sealed class GamesMetrics : IDisposable
             "codebreaker.games.won",
             unit: "{won}",
             description: "Number of games won.");
+
+        _gamesLostCounter = _meter.CreateCounter<long>(
+            "codebreaker.games.lost",
+            unit: "{lost}",
+            description: "Number of games lost.");
     }
 
     private static KeyValuePair<string, object?> CreateGameTypeTag(string gameType) => KeyValuePair.Create<string, object?>("GameType", gameType);
@@ -57,7 +62,11 @@ public sealed class GamesMetrics : IDisposable
 
     public void GameStarted(Game game)
     {
-        _moveStartTimes.TryAdd(game.Id, game.StartTime);
+        if (_activeGamesCounter.Enabled || _moveThinkTime.Enabled)
+        {
+            _moveTimes.TryAdd(game.Id, game.StartTime);
+        }
+
         if (_activeGamesCounter.Enabled)
         {
             _activeGamesCounter.Add(1, CreateGameTypeTag(game.GameType));
@@ -68,20 +77,11 @@ public sealed class GamesMetrics : IDisposable
     {
         if (_moveThinkTime.Enabled)
         {
-            if (_moveStartTimes.TryGetValue(id, out DateTime prevMoveTime))
+            _moveTimes.AddOrUpdate(id, time, (id1, prevTime) =>
             {
-                _moveThinkTime.Record((time - prevMoveTime).TotalSeconds, [CreateGameIdTag(id), CreateGameTypeTag(gameType)]);
-                _moveStartTimes.TryUpdate(id, time, prevMoveTime);
-            }
-            else
-            {
-                _moveStartTimes.TryAdd(id, time);
-            }
-            //_moveStartTimes.AddOrUpdate(id, time, (id1, startTime) =>
-            //{
-            //    _moveThinkTime.Record((time - startTime).TotalSeconds, new KeyValuePair<string, object?>("Id", id1));
-            //    return time;
-            //});
+                _moveThinkTime.Record((time - prevTime).TotalSeconds, [CreateGameIdTag(id1), CreateGameTypeTag(gameType)]);
+                return time;
+            });
         }
     }
 
@@ -95,9 +95,13 @@ public sealed class GamesMetrics : IDisposable
 
     public void GameEnded(Game game)
     {
-        if (_gameDuration.Enabled)
+        if (!game.Ended())
         {
-            _gameDuration.Record(game.Duration!.Value.TotalSeconds, CreateGameTypeTag(game.GameType)); // // game.Duration is not null if Ended() is true
+            return;
+        }
+        if (_gameDuration.Enabled && game.Duration is not null)
+        {
+            _gameDuration.Record(game.Duration.Value.TotalSeconds, CreateGameTypeTag(game.GameType)); // game.Duration is not null if Ended() is true
         }
         if (_activeGamesCounter.Enabled)
         {
@@ -107,13 +111,16 @@ public sealed class GamesMetrics : IDisposable
         {
             _movesPerGameWin.Record(game.LastMoveNumber, CreateGameTypeTag(game.GameType));
         }
-
         if (game.IsVictory && _gamesWonCounter.Enabled)
         {
             _gamesWonCounter.Add(1, CreateGameTypeTag(game.GameType));
         }
+        if (!game.IsVictory && _gamesLostCounter.Enabled)
+        {
+            _gamesLostCounter.Add(1, CreateGameTypeTag(game.GameType));
+        }
 
-        _moveStartTimes.TryRemove(game.Id, out _);
+        _moveTimes.TryRemove(game.Id, out _);
     }
 
     public void Dispose() => _meter?.Dispose();
