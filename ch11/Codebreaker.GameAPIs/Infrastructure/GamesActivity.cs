@@ -2,7 +2,7 @@
 
 namespace Codebreaker.GameAPIs.Infrastructure;
 
-internal static class Tracing
+internal static class GamesActivity
 {
     internal const string ActivitySourceName = "Codebreaker.GameAPIs";
     internal const string ActivityVersion = "1.0.0";
