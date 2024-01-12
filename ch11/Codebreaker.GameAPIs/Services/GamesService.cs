@@ -1,16 +1,29 @@
-﻿using Codebreaker.GameAPIs.Infrastructure;
-
-namespace Codebreaker.GameAPIs.Services;
+﻿namespace Codebreaker.GameAPIs.Services;
 
 public class GamesService(IGamesRepository dataRepository, ILogger<GamesService> logger, GamesMetrics metrics) : IGamesService
 {
     public async Task<Game> StartGameAsync(string gameType, string playerName, CancellationToken cancellationToken = default)
     {
-        Game game = GamesFactory.CreateGame(gameType, playerName);
-        using var activity = GamesActivity.StartGame(game.Id, game.GameType);
+        Game game;
+        try
+        {
+            game = GamesFactory.CreateGame(gameType, playerName);
+            using var activity = GamesActivity.StartGame(game.Id, game.GameType);
 
-        await dataRepository.AddGameAsync(game, cancellationToken);
-        metrics.GameStarted(game);
+            await dataRepository.AddGameAsync(game, cancellationToken);
+            metrics.GameStarted(game);
+            logger.GameStarted(game.Id);
+        }
+        catch (CodebreakerException ex) when (ex.Code is CodebreakerExceptionCodes.InvalidGameType)
+        {
+            logger.InvalidGameType(gameType);
+            throw;
+        }
+        catch (Exception ex)
+        {
+            logger.Error(ex, ex.Message);
+            throw;
+        }
         return game;
     }
 
@@ -33,6 +46,7 @@ public class GamesService(IGamesRepository dataRepository, ILogger<GamesService>
             metrics.MoveSet(game.Id, DateTime.UtcNow, game.GameType);
             if (game.Ended())
             {
+                logger.GameEnded(game);
                 metrics.GameEnded(game);
             }
         }
@@ -54,6 +68,14 @@ public class GamesService(IGamesRepository dataRepository, ILogger<GamesService>
     public async ValueTask<Game?> GetGameAsync(Guid id, CancellationToken cancellationToken = default)
     {
         var game = await dataRepository.GetGameAsync(id, cancellationToken);
+        if (game is null)
+        {
+            logger.GameNotFound(id);
+        }
+        else
+        {
+            logger.QueryGame(game.Id);
+        }
         return game;
     }
 
@@ -77,6 +99,8 @@ public class GamesService(IGamesRepository dataRepository, ILogger<GamesService>
 
     public async Task<IEnumerable<Game>> GetGamesAsync(GamesQuery gamesQuery, CancellationToken cancellationToken = default)
     {
-        return await dataRepository.GetGamesAsync(gamesQuery, cancellationToken);
+        var games = await dataRepository.GetGamesAsync(gamesQuery, cancellationToken);
+        logger.QueryGames(games, gamesQuery.ToString());
+        return games;
     }
 }

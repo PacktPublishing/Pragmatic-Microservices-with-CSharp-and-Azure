@@ -2,16 +2,16 @@
 
 namespace Codebreaker.GameAPIs.Data.InMemory;
 
-public class GamesMemoryRepository(ILogger<GamesMemoryRepository> logger) : IGamesRepository
+public partial class GamesMemoryRepository(ILogger<GamesMemoryRepository> logger) : IGamesRepository
 {
     private readonly ConcurrentDictionary<Guid, Game> _games = new();
-    private readonly ILogger _logger = logger;
 
     public Task AddGameAsync(Game game, CancellationToken cancellationToken = default)
     {
         if (!_games.TryAdd(game.Id, game))
         {
-            _logger.LogWarning("id {id} already exists", game.Id);
+            Log.GameExists(logger, game.Id);
+            
         }
         return Task.CompletedTask;
     }
@@ -20,7 +20,7 @@ public class GamesMemoryRepository(ILogger<GamesMemoryRepository> logger) : IGam
     {
         if (!_games.TryRemove(id, out _))
         {
-            _logger.LogWarning("id {id} not available", id);
+            Log.GameNotFound(logger, id);
             return Task.FromResult(false);
         }
         return Task.FromResult(true);
