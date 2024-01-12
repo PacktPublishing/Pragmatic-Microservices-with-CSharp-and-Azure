@@ -8,14 +8,16 @@ public sealed class GamesMetrics : IDisposable
     public const string MeterName = "Codebreaker.Games";
     public const string Version = "1.0";
     private readonly Meter _meter;
+
     private readonly UpDownCounter<long> _activeGamesCounter;
-    private readonly ConcurrentDictionary<Guid, DateTime> _moveTimes = new();
     private readonly Histogram<double> _gameDuration;
     private readonly Histogram<double> _moveThinkTime;
     private readonly Histogram<int> _movesPerGameWin;
     private readonly Counter<long> _invalidMoveCounter;
     private readonly Counter<long> _gamesWonCounter;
     private readonly Counter<long> _gamesLostCounter;
+
+    private readonly ConcurrentDictionary<Guid, DateTime> _moveTimes = new();
 
     public GamesMetrics(IMeterFactory meterFactory)
     {
