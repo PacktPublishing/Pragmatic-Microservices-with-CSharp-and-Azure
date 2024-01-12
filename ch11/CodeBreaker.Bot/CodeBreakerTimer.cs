@@ -7,8 +7,6 @@ public class CodeBreakerTimer(CodeBreakerGameRunner runner, ILogger<CodeBreakerT
 {
     private readonly CodeBreakerGameRunner _gameRunner = runner;
 
-    private readonly ILogger _logger = logger;
-
     private static readonly ConcurrentDictionary<Guid, CodeBreakerTimer> _bots = new();
 
     private PeriodicTimer? _timer;
@@ -24,7 +22,7 @@ public class CodeBreakerTimer(CodeBreakerGameRunner runner, ILogger<CodeBreakerT
         ArgumentOutOfRangeException.ThrowIfLessThan(numberGames, 1);
         ArgumentOutOfRangeException.ThrowIfNegative(thinkSeconds);
 
-        _logger.StartGameRunner();
+        logger.StartGameRunner();
         Guid id = Guid.NewGuid();
         _bots.TryAdd(id, this);
 
@@ -36,11 +34,11 @@ public class CodeBreakerTimer(CodeBreakerGameRunner runner, ILogger<CodeBreakerT
             {
                 do
                 {
-                    _logger.WaitingForNextTick(_loop);
+                    logger.WaitingForNextTick(_loop);
 
                     if (await _timer.WaitForNextTickAsync(_cancellationTokenSource.Token)) // simulate some waiting time
                     {
-                        _logger.TimerTickFired(_loop);
+                        logger.TimerTickFired(_loop);
                         await _gameRunner.StartGameAsync(_cancellationTokenSource.Token);  // start the game
                         await _gameRunner.RunAsync(thinkSeconds, _cancellationTokenSource.Token); // play the game until finished
                         _loop++;
@@ -51,7 +49,7 @@ public class CodeBreakerTimer(CodeBreakerGameRunner runner, ILogger<CodeBreakerT
             catch (HttpRequestException ex)
             {
                 _statusMessage = ex.Message;
-                _logger.Error(ex, ex.Message);
+                logger.Error(ex, ex.Message);
             }
 
         }, TaskCreationOptions.LongRunning);
@@ -65,10 +63,8 @@ public class CodeBreakerTimer(CodeBreakerGameRunner runner, ILogger<CodeBreakerT
         _timer?.Dispose();
     }
 
-    public StatusResponse Status()
-    {
-        return new StatusResponse(_loop + 1, _statusMessage);
-    }
+    public StatusResponse Status() => 
+        new StatusResponse(_loop + 1, _statusMessage);
 
     public static void Stop(Guid id)
     {

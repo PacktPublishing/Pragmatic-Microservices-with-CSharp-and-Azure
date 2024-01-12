@@ -18,7 +18,7 @@ internal static partial class Log
         EventId = 4001,
         Level = LogLevel.Information,
         Message = "Matched after {NumberMoves} moves with {GameId}")]
-    public static partial void Matched(this ILogger logger, int numberMoves, string gameId);
+    public static partial void Matched(this ILogger logger, int numberMoves, Guid gameId);
 
     [LoggerMessage(
         EventId = 4002,
