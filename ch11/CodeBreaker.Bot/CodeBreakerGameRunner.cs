@@ -91,7 +91,7 @@ public class CodeBreakerGameRunner(GamesClient gamesClient, ILogger<CodeBreakerG
         {
             _moveNumber++;
             (string[] guessPegs, int selection) = GetNextMoves();
-            _logger.SendMove(string.Join(':', guessPegs), gameId.ToString());
+            _logger.SendMove(string.Join(':', guessPegs), gameId);
 
             (string[] results, ended, bool isVictory) = await _gamesClient.SetMoveAsync(gameId, PlayerName, GameType.Game6x4, _moveNumber, guessPegs, cancellationToken);
 
@@ -113,23 +113,23 @@ public class CodeBreakerGameRunner(GamesClient gamesClient, ILogger<CodeBreakerG
             if (blackHits == 0 && whiteHits == 0)
             {
                 _possibleValues = _possibleValues.HandleNoMatches(selection);
-                _logger.ReducedPossibleValues(_possibleValues.Count, "none", gameId.ToString());
+                _logger.ReducedPossibleValues(_possibleValues.Count, "none", gameId);
             }
             if (blackHits > 0)
             {
                 _possibleValues = _possibleValues.HandleBlackMatches(blackHits, selection);
-                _logger.ReducedPossibleValues(_possibleValues.Count, "Black", gameId.ToString());
+                _logger.ReducedPossibleValues(_possibleValues.Count, "Black", gameId);
             }
             if (whiteHits > 0)
             {
                 _possibleValues = _possibleValues.HandleWhiteMatches(whiteHits + blackHits, selection);
-                _logger.ReducedPossibleValues(_possibleValues.Count, "White", gameId.ToString());
+                _logger.ReducedPossibleValues(_possibleValues.Count, "White", gameId);
             }
 
             await Task.Delay(TimeSpan.FromSeconds(thinkSeconds), cancellationToken);  // thinking delay
         } while (!ended);
 
-        _logger.FinishedRun(_moveNumber, gameId.ToString());
+        _logger.FinishedRun(_moveNumber, gameId);
     }
 
     /// <summary>
