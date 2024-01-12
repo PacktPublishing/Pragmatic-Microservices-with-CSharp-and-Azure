@@ -4,11 +4,11 @@ namespace Codebreaker.GameAPIs.Tests;
 
 internal sealed class TestMeterFactory : IMeterFactory
 {
-    public List<Meter> Meters { get; } = new List<Meter>();
+    public List<Meter> Meters { get; } = [];
 
     public Meter Create(MeterOptions options)
     {
-        var meter = new Meter(options.Name, options.Version, Array.Empty<KeyValuePair<string, object?>>(), scope: this);
+        Meter meter = new(options.Name, options.Version, Array.Empty<KeyValuePair<string, object?>>(), scope: this);
         Meters.Add(meter);
         return meter;
     }

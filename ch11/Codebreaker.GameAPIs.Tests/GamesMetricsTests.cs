@@ -1,7 +1,6 @@
 ﻿using Codebreaker.GameAPIs.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.Metrics.Testing;
-using Microsoft.VisualStudio.TestPlatform.Common.Telemetry;
 using System.Diagnostics.Metrics;
 
 namespace Codebreaker.GameAPIs.Tests;
@@ -18,7 +17,7 @@ public class GamesMetricsTests
     {
         // arrange
         (IMeterFactory meterFactory, GamesMetrics metrics) = CreateMeterFactorySkeleton();
-        var collector = new MetricCollector<long>(meterFactory, GamesMetrics.MeterName, "codebreaker.active_games");
+        MetricCollector<long> collector = new(meterFactory, GamesMetrics.MeterName, "codebreaker.active_games");
         var game = GetGame();
 
         // act
@@ -35,7 +34,7 @@ public class GamesMetricsTests
     {
         // arrange
         (IMeterFactory meterFactory, GamesMetrics metrics) = CreateMeterFactorySkeleton();
-        var collector = new MetricCollector<double>(meterFactory, GamesMetrics.MeterName, "codebreaker.move_think_time");
+        MetricCollector<double> collector = new(meterFactory, GamesMetrics.MeterName, "codebreaker.move_think_time");
         var game = GetGame();
         metrics.GameStarted(game);
 
@@ -53,11 +52,11 @@ public class GamesMetricsTests
     {
         // arrange
         (IMeterFactory meterFactory, GamesMetrics metrics) = CreateMeterFactorySkeleton();
-        var gameDurationCollector = new MetricCollector<double>(meterFactory, GamesMetrics.MeterName, "codebreaker.game_duration");
-        var activeGamesCollector = new MetricCollector<long>(meterFactory, GamesMetrics.MeterName, "codebreaker.active_games");
-        var movesPerGameWinCollector = new MetricCollector<int>(meterFactory, GamesMetrics.MeterName, "codebreaker.game_moves-per-win");
-        var gamesWonCollector = new MetricCollector<long>(meterFactory, GamesMetrics.MeterName, "codebreaker.games.won");
-        var gamesLostCollector = new MetricCollector<long>(meterFactory, GamesMetrics.MeterName, "codebreaker.games.lost");
+        MetricCollector<double> gameDurationCollector = new(meterFactory, GamesMetrics.MeterName, "codebreaker.game_duration");
+        MetricCollector<long> activeGamesCollector = new(meterFactory, GamesMetrics.MeterName, "codebreaker.active_games");
+        MetricCollector<int> movesPerGameWinCollector = new(meterFactory, GamesMetrics.MeterName, "codebreaker.game_moves-per-win");
+        MetricCollector<long> gamesWonCollector = new(meterFactory, GamesMetrics.MeterName, "codebreaker.games.won");
+        MetricCollector<long> gamesLostCollector = new(meterFactory, GamesMetrics.MeterName, "codebreaker.games.lost");
 
         var game = GetGame();
         metrics.GameStarted(game);
@@ -117,15 +116,12 @@ public class GamesMetricsTests
         return (meterFactory, metrics);
     }
 
-    public Game GetGame()
+    public Game GetGame() => new Game(_gameId, "Game6x4", "Test", _gameStartTime, 4, 12)
     {
-        return new Game(_gameId, "Game6x4", "Test", _gameStartTime, 4, 12)
-        {
-            Codes = ["Red", "Green", "Blue", "Yellow"],
-            FieldValues = new Dictionary<string, IEnumerable<string>>()
+        Codes = ["Red", "Green", "Blue", "Yellow"],
+        FieldValues = new Dictionary<string, IEnumerable<string>>()
             {
                 { FieldCategories.Colors, ["Red", "Green", "Blue", "Yellow", "Purple", "Orange"] }
             }
-        };
-    }
+    };
 }
