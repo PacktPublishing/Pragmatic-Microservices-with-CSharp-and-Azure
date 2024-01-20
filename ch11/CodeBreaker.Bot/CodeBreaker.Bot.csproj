@@ -6,7 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>4053495e-84a4-48c2-91d3-4b8290310020</UserSecretsId>
     <LangVersion>latest</LangVersion>
-    <Configurations>Debug;Release;Debug-Azure;Debug-OnPremises;Release-OnPremises</Configurations>
+    <Configurations>Debug;Release</Configurations>
   </PropertyGroup>
 
   <ItemGroup>
