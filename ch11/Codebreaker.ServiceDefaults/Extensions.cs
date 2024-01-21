@@ -23,16 +23,16 @@ public static class Extensions
 {
     public static void AddAppConfiguration(this IHostApplicationBuilder builder)
     {
-
 #if DEBUG
+
         DefaultAzureCredentialOptions credentialOptions = new()
         {
             Diagnostics =
-                {
-                    LoggedHeaderNames = { "x-ms-request-id" },
-                    LoggedQueryParameters = { "api-version" },
-                    IsLoggingContentEnabled = true
-                },
+            {
+                LoggedHeaderNames = { "x-ms-request-id" },
+                LoggedQueryParameters = { "api-version" },
+                IsLoggingContentEnabled = true
+            },
             ExcludeSharedTokenCacheCredential = true,
             ExcludeAzurePowerShellCredential = true,
             ExcludeVisualStudioCodeCredential = true,
@@ -45,20 +45,20 @@ public static class Extensions
 #elif RELEASE
         string? managedIdentityClientId = builder.Configuration["ManagedIdentityClientId"];
 
-            DefaultAzureCredentialOptions credentialOptions = new()
-            {
-                ManagedIdentityClientId = managedIdentityClientId,
-                ExcludeSharedTokenCacheCredential = true,
-                ExcludeAzurePowerShellCredential = true,
-                ExcludeVisualStudioCodeCredential = true,
-                ExcludeEnvironmentCredential = true,
-                ExcludeInteractiveBrowserCredential = true,
-                ExcludeAzureCliCredential = false,
-                ExcludeManagedIdentityCredential = false,
-                ExcludeVisualStudioCredential = false
-            };
+        DefaultAzureCredentialOptions credentialOptions = new()
+        {
+            ManagedIdentityClientId = managedIdentityClientId,
+            ExcludeSharedTokenCacheCredential = true,
+            ExcludeAzurePowerShellCredential = true,
+            ExcludeVisualStudioCodeCredential = true,
+            ExcludeEnvironmentCredential = true,
+            ExcludeInteractiveBrowserCredential = true,
+            ExcludeAzureCliCredential = false,
+            ExcludeManagedIdentityCredential = false,
+            ExcludeVisualStudioCredential = false
+        };
 #endif
-#if RELEASE
+#if DEBUG || RELEASE
 
         DefaultAzureCredential credential = new(credentialOptions);
         string endpoint = builder.Configuration.GetConnectionString("CodebreakerAppConfiguration") ?? throw new InvalidOperationException("Could not read AzureAppConfiguration");
@@ -76,7 +76,6 @@ public static class Extensions
         {
 
         }
-
 #endif
     }
 
@@ -121,10 +120,11 @@ public static class Extensions
                     // We want to view all traces in development
                     tracing.SetSampler(new AlwaysOnSampler());
                 }
+
                 tracing.AddSource("Codebreaker.GameAPIs.Client", "Codebreaker.GameAPIs")
-                       .AddAspNetCoreInstrumentation()
-                       .AddGrpcClientInstrumentation()
-                       .AddHttpClientInstrumentation();
+                    .AddAspNetCoreInstrumentation()
+                    .AddGrpcClientInstrumentation()
+                    .AddHttpClientInstrumentation();
             });
 
         builder.AddOpenTelemetryExporters();
@@ -137,7 +137,6 @@ public static class Extensions
         // TODO: what's the strategy using the OLTP exporter?
         // note here: not supported https://learn.microsoft.com/en-us/azure/azure-monitor/app/opentelemetry-configuration?tabs=aspnetcore
         // but it's configured by default with .NET Aspire
-
         bool useOtlpExporter = !string.IsNullOrWhiteSpace(builder.Configuration["OTEL_EXPORTER_OTLP_ENDPOINT"]);
 
         if (useOtlpExporter)
@@ -146,7 +145,7 @@ public static class Extensions
             builder.Services.ConfigureOpenTelemetryMeterProvider(metrics => metrics.AddOtlpExporter());
             builder.Services.ConfigureOpenTelemetryTracerProvider(tracing => tracing.AddOtlpExporter());
         }
-#if PROMETHEUS 
+#if PROMETHEUS
         builder.Services.AddOpenTelemetry()
            .WithMetrics(metrics => metrics.AddPrometheusExporter());
 #else
