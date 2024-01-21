@@ -54,13 +54,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Codebreaker.GameAPIs.Client
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Codebreaker.GameAPIs.Client.Tests", "Codebreaker.GameAPIs.Client.Tests\Codebreaker.GameAPIs.Client.Tests.csproj", "{DDED1556-3395-4FE8-A15B-E3897B2351C6}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Client", "Client", "{74A02989-2FDE-4831-B5A4-28AA04F5CB6E}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Bot", "Bot", "{84445501-F20E-4AAD-8930-3486EE3B9B2E}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GamesAPI", "GamesAPI", "{77EEE74A-99C6-4CD5-96B0-BF9AD39DF075}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{D0312849-C404-40DC-BB9F-51E915D7890B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
