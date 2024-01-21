@@ -1,16 +1,21 @@
-using Azure.Core.Diagnostics;
-using Azure.Identity;
-
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Configuration.AzureAppConfiguration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;
 using OpenTelemetry.Logs;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
+using Microsoft.Extensions.Configuration;
+
+#if PROMETHEUS
+#else
+using Azure.Core.Diagnostics;
+using Azure.Identity;
+using Azure.Monitor.OpenTelemetry.AspNetCore;
+
+using Microsoft.Extensions.Configuration.AzureAppConfiguration;
+#endif
 
 namespace Microsoft.Extensions.Hosting;
 
@@ -18,31 +23,27 @@ public static class Extensions
 {
     public static void AddAppConfiguration(this IHostApplicationBuilder builder)
     {
-        string? solutionEnvironment = builder.Configuration["SolutionEnvironment"];
 
-        if (solutionEnvironment == "Azure")
-        {
 #if DEBUG
-
-            DefaultAzureCredentialOptions credentialOptions = new()
-            {
-                Diagnostics =
+        DefaultAzureCredentialOptions credentialOptions = new()
+        {
+            Diagnostics =
                 {
                     LoggedHeaderNames = { "x-ms-request-id" },
                     LoggedQueryParameters = { "api-version" },
                     IsLoggingContentEnabled = true
                 },
-                ExcludeSharedTokenCacheCredential = true,
-                ExcludeAzurePowerShellCredential = true,
-                ExcludeVisualStudioCodeCredential = true,
-                ExcludeEnvironmentCredential = true,
-                ExcludeInteractiveBrowserCredential = true,
-                ExcludeAzureCliCredential = false,
-                ExcludeManagedIdentityCredential = false,
-                ExcludeVisualStudioCredential = false
-            };
-#else
-            string? managedIdentityClientId = builder.Configuration["ManagedIdentityClientId"];
+            ExcludeSharedTokenCacheCredential = true,
+            ExcludeAzurePowerShellCredential = true,
+            ExcludeVisualStudioCodeCredential = true,
+            ExcludeEnvironmentCredential = true,
+            ExcludeInteractiveBrowserCredential = true,
+            ExcludeAzureCliCredential = false,
+            ExcludeManagedIdentityCredential = false,
+            ExcludeVisualStudioCredential = false
+        };
+#elif RELEASE
+        string? managedIdentityClientId = builder.Configuration["ManagedIdentityClientId"];
 
             DefaultAzureCredentialOptions credentialOptions = new()
             {
@@ -57,24 +58,26 @@ public static class Extensions
                 ExcludeVisualStudioCredential = false
             };
 #endif
+#if RELEASE
 
-            DefaultAzureCredential credential = new(credentialOptions);
-            string endpoint = builder.Configuration.GetConnectionString("CodebreakerAppConfiguration") ?? throw new InvalidOperationException("Could not read AzureAppConfiguration");
+        DefaultAzureCredential credential = new(credentialOptions);
+        string endpoint = builder.Configuration.GetConnectionString("CodebreakerAppConfiguration") ?? throw new InvalidOperationException("Could not read AzureAppConfiguration");
 
-            try
+        try
+        {
+            builder.Configuration.AddAzureAppConfiguration(options =>
             {
-                builder.Configuration.AddAzureAppConfiguration(options =>
-                {
-                    options.Connect(new Uri(endpoint), credential)
-                        .Select("BotService*", labelFilter: LabelFilter.Null)
-                        .Select("BotService*", builder.Environment.EnvironmentName);
-                });
-            }
-            catch (Exception ex)
-            {
-
-            }
+                options.Connect(new Uri(endpoint), credential)
+                    .Select("BotService*", labelFilter: LabelFilter.Null)
+                    .Select("BotService*", builder.Environment.EnvironmentName);
+            });
         }
+        catch (Exception ex)
+        {
+
+        }
+
+#endif
     }
 
     public static IHostApplicationBuilder AddServiceDefaults(this IHostApplicationBuilder builder)
@@ -131,6 +134,10 @@ public static class Extensions
 
     private static IHostApplicationBuilder AddOpenTelemetryExporters(this IHostApplicationBuilder builder)
     {
+        // TODO: what's the strategy using the OLTP exporter?
+        // note here: not supported https://learn.microsoft.com/en-us/azure/azure-monitor/app/opentelemetry-configuration?tabs=aspnetcore
+        // but it's configured by default with .NET Aspire
+
         bool useOtlpExporter = !string.IsNullOrWhiteSpace(builder.Configuration["OTEL_EXPORTER_OTLP_ENDPOINT"]);
 
         if (useOtlpExporter)
@@ -139,15 +146,16 @@ public static class Extensions
             builder.Services.ConfigureOpenTelemetryMeterProvider(metrics => metrics.AddOtlpExporter());
             builder.Services.ConfigureOpenTelemetryTracerProvider(tracing => tracing.AddOtlpExporter());
         }
-
-        // Uncomment the following lines to enable the Prometheus exporter (requires the OpenTelemetry.Exporter.Prometheus.AspNetCore package)
+#if PROMETHEUS 
         builder.Services.AddOpenTelemetry()
            .WithMetrics(metrics => metrics.AddPrometheusExporter());
-
-        // Uncomment the following lines to enable the Azure Monitor exporter (requires the Azure.Monitor.OpenTelemetry.Exporter package)
-        // builder.Services.AddOpenTelemetry()
-        //    .UseAzureMonitor();
-
+#else
+        builder.Services.AddOpenTelemetry()
+           .UseAzureMonitor(options =>
+           {
+               options.ConnectionString = builder.Configuration["ApplicationInsightsConnectionString"];
+           });
+#endif
         return builder;
     }
 
@@ -162,8 +170,9 @@ public static class Extensions
 
     public static WebApplication MapDefaultEndpoints(this WebApplication app)
     {
-        // Uncomment the following line to enable the Prometheus endpoint (requires the OpenTelemetry.Exporter.Prometheus.AspNetCore package)
-        // app.MapPrometheusScrapingEndpoint();
+#if PROMETHEUS
+        app.MapPrometheusScrapingEndpoint();
+#endif
 
         // All health checks must pass for app to be considered ready to accept traffic after starting
         app.MapHealthChecks("/health");
@@ -182,5 +191,6 @@ public static class Extensions
             "Codebreaker.Games",
             "Microsoft.AspNetCore.Hosting",
             "Microsoft.AspNetCore.Server.Kestrel",
+            "Microsoft.EntityFrameworkCore",
             "System.Net.Http");
 }

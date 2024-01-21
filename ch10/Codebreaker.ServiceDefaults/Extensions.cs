@@ -18,10 +18,6 @@ public static class Extensions
 {
     public static void AddAppConfiguration(this IHostApplicationBuilder builder)
     {
-        string? solutionEnvironment = builder.Configuration["SolutionEnvironment"];
-
-        if (solutionEnvironment == "Azure")
-        {
 #if DEBUG
 
             DefaultAzureCredentialOptions credentialOptions = new()
@@ -41,7 +37,7 @@ public static class Extensions
                 ExcludeManagedIdentityCredential = false,
                 ExcludeVisualStudioCredential = false
             };
-#else
+#elif RELEASE
             string? managedIdentityClientId = builder.Configuration["ManagedIdentityClientId"];
 
             DefaultAzureCredentialOptions credentialOptions = new()
@@ -57,6 +53,7 @@ public static class Extensions
                 ExcludeVisualStudioCredential = false
             };
 #endif
+#if DEBUG || RELEASE
 
             DefaultAzureCredential credential = new(credentialOptions);
             string endpoint = builder.Configuration.GetConnectionString("CodebreakerAppConfiguration") ?? throw new InvalidOperationException("Could not read AzureAppConfiguration");
@@ -75,6 +72,7 @@ public static class Extensions
 
             }
         }
+#endif
     }
 
     public static IHostApplicationBuilder AddServiceDefaults(this IHostApplicationBuilder builder)
