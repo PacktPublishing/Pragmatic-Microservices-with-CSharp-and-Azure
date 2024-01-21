@@ -60,11 +60,11 @@ public sealed class GamesMetrics : IDisposable
     }
 
     private static KeyValuePair<string, object?> CreateGameTypeTag(string gameType) => KeyValuePair.Create<string, object?>("GameType", gameType);
-    private static KeyValuePair<string, object?> CreateGameIdTag(Guid id) => KeyValuePair.Create<string, object?>("Id", id.ToString());
+    private static KeyValuePair<string, object?> CreateGameIdTag(Guid id) => KeyValuePair.Create<string, object?>("GameId", id.ToString());
 
     public void GameStarted(Game game)
     {
-        if (_activeGamesCounter.Enabled || _moveThinkTime.Enabled)
+        if (_moveThinkTime.Enabled)
         {
             _moveTimes.TryAdd(game.Id, game.StartTime);
         }
@@ -75,14 +75,14 @@ public sealed class GamesMetrics : IDisposable
         }
     }
 
-    public void MoveSet(Guid id, DateTime time, string gameType)
+    public void MoveSet(Guid id, DateTime moveTime, string gameType)
     {
         if (_moveThinkTime.Enabled)
         {
-            _moveTimes.AddOrUpdate(id, time, (id1, prevTime) =>
+            _moveTimes.AddOrUpdate(id, moveTime, (id1, prevTime) =>
             {
-                _moveThinkTime.Record((time - prevTime).TotalSeconds, [CreateGameIdTag(id1), CreateGameTypeTag(gameType)]);
-                return time;
+                _moveThinkTime.Record((moveTime - prevTime).TotalSeconds, [CreateGameIdTag(id1), CreateGameTypeTag(gameType)]);
+                return moveTime;
             });
         }
     }

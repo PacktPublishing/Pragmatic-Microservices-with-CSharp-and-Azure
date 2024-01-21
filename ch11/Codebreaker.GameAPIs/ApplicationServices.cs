@@ -38,12 +38,13 @@ public static class ApplicationServices
         string? dataStore = builder.Configuration.GetValue<string>("DataStore");
         switch (dataStore)
         {
-            case "Cosmos":
-                ConfigureCosmos(builder);
-                break;
             case "SqlServer":
                 ConfigureSqlServer(builder);
                 break;
+            case "Cosmos":
+                ConfigureCosmos(builder);
+                break;
+
             default:
                 ConfigureInMemory(builder);
                 break;
