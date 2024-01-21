@@ -1,0 +1,10 @@
+global:
+  scrape_interval: 1s # 1s makes for a good demo
+
+scrape_configs:
+  - job_name: 'codebreakergames'
+    static_configs:
+      - targets: ['host.docker.internal:9400'] # hard-coded port matches launchSettings.json
+  - job_name: 'codebreakerbot'
+    static_configs:
+      - targets: ['host.docker.internal:5141'] # hard-coded port matches launchSettings.json 

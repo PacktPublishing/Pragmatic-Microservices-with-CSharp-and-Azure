@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <PackageId>CNinnovation.Codebreaker.GamesClient</PackageId>
+    <TargetFrameworks>net7.0;net8.0</TargetFrameworks>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <LangVersion>preview</LangVersion>
+    <PackageTags>
+      Codebreaker;CNinnovation;GamesClient;
+    </PackageTags>
+    <Description>
+      This library contains client code to access the Codebreaker Games APIp. Reference this library to create a client application to access the Codebreaker Games API.
+      See https://github.com/codebreakerapp for more information on the complete solution.
+    </Description>
+    <PackageReadmeFile>readme.md</PackageReadmeFile>
+    <PackageIcon>codebreaker.jpeg</PackageIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="docs/readme.md" Pack="true" PackagePath="\" />
+    <None Include="Images/codebreaker.jpeg" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)'=='net7.0'">
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.1" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)'=='net8.0'">
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.0" />
+  </ItemGroup>
+
+</Project>
