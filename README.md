@@ -9,3 +9,12 @@ Pragmatic Microservices with CSharp and Azure, published by Packt
 * Chapter 6 - Microsoft Azure for Hosting of Applications
 * Chapter 7 - Flexible Configuration
 * Chapter 8 - DevOps with GitHub Actions
+* Chapter 9 - Authentication and Authorization with clients and services
+* Chapter 10 - All about testing the solution
+* Chapter 11 - Logging and monitoring
+* Chapter 12 - Scaling Services
+* Chapter 13 - Real-time messaging with SignalR
+* Chapter 14 - gRPC for binary communication
+* Chapter 15 - Asynchronous communication with messages and events
+* Chapter 16 - Microsoft Orleans
+* Chapter 17 - Running the application on-premises and in the cloud
