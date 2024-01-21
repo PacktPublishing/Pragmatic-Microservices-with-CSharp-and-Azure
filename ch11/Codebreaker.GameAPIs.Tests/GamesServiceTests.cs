@@ -1,6 +1,6 @@
-using Castle.Core.Logging;
 using Codebreaker.GameAPIs.Infrastructure;
 using Microsoft.Extensions.Logging.Abstractions;
+using System.Diagnostics;
 using System.Diagnostics.Metrics;
 
 namespace Codebreaker.GameAPIs.Tests;
@@ -41,6 +41,16 @@ public class GamesServiceTests
         _gamesRepositoryMock.Setup(repo => repo.GetGameAsync(_running6x4GameId, CancellationToken.None)).ReturnsAsync(_running6x4Game);
         _gamesRepositoryMock.Setup(repo => repo.AddMoveAsync(_running6x4Game, It.IsAny<Move>(), CancellationToken.None));
     }
+
+    //[Fact]
+    //public async Task StartGame_Should_()
+    //{
+    //    GamesService gamesService = GetGamesService();
+    //    await Assert.ThrowsAsync<CodebreakerException>(async () =>
+    //    {
+    //        await gamesService.StartGameAsync("Game6x4", "Test", CancellationToken.None);
+    //    });
+    //}
 
     [Fact]
     public async Task SetMoveAsync_Should_ThrowWithEndedGame()
@@ -114,6 +124,6 @@ public class GamesServiceTests
     {
         IMeterFactory meterFactory = new TestMeterFactory();
         GamesMetrics metrics = new(meterFactory);
-        return new GamesService(_gamesRepositoryMock.Object, NullLogger<GamesService>.Instance, metrics);
+        return new GamesService(_gamesRepositoryMock.Object, NullLogger<GamesService>.Instance, metrics, new ActivitySource("TestSource"));
     }
 }

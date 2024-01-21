@@ -102,17 +102,17 @@ public class GamesMetricsTests
 
     private static IServiceProvider CreateServiceProvider()
     {
-        var serviceCollection = new ServiceCollection();
-        serviceCollection.AddMetrics();
-        serviceCollection.AddSingleton<GamesMetrics>();
-        return serviceCollection.BuildServiceProvider();
+        ServiceCollection services = new();
+        services.AddMetrics();
+        services.AddSingleton<GamesMetrics>();
+        return services.BuildServiceProvider();
     }
 
     private static (IMeterFactory MeterFactory, GamesMetrics Metrics) CreateMeterFactorySkeleton()
     {
-        var services = CreateServiceProvider();
-        GamesMetrics metrics = services.GetRequiredService<GamesMetrics>();
-        IMeterFactory meterFactory = services.GetRequiredService<IMeterFactory>();
+        var container = CreateServiceProvider();
+        GamesMetrics metrics = container.GetRequiredService<GamesMetrics>();
+        IMeterFactory meterFactory = container.GetRequiredService<IMeterFactory>();
         return (meterFactory, metrics);
     }
 
