@@ -1,13 +1,15 @@
 using Codebreaker.Data.SqlServer;
 using Codebreaker.GameAPIs;
-using Codebreaker.GameAPIs.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using System.Diagnostics;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddMetrics();
 
 builder.Services.AddSingleton<GamesMetrics>();
+
+builder.Services.AddKeyedSingleton("Codebreaker.GameAPIs", (services, _) => new ActivitySource("Codebreaker.GameAPIs", "1.0.0"));  
 
 builder.AddServiceDefaults();
 builder.AddAppConfiguration();
