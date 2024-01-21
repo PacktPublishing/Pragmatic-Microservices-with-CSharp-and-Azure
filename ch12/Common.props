@@ -1,0 +1,8 @@
+<Project>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug-Prometheus' ">
+    <DefineConstants>DEBUG_PROMETHEUS;PROMETHEUS</DefineConstants>
+  </PropertyGroup>
+      <PropertyGroup Condition=" '$(Configuration)' == 'Release-Prometheus' ">
+    <DefineConstants>RELEASE_PROMETHEUS;PROMETHEUS</DefineConstants>
+  </PropertyGroup>
+</Project>
