@@ -1,8 +1,9 @@
 using System.Collections;
+using System.Reflection.Emit;
 
 using static Codebreaker.GameAPIs.Models.Colors;
 
-namespace Codebreaker.GameAPIs.Algorithms.Tests;
+namespace Codebreaker.GameAPIs.Analyzer.Tests;
 
 public class ColorGame6x4AnalyzerTests
 {
@@ -11,8 +12,8 @@ public class ColorGame6x4AnalyzerTests
     {
         ColorResult expectedKeyPegs = new(0, 3);
         ColorResult? resultKeyPegs = TestSkeleton(
-            new[] { Green, Yellow, Green, Black },
-            new[] { Yellow, Green, Black, Blue }
+            [Green, Yellow, Green, Black],
+            [Yellow, Green, Black, Blue]
         );
 
         Assert.Equal(expectedKeyPegs, resultKeyPegs);
@@ -23,7 +24,7 @@ public class ColorGame6x4AnalyzerTests
     [Theory]
     public void SetMoveUsingVariousData(int expectedBlack, int expectedWhite, params string[] guessValues)
     {
-        string[] code = new[] { Red, Green, Blue, Red };
+        string[] code = [Red, Green, Blue, Red];
         ColorResult expectedKeyPegs = new (expectedBlack, expectedWhite);
         ColorResult resultKeyPegs = TestSkeleton(code, guessValues);
         Assert.Equal(expectedKeyPegs, resultKeyPegs);
@@ -42,8 +43,8 @@ public class ColorGame6x4AnalyzerTests
     {
         Assert.Throws<ArgumentException>(() => 
             TestSkeleton(
-                new[] { "Black", "Black", "Black", "Black" },
-                new[] { "Black" }
+                ["Black", "Black", "Black", "Black"],
+                ["Black"]
             ));
     }
 
@@ -52,8 +53,8 @@ public class ColorGame6x4AnalyzerTests
     {
         Assert.Throws<ArgumentException>(() => 
             TestSkeleton(
-                new[] { "Black", "Black", "Black", "Black" },
-                new[] { "Black", "Der", "Blue", "Yellow" }      // "Der" is the wrong value
+                ["Black", "Black", "Black", "Black"],
+                ["Black", "Der", "Blue", "Yellow"]      // "Der" is the wrong value
             ));
     }
 
@@ -62,8 +63,18 @@ public class ColorGame6x4AnalyzerTests
     {
         Assert.Throws<ArgumentException>(() => 
             TestSkeleton(
-                new[] { Green, Yellow, Green, Black },
-                new[] { Yellow, Green, Black, Blue }, moveNumber: 2));
+                [Green, Yellow, Green, Black],
+                [Yellow, Green, Black, Blue], moveNumber: 2));
+    }
+
+    [Fact]
+    public void ShouldNotIncrementMoveNumberOnInvalidMove()
+    {
+        IGame game = TestSkeletonWithGame(
+            [Green, Yellow, Green, Black],
+            [Yellow, Green, Black, Blue], moveNumber: 2);
+
+        Assert.Equal(0, game?.LastMoveNumber);
     }
 
     private static ColorResult TestSkeleton(string[] codes, string[] guesses, int moveNumber = 1)
@@ -84,11 +95,38 @@ public class ColorGame6x4AnalyzerTests
         ColorGameGuessAnalyzer analyzer = new(game,guesses.ToPegs<ColorField>().ToArray(), moveNumber);
         return analyzer.GetResult();
     }
+
+    private static IGame TestSkeletonWithGame(string[] codes, string[] guesses, int moveNumber = 1)
+    {
+        MockColorGame game = new()
+        {
+            GameType = GameTypes.Game6x4,
+            NumberCodes = 4,
+            MaxMoves = 12,
+            IsVictory = false,
+            FieldValues = new Dictionary<string, IEnumerable<string>>()
+            {
+                [FieldCategories.Colors] = TestData6x4.Colors6.ToList()
+            },
+            Codes = codes
+        };
+
+        ColorGameGuessAnalyzer analyzer = new(game, guesses.ToPegs<ColorField>().ToArray(), moveNumber);
+        try
+        {
+            analyzer.GetResult();
+        }
+        catch (ArgumentException)
+        {
+
+        }
+        return game;
+    }
 }
 
 public class TestData6x4 : IEnumerable<object[]>
 {
-    public static readonly string[] Colors6 = { Red, Green, Blue, Yellow, Black, White };
+    public static readonly string[] Colors6 = [Red, Green, Blue, Yellow, Black, White];
 
     public IEnumerator<object[]> GetEnumerator()
     {

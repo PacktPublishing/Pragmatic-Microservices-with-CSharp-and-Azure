@@ -17,20 +17,20 @@ public interface IGamesService
     /// <summary>
     /// set new moves
     /// </summary>
-    /// <param name="gameId">the id of the game</param>
+    /// <param name="id">the id of the game</param>
     /// <param name="guesses">an enumerable guesses of strings</param>
     /// <param name="moveNumber">the number of the move</param>
     /// <param name="cancellationToken">cancellation token</param>
     /// <returns>tuple consisting of the updated game and its result</returns>
-    Task<(Game Game, Move Move)> SetMoveAsync(Guid gameId, string[] guesses, int moveNumber, CancellationToken cancellationToken = default);
+    Task<(Game Game, Move Move)> SetMoveAsync(Guid id, string[] guesses, int moveNumber, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Get the Game by id
     /// </summary>
     /// <param name="id">the id of the game</param>
     /// <param name="cancellationToken">cancellation token</param>
-    /// <returns>the game with the given id</returns>
-    ValueTask<Game> GetGameAsync(Guid id, CancellationToken cancellationToken = default);
+    /// <returns>the game with the given id or null if the game was not found</returns>
+    ValueTask<Game?> GetGameAsync(Guid id, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Delete a game with the given id
@@ -43,10 +43,10 @@ public interface IGamesService
     /// <summary>
     /// Ends and returns the game with the result
     /// </summary>
-    /// <param name="gameId">the game id to end</param>
+    /// <param name="id">the game id to end</param>
     /// <param name="cancellationToken">cancellation token</param>
     /// <returns>ended game</returns>
-    Task<Game> EndGameAsync(Guid gameId, CancellationToken cancellationToken = default);
+    Task<Game> EndGameAsync(Guid id, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Get a list of games as an IEnumerable of Game

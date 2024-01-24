@@ -8,8 +8,6 @@ namespace Codebreaker.Client.Models {
     public class UpdateGameRequest : IParsable {
         /// <summary>The end property</summary>
         public bool? End { get; set; }
-        /// <summary>The gameId property</summary>
-        public Guid? GameId { get; set; }
         /// <summary>The gameType property</summary>
         public Codebreaker.Client.Models.GameType? GameType { get; set; }
         /// <summary>The guessPegs property</summary>
@@ -20,6 +18,8 @@ namespace Codebreaker.Client.Models {
 #else
         public List<string> GuessPegs { get; set; }
 #endif
+        /// <summary>The id property</summary>
+        public Guid? Id { get; set; }
         /// <summary>The moveNumber property</summary>
         public int? MoveNumber { get; set; }
         /// <summary>The playerName property</summary>
@@ -41,12 +41,12 @@ namespace Codebreaker.Client.Models {
         /// <summary>
         /// The deserialization information for the current model
         /// </summary>
-        public IDictionary<string, Action<IParseNode>> GetFieldDeserializers() {
+        public virtual IDictionary<string, Action<IParseNode>> GetFieldDeserializers() {
             return new Dictionary<string, Action<IParseNode>> {
                 {"end", n => { End = n.GetBoolValue(); } },
-                {"gameId", n => { GameId = n.GetGuidValue(); } },
                 {"gameType", n => { GameType = n.GetEnumValue<GameType>(); } },
                 {"guessPegs", n => { GuessPegs = n.GetCollectionOfPrimitiveValues<string>()?.ToList(); } },
+                {"id", n => { Id = n.GetGuidValue(); } },
                 {"moveNumber", n => { MoveNumber = n.GetIntValue(); } },
                 {"playerName", n => { PlayerName = n.GetStringValue(); } },
             };
@@ -55,12 +55,12 @@ namespace Codebreaker.Client.Models {
         /// Serializes information the current object
         /// </summary>
         /// <param name="writer">Serialization writer to use to serialize this model</param>
-        public void Serialize(ISerializationWriter writer) {
+        public virtual void Serialize(ISerializationWriter writer) {
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
             writer.WriteBoolValue("end", End);
-            writer.WriteGuidValue("gameId", GameId);
             writer.WriteEnumValue<GameType>("gameType", GameType);
             writer.WriteCollectionOfPrimitiveValues<string>("guessPegs", GuessPegs);
+            writer.WriteGuidValue("id", Id);
             writer.WriteIntValue("moveNumber", MoveNumber);
             writer.WriteStringValue("playerName", PlayerName);
         }

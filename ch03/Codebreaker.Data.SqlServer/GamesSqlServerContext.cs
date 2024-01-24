@@ -4,18 +4,11 @@ namespace Codebreaker.Data.SqlServer;
 
 public class GamesSqlServerContext(DbContextOptions<GamesSqlServerContext> options) : DbContext(options), IGamesRepository
 {
-    internal const string GameId = nameof(GameId);
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.HasDefaultSchema("codebreaker");
         modelBuilder.ApplyConfiguration(new GameConfiguration());
         modelBuilder.ApplyConfiguration(new MoveConfiguration());
-
-        modelBuilder.Entity<Game>()
-            .HasMany(g => g.Moves)
-            .WithOne()
-            .HasForeignKey(GameId);
     }
 
     public DbSet<Game> Games => Set<Game>();
@@ -35,22 +28,20 @@ public class GamesSqlServerContext(DbContextOptions<GamesSqlServerContext> optio
         await SaveChangesAsync(cancellationToken);
     }
 
-    public async Task<bool> DeleteGameAsync(Guid gameId, CancellationToken cancellationToken = default)
+    public async Task<bool> DeleteGameAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        var game = await Games.FindAsync(new object[] { gameId }, cancellationToken);
-        if (game is null)
-            return false;
-        Games.Remove(game);
-        await SaveChangesAsync(cancellationToken);
-        return true;
+        var affected = await Games
+            .Where(g => g.Id == id)
+            .ExecuteDeleteAsync(cancellationToken);
+        return affected == 1;
     }
 
-    public async Task<Game?> GetGameAsync(Guid gameId, CancellationToken cancellationToken = default)
+    public async Task<Game?> GetGameAsync(Guid id, CancellationToken cancellationToken = default)
     {
         var game = await Games
             .Include("Moves")
             .TagWith(nameof(GetGameAsync))
-            .SingleOrDefaultAsync(g => g.GameId == gameId, cancellationToken);
+            .SingleOrDefaultAsync(g => g.Id == id, cancellationToken);
         return game;
     }
 

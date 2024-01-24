@@ -13,22 +13,22 @@ public enum GameType
 
 public record class CreateGameRequest(GameType GameType, string PlayerName);
 
-public record class CreateGameResponse(Guid GameId, GameType GameType, string PlayerName, int NumberCodes, int MaxMoves)
+public record class CreateGameResponse(Guid Id, GameType GameType, string PlayerName, int NumberCodes, int MaxMoves)
 {
     public required IDictionary<string, IEnumerable<string>> FieldValues { get; init; }
 }
 
-public record class UpdateGameRequest(Guid GameId, GameType GameType, string PlayerName, int MoveNumber, bool End = false)
+public record class UpdateGameRequest(Guid Id, GameType GameType, string PlayerName, int MoveNumber, bool End = false)
 {
     public string[]? GuessPegs { get; set; }
 }
 
 public record class UpdateGameResponse(
-    Guid GameId,
+    Guid Id,
     GameType GameType,
     int MoveNumber,
     bool Ended,
     bool IsVictory,
     string[]? Results);
 
-public record GameSummary(Guid GameId, string PlayerName, DateTime StartTime, int NumberMoves, bool Won, TimeSpan? Duration);
+public record GameSummary(Guid Id, string PlayerName, DateTime StartTime, int NumberMoves, bool Won, TimeSpan? Duration);

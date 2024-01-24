@@ -6,8 +6,12 @@ internal class GameConfiguration : IEntityTypeConfiguration<Game>
 {
     public void Configure(EntityTypeBuilder<Game> builder)
     {
-        builder.HasKey(g => g.GameId);
-      
+        builder.HasKey(g => g.Id);
+
+        builder.HasMany(g => g.Moves)
+            .WithOne()
+            .HasForeignKey("GameId");
+            
         builder.Property(g => g.GameType).HasMaxLength(20);
         builder.Property(g => g.PlayerName).HasMaxLength(60);
 
