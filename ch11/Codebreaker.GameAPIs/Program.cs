@@ -1,5 +1,6 @@
 using Codebreaker.Data.SqlServer;
 using Codebreaker.GameAPIs;
+using Codebreaker.ServiceDefaults;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using System.Diagnostics;
@@ -51,7 +52,8 @@ app.UseSwaggerUI(options =>
     options.SwaggerEndpoint("/swagger/v3/swagger.json", "v3");
 });
 
-if (builder.Configuration["DataStore"] == "SqlServer" && builder.Environment.IsDevelopment())
+if (builder.Configuration["DataStore"] == "SqlServer" && 
+    (builder.Environment.IsDevelopment() || builder.Environment.IsPrometheus()))
 {
     try
     {
