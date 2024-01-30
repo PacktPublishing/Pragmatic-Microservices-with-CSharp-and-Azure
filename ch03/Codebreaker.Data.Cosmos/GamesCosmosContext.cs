@@ -7,6 +7,7 @@ public class GamesCosmosContext(DbContextOptions<GamesCosmosContext> options) : 
 
     private const string PartitionKey = nameof(PartitionKey);
     private const string ContainerName = "GamesV3";
+    private const string DiscriminatorValue = "GameV3";
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -18,7 +19,7 @@ public class GamesCosmosContext(DbContextOptions<GamesCosmosContext> options) : 
         gameModel.HasKey(nameof(Game.Id), PartitionKey);
 
         gameModel.HasDiscriminator<string>("Discriminator")
-            .HasValue<Game>("Gamev2");
+            .HasValue<Game>(DiscriminatorValue);
 
         gameModel.Property(g => g.FieldValues)
             .HasConversion(s_fieldValueConverter, s_fieldValueComparer);
@@ -50,6 +51,7 @@ public class GamesCosmosContext(DbContextOptions<GamesCosmosContext> options) : 
     {
         var game = await Games
             .WithPartitionKey(id.ToString())
+            .AsTracking()
             .SingleOrDefaultAsync(g => g.Id == id, cancellationToken);
 
         if (game is null)
