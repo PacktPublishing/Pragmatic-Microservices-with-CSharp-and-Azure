@@ -104,16 +104,17 @@ public static class GameEndpoints
         .WithName("GetGame")
         .WithSummary("Gets a game by the given id");
 
-        // TODO: bool and CancellationToken parameters have an issue with the RequestDelegateGenerator using .NET 8; update with .NET 8 Update 1
-        // https://github.com/dotnet/aspnetcore/pull/53047
-        // https://github.com/dotnet/aspnetcore/issues/51183
+        // TODO: bool and CancellationToken parameters have an issue with the RequestDelegateGenerator using .NET 8; update with .NET 8 Update 2
+        //// https://github.com/dotnet/aspnetcore/pull/53047
+        //// https://github.com/dotnet/aspnetcore/issues/51183
         group.MapGet("/", async (
             IGamesService gameService,
-            CancellationToken cancellationToken,
+            CancellationToken cancellationToken, // TODO: move this to last parameter
             string? gameType = default,
             string? playerName = default,
             DateOnly? date = default,
-            bool? ended = default) =>
+            bool? ended = default) =>  // TODO: change to bool ended = false
+      //      CancellationToken cancellationToken = default) =>
         {
             GamesQuery query = new(gameType, playerName, date, Ended: ended ?? false);
             var games = await gameService.GetGamesAsync(query, cancellationToken);

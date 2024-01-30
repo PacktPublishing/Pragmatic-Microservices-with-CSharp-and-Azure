@@ -5,7 +5,6 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>4053495e-84a4-48c2-91d3-4b8290310020</UserSecretsId>
-    <LangVersion>preview</LangVersion>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -19,13 +18,9 @@
 
   <ItemGroup>
     <!--<PackageReference Include="CNinnovation.Codebreaker.GamesClient" Version="3.6.0-beta.19" />-->
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.0" />
+    <PackageReference Include="CNinnovation.Codebreaker.GamesClient" Version="3.6.0-beta.21" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\..\Codebreaker.Backend\src\clients\common\Codebreaker.GameAPIs.Client\Codebreaker.GameAPIs.Client.csproj" />
-    <ProjectReference Include="..\Codebreaker.ServiceDefaults\Codebreaker.ServiceDefaults.csproj" />
   </ItemGroup>
 
 </Project>
