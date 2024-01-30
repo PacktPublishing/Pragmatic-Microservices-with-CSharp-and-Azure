@@ -23,7 +23,7 @@ public class GamesClient(HttpClient httpClient)
 
     public async Task<IEnumerable<Game>> GetGamesAsync(GamesQuery query, CancellationToken cancellationToken = default)
     {
-        IEnumerable<Game> games = (await _httpClient.GetFromJsonAsync<IEnumerable<Game>>($"/games/{query.AsUrlQuery()}", _jsonOptions, cancellationToken)) ?? Enumerable.Empty<Game>();
+        IEnumerable<Game> games = (await _httpClient.GetFromJsonAsync<IEnumerable<Game>>($"/games/{query.AsUrlQuery()}", _jsonOptions, cancellationToken)) ?? [];
         return games;
     }
 
@@ -34,7 +34,7 @@ public class GamesClient(HttpClient httpClient)
         var response = await _httpClient.PostAsJsonAsync("/games", createGameRequest, _jsonOptions, cancellationToken);
         response.EnsureSuccessStatusCode();
         var gameResponse = await response.Content.ReadFromJsonAsync<CreateGameResponse>(_jsonOptions, cancellationToken) ?? throw new InvalidOperationException();
-        return (gameResponse.GameId, gameResponse.NumberCodes, gameResponse.MaxMoves, gameResponse.FieldValues);
+        return (gameResponse.Id, gameResponse.NumberCodes, gameResponse.MaxMoves, gameResponse.FieldValues);
     }
 
     public async Task<(string[] Results, bool Ended, bool IsVictory)> SetMoveAsync(Guid id, string playerName, GameType gameType, int moveNumber, string[] guessPegs, CancellationToken cancellationToken = default)
