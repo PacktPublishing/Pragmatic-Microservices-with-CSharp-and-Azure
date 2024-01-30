@@ -1,5 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-	<Import Project="../Common.props" />
 
 	<PropertyGroup>
 		<OutputType>Library</OutputType>
@@ -7,7 +6,7 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<IsAspireSharedProject>true</IsAspireSharedProject>
-		<Configurations>Debug;Release;Debug-Prometheus;Release-Prometheus</Configurations>
+		<Configurations>Debug;Release</Configurations>
 	</PropertyGroup>
 
 	<ItemGroup>
