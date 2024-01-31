@@ -1,7 +1,4 @@
-using Codebreaker.Data.SqlServer;
-using Codebreaker.GameAPIs;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Models;
+using Codebreaker.ServiceDefaults;
 using System.Diagnostics;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -51,7 +48,8 @@ app.UseSwaggerUI(options =>
     options.SwaggerEndpoint("/swagger/v3/swagger.json", "v3");
 });
 
-if (builder.Configuration["DataStore"] == "SqlServer" && builder.Environment.IsDevelopment())
+if (builder.Configuration["DataStore"] == "SqlServer" && 
+    (builder.Environment.IsDevelopment() || builder.Environment.IsPrometheus()))
 {
     try
     {
@@ -65,7 +63,8 @@ if (builder.Configuration["DataStore"] == "SqlServer" && builder.Environment.IsD
     }
     catch (Exception ex)
     {
-        app.Logger.LogError(ex, "Error updating database");
+        app.Logger.LogError(ex, "Error updating database {error}", ex.Message);
+        throw;
     }
 }
 

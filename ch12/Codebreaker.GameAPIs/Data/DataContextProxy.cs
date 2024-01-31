@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Codebreaker.Data.SqlServer;
+using Microsoft.EntityFrameworkCore;
 
 namespace Codebreaker.GameAPIs.Data;
 
@@ -11,4 +12,13 @@ public class DataContextProxy<TContext>(TContext context) : IGamesRepository
     public Task<Game?> GetGameAsync(Guid id, CancellationToken cancellationToken = default) => context.GetGameAsync(id, cancellationToken);
     public Task<IEnumerable<Game>> GetGamesAsync(GamesQuery gamesQuery, CancellationToken cancellationToken = default) => context.GetGamesAsync(gamesQuery, cancellationToken);
     public Task<Game> UpdateGameAsync(Game game, CancellationToken cancellationToken = default) => context.UpdateGameAsync(game, cancellationToken);
+
+    public async Task UpdateDatabaseAsync(ILogger logger)
+    {
+        if (context is GamesSqlServerContext gamesSqlContext)
+        {
+            await gamesSqlContext.Database.MigrateAsync();
+            logger.LogInformation("Sql Server database migration applied");
+        }
+    }
 }

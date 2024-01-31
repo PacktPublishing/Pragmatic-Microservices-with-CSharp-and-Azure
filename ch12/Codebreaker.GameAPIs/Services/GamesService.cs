@@ -49,6 +49,7 @@ public class GamesService(IGamesRepository dataRepository, ILogger<GamesService>
             CodebreakerException.ThrowIfNull(game);
             CodebreakerException.ThrowIfEnded(game);
             CodebreakerException.ThrowIfUnexpectedGameType(game, gameType);
+
             activity?.AddTag(GameTypeTagName, game.GameType);
             activity?.AddTag(GameIdTagName, game.Id.ToString());
             activity?.Start();

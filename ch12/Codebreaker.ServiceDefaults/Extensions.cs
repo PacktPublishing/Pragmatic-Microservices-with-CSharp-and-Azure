@@ -8,14 +8,12 @@ using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
 using Microsoft.Extensions.Configuration;
 
-#if PROMETHEUS
-#else
 using Azure.Core.Diagnostics;
 using Azure.Identity;
 using Azure.Monitor.OpenTelemetry.AspNetCore;
 
 using Microsoft.Extensions.Configuration.AzureAppConfiguration;
-#endif
+using Codebreaker.ServiceDefaults;
 
 namespace Microsoft.Extensions.Hosting;
 
@@ -23,31 +21,18 @@ public static class Extensions
 {
     public static void AddAppConfiguration(this IHostApplicationBuilder builder)
     {
-
-#if DEBUG
-        DefaultAzureCredentialOptions credentialOptions = new()
+        if (!builder.Environment.IsPrometheus())
         {
-            Diagnostics =
-                {
-                    LoggedHeaderNames = { "x-ms-request-id" },
-                    LoggedQueryParameters = { "api-version" },
-                    IsLoggingContentEnabled = true
-                },
-            ExcludeSharedTokenCacheCredential = true,
-            ExcludeAzurePowerShellCredential = true,
-            ExcludeVisualStudioCodeCredential = true,
-            ExcludeEnvironmentCredential = true,
-            ExcludeInteractiveBrowserCredential = true,
-            ExcludeAzureCliCredential = false,
-            ExcludeManagedIdentityCredential = false,
-            ExcludeVisualStudioCredential = false
-        };
-#elif RELEASE
-        string? managedIdentityClientId = builder.Configuration["ManagedIdentityClientId"];
+#if DEBUG
 
             DefaultAzureCredentialOptions credentialOptions = new()
             {
-                ManagedIdentityClientId = managedIdentityClientId,
+                Diagnostics =
+            {
+                LoggedHeaderNames = { "x-ms-request-id" },
+                LoggedQueryParameters = { "api-version" },
+                IsLoggingContentEnabled = true
+            },
                 ExcludeSharedTokenCacheCredential = true,
                 ExcludeAzurePowerShellCredential = true,
                 ExcludeVisualStudioCodeCredential = true,
@@ -57,27 +42,40 @@ public static class Extensions
                 ExcludeManagedIdentityCredential = false,
                 ExcludeVisualStudioCredential = false
             };
-#endif
-#if RELEASE
+#elif RELEASE
+        string? managedIdentityClientId = builder.Configuration["ManagedIdentityClientId"];
 
-        DefaultAzureCredential credential = new(credentialOptions);
-        string endpoint = builder.Configuration.GetConnectionString("CodebreakerAppConfiguration") ?? throw new InvalidOperationException("Could not read AzureAppConfiguration");
-
-        try
+        DefaultAzureCredentialOptions credentialOptions = new()
         {
-            builder.Configuration.AddAzureAppConfiguration(options =>
+            ManagedIdentityClientId = managedIdentityClientId,
+            ExcludeSharedTokenCacheCredential = true,
+            ExcludeAzurePowerShellCredential = true,
+            ExcludeVisualStudioCodeCredential = true,
+            ExcludeEnvironmentCredential = true,
+            ExcludeInteractiveBrowserCredential = true,
+            ExcludeAzureCliCredential = false,
+            ExcludeManagedIdentityCredential = false,
+            ExcludeVisualStudioCredential = false
+        };
+#endif
+
+            DefaultAzureCredential credential = new(credentialOptions);
+            string endpoint = builder.Configuration.GetConnectionString("CodebreakerAppConfiguration") ?? throw new InvalidOperationException("Could not read AzureAppConfiguration");
+
+            try
             {
-                options.Connect(new Uri(endpoint), credential)
-                    .Select("BotService*", labelFilter: LabelFilter.Null)
-                    .Select("BotService*", builder.Environment.EnvironmentName);
-            });
-        }
-        catch (Exception ex)
-        {
+                builder.Configuration.AddAzureAppConfiguration(options =>
+                {
+                    options.Connect(new Uri(endpoint), credential)
+                        .Select("BotService*", labelFilter: LabelFilter.Null)
+                        .Select("BotService*", builder.Environment.EnvironmentName);
+                });
+            }
+            catch (Exception ex)
+            {
 
+            }
         }
-
-#endif
     }
 
     public static IHostApplicationBuilder AddServiceDefaults(this IHostApplicationBuilder builder)
@@ -121,10 +119,11 @@ public static class Extensions
                     // We want to view all traces in development
                     tracing.SetSampler(new AlwaysOnSampler());
                 }
+
                 tracing.AddSource("Codebreaker.GameAPIs.Client", "Codebreaker.GameAPIs")
-                       .AddAspNetCoreInstrumentation()
-                       .AddGrpcClientInstrumentation()
-                       .AddHttpClientInstrumentation();
+                    .AddAspNetCoreInstrumentation()
+                    .AddGrpcClientInstrumentation()
+                    .AddHttpClientInstrumentation();
             });
 
         builder.AddOpenTelemetryExporters();
@@ -137,7 +136,6 @@ public static class Extensions
         // TODO: what's the strategy using the OLTP exporter?
         // note here: not supported https://learn.microsoft.com/en-us/azure/azure-monitor/app/opentelemetry-configuration?tabs=aspnetcore
         // but it's configured by default with .NET Aspire
-
         bool useOtlpExporter = !string.IsNullOrWhiteSpace(builder.Configuration["OTEL_EXPORTER_OTLP_ENDPOINT"]);
 
         if (useOtlpExporter)
@@ -146,16 +144,19 @@ public static class Extensions
             builder.Services.ConfigureOpenTelemetryMeterProvider(metrics => metrics.AddOtlpExporter());
             builder.Services.ConfigureOpenTelemetryTracerProvider(tracing => tracing.AddOtlpExporter());
         }
-#if PROMETHEUS 
-        builder.Services.AddOpenTelemetry()
-           .WithMetrics(metrics => metrics.AddPrometheusExporter());
-#else
-        builder.Services.AddOpenTelemetry()
-           .UseAzureMonitor(options =>
-           {
-               options.ConnectionString = builder.Configuration["ApplicationInsightsConnectionString"];
-           });
-#endif
+        if (builder.Environment.IsPrometheus())
+        {
+            builder.Services.AddOpenTelemetry()
+               .WithMetrics(metrics => metrics.AddPrometheusExporter());
+        }
+        else
+        {
+            builder.Services.AddOpenTelemetry()
+               .UseAzureMonitor(options =>
+               {
+                   options.ConnectionString = builder.Configuration["ApplicationInsightsConnectionString"];
+               });
+        }
         return builder;
     }
 
@@ -170,9 +171,10 @@ public static class Extensions
 
     public static WebApplication MapDefaultEndpoints(this WebApplication app)
     {
-#if PROMETHEUS
-        app.MapPrometheusScrapingEndpoint();
-#endif
+        if (app.Environment.IsPrometheus())
+        { 
+            app.MapPrometheusScrapingEndpoint();
+        }   
 
         // All health checks must pass for app to be considered ready to accept traffic after starting
         app.MapHealthChecks("/health");

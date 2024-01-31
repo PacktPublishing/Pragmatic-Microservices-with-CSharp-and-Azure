@@ -84,5 +84,4 @@ public static partial class Log
             QueryGames(logger, games.Count(), query);
         }
     }
-
 }

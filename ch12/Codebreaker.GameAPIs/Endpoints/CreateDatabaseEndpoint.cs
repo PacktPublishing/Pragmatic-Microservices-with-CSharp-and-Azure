@@ -1,7 +1,4 @@
-﻿using Codebreaker.Data.SqlServer;
-
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace Codebreaker.GameAPIs.Endpoints;
 

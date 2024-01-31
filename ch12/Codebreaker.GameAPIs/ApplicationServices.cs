@@ -1,9 +1,4 @@
-﻿using Codebreaker.Data.Cosmos;
-using Codebreaker.Data.SqlServer;
-
-using Microsoft.EntityFrameworkCore;
-
-namespace Codebreaker.GameAPIs;
+﻿namespace Codebreaker.GameAPIs;
 
 public static class ApplicationServices
 {
@@ -44,7 +39,6 @@ public static class ApplicationServices
             case "Cosmos":
                 ConfigureCosmos(builder);
                 break;
-
             default:
                 ConfigureInMemory(builder);
                 break;
