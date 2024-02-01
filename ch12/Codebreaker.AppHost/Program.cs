@@ -26,8 +26,11 @@ if (builder.Environment.IsPrometheus())
                          .WithVolumeMount("../grafana/dashboards", "/var/lib/grafana/dashboards")
                          .WithServiceBinding(containerPort: 3000, hostPort: 3000, name: "grafana-http", scheme: "http");
 
+    var redis = builder.AddRedisContainer("redis");
+
     var gameAPIs = builder.AddProject<Projects.Codebreaker_GameAPIs>("gameapis")
         .WithReference(sqlServer)
+        .WithReference(redis)
         .WithEnvironment("DataStore", dataStore)
         .WithEnvironment("GRAFANA_URL", grafana.GetEndpoint("grafana-http"));
 
@@ -37,25 +40,26 @@ if (builder.Environment.IsPrometheus())
 }
 else
 {
-
     var appInsightsConnectionString = builder.Configuration["ApplicationInsightsConnectionString"] ?? throw new InvalidOperationException("Could not read AppInsightsConnectionString");
 
-    var appConfiguration = builder.AddAzureAppConfiguration("CodebreakerAppConfiguration");
+    // var appConfiguration = builder.AddAzureAppConfiguration("CodebreakerAppConfiguration");
     string cosmosConnectionString = builder.Configuration["CosmosConnectionString"] ?? throw new InvalidOperationException("Could not find CosmosConnectionString");
+    // var redis = builder.AddAzureRedis("Codebreaker.Redis");
+    var redis = builder.AddRedisContainer("redis");
 
     var cosmos = builder.AddAzureCosmosDB("GamesCosmosConnection", cosmosConnectionString);
 
     var gameAPIs = builder.AddProject<Projects.Codebreaker_GameAPIs>("gameapis")
         .WithReference(cosmos)
-        .WithReference(appConfiguration)
+        .WithReference(redis)
+//        .WithReference(appConfiguration)
         .WithEnvironment("DataStore", dataStore)
         .WithEnvironment("ApplicationInsightsConnectionString", appInsightsConnectionString);
 
     builder.AddProject<Projects.CodeBreaker_Bot>("bot")
         .WithReference(gameAPIs)
-        .WithReference(appConfiguration)
+      //  .WithReference(appConfiguration)
         .WithEnvironment("ApplicationInsightsConnectionString", appInsightsConnectionString);
-
 }
 
 builder.Build().Run();

@@ -1,8 +1,10 @@
-﻿using System.Diagnostics;
+﻿using Microsoft.Extensions.Caching.Distributed;
+using System.Diagnostics;
+using System.Text;
 
 namespace Codebreaker.GameAPIs.Services;
 
-public class GamesService(IGamesRepository dataRepository, ILogger<GamesService> logger, GamesMetrics metrics, [FromKeyedServices("Codebreaker.GameAPIs")] ActivitySource activitySource) : IGamesService
+public class GamesService(IGamesRepository dataRepository, IDistributedCache distributedCache, ILogger<GamesService> logger, GamesMetrics metrics, [FromKeyedServices("Codebreaker.GameAPIs")] ActivitySource activitySource) : IGamesService
 {
     private const string GameTypeTagName = "codebreaker.gameType";
     private const string GameIdTagName = "codebreaker.gameId";
@@ -18,7 +20,9 @@ public class GamesService(IGamesRepository dataRepository, ILogger<GamesService>
                 .AddTag(GameIdTagName, game.Id.ToString())
                 .Start();
 
-            await dataRepository.AddGameAsync(game, cancellationToken);
+            Task t1 = dataRepository.AddGameAsync(game, cancellationToken);
+            Task t2 = distributedCache.SetAsync(game.Id.ToString(), game.ToBytes(), cancellationToken);
+            await Task.WhenAll(t1, t2);
             metrics.GameStarted(game);
             logger.GameStarted(game.Id);
             activity?.SetStatus(ActivityStatusCode.Ok);
@@ -45,7 +49,17 @@ public class GamesService(IGamesRepository dataRepository, ILogger<GamesService>
         Move? move;
         try
         {
-            game = await dataRepository.GetGameAsync(id, cancellationToken);
+            //game = await dataRepository.GetGameAsync(id, cancellationToken);
+            byte[]? bytesGame = await distributedCache.GetAsync(id.ToString(), cancellationToken);
+            if (bytesGame is null)
+            {
+                game = await dataRepository.GetGameAsync(id, cancellationToken);
+            }
+            else
+            {
+                game = bytesGame.ToGame();
+            }
+
             CodebreakerException.ThrowIfNull(game);
             CodebreakerException.ThrowIfEnded(game);
             CodebreakerException.ThrowIfUnexpectedGameType(game, gameType);
@@ -57,7 +71,10 @@ public class GamesService(IGamesRepository dataRepository, ILogger<GamesService>
             move = game.ApplyMove(guesses, moveNumber);
 
             // Update the game in the game-service database
-            await dataRepository.AddMoveAsync(game, move, cancellationToken);
+            Task t1 = dataRepository.AddMoveAsync(game, move, cancellationToken);
+            Task t2 = distributedCache.SetAsync(game.Id.ToString(), game.ToBytes(), cancellationToken);
+            await Task.WhenAll(t1, t2);
+
             metrics.MoveSet(game.Id, DateTime.UtcNow, game.GameType);
             if (game.Ended())
             {

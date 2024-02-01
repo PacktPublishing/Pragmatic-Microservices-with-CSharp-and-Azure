@@ -45,6 +45,8 @@ public static class ApplicationServices
         }
 
         builder.Services.AddScoped<IGamesService, GamesService>();
+
+        builder.AddRedisDistributedCache("redis");
     }
 
 }

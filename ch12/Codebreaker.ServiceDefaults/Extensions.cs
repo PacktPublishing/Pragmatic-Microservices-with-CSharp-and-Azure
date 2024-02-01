@@ -60,21 +60,21 @@ public static class Extensions
 #endif
 
             DefaultAzureCredential credential = new(credentialOptions);
-            string endpoint = builder.Configuration.GetConnectionString("CodebreakerAppConfiguration") ?? throw new InvalidOperationException("Could not read AzureAppConfiguration");
+          //  string endpoint = builder.Configuration.GetConnectionString("CodebreakerAppConfiguration") ?? throw new InvalidOperationException("Could not read AzureAppConfiguration");
 
-            try
-            {
-                builder.Configuration.AddAzureAppConfiguration(options =>
-                {
-                    options.Connect(new Uri(endpoint), credential)
-                        .Select("BotService*", labelFilter: LabelFilter.Null)
-                        .Select("BotService*", builder.Environment.EnvironmentName);
-                });
-            }
-            catch (Exception ex)
-            {
+            //try
+            //{
+            //    builder.Configuration.AddAzureAppConfiguration(options =>
+            //    {
+            //        options.Connect(new Uri(endpoint), credential)
+            //            .Select("BotService*", labelFilter: LabelFilter.Null)
+            //            .Select("BotService*", builder.Environment.EnvironmentName);
+            //    });
+            //}
+            //catch (Exception ex)
+            //{
 
-            }
+            //}
         }
     }
 

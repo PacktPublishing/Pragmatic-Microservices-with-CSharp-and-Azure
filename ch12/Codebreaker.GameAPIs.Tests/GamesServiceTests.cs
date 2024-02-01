@@ -1,4 +1,5 @@
 using Codebreaker.GameAPIs.Infrastructure;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging.Abstractions;
 using System.Diagnostics;
 using System.Diagnostics.Metrics;
@@ -15,6 +16,7 @@ public class GamesServiceTests
     private readonly Guid _notFoundGameId = Guid.Parse("4786C27B-3F9A-4C47-9947-F983CF7053E8");
     private readonly Guid _running6x4MoveId1 = Guid.Parse("4786C27B-3F9A-4C47-9947-F983CF7053E9");
     private readonly string[] _guessesMove1 = ["Red", "Green", "Blue", "Yellow"];
+    private readonly Mock<IDistributedCache> _distributedCacheMock = new();
 
     public GamesServiceTests()
     {
@@ -124,6 +126,6 @@ public class GamesServiceTests
     {
         IMeterFactory meterFactory = new TestMeterFactory();
         GamesMetrics metrics = new(meterFactory);
-        return new GamesService(_gamesRepositoryMock.Object, NullLogger<GamesService>.Instance, metrics, new ActivitySource("TestSource"));
+        return new GamesService(_gamesRepositoryMock.Object, _distributedCacheMock.Object, NullLogger<GamesService>.Instance, metrics, new ActivitySource("TestSource"));
     }
 }

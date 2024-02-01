@@ -76,6 +76,7 @@ public static class GamesFactory
 
     /// <summary>
     /// Applies a player's move to a game and returns a <see cref="Move"/> object that encapsulates the player's guess and the result of the guess.
+    /// Returns the Move and updates the Game
     /// </summary>
     /// <param name="game">The game to apply the move to.</param>
     /// <param name="guesses">The player's guesses.</param>
