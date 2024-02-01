@@ -1,5 +1,5 @@
 global:
-  scrape_interval: 1s # 1s makes for a good demo
+  scrape_interval: 15s # 1s makes for a good demo
 
 scrape_configs:
   - job_name: 'codebreakergames'
