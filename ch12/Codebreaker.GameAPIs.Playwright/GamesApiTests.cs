@@ -1,4 +1,5 @@
 [assembly: Category("SkipWhenLiveUnitTesting")]
+[assembly: LevelOfParallelism(2000)]
 
 namespace Codebreaker.APIs.PlaywrightTests;
 
@@ -7,6 +8,7 @@ public class GamesApiTests : PlaywrightTest
 {
     private IAPIRequestContext? _requestContext;
     private int _delayMoveMS = 1000;
+    private string _playerName = "Test";
 
     [SetUp]
     public async Task SetupAPITestingAsync()
@@ -17,6 +19,7 @@ public class GamesApiTests : PlaywrightTest
         var config = configurationBuilder.Build();
 
         _delayMoveMS = int.Parse(config["DelayMoveMS"] ?? "1000");
+        _playerName = config["PlayerName"] ?? "Test";
 
         Dictionary<string, string> headers = new()
         {
@@ -40,7 +43,7 @@ public class GamesApiTests : PlaywrightTest
     }
 
     [Test]
-    [Repeat(5)]
+    [Repeat(50)]
     public async Task PlayTheGameToWinAsync()
     {
         if (_requestContext is null)
@@ -49,24 +52,23 @@ public class GamesApiTests : PlaywrightTest
             return;
         }
 
-        string playerName = "test";
-        (Guid id, string[] colors) = await CreateGameAsync(playerName);
+        (Guid id, string[] colors) = await CreateGameAsync(_playerName);
 
         int moveNumber = 1;
         bool gameEnded = false;
 
         while (moveNumber < 10 && !gameEnded)
         {
-            await Task.Delay(1000);
+            await Task.Delay(_delayMoveMS);
             string[] guesses = Random.Shared.GetItems<string>(colors, 4).ToArray();
-            gameEnded = await SetMoveAsync(id, playerName, moveNumber++, guesses);
+            gameEnded = await SetMoveAsync(id, _playerName, moveNumber++, guesses);
         }
 
         if (!gameEnded)
         {
-            await Task.Delay(1000);
+            await Task.Delay(_delayMoveMS);
             string[] correctCodes = await GetGameAsync(id, moveNumber - 1);
-            gameEnded = await SetMoveAsync(id, playerName, moveNumber++, correctCodes);
+            gameEnded = await SetMoveAsync(id, _playerName, moveNumber++, correctCodes);
         }
 
         Assert.That(gameEnded, Is.True);
@@ -82,8 +84,7 @@ public class GamesApiTests : PlaywrightTest
             return;
         }
 
-        string playerName = "test";
-        (Guid id, string[] colors) = await CreateGameAsync(playerName);
+        (Guid id, string[] colors) = await CreateGameAsync(_playerName);
 
         int moveNumber = 1;
         bool gameEnded = false;
@@ -91,9 +92,9 @@ public class GamesApiTests : PlaywrightTest
         // the service should end the game after 12 moves
         while (!gameEnded)
         {
-            await Task.Delay(1000);
+            await Task.Delay(_delayMoveMS);
             string[] guesses = Random.Shared.GetItems<string>(colors, 4).ToArray();
-            gameEnded = await SetMoveAsync(id, playerName, moveNumber++, guesses);
+            gameEnded = await SetMoveAsync(id, _playerName, moveNumber++, guesses);
         }
 
         Assert.That(gameEnded, Is.True);
