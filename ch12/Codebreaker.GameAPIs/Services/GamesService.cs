@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.Caching.Distributed;
 using System.Diagnostics;
-using System.Text;
 
 namespace Codebreaker.GameAPIs.Services;
 
@@ -20,9 +19,10 @@ public class GamesService(IGamesRepository dataRepository, IDistributedCache dis
                 .AddTag(GameIdTagName, game.Id.ToString())
                 .Start();
 
-            Task t1 = dataRepository.AddGameAsync(game, cancellationToken);
-            Task t2 = distributedCache.SetAsync(game.Id.ToString(), game.ToBytes(), cancellationToken);
-            await Task.WhenAll(t1, t2);
+            await Task.WhenAll(
+                dataRepository.AddGameAsync(game, cancellationToken), 
+                UpdateGameInCacheAsync(game, cancellationToken));
+
             metrics.GameStarted(game);
             logger.GameStarted(game.Id);
             activity?.SetStatus(ActivityStatusCode.Ok);
@@ -49,16 +49,7 @@ public class GamesService(IGamesRepository dataRepository, IDistributedCache dis
         Move? move;
         try
         {
-            //game = await dataRepository.GetGameAsync(id, cancellationToken);
-            byte[]? bytesGame = await distributedCache.GetAsync(id.ToString(), cancellationToken);
-            if (bytesGame is null)
-            {
-                game = await dataRepository.GetGameAsync(id, cancellationToken);
-            }
-            else
-            {
-                game = bytesGame.ToGame();
-            }
+            game = await GetGameFromCacheOrDataStoreAsync(id, noCache: false, cancellationToken: cancellationToken);
 
             CodebreakerException.ThrowIfNull(game);
             CodebreakerException.ThrowIfEnded(game);
@@ -71,9 +62,9 @@ public class GamesService(IGamesRepository dataRepository, IDistributedCache dis
             move = game.ApplyMove(guesses, moveNumber);
 
             // Update the game in the game-service database
-            Task t1 = dataRepository.AddMoveAsync(game, move, cancellationToken);
-            Task t2 = distributedCache.SetAsync(game.Id.ToString(), game.ToBytes(), cancellationToken);
-            await Task.WhenAll(t1, t2);
+            await Task.WhenAll(
+                dataRepository.AddMoveAsync(game, move, cancellationToken), 
+                UpdateGameInCacheAsync(game, cancellationToken));
 
             metrics.MoveSet(game.Id, DateTime.UtcNow, game.GameType);
             if (game.Ended())
@@ -102,7 +93,7 @@ public class GamesService(IGamesRepository dataRepository, IDistributedCache dis
     // get the game from the cache or the data repository
     public async ValueTask<Game?> GetGameAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        var game = await dataRepository.GetGameAsync(id, cancellationToken);
+        var game = await GetGameFromCacheOrDataStoreAsync(id, cancellationToken: cancellationToken);
         if (game is null)
         {
             logger.GameNotFound(id);
@@ -121,14 +112,15 @@ public class GamesService(IGamesRepository dataRepository, IDistributedCache dis
 
     public async Task<Game> EndGameAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        Game? game = await dataRepository.GetGameAsync(id, cancellationToken);
+        Game? game = await GetGameFromCacheOrDataStoreAsync(id, cancellationToken: cancellationToken);
         CodebreakerException.ThrowIfNull(game);
-       
+
         game.EndTime = DateTime.UtcNow;
         TimeSpan duration = game.EndTime.Value - game.StartTime;
         game.Duration = duration;
         metrics.GameEnded(game);
         game = await dataRepository.UpdateGameAsync(game, cancellationToken);
+        await distributedCache.RemoveAsync(id.ToString(), cancellationToken);
         return game;
     }
 
@@ -137,5 +129,30 @@ public class GamesService(IGamesRepository dataRepository, IDistributedCache dis
         var games = await dataRepository.GetGamesAsync(gamesQuery, cancellationToken);
         logger.QueryGames(games, gamesQuery.ToString());
         return games;
+    }
+
+    private async Task<Game?> GetGameFromCacheOrDataStoreAsync(Guid id, bool noCache = false, CancellationToken cancellationToken = default)
+    {
+        if (noCache)
+        {
+            return await dataRepository.GetGameAsync(id, cancellationToken);
+        }
+        else
+        {
+            byte[]? bytesGame = await distributedCache.GetAsync(id.ToString(), cancellationToken);
+            if (bytesGame is null)
+            {
+                return await dataRepository.GetGameAsync(id, cancellationToken);
+            }
+            else
+            {
+                return bytesGame.ToGame();
+            }
+        }
+    }
+
+    private async Task UpdateGameInCacheAsync(Game game, CancellationToken cancellationToken = default)
+    {
+        await distributedCache.SetAsync(game.Id.ToString(), game.ToBytes(), cancellationToken);
     }
 }

@@ -8,9 +8,7 @@ string dataStore = builder.Configuration["DataStore"] ?? "InMemory";
 
 if (builder.Environment.IsPrometheus())
 {
-#if DEBUG
     builder.AddUserSecretsForPrometheusEnvironment();
-#endif
     string sqlPassword = builder.Configuration["SqlPassword"] ?? throw new InvalidOperationException("could not read password");
 
     var sqlServer = builder.AddSqlServerContainer("sql", sqlPassword)

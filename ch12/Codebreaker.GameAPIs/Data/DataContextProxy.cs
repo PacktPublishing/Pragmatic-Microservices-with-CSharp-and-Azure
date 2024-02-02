@@ -1,7 +1,4 @@
-﻿using Codebreaker.Data.SqlServer;
-using Microsoft.EntityFrameworkCore;
-
-namespace Codebreaker.GameAPIs.Data;
+﻿namespace Codebreaker.GameAPIs.Data;
 
 public class DataContextProxy<TContext>(TContext context) : IGamesRepository
     where TContext: DbContext, IGamesRepository

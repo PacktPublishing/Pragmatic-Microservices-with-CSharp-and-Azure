@@ -7,6 +7,11 @@ public static class ApplicationServices
         static void ConfigureSqlServer(IHostApplicationBuilder builder)
         {
             builder.AddSqlServerDbContext<GamesSqlServerContext>("CodebreakerSql",
+                configureSettings: settings =>
+                {
+                    settings.Metrics = true;
+                    settings.Tracing = true;
+                },
                 configureDbContextOptions: options =>
                 {
                     options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
@@ -17,6 +22,11 @@ public static class ApplicationServices
         static void ConfigureCosmos(IHostApplicationBuilder builder)
         {
             builder.AddCosmosDbContext<GamesCosmosContext>("GamesCosmosConnection", "codebreaker",
+                configureSettings: settings =>
+                {
+                    settings.Metrics = true;
+                    settings.Tracing = true;
+                },
                 configureDbContextOptions: options =>
                 {
                     options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
@@ -48,5 +58,4 @@ public static class ApplicationServices
 
         builder.AddRedisDistributedCache("redis");
     }
-
 }

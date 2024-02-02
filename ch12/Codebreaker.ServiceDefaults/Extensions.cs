@@ -120,7 +120,8 @@ public static class Extensions
                     tracing.SetSampler(new AlwaysOnSampler());
                 }
 
-                tracing.AddSource("Codebreaker.GameAPIs.Client", "Codebreaker.GameAPIs")
+                tracing.AddSource("Codebreaker.GameAPIs.Client", "Codebreaker.GameAPIs", 
+                    "OpenTelemetry.Instrumentation.EntityFrameworkCore", "Azure.Cosmos.Operation")
                     .AddAspNetCoreInstrumentation()
                     .AddGrpcClientInstrumentation()
                     .AddHttpClientInstrumentation();
