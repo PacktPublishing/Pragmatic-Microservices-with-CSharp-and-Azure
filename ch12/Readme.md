@@ -24,6 +24,90 @@ Working through the code with this chapter, you can start using the Start folder
 
 [See Deploy the application to Azure using azd](../Deploy2Azure.md)
 
+## Azure Load Testing test requests
+
+### Create game
+
+Request name: Create game
+URL: <link to your games API ACA>/games
+HTTP method: POST
+Headers:
+- content-type application/json
+- accept application/json
+Body:
+
+```json
+{
+  "gameType": "Game6x4",
+  "playerName": "Test"
+}
+```
+
+Response variable: 
+Type: JSONPath
+Name: gameId
+Expression: $.id
+
+### Set move 1
+
+Request name: Set move 1
+URL: <link to your games API ACA>/games/${gameId}
+HTTP method: PATCH
+Headers:
+- content-type application/json
+- accept application/json
+Body:
+
+```json
+{
+  "id": "${gameId}",
+  "gameType": "Game6x4",
+  "playerName": "test",
+  "moveNumber": 1,
+  "end": false,
+  "guessPegs": [
+    "Red",
+	  "Red",
+	  "Red",
+	  "Red"
+  ]
+}
+```
+
+### Get game
+
+Request name: Get game
+URL: <link to your games API ACA>/games/${gameId}
+HTTP method: GET
+Headers:
+- accept application/json
+
+### End game
+
+Request name: End game
+URL: <link to your games API ACA>/games/${gameId}
+HTTP method: PATCH
+Headers:
+- content-type application/json
+- accept application/json
+Body:
+
+```json
+{
+  "id": "${gameId}",
+  "gameType": "Game6x4",
+  "playerName": "test",
+  "moveNumber": 2,
+  "end": true
+}
+```
+
+### Delete game
+
+Request name: Delete game
+URL: <link to your games API ACA>/games/${gameId}
+HTTP method: DELETE
+
 ## Run Playwright tests
 
 [See Playwright tests](../TestWithPlaywright.md)
