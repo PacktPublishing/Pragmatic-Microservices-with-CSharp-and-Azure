@@ -5,6 +5,9 @@ namespace Codebreaker.GameAPIs.Data.InMemory;
 public partial class GamesMemoryRepository(ILogger<GamesMemoryRepository> logger) : IGamesRepository
 {
     private readonly ConcurrentDictionary<Guid, Game> _games = new();
+    private DateTime _lastCleanupRun = DateTime.MinValue;
+    private bool _cleanupRunnerActive = false;
+    private static readonly object _cleanupLock = new object();
 
     public Task AddGameAsync(Game game, CancellationToken cancellationToken = default)
     {
@@ -13,6 +16,8 @@ public partial class GamesMemoryRepository(ILogger<GamesMemoryRepository> logger
             Log.GameExists(logger, game.Id);
             
         }
+        _ = CleanupOldGamesAsync(); // don't need to wait for this to complete
+
         return Task.CompletedTask;
     }
 
@@ -32,7 +37,7 @@ public partial class GamesMemoryRepository(ILogger<GamesMemoryRepository> logger
         return Task.FromResult(game);
     }
 
-    public Task AddMoveAsync(Game game, Move move, CancellationToken cancellationToken = default)
+    public Task AddMoveAsync(Game game, Move _, CancellationToken cancellationToken = default)
     {
         _games[game.Id] = game;
         return Task.CompletedTask;
@@ -62,22 +67,59 @@ public partial class GamesMemoryRepository(ILogger<GamesMemoryRepository> logger
             filteredGames = filteredGames.Where(g => g.Ended());
         }
 
+        filteredGames = filteredGames.OrderBy(g => g.Duration).ThenBy(g => g.StartTime).Take(500);
+
+        filteredGames = filteredGames.ToList();
+
+        _ = CleanupOldGamesAsync(); // don't need to wait for this to complete
+
         return Task.FromResult(filteredGames);
     }
 
     public Task<Game> UpdateGameAsync(Game game, CancellationToken cancellationToken = default)
     {
-        _games.TryGetValue(game.Id, out var existingGame);
-        CodebreakerException.ThrowIfNull(existingGame);
-
-        if (_games.TryUpdate(game.Id, game, existingGame))
-        {
-            return Task.FromResult(game);
-        }
+        _games[game.Id] = game;
 
         throw new CodebreakerException($"Game update failed with game id {game.Id}") 
         { 
             Code = CodebreakerExceptionCodes.GameUpdateFailed 
         };
+    }
+
+    private Task CleanupOldGamesAsync()
+    {
+        if (_lastCleanupRun > DateTime.Now.AddHours(-1))
+        {
+            return Task.CompletedTask;
+        }
+        lock (_cleanupLock)
+        {
+            if (!_cleanupRunnerActive)
+            {
+                return Task.CompletedTask;
+            }
+            _cleanupRunnerActive = true;
+        }
+        return Task.Run(() =>
+        {
+            _lastCleanupRun = DateTime.Now;
+
+            logger.StartCleanupGames();
+            var currentTime = DateTime.Now;
+            var gamesToRemove = _games.Values.Where(g => g.StartTime <= currentTime.AddHours(-3)).ToList();
+            int gamesRemoved = 0;
+            foreach (var game in gamesToRemove)
+            {
+                if (_games.TryRemove(game.Id, out _))
+                {
+                    gamesRemoved++;
+                }
+            }
+            logger.CleanedUpGames(gamesRemoved);
+            lock (_cleanupLock)
+            {
+                _cleanupRunnerActive = false;
+            }
+        });
     }
 }

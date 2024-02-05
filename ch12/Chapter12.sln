@@ -25,8 +25,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Codebreaker.GameAPIs.Tests"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeBreaker.Bot.Tests", "CodeBreaker.Bot.Tests\CodeBreaker.Bot.Tests.csproj", "{6F24F509-90E2-4EF4-BD3D-04ECE970340E}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GamesAPI", "GamesAPI", "{77EEE74A-99C6-4CD5-96B0-BF9AD39DF075}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "grafana", "grafana", "{5F6717A8-03CF-4A25-83F1-5809B7E373C1}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dashboards", "dashboards", "{63E66D67-72F4-4B2D-A45F-B45A86AACB2B}"

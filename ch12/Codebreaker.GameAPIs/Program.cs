@@ -35,7 +35,6 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 // Application Services
-
 builder.AddApplicationServices();
 
 var app = builder.Build();
