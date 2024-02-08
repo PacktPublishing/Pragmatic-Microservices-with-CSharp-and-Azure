@@ -79,11 +79,7 @@ public partial class GamesMemoryRepository(ILogger<GamesMemoryRepository> logger
     public Task<Game> UpdateGameAsync(Game game, CancellationToken cancellationToken = default)
     {
         _games[game.Id] = game;
-
-        throw new CodebreakerException($"Game update failed with game id {game.Id}") 
-        { 
-            Code = CodebreakerExceptionCodes.GameUpdateFailed 
-        };
+        return Task.FromResult(game);
     }
 
     private Task CleanupOldGamesAsync()
