@@ -18,7 +18,7 @@
 }
 ```
 
-4. Change to the directory of the AppHost project `cd Codebreaker.AppHost`
+4. Change to the directory of the solution
 
 5. Run ```azd init```
 
@@ -35,7 +35,7 @@ These files are generated:
 
 ## Deploy the appliation to Azure
 
-1. Change to the directory of the AppHost project `cd Codebreaker.AppHost`
+1. Change to the directory of the solution
 2. Run ```az up```
     1. Select the subscription
     2. Select a location near you
