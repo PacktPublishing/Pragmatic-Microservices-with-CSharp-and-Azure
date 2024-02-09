@@ -7,7 +7,7 @@ public partial class GamesMemoryRepository(ILogger<GamesMemoryRepository> logger
     private readonly ConcurrentDictionary<Guid, Game> _games = new();
     private DateTime _lastCleanupRun = DateTime.MinValue;
     private bool _cleanupRunnerActive = false;
-    private static readonly object _cleanupLock = new object();
+    private static readonly object _cleanupLock = new();
 
     public Task AddGameAsync(Game game, CancellationToken cancellationToken = default)
     {

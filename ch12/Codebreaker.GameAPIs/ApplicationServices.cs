@@ -40,6 +40,11 @@ public static class ApplicationServices
             builder.Services.AddSingleton<IGamesRepository, GamesMemoryRepository>();
         }
 
+        static void ConfigureDistributedMemory(IHostApplicationBuilder builder)
+        {
+            builder.Services.AddTransient<IGamesRepository, DistributedMemoryGamesRepository>();
+        }
+
         string? dataStore = builder.Configuration.GetValue<string>("DataStore");
         switch (dataStore)
         {
@@ -48,6 +53,9 @@ public static class ApplicationServices
                 break;
             case "Cosmos":
                 ConfigureCosmos(builder);
+                break;
+            case "DistributedMemory":
+                ConfigureDistributedMemory(builder);
                 break;
             default:
                 ConfigureInMemory(builder);
