@@ -37,8 +37,11 @@ builder.Services.AddSwaggerGen(options =>
 // Application Services
 builder.AddApplicationServices();
 
+builder.Services.AddCors(policy => policy.AddDefaultPolicy(builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
+
 var app = builder.Build();
 
+app.UseCors();
 app.MapDefaultEndpoints();
 
 app.UseSwagger();
