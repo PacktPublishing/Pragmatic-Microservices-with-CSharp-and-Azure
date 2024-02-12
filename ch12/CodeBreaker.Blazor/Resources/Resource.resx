@@ -1,0 +1,356 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="About_Information_Language" xml:space="preserve">
+    <value>Current language</value>
+  </data>
+  <data name="About_Information_Tab" xml:space="preserve">
+    <value>Information</value>
+  </data>
+  <data name="About_Information_Theme" xml:space="preserve">
+    <value>App Theme</value>
+  </data>
+  <data name="About_Information_Version" xml:space="preserve">
+    <value>Version</value>
+  </data>
+  <data name="About_Instructions" xml:space="preserve">
+    <value>&lt;p&gt;The game is played using:&lt;/p&gt;
+        &lt;ul&gt;
+            &lt;li&gt;
+                a decoding board, with a shield at one end covering a row of four large holes, and twelve (or ten, or eight, or six) additional rows containing four large holes next to a set of four small holes;
+            &lt;/li&gt;
+            &lt;li&gt;
+                code pegs of six different colors (or more; see Variations below), with round heads, which will be placed in the large holes on the board; and
+            &lt;/li&gt;
+            &lt;li&gt;
+                key pegs, some colored black, some white, which are flat-headed and smaller than the code pegs; they will be placed in the small holes on the board.
+            &lt;/li&gt;
+        &lt;/ul&gt;
+        &lt;p&gt;
+            The two players decide in advance how many games they will play, which must be an even number. One player becomes the codemaker, the other the codebreaker.  The codemaker chooses a pattern of four code pegs. Players decide in advance whether duplicates and blanks are allowed. If so, the codemaker may even choose four same-colored code pegs or four blanks. If blanks are not allowed in the code, the codebreaker may not use blanks in their guesses. The codemaker places the chosen pattern in the four holes covered by the shield, visible to the codemaker but not to the codebreaker.
+        &lt;/p&gt;
+        &lt;p&gt;
+            The codebreaker tries to guess the pattern, in both order and color, within eight to twelve turns. Each guess is made by placing a row of code pegs on the decoding board.
+        &lt;/p&gt;
+        &lt;p&gt;
+            If there are duplicate colors in the guess, they cannot all be awarded a key peg unless they correspond to the same number of duplicate colors in the hidden code. For example, if the hidden code is red-red-blue-blue and the player guesses red-red-red-blue, the codemaker will award two colored key pegs for the two correct reds, nothing for the third red as there is not a third red in the code, and a colored key peg for the blue. No indication is given of the fact that the code also includes a second blue.
+        &lt;/p&gt;
+        &lt;p&gt;
+            Once feedback is provided, another guess is made; guesses and feedback continue to alternate until either the codebreaker guesses correctly, or all rows on the decoding board are full.
+        &lt;/p&gt;</value>
+  </data>
+  <data name="About_Instructions_Tab" xml:space="preserve">
+    <value>Instructions</value>
+  </data>
+  <data name="About_NoVersion_Found" xml:space="preserve">
+    <value>No version found.</value>
+  </data>
+  <data name="About_Title" xml:space="preserve">
+    <value>About</value>
+  </data>
+  <data name="AppDescription" xml:space="preserve">
+    <value>CodeBreaker</value>
+  </data>
+  <data name="AppDisplayName" xml:space="preserve">
+    <value>CodeBreaker</value>
+  </data>
+  <data name="AuthPage_ContinueAsGuest" xml:space="preserve">
+    <value>Continue as Guest</value>
+  </data>
+  <data name="AuthPage_GuestTooltip" xml:space="preserve">
+    <value>You can play games, but you won't get listed in the scoreboard.</value>
+  </data>
+  <data name="AuthPage_Or" xml:space="preserve">
+    <value>or</value>
+  </data>
+  <data name="AuthPage_SignIn" xml:space="preserve">
+    <value>Sign in</value>
+  </data>
+  <data name="AuthPage_SignUp" xml:space="preserve">
+    <value>sign up</value>
+  </data>
+  <data name="AuthPage_WelcomeTo" xml:space="preserve">
+    <value>Welcome to</value>
+  </data>
+  <data name="GamePage_CancelButtonText" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="GamePage_CancelConfirmContent" xml:space="preserve">
+    <value>Do you really want to cancel the game?</value>
+  </data>
+  <data name="GamePage_CancelConfirmTitle" xml:space="preserve">
+    <value>Cancel game</value>
+  </data>
+  <data name="GamePage_CancelGame_Info" xml:space="preserve">
+    <value>Do you really want to stop this game?</value>
+  </data>
+  <data name="GamePage_FinishGame_Lose" xml:space="preserve">
+    <value>You lose this game.</value>
+  </data>
+  <data name="GamePage_FinishGame_Ok" xml:space="preserve">
+    <value>Home</value>
+  </data>
+  <data name="GamePage_FinishGame_Restart" xml:space="preserve">
+    <value>Start new game</value>
+  </data>
+  <data name="GamePage_FinishGame_Win" xml:space="preserve">
+    <value>You win this game!</value>
+  </data>
+  <data name="GamePage_NameAlreadyProvidedTooltip" xml:space="preserve">
+    <value>The gamername was already defined during sign-up</value>
+  </data>
+  <data name="GamePage_NameInput" xml:space="preserve">
+    <value>Gamername</value>
+  </data>
+  <data name="GamePage_NameInputPlaceholder" xml:space="preserve">
+    <value>Enter your gamername</value>
+  </data>
+  <data name="GamePage_StartButtonText" xml:space="preserve">
+    <value>Start game</value>
+  </data>
+  <data name="Index_Card_About_Action" xml:space="preserve">
+    <value>Read More</value>
+  </data>
+  <data name="Index_Card_About_Body" xml:space="preserve">
+    <value>Need more information about the game? This page is the right one for you.</value>
+  </data>
+  <data name="Index_Card_About_Title" xml:space="preserve">
+    <value>About</value>
+  </data>
+  <data name="Index_Card_Game_Action" xml:space="preserve">
+    <value>Play the game</value>
+  </data>
+  <data name="Index_Card_Game_Body" xml:space="preserve">
+    <value>Play the game and try to crack the code.</value>
+  </data>
+  <data name="Index_Card_Game_Title" xml:space="preserve">
+    <value>Game</value>
+  </data>
+  <data name="Index_Card_Reports_Action" xml:space="preserve">
+    <value>Show the reports</value>
+  </data>
+  <data name="Index_Card_Reports_Body" xml:space="preserve">
+    <value>Here you can view played games.</value>
+  </data>
+  <data name="Index_Card_Reports_Title" xml:space="preserve">
+    <value>Reports</value>
+  </data>
+  <data name="Index_Welcome" xml:space="preserve">
+    <value>Welcome to</value>
+  </data>
+  <data name="Language_English" xml:space="preserve">
+    <value>English</value>
+  </data>
+  <data name="Language_German" xml:space="preserve">
+    <value>German</value>
+  </data>
+  <data name="Language_Select_Label" xml:space="preserve">
+    <value>Select language:</value>
+  </data>
+  <data name="LivePage_WaitingForGames" xml:space="preserve">
+    <value>Waiting for games... ⌛</value>
+  </data>
+  <data name="NavMenu_About_Title" xml:space="preserve">
+    <value>About</value>
+  </data>
+  <data name="NavMenu_Game_Title" xml:space="preserve">
+    <value>Game</value>
+  </data>
+  <data name="NavMenu_Home_Title" xml:space="preserve">
+    <value>Home</value>
+  </data>
+  <data name="NavMenu_Reports_Title" xml:space="preserve">
+    <value>Reports</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="PegSelection_MakeMove" xml:space="preserve">
+    <value>Move</value>
+  </data>
+  <data name="Reports_LoadGames_Action" xml:space="preserve">
+    <value>Load games</value>
+  </data>
+  <data name="Reports_Table_Headers" xml:space="preserve">
+    <value>Gamername,Start,End,Number of Moves</value>
+  </data>
+  <data name="Reports_Title" xml:space="preserve">
+    <value>Reports</value>
+  </data>
+  <data name="Report_NoReports" xml:space="preserve">
+    <value>No reports found</value>
+  </data>
+  <data name="Report_SelectDate_Label" xml:space="preserve">
+    <value>Select the date</value>
+  </data>
+  <data name="SettingsPage_LanguageChangeInfoMessage" xml:space="preserve">
+    <value>The language will change after the next start of the application.</value>
+  </data>
+  <data name="SettingsPage_PrivacyTermsLink" xml:space="preserve">
+    <value>Privacy Statement</value>
+  </data>
+  <data name="SettingsPage_PrivacyTermsLinkNavigateUri" xml:space="preserve">
+    <value>https://YourPrivacyUrlGoesHere/</value>
+  </data>
+  <data name="Settings_About" xml:space="preserve">
+    <value>About this application</value>
+  </data>
+  <data name="Settings_AboutDescription" xml:space="preserve">
+    <value>TODO: Replace with your app description.</value>
+  </data>
+  <data name="Settings_Language" xml:space="preserve">
+    <value>Language</value>
+  </data>
+  <data name="Settings_Language_Default" xml:space="preserve">
+    <value>Default</value>
+  </data>
+  <data name="Settings_Language_English" xml:space="preserve">
+    <value>English</value>
+  </data>
+  <data name="Settings_Language_German" xml:space="preserve">
+    <value>German</value>
+  </data>
+  <data name="Settings_Personalization" xml:space="preserve">
+    <value>Personalization</value>
+  </data>
+  <data name="Settings_Theme" xml:space="preserve">
+    <value>Theme</value>
+  </data>
+  <data name="Settings_Theme_Dark" xml:space="preserve">
+    <value>Dark</value>
+  </data>
+  <data name="Settings_Theme_Default" xml:space="preserve">
+    <value>Default</value>
+  </data>
+  <data name="Settings_Theme_Light" xml:space="preserve">
+    <value>Light</value>
+  </data>
+  <data name="ShellPage_Blank" xml:space="preserve">
+    <value>Blank</value>
+  </data>
+  <data name="ShellPage_GameTab" xml:space="preserve">
+    <value>Game</value>
+  </data>
+  <data name="ShellPage_LiveTab" xml:space="preserve">
+    <value>Live</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>Yes</value>
+  </data>
+</root>

@@ -1,0 +1,9 @@
+﻿@namespace CodeBreaker.Blazor.UI.Components
+
+<div class="tab">
+    <input type="radio" name="tabgroup" id="@Title" checked="@Selected">
+    <label for="@Title">@Title</label>
+    <div class="tab__content">
+        @ChildContent
+    </div>
+</div>

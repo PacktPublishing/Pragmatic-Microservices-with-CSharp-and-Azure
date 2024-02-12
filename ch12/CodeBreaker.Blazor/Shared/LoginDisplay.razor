@@ -1,0 +1,16 @@
+﻿@using CodeBreaker.Blazor.UI.Models.Icon
+
+@* <AuthorizeView>
+    <Authorized>
+        <div class="user">
+            @if (!string.IsNullOrWhiteSpace(context.User.Identity?.Name)) {
+                <a href="/user-information">@context.User.Identity.Name</a>
+            }
+            <CodeBreakerIconButton OnClick="BeginLogOut" Icon="CodeBreakerIcon.Logout" />
+        </div>
+    </Authorized>
+    <NotAuthorized>
+        <CodeBreakerIconButton OnClick="BeginLogIn" Icon="CodeBreakerIcon.Login" />
+    </NotAuthorized>
+</AuthorizeView>
+ *@

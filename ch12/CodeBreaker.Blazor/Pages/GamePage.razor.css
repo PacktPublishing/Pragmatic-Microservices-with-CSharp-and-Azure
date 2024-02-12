@@ -1,0 +1,29 @@
+﻿.header {
+    justify-content: space-between;
+    margin: 0 1rem;
+}
+
+.start-game-container {
+    align-items: stretch;
+    gap: 1rem;
+}
+
+.user-name {
+    margin-bottom: 1rem;
+}
+
+::deep .progress {
+    margin-right: 1rem;
+    width: 1rem !important;
+    height: 1rem !important;
+}
+
+@media only screen and (max-width: 959px) {
+    .header {
+        margin: 0 1rem;
+    }
+
+    .start-game-container {
+        flex-direction: column;
+    }
+}

@@ -1,0 +1,29 @@
+@using CodeBreaker.Blazor.UI.Models.Icon
+
+@namespace CodeBreaker.Blazor.UI.Components
+
+<CodeBreakerDialog />
+
+<div class="app">
+    <div class="top-nav-bar">
+        @DrawerContent
+        <div class="mobile-header">
+            <CodeBreakerIconButton
+                Class="@(_isRoot ? "hidden" : string.Empty)"
+                Icon="CodeBreakerIcon.Back"
+                OnClick="GoBack">
+            </CodeBreakerIconButton>
+            @Label
+        </div>
+        <div class="top-nav-bar-profile">
+            @ToolbarContent
+        </div>
+    </div>
+    <div class="wrapper">
+        <div class="main-container">
+            <div class="content-wrapper">
+                @ChildContent
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,33 @@
+﻿@page "/reports"
+@using Codebreaker.GameAPIs.Client.Models
+
+<h2>@Loc["Reports_Title"]</h2>
+
+<div class="flex-column gap-5">
+    <div class="flex-column full-width gap-2">
+        <div>
+            <CodeBreakerDatePicker Label="@Loc["Report_SelectDate_Label"]" @bind-Date="_test" />
+        </div>
+        <div style="align-self: flex-end;">
+            <CodeBreakerButton Disabled=@_isLoadingGames @onclick="async () => await GetGamesAsync()">
+                @if (_isLoadingGames)
+                {
+                    <CodeBreakerProgressCircular Class="progress" />
+                }
+                @Loc["Reports_LoadGames_Action"]
+            </CodeBreakerButton>
+        </div>
+    </div>
+
+    @if (_games is not null && !_isLoadingGames)
+    {
+        if (_games.Count != 0)
+        {
+            <CodeBreakerDataGrid Items="_games" Columns="_columns" Headers="Headers" RowItemClicked="(GameInfo game) => ShowReportDialog(game)" />
+        }
+        else
+        {
+            <p>@Loc["Report_NoReports"]</p>
+        }
+    }
+</div>
