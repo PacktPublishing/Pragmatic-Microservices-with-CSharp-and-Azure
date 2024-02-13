@@ -47,7 +47,7 @@ app.UseRequestLocalization(new RequestLocalizationOptions()
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode()
-   // .AddInteractiveWebAssemblyRenderMode()
+    .AddInteractiveWebAssemblyRenderMode()
     .AddAdditionalAssemblies(typeof(GamePage).Assembly);
 
 app.MapGet("/gamesAPIUrl", () =>

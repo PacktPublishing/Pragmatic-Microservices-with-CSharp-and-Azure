@@ -62,7 +62,8 @@ else
         .WithReplicas(1);
 
     builder.AddProject<Projects.CodeBreaker_Blazor_Host>("blazor")
-        .WithReference(gameAPIs);
+        .WithReference(gameAPIs)
+        .WithEnvironment("ApplicationInsightsConnectionString", appInsightsConnectionString);
 
     builder.AddProject<Projects.CodeBreaker_Bot>("bot")
         .WithReference(gameAPIs)
