@@ -56,6 +56,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeBreaker.Blazor", "CodeB
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeBreaker.Blazor.UI", "CodeBreaker.Blazor.UI\CodeBreaker.Blazor.UI.csproj", "{E277D8AC-BFCA-4EB2-B8A4-B6ABC16B8591}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Codebreaker.Common", "Codebreaker.Common\Codebreaker.Common.csproj", "{DBC4D6CA-DB7E-42B3-BB8F-C095C53352E6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -95,6 +97,10 @@ Global
 		{E277D8AC-BFCA-4EB2-B8A4-B6ABC16B8591}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E277D8AC-BFCA-4EB2-B8A4-B6ABC16B8591}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E277D8AC-BFCA-4EB2-B8A4-B6ABC16B8591}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DBC4D6CA-DB7E-42B3-BB8F-C095C53352E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DBC4D6CA-DB7E-42B3-BB8F-C095C53352E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DBC4D6CA-DB7E-42B3-BB8F-C095C53352E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DBC4D6CA-DB7E-42B3-BB8F-C095C53352E6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
