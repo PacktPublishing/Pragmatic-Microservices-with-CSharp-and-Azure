@@ -12,7 +12,7 @@ Content-Type: {{ContentType}}
 
 ### Set a move
 
-@id = 2e62630a-4816-4a81-a464-2cc417963992
+@id = f178055f-b98f-4e77-a21e-072ec7604edb
 
 PATCH {{Codebreaker.GameAPIs_HostAddress}}/games/{{id}}
 Content-Type: {{ContentType}}

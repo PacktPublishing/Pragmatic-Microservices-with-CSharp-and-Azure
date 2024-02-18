@@ -5,8 +5,6 @@ using CodeBreaker.Bot.Endpoints;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.AddServiceDefaults();
-
 // Swagger & EndpointDocumentation
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -17,12 +15,6 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddHttpClient<GamesClient>(client =>
 {
     client.BaseAddress = new Uri("http://codebreaker.gameapis");
-}).AddStandardResilienceHandler(config =>
-{
-    TimeSpan timeSpan = TimeSpan.FromMinutes(5);
-    config.AttemptTimeout.Timeout = timeSpan;
-    config.CircuitBreaker.SamplingDuration = timeSpan * 2;
-    config.TotalRequestTimeout.Timeout = timeSpan * 3;
 });
 builder.Services.AddScoped<CodeBreakerTimer>();
 builder.Services.AddScoped<CodeBreakerGameRunner>();
@@ -32,7 +24,6 @@ var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI();
 
-app.MapDefaultEndpoints();
 app.MapBotEndpoints();
 
 app.Run();
