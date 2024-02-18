@@ -2,6 +2,10 @@
 
 ## Technical Requirements
 
+> The follwing part will change with the next versions of .NET Aspire and the Azure Developer CLI!
+
+To publish the solution to Azure, see [Deploy to Azure using azd](../Deploy2Azure.md)
+
 TODO: update this for the scaling chapter
 
 With this chapter, like the previous chapters, you need an Azure subscription and Docker desktop. To create all the Azure resources for the solution, you can use the Azure Developer CLI – azd up creates all the resources.  

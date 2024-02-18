@@ -43,7 +43,8 @@ public partial class Playground
     protected override async Task OnInitializedAsync()
     {
         InitializePlayground();
-        if (Game.Moves.Any())
+
+        if (Game.Moves.Count > 0)
         {
             foreach (var move in Game.Moves)
             {
@@ -62,7 +63,7 @@ public partial class Playground
         if (firstRender || module is null)
         {
             module = await JS.InvokeAsync<IJSInProcessObjectReference>("import", "./Components/Playground.razor.js");
-            _isMobile= await module.InvokeAsync<bool>("isMobile");
+            _isMobile = await module.InvokeAsync<bool>("isMobile");
             StateHasChanged();
         }
         await base.OnAfterRenderAsync(firstRender);
@@ -75,7 +76,7 @@ public partial class Playground
             if (_selectionFields.Length != Game.NumberCodes || _selectionFields.Any(x => x is null || x == string.Empty))
                 throw new InvalidOperationException("all colors need to be selected before invoking this method");
 
-            var response = await Client.SetMoveAsync(Game.GameId, Game.PlayerName, Enum.Parse<GameType>(Game.GameType), MoveNumber+1, _selectionFields!);
+            var response = await Client.SetMoveAsync(Game.Id, Game.PlayerName, Enum.Parse<GameType>(Game.GameType), MoveNumber + 1, _selectionFields!);
             _gameMoves.Add(new(_selectionFields!, response.Results, MoveNumber));
 
             Console.WriteLine(response.ToString());
@@ -160,5 +161,6 @@ public partial class Playground
         {
             _currentMove.Add(new Tuple<int, string>(i, string.Empty));
         }
+
     }
 }

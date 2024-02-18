@@ -1,6 +1,7 @@
 ﻿using Codebreaker.GameAPIs.Client;
+using CodeBreaker.Blazor.UI.Services.Dialog;
 
-namespace CodeBreaker.Bot;
+namespace CodeBreaker.Blazor;
 
 internal static class ApplicationServices
 {
@@ -10,6 +11,7 @@ internal static class ApplicationServices
         {
             client.BaseAddress = new Uri("http://gameapis");
         });
-    }
 
+        builder.Services.AddScoped<IDialogService, DialogService>();
+    }
 }

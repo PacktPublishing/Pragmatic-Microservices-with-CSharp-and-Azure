@@ -11,10 +11,10 @@ builder.Services.AddLocalization();
 builder.Services.AddBlazorApplicationInsights();
 builder.Services.AddCodeBreakerUI();
 
-builder.Services.AddHttpClient("GameApi",  (HttpClient client) =>
-    client.BaseAddress = new Uri(builder.Configuration.GetRequired("ApiBase")));
-
-builder.Services.AddHttpClient<IGamesClient, GamesClient>("GameApi");
+builder.Services.AddHttpClient<IGamesClient, GamesClient>(client =>
+{
+    client.BaseAddress = new Uri(builder.Configuration["ApiBase"] ?? throw new InvalidOperationException("Could not read ApiBase"));
+});
 builder.Services.AddScoped<IDialogService, DialogService>();
 
 var host = builder.Build();

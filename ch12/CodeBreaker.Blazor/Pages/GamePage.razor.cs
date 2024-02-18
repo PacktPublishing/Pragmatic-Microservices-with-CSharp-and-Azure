@@ -14,7 +14,7 @@ namespace CodeBreaker.Blazor.Pages;
 
 public record SelectionAndKeyPegs(string[] GuessPegs, string[] KeyPegs, int MoveNumber);
 
-public partial class GamePage : IDisposable
+public sealed partial class GamePage : IDisposable
 {
     private GameType _selectedGameType = GameType.Game6x4;
 

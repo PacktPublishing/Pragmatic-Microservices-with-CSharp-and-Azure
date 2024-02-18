@@ -226,6 +226,14 @@
     background-color: var(--orange);
 }
 
+.pink {
+    background-color: var(--pink);
+}
+
+.brown {
+    background-color: var(--brown);
+}
+
 
 .key-pegs {
     padding: 0.125rem;

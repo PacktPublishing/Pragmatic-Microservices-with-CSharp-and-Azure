@@ -32,6 +32,9 @@ if (builder.Environment.IsPrometheus())
         .WithEnvironment("DataStore", dataStore)
         .WithEnvironment("GRAFANA_URL", grafana.GetEndpoint("grafana-http"));
 
+    builder.AddProject<Projects.CodeBreaker_Blazor_Host>("blazor")
+        .WithReference(gameAPIs);
+
     builder.AddProject<Projects.CodeBreaker_Bot>("bot")
         .WithReference(gameAPIs);
 
@@ -50,7 +53,7 @@ else
     //    .WithVolumeMount("volume.codebreaker.sql", "/var/opt/mssql", VolumeMountType.Named)
     //    .AddDatabase("CodebreakerSql");
 
-    var cosmos = builder.AddAzureCosmosDB("GamesCosmosConnection", cosmosConnectionString);
+    var cosmos = builder.AddAzureCosmosDB("GamesCosmosConnection"); // , cosmosConnectionString);
 
     var gameAPIs = builder.AddProject<Projects.Codebreaker_GameAPIs>("gameapis")
         .WithReference(cosmos)

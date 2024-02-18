@@ -47,6 +47,8 @@
     --orange: #E35B45;
     --black: #000000;
     --white: #ffffff;
+    --pink: #E600E2;
+    --brown: #9D5C23;
     --move-border-color: rgb(0 0 0 / 35%);
     --selected-border: 1px solid var(--white);
 }
