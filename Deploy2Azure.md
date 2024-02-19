@@ -1,6 +1,6 @@
 # Deploy to Microsoft Azure using the Azure Developer CLI
 
-> This information can be used with the samples from multiple chapters. Tested with chapter 12. 
+> This information can be used with the samples from multiple chapters.
 
 > This will change with .NET Aspire Preview 4. Instructions created with .NET Aspire Preview 3 and Azure Developer CLI (azd) 1.6.1.
 
@@ -55,3 +55,9 @@ These resources are now available:
 
 1. Create a container named `GamesV3`
 2. Specify the partition key name `/PartitionKey`
+
+## Delete the Azure resources
+
+After you don't need them anymore, delete the Azure resources using
+
+`azd down`
