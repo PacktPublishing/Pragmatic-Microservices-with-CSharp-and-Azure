@@ -1,8 +1,4 @@
-using System.Runtime.CompilerServices;
 
-using Microsoft.OpenApi.Models;
-
-[assembly: InternalsVisibleTo("Codbreaker.APIs.Tests")]
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,7 +29,7 @@ builder.Services.AddSwaggerGen(options =>
 
 // Application Services
 
-builder.AddDataStores();
+builder.AddApplicationServices();
 
 builder.Services.AddScoped<IGamesService, GamesService>();
 
@@ -48,6 +44,18 @@ if (app.Environment.IsDevelopment())
     {
         options.SwaggerEndpoint("/swagger/v3/swagger.json", "v3");
     });
+}
+
+// Update or create the SQL Server database 
+string? dataStore = builder.Configuration.GetValue<string>("DataStore");
+if (dataStore == "SqlServer")
+{
+    using var scope = app.Services.CreateScope();
+    var service = scope.ServiceProvider.GetRequiredService<IGamesRepository>();
+    if (service is DataContextProxy<GamesSqlServerContext> proxy)
+    {
+        await proxy.UpdateDatabaseAsync(app.Logger);
+    }
 }
 
 app.MapGameEndpoints();

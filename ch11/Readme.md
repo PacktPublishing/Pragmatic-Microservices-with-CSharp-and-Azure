@@ -18,3 +18,6 @@ These are the important projects for this chapter:
   * The prometheus folder contains a configuration file that is used by the Prometheus Docker container.
 Working through the code with this chapter, you can start using the Start folder which contains the same projects without the code which needs to be added for monitoring.
 
+## Running the solution
+
+To run the solution, running the application with Prometheus and Grafana, switch to the *Prometheus* environment (see `launchsettings.json` with the AppHost project)
