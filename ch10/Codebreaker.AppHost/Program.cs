@@ -1,17 +1,15 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
-var appConfiguration = builder.AddAzureAppConfiguration("CodebreakerAppConfiguration");
+var dataStoreConfig = builder.Configuration["DataStore"] ?? "InMemory";
 
-string cosmosConnectionString = builder.Configuration["CosmosConnectionString"] ?? throw new InvalidOperationException("Could not find CosmosConnectionString");
-
-var cosmos = builder.AddAzureCosmosDB("GamesCosmosConnection", cosmosConnectionString);
+var cosmos = builder.AddAzureCosmosDB("codebreaker10")
+    .AddDatabase("codebreaker");
 
 var gameAPIs = builder.AddProject<Projects.Codebreaker_GameAPIs>("gameapis")
     .WithReference(cosmos)
-    .WithReference(appConfiguration);
+    .WithEnvironment("DataStore", dataStoreConfig);
 
 builder.AddProject<Projects.CodeBreaker_Bot>("bot")
-    .WithReference(gameAPIs)
-    .WithReference(appConfiguration);
+    .WithReference(gameAPIs);
 
 builder.Build().Run();
