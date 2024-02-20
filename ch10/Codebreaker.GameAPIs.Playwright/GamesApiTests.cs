@@ -6,6 +6,7 @@ namespace Codebreaker.APIs.PlaywrightTests;
 public class GamesApiTests : PlaywrightTest
 {
     private IAPIRequestContext? _requestContext;
+    private int _thinkTimeMS;
 
     [SetUp]
     public async Task SetupAPITestingAsync()
@@ -14,6 +15,10 @@ public class GamesApiTests : PlaywrightTest
         configurationBuilder.SetBasePath(Directory.GetCurrentDirectory());
         configurationBuilder.AddJsonFile("appsettings.json", optional: true);
         var config = configurationBuilder.Build();
+        if (!int.TryParse(config["ThinkTimeMS"], out _thinkTimeMS))
+        {
+            _thinkTimeMS = 1000;
+        }
 
         Dictionary<string, string> headers = new()
         {
@@ -22,7 +27,7 @@ public class GamesApiTests : PlaywrightTest
 
         _requestContext = await Playwright.APIRequest.NewContextAsync(new()
         {
-            BaseURL = config["BaseUrl"] ?? "http://localhost",
+            BaseURL = config["BaseURL"] ?? "http://localhost",
             ExtraHTTPHeaders = headers
         });
     }
@@ -54,14 +59,14 @@ public class GamesApiTests : PlaywrightTest
 
         while (moveNumber < 10 && !gameEnded)
         {
-            await Task.Delay(1000);
-            string[] guesses = Random.Shared.GetItems<string>(colors, 4).ToArray();
+            await Task.Delay(_thinkTimeMS);
+            string[] guesses = [.. Random.Shared.GetItems<string>(colors, 4)];
             gameEnded = await SetMoveAsync(id, playerName, moveNumber++, guesses);
         }
 
         if (!gameEnded)
         {
-            await Task.Delay(1000);
+            await Task.Delay(_thinkTimeMS);
             string[] correctCodes = await GetGameAsync(id, moveNumber - 1);
             gameEnded = await SetMoveAsync(id, playerName, moveNumber++, correctCodes);
         }
@@ -88,13 +93,16 @@ public class GamesApiTests : PlaywrightTest
         // the service should end the game after 12 moves
         while (!gameEnded)
         {
-            await Task.Delay(1000);
-            string[] guesses = Random.Shared.GetItems<string>(colors, 4).ToArray();
+            await Task.Delay(_thinkTimeMS);
+            string[] guesses = [.. Random.Shared.GetItems<string>(colors, 4)];
             gameEnded = await SetMoveAsync(id, playerName, moveNumber++, guesses);
         }
 
-        Assert.That(gameEnded, Is.True);
-        Assert.That(moveNumber, Is.LessThanOrEqualTo(13));
+        Assert.Multiple(() =>
+        {
+            Assert.That(gameEnded, Is.True);
+            Assert.That(moveNumber, Is.LessThanOrEqualTo(13));
+        });
 
         await DeleteGameAsync(id);
     }
