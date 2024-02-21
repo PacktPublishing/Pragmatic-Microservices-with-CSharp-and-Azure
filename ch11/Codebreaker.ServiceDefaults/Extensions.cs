@@ -1,3 +1,6 @@
+using Azure.Identity;
+using Azure.Monitor.OpenTelemetry.AspNetCore;
+using Codebreaker.ServiceDefaults;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.DependencyInjection;
@@ -6,14 +9,6 @@ using Microsoft.Extensions.Logging;
 using OpenTelemetry.Logs;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
-using Microsoft.Extensions.Configuration;
-
-using Azure.Core.Diagnostics;
-using Azure.Identity;
-using Azure.Monitor.OpenTelemetry.AspNetCore;
-
-using Microsoft.Extensions.Configuration.AzureAppConfiguration;
-using Codebreaker.ServiceDefaults;
 
 namespace Microsoft.Extensions.Hosting;
 
@@ -60,21 +55,6 @@ public static class Extensions
 #endif
 
             DefaultAzureCredential credential = new(credentialOptions);
-            string endpoint = builder.Configuration.GetConnectionString("CodebreakerAppConfiguration") ?? throw new InvalidOperationException("Could not read AzureAppConfiguration");
-
-            try
-            {
-                builder.Configuration.AddAzureAppConfiguration(options =>
-                {
-                    options.Connect(new Uri(endpoint), credential)
-                        .Select("BotService*", labelFilter: LabelFilter.Null)
-                        .Select("BotService*", builder.Environment.EnvironmentName);
-                });
-            }
-            catch (Exception ex)
-            {
-
-            }
         }
     }
 
