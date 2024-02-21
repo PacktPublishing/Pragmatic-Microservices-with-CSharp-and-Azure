@@ -14,7 +14,7 @@ public class SimpleGameGuessAnalyzer(IGame game, ColorField[] guesses, int moveN
         List<ColorField> codesToCheck = new(_game.Codes.ToPegs<ColorField>());
         List<ColorField> guessPegsToCheck = new(Guesses);
 
-        var results = Enumerable.Repeat(ResultValue.Incorrect, 4).ToArray();
+        ResultValue[] results = [.. Enumerable.Repeat(ResultValue.Incorrect, 4)];
 
         for (int i = 0; i < results.Length; i++)
         {

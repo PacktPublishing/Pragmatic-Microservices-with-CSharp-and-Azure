@@ -21,7 +21,7 @@ public static class ApplicationServices
 
         static void ConfigureCosmos(IHostApplicationBuilder builder)
         {
-            builder.AddCosmosDbContext<GamesCosmosContext>("GamesCosmosConnection", "codebreaker",
+            builder.AddCosmosDbContext<GamesCosmosContext>("codebreaker", "codebreaker",
                 configureDbContextOptions: options =>
                 {
                     options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
