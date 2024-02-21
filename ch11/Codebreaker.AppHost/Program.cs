@@ -11,7 +11,7 @@ if (builder.Environment.IsPrometheus())
 #if DEBUG
     builder.AddUserSecretsForPrometheusEnvironment();
 #endif
-    string sqlPassword = builder.Configuration["SqlPassword"] ?? throw new InvalidOperationException("could not read password");
+    string sqlPassword = builder.Configuration["SqlPassword"] ?? throw new InvalidOperationException("Configure SqlPassword");
 
     var sqlServer = builder.AddSqlServerContainer("sql", sqlPassword)
         .WithVolumeMount("volume.codebreaker.sql", "/var/opt/mssql", VolumeMountType.Named)
