@@ -6,3 +6,5 @@ global using Codebreaker.GameAPIs.Extensions;
 global using Codebreaker.GameAPIs.Models;
 global using Codebreaker.GameAPIs.Services;
 global using Codebreaker.GameAPIs.Infrastructure;
+global using Codebreaker.Data.Cosmos;
+global using Codebreaker.Data.SqlServer;
