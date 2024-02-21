@@ -1,7 +1,4 @@
-using Codebreaker.Data.SqlServer;
 using Codebreaker.GameAPIs;
-using Codebreaker.ServiceDefaults;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using System.Diagnostics;
 
@@ -52,24 +49,7 @@ app.UseSwaggerUI(options =>
     options.SwaggerEndpoint("/swagger/v3/swagger.json", "v3");
 });
 
-if (builder.Configuration["DataStore"] == "SqlServer" && 
-    (builder.Environment.IsDevelopment() || builder.Environment.IsPrometheus()))
-{
-    try
-    {
-        using var scope = app.Services.CreateScope();
-        var repo = scope.ServiceProvider.GetRequiredService<GamesSqlServerContext>();
-        if (repo is GamesSqlServerContext context)
-        {
-            await context.Database.MigrateAsync();
-            app.Logger.LogInformation("Database updated");
-        }
-    }
-    catch (Exception ex)
-    {
-        app.Logger.LogError(ex, "Error updating database");
-    }
-}
+await app.CreateOrUpdateDatabaseAsync();
 
 app.MapGameEndpoints();
 
