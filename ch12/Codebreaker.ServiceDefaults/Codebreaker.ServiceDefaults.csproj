@@ -22,10 +22,6 @@
 		<PackageReference Include="OpenTelemetry.Instrumentation.Runtime" Version="1.7.0" />
 		<PackageReference Include="OpenTelemetry.Exporter.Prometheus.AspNetCore" Version="1.7.0-rc.1" />
 	</ItemGroup>
-
-	<ItemGroup>
-	  <ProjectReference Include="..\Codebreaker.Common\Codebreaker.Common.csproj" />
-	</ItemGroup>
 	<Choose>
 		<When Condition=" '$(PROMETHEUS)'=='True' ">
 			<ItemGroup>
