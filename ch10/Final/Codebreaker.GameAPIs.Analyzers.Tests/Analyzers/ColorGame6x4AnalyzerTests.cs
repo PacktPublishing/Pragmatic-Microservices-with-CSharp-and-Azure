@@ -84,7 +84,7 @@ public class ColorGame6x4AnalyzerTests
         IsVictory = false,
         FieldValues = new Dictionary<string, IEnumerable<string>>()
         {
-            [FieldCategories.Colors] = TestData6x4.Colors6.ToList()
+            [FieldCategories.Colors] = [.. TestData6x4.Colors6]
         },
         Codes = codes
     };
@@ -92,14 +92,14 @@ public class ColorGame6x4AnalyzerTests
     private static ColorResult TestSkeleton(string[] codes, string[] guesses, int moveNumber = 1)
     {
         MockColorGame game = CreateGame(codes);
-        ColorGameGuessAnalyzer analyzer = new(game,guesses.ToPegs<ColorField>().ToArray(), moveNumber);
+        ColorGameGuessAnalyzer analyzer = new(game, [.. guesses.ToPegs<ColorField>()], moveNumber);
         return analyzer.GetResult();
     }
 
     private static IGame TestSkeletonCatchesArgumentException(string[] codes, string[] guesses, int moveNumber = 1)
     {
         MockColorGame game = CreateGame(codes);
-        ColorGameGuessAnalyzer analyzer = new(game, guesses.ToPegs<ColorField>().ToArray(), moveNumber);
+        ColorGameGuessAnalyzer analyzer = new(game, [.. guesses.ToPegs<ColorField>()], moveNumber);
         try
         {
             analyzer.GetResult();
@@ -120,7 +120,7 @@ public class TestData6x4 : IEnumerable<object[]>
         yield return new object[]
         {
             new string[] { Green, Blue,  Green, Yellow }, // code
-            new string[] { Green, Green, Black, White },  // inputdata
+            new string[] { Green, Green, Black, White },  // input-data
             new ColorResult(1, 1) // expected
         };
         yield return new object[]

@@ -67,12 +67,12 @@ public class ColorGame8x5AnalyzerTests
             IsVictory = false,
             FieldValues = new Dictionary<string, IEnumerable<string>>()
             {
-                [FieldCategories.Colors] = TestData8x5.Colors8.ToList()
+                [FieldCategories.Colors] = [.. TestData8x5.Colors8]
             },
             Codes = codes
         };
 
-        ColorGameGuessAnalyzer analyzer = new(game, guesses.ToPegs<ColorField>().ToArray(), 1);
+        ColorGameGuessAnalyzer analyzer = new(game, [.. guesses.ToPegs<ColorField>()], 1);
         return analyzer.GetResult();
     }
 }
