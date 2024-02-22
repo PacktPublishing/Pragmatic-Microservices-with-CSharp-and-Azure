@@ -4,7 +4,7 @@ public static partial class ApiModelExtensions
 {
     public static IList<T> ToPegs<T>(this IEnumerable<string> guesses)
         where T : IParsable<T> =>
-        guesses.Select(guess => T.Parse(guess, default)).ToArray();
+        [.. guesses.Select(guess => T.Parse(guess, default))];
 
     public static CreateGameResponse ToCreateGameResponse(this Game game) => 
         new(game.Id, Enum.Parse<GameType>(game.GameType), game.PlayerName, game.NumberCodes, game.MaxMoves)

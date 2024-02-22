@@ -16,19 +16,19 @@ public static class GameEndpoints
         group.MapPost("/", async Task<Results<Created<CreateGameResponse>, BadRequest<GameError>>> (
             CreateGameRequest request,
             IGamesService gameService,
-            IFeatureManager featureManager,
+         //   IFeatureManager featureManager,
             HttpContext context,
             CancellationToken cancellationToken) =>
         {
             Game game;
             try
             {
-                bool featureAvailable = await featureManager.IsGameTypeAvailable(request.GameType);
-                if (!featureAvailable)
-                {
-                    GameError error = new(ErrorCodes.GameTypeCurrentlyNotAvailable, "Game type currently not available", context.Request.GetDisplayUrl());
-                    return TypedResults.BadRequest(error);
-                }
+                //bool featureAvailable = await featureManager.IsGameTypeAvailable(request.GameType);
+                //if (!featureAvailable)
+                //{
+                //    GameError error = new(ErrorCodes.GameTypeCurrentlyNotAvailable, "Game type currently not available", context.Request.GetDisplayUrl());
+                //    return TypedResults.BadRequest(error);
+                //}
 
                 game = await gameService.StartGameAsync(request.GameType.ToString(), request.PlayerName, cancellationToken);
             }

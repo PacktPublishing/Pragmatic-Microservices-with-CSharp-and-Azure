@@ -146,9 +146,8 @@ public static class CodeBreakerAlgorithms
         }
 
         List<int> newValues = new(values.Count);
-        int[] selections = Enumerable.Range(0, 4)
-            .Select(i => selection.SelectPeg(i))
-            .ToArray();
+        int[] selections = [.. Enumerable.Range(0, 4)
+            .Select(i => selection.SelectPeg(i))];
 
         foreach (int value in values)
         {

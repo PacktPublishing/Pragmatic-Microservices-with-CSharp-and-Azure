@@ -11,7 +11,7 @@ if (builder.Environment.IsPrometheus())
 #if DEBUG
     builder.AddUserSecretsForPrometheusEnvironment();
 #endif
-    string sqlPassword = builder.Configuration["SqlPassword"] ?? throw new InvalidOperationException("could not read password");
+    string sqlPassword = builder.Configuration["SqlPassword"] ?? throw new InvalidOperationException("Configure SqlPassword");
 
     var sqlServer = builder.AddSqlServerContainer("sql", sqlPassword)
         .WithVolumeMount("volume.codebreaker.sql", "/var/opt/mssql", VolumeMountType.Named)
@@ -33,29 +33,28 @@ if (builder.Environment.IsPrometheus())
 
     builder.AddProject<Projects.CodeBreaker_Bot>("bot")
         .WithReference(gameAPIs);
-
 }
 else
 {
-
     var appInsightsConnectionString = builder.Configuration["ApplicationInsightsConnectionString"] ?? throw new InvalidOperationException("Could not read AppInsightsConnectionString");
 
-    var appConfiguration = builder.AddAzureAppConfiguration("CodebreakerAppConfiguration");
-    string cosmosConnectionString = builder.Configuration["CosmosConnectionString"] ?? throw new InvalidOperationException("Could not find CosmosConnectionString");
-
-    var cosmos = builder.AddAzureCosmosDB("GamesCosmosConnection", cosmosConnectionString);
+#if DEBUG
+    var cosmos = builder.AddAzureCosmosDB("codebreakercosmos")
+        .UseEmulator()
+        .AddDatabase("codebreaker");
+#else
+    var cosmos = builder.AddAzureCosmosDB("codebreakercosmos")
+        .AddDatabase("codebreaker");
+#endif
 
     var gameAPIs = builder.AddProject<Projects.Codebreaker_GameAPIs>("gameapis")
         .WithReference(cosmos)
-        .WithReference(appConfiguration)
         .WithEnvironment("DataStore", dataStore)
         .WithEnvironment("ApplicationInsightsConnectionString", appInsightsConnectionString);
 
     builder.AddProject<Projects.CodeBreaker_Bot>("bot")
         .WithReference(gameAPIs)
-        .WithReference(appConfiguration)
         .WithEnvironment("ApplicationInsightsConnectionString", appInsightsConnectionString);
-
 }
 
 builder.Build().Run();
