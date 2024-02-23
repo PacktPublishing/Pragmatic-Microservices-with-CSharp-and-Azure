@@ -1,15 +1,26 @@
-using Codebreaker.ServiceDefaults;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using System.Diagnostics;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddMetrics();
 
+builder.Services.AddOpenTelemetry().WithMetrics(m => m.AddMeter(GamesMetrics.MeterName));
+
 builder.Services.AddSingleton<GamesMetrics>();
 
-builder.Services.AddKeyedSingleton("Codebreaker.GameAPIs", (services, _) => new ActivitySource("Codebreaker.GameAPIs", "1.0.0"));  
+builder.Services.AddKeyedSingleton("Codebreaker.GameAPIs", (services, _) => new ActivitySource("Codebreaker.GameAPIs", "1.0.0"));
+
+builder.Services.AddHealthChecks().AddCheck("dbupdate", () =>
+{
+    return ApplicationServices.IsDatabaseUpdateComplete ?
+        HealthCheckResult.Healthy("DB update done") :
+        HealthCheckResult.Degraded("DB update not ready");
+}, ["ready"]);
 
 builder.AddServiceDefaults();
-builder.AddAppConfiguration();
+
+
 
 // Swagger/EndpointDocumentation
 builder.Services.AddEndpointsApiExplorer();
@@ -50,25 +61,7 @@ app.UseSwaggerUI(options =>
     options.SwaggerEndpoint("/swagger/v3/swagger.json", "v3");
 });
 
-if (builder.Configuration["DataStore"] == "SqlServer" && 
-    (builder.Environment.IsDevelopment() || builder.Environment.IsPrometheus()))
-{
-    try
-    {
-        using var scope = app.Services.CreateScope();
-        var repo = scope.ServiceProvider.GetRequiredService<GamesSqlServerContext>();
-        if (repo is GamesSqlServerContext context)
-        {
-            await context.Database.MigrateAsync();
-            app.Logger.LogInformation("Database updated");
-        }
-    }
-    catch (Exception ex)
-    {
-        app.Logger.LogError(ex, "Error updating database {error}", ex.Message);
-        throw;
-    }
-}
+_ = app.CreateOrUpdateDatabaseAsync();
 
 app.MapGameEndpoints();
 

@@ -191,7 +191,6 @@ public static class Extensions
 
     private static MeterProviderBuilder AddBuiltInMeters(this MeterProviderBuilder meterProviderBuilder) =>
         meterProviderBuilder.AddMeter(
-            "Codebreaker.Games",
             "Microsoft.AspNetCore.Hosting",
             "Microsoft.AspNetCore.Server.Kestrel",
             "Microsoft.EntityFrameworkCore",
