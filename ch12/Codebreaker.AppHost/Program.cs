@@ -30,7 +30,8 @@ if (builder.Environment.IsPrometheus())
         .WithReference(sqlServer)
         .WithReference(redis)
         .WithEnvironment("DataStore", dataStore)
-        .WithEnvironment("GRAFANA_URL", grafana.GetEndpoint("grafana-http"));
+        .WithEnvironment("GRAFANA_URL", grafana.GetEndpoint("grafana-http"))
+        .WithReplicas(1);
 
     builder.AddProject<Projects.CodeBreaker_Blazor_Host>("blazor")
         .WithReference(gameAPIs);
@@ -43,9 +44,6 @@ else
 {
     var appInsightsConnectionString = builder.Configuration["ApplicationInsightsConnectionString"] ?? throw new InvalidOperationException("Could not read AppInsightsConnectionString");
 
-    // var appConfiguration = builder.AddAzureAppConfiguration("CodebreakerAppConfiguration");
-    string cosmosConnectionString = builder.Configuration["CosmosConnectionString"] ?? throw new InvalidOperationException("Could not find CosmosConnectionString");
-    // var redis = builder.AddAzureRedis("Codebreaker.Redis");
     var redis = builder.AddRedisContainer("redis");
 
     //string sqlPassword = builder.Configuration["SqlPassword"] ?? throw new InvalidOperationException("could not read password");
@@ -53,13 +51,19 @@ else
     //    .WithVolumeMount("volume.codebreaker.sql", "/var/opt/mssql", VolumeMountType.Named)
     //    .AddDatabase("CodebreakerSql");
 
-    var cosmos = builder.AddAzureCosmosDB("GamesCosmosConnection"); // , cosmosConnectionString);
+//#if DEBUG
+//    var cosmos = builder.AddAzureCosmosDB("codebreakercosmos")
+//        .UseEmulator(port: 8081)
+//        .AddDatabase("codebreaker")
+//        .WithHttpEndpoint(8081, hostPort: 8082, name: "cosmos");
+//#else
+    var cosmos = builder.AddAzureCosmosDB("codebreakercosmos")
+        .AddDatabase("codebreaker");
+//#endif
 
     var gameAPIs = builder.AddProject<Projects.Codebreaker_GameAPIs>("gameapis")
         .WithReference(cosmos)
-        //.WithReference(sqlServer)
         .WithReference(redis)
-        //        .WithReference(appConfiguration)
         .WithEnvironment("DataStore", dataStore)
         .WithEnvironment("ApplicationInsightsConnectionString", appInsightsConnectionString)
         .WithReplicas(1);
@@ -70,7 +74,6 @@ else
 
     builder.AddProject<Projects.CodeBreaker_Bot>("bot")
         .WithReference(gameAPIs)
-      //  .WithReference(appConfiguration)
         .WithEnvironment("ApplicationInsightsConnectionString", appInsightsConnectionString);
 }
 

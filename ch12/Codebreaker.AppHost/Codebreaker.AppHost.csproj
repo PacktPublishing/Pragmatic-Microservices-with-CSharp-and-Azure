@@ -22,8 +22,8 @@
   <ItemGroup>
     <ProjectReference Include="..\CodeBreaker.Blazor.Host\CodeBreaker.Blazor.Host.csproj" />
     <ProjectReference Include="..\CodeBreaker.Bot\CodeBreaker.Bot.csproj" />
-    <ProjectReference Include="..\Codebreaker.Common\Codebreaker.Common.csproj" IsAspireProjectResource="false" />
     <ProjectReference Include="..\Codebreaker.GameAPIs\Codebreaker.GameAPIs.csproj" />
+    <ProjectReference Include="..\Codebreaker.ServiceDefaults\Codebreaker.ServiceDefaults.csproj" IsAspireProjectResource="false" />
   </ItemGroup>
 
 </Project>
