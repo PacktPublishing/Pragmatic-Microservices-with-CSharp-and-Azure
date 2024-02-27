@@ -1,0 +1,17 @@
+.toolbar-content {
+    justify-content: space-between;
+    align-items: center;
+    --mud-palette-text-primary: white;
+}
+
+.content-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+@media(max-width: 599px) {
+    .content-container {
+       padding: 1rem 0;
+    }
+}

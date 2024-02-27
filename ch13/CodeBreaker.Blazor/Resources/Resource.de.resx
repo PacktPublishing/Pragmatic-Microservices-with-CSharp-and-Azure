@@ -1,0 +1,344 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="About_Information_Language" xml:space="preserve">
+    <value>Aktuelle Sprache</value>
+  </data>
+  <data name="About_Information_Tab" xml:space="preserve">
+    <value>Information</value>
+  </data>
+  <data name="About_Information_Theme" xml:space="preserve">
+    <value>App Theme</value>
+  </data>
+  <data name="About_Information_Version" xml:space="preserve">
+    <value>Version</value>
+  </data>
+  <data name="About_Instructions" xml:space="preserve">
+    <value>&lt;p&gt;
+            Als Spielbrett dient eine Lochplatte mit hintereinander angeordneten Viererreihen Rundlöcher zur Aufnahme pilzförmiger Farbsteine und parallel daneben jeweils vier kleinere Löcher in quadratischer Anordnung zur Aufnahme nagelförmiger Stifte.
+        &lt;/p&gt;
+        &lt;p&gt;
+            Ein Spieler (der Codierer) legt zu Beginn verdeckt einen vierstelligen geordneten Farbcode fest, der aus sechs Farben ausgewählt wird; jede Farbe kann auch mehrmals verwendet werden. Der andere Spieler (der Rater) versucht, den Code herauszufinden. Dazu setzt er einen gleichartigen Farbcode als Frage; beim ersten Zug blind geraten, bei den weiteren Zügen mit Hilfe der Antworten zu den vorangegangenen Zügen.
+        &lt;/p&gt;
+        &lt;p&gt;
+            Auf jeden Zug hin bekommt der Rater die Information, wie viele Stifte er in Farbe und Position richtig gesetzt hat und wie viele Stifte zwar die richtige Farbe haben, aber an einer falschen Position stehen. Ein Treffer in Farbe und Position wird durch einen schwarzen Stift angezeigt, ein farblich richtiger Stift an falscher Stelle durch einen weißen Stift. Es gibt auch Versionen mit roten statt schwarzen Stiften zur Trefferanzeige. Alle Fragen und Antworten bleiben bis zum Ende des Spiels gesteckt.
+        &lt;/p&gt;
+        &lt;p&gt;
+            Ziel des Raters ist es, den Farbcode mit möglichst wenigen Fragen zu erraten. Der Codierer darf seine Farbreihe nicht verändern und muss zu jeder Frage die zutreffende Anzahl schwarzer und weißer Stifte setzen.
+        &lt;/p&gt;</value>
+  </data>
+  <data name="About_Instructions_Tab" xml:space="preserve">
+    <value>Anleitung</value>
+  </data>
+  <data name="About_NoVersion_Found" xml:space="preserve">
+    <value>Keine Version gefunden.</value>
+  </data>
+  <data name="About_Title" xml:space="preserve">
+    <value>Über Codebreaker</value>
+  </data>
+  <data name="AppDescription" xml:space="preserve">
+    <value>CodeBreaker</value>
+  </data>
+  <data name="AppDisplayName" xml:space="preserve">
+    <value>CodeBreaker</value>
+  </data>
+  <data name="AuthPage_ContinueAsGuest" xml:space="preserve">
+    <value>Als Gast fortfahren</value>
+  </data>
+  <data name="AuthPage_GuestTooltip" xml:space="preserve">
+    <value>Sie können spielen, werden aber nicht im Scoreboard gelistet.</value>
+  </data>
+  <data name="AuthPage_Or" xml:space="preserve">
+    <value>oder</value>
+  </data>
+  <data name="AuthPage_SignIn" xml:space="preserve">
+    <value>Einloggen</value>
+  </data>
+  <data name="AuthPage_SignUp" xml:space="preserve">
+    <value>Registrieren</value>
+  </data>
+  <data name="AuthPage_WelcomeTo" xml:space="preserve">
+    <value>Willkommen zu</value>
+  </data>
+  <data name="GamePage_CancelButtonText" xml:space="preserve">
+    <value>Abbrechen</value>
+  </data>
+  <data name="GamePage_CancelConfirmContent" xml:space="preserve">
+    <value>Wollen Sie das Spiel wirklich abbrechen?</value>
+  </data>
+  <data name="GamePage_CancelConfirmTitle" xml:space="preserve">
+    <value>Spiel abbrechen</value>
+  </data>
+  <data name="GamePage_CancelGame_Info" xml:space="preserve">
+    <value>Willst du das Spiel wirklich beenden?</value>
+  </data>
+  <data name="GamePage_FinishGame_Lose" xml:space="preserve">
+    <value>Du hast das Spiel verloren.</value>
+  </data>
+  <data name="GamePage_FinishGame_Ok" xml:space="preserve">
+    <value>Startseite</value>
+  </data>
+  <data name="GamePage_FinishGame_Restart" xml:space="preserve">
+    <value>Neues Spiel starten</value>
+  </data>
+  <data name="GamePage_FinishGame_Win" xml:space="preserve">
+    <value>Du hast das Spiel gewonnen!</value>
+  </data>
+  <data name="GamePage_NameAlreadyProvidedTooltip" xml:space="preserve">
+    <value>The gamername was already defined during sign-up</value>
+  </data>
+  <data name="GamePage_NameInput" xml:space="preserve">
+    <value>Spielername</value>
+  </data>
+  <data name="GamePage_NameInputPlaceholder" xml:space="preserve">
+    <value>Geben Sie Ihren Spielernamen ein</value>
+  </data>
+  <data name="GamePage_StartButtonText" xml:space="preserve">
+    <value>Spiel starten</value>
+  </data>
+  <data name="Index_Card_About_Action" xml:space="preserve">
+    <value>Mehr lesen</value>
+  </data>
+  <data name="Index_Card_About_Body" xml:space="preserve">
+    <value>Sie brauchen mehr Informationen über das Spiel? Dann ist diese Seite die richtige für Sie.</value>
+  </data>
+  <data name="Index_Card_About_Title" xml:space="preserve">
+    <value>Über Codebreaker</value>
+  </data>
+  <data name="Index_Card_Game_Action" xml:space="preserve">
+    <value>Spiel spielen</value>
+  </data>
+  <data name="Index_Card_Game_Body" xml:space="preserve">
+    <value>Spielen Sie das Spiel und versuchen Sie, den Code zu knacken.</value>
+  </data>
+  <data name="Index_Card_Game_Title" xml:space="preserve">
+    <value>Spiel</value>
+  </data>
+  <data name="Index_Card_Reports_Action" xml:space="preserve">
+    <value>Statistiken anschauen</value>
+  </data>
+  <data name="Index_Card_Reports_Body" xml:space="preserve">
+    <value>Hier können Sie gespielte Spiele ansehen.</value>
+  </data>
+  <data name="Index_Card_Reports_Title" xml:space="preserve">
+    <value>Statistiken</value>
+  </data>
+  <data name="Index_Welcome" xml:space="preserve">
+    <value>Willkommen zu</value>
+  </data>
+  <data name="Language_English" xml:space="preserve">
+    <value>Englisch</value>
+  </data>
+  <data name="Language_German" xml:space="preserve">
+    <value>Deutsch</value>
+  </data>
+  <data name="Language_Select_Label" xml:space="preserve">
+    <value>Wähle eine Sprache:</value>
+  </data>
+  <data name="LivePage_WaitingForGames" xml:space="preserve">
+    <value>Waiting for games... ⌛</value>
+  </data>
+  <data name="NavMenu_About_Title" xml:space="preserve">
+    <value>Über Codebreaker</value>
+  </data>
+  <data name="NavMenu_Game_Title" xml:space="preserve">
+    <value>Spiel</value>
+  </data>
+  <data name="NavMenu_Home_Title" xml:space="preserve">
+    <value>Startseite</value>
+  </data>
+  <data name="NavMenu_Reports_Title" xml:space="preserve">
+    <value>Statistiken</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>Nein</value>
+  </data>
+  <data name="PegSelection_MakeMove" xml:space="preserve">
+    <value>Move</value>
+  </data>
+  <data name="Reports_LoadGames_Action" xml:space="preserve">
+    <value>Spiele laden</value>
+  </data>
+  <data name="Reports_Table_Headers" xml:space="preserve">
+    <value>Spielername,Start,Ende,Anzahl an zügen</value>
+  </data>
+  <data name="Reports_Title" xml:space="preserve">
+    <value>Statistiken</value>
+  </data>
+  <data name="Report_NoReports" xml:space="preserve">
+    <value>Es wurden keine Spiele gefunden.</value>
+  </data>
+  <data name="Report_SelectDate_Label" xml:space="preserve">
+    <value>Wähle ein Datum</value>
+  </data>
+  <data name="SettingsPage_LanguageChangeInfoMessage" xml:space="preserve">
+    <value>Die Sprache wird beim Neustart der Applikation geändert</value>
+  </data>
+  <data name="SettingsPage_PrivacyTermsLink" xml:space="preserve">
+    <value>Datenschutzerklärung</value>
+  </data>
+  <data name="SettingsPage_PrivacyTermsLinkNavigateUri" xml:space="preserve">
+    <value>https://YourPrivacyUrlGoesHere/</value>
+  </data>
+  <data name="Settings_About" xml:space="preserve">
+    <value>Über die Applikation</value>
+  </data>
+  <data name="Settings_AboutDescription" xml:space="preserve">
+    <value>TODO: Replace with your app description.</value>
+  </data>
+  <data name="Settings_Language" xml:space="preserve">
+    <value>Sprache</value>
+  </data>
+  <data name="Settings_Language_Default" xml:space="preserve">
+    <value>Standard</value>
+  </data>
+  <data name="Settings_Language_English" xml:space="preserve">
+    <value>Englisch</value>
+  </data>
+  <data name="Settings_Language_German" xml:space="preserve">
+    <value>Deutsch</value>
+  </data>
+  <data name="Settings_Personalization" xml:space="preserve">
+    <value>Personalisierung</value>
+  </data>
+  <data name="Settings_Theme" xml:space="preserve">
+    <value>Theme</value>
+  </data>
+  <data name="Settings_Theme_Dark" xml:space="preserve">
+    <value>Dunkel</value>
+  </data>
+  <data name="Settings_Theme_Default" xml:space="preserve">
+    <value>Standard</value>
+  </data>
+  <data name="Settings_Theme_Light" xml:space="preserve">
+    <value>Hell</value>
+  </data>
+  <data name="ShellPage_Blank" xml:space="preserve">
+    <value>Leer</value>
+  </data>
+  <data name="ShellPage_GameTab" xml:space="preserve">
+    <value>Spiel</value>
+  </data>
+  <data name="ShellPage_LiveTab" xml:space="preserve">
+    <value>Live</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>Ja</value>
+  </data>
+</root>

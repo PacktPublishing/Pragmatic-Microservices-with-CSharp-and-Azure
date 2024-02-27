@@ -1,0 +1,102 @@
+.list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding-bottom: 2rem;
+}
+
+    .list .card {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+        padding: 0.5rem;
+        border: 1px solid;
+        border-radius: 0.25rem;
+        cursor: pointer;
+        transition: all .2s ease-in-out;
+    }
+
+        .list .card:hover {
+            border-color: var(--accent-color);
+            color: var(--accent-color);
+        }
+
+        .list .card:active,
+        .list .card:focus {
+            background-color: var(--accent-color);
+            color: #fff;
+        }
+
+@media (max-width: 759px) {
+    .grid {
+        display: none;
+    }
+}
+
+@media (min-width: 760px) {
+    .list {
+        display: none;
+    }
+}
+
+::deep .quickgrid[theme=default] {
+    color: var(--theme-color);
+    background-color: var(--content-bg);
+    border: 1px solid var(--theme-bg-color);
+    border-spacing: 0;
+    width: 100%;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+}
+
+    ::deep .quickgrid[theme=default] .col-title {
+        color: var(--theme-color);
+        padding: 0.5rem;
+    }
+
+    ::deep .quickgrid[theme=default] .sort-indicator {
+        color: var(--theme-color);
+    }
+
+    ::deep .quickgrid[theme=default] tbody tr {
+        padding: 10px 18px;
+        white-space: nowrap;
+    }
+        ::deep .quickgrid[theme=default] tbody tr:hover {
+            background-color: var(--theme-bg-color);
+        }
+
+/* Style the custom page links*/
+.page-buttons {
+    margin: 1rem 0;
+    align-items: center;
+}
+
+    .page-buttons button {
+        color: var(--button-inactive);
+        border: 1px solid var(--button-inactive);
+        background-color: transparent;
+        width: 2rem;
+        height: 2rem;
+        border-radius: 100vh;
+        transition: transform 0.3s ease-out;
+        margin: 0.25rem;
+        cursor: pointer;
+    }
+
+        .page-buttons button:active {
+            background: var(--accent-color) !important;
+            color: white;
+            transform: scale(0.95) translateY(-0.15rem);
+            transition-duration: 0.05s;
+        }
+
+        .page-buttons button:hover:not(.current) {
+            color: var(--theme-color);
+            border: 1px solid var(--theme-color);
+        }
+
+        .page-buttons button.current {
+            background: var(--accent-color);
+            color: white;
+        }

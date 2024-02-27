@@ -1,0 +1,39 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<InvariantGlobalization>false</InvariantGlobalization>
+		<Configurations>Debug;Release</Configurations>
+		<UserSecretsId>fd1d3a37-908b-4899-ac69-4a1f3942d57b</UserSecretsId>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<ContainerRegistry>acrokccxl67xgpc6.azurecr.io</ContainerRegistry>
+		<ContainerRepository>codebgreakergames</ContainerRepository>
+		<ContainerImageTags>4.6.3;latest</ContainerImageTags>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<InternalsVisibleTo Include="Codebreaker.GameAPIs.Tests" />
+		<InternalsVisibleTo Include="Codebreaker.GameAPIs.IntegrationTests" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Aspire.StackExchange.Redis.DistributedCaching" Version="8.0.0-preview.3.24105.21" />
+		<PackageReference Include="CNinnovation.Codebreaker.BackendModels" Version="3.6.0-beta.23" />
+		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.2" />
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+		<PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.5.0" />
+		<PackageReference Include="Aspire.Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.0-preview.3.24105.21" />
+		<PackageReference Include="CNinnovation.Codebreaker.SqlServer" Version="3.6.0-beta.16" />
+		<PackageReference Include="Aspire.Microsoft.EntityFrameworkCore.Cosmos" Version="8.0.0-preview.3.24105.21" />
+		<PackageReference Include="CNinnovation.Codebreaker.Cosmos" Version="3.6.0-beta.19" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Codebreaker.ServiceDefaults\Codebreaker.ServiceDefaults.csproj" />
+	</ItemGroup>
+
+</Project>

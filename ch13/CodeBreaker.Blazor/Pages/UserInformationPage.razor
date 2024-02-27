@@ -1,0 +1,17 @@
+﻿@page "/user-information"
+@using Microsoft.AspNetCore.Authorization;
+@attribute [Authorize]
+
+@if (_user is not null) {
+    <div class="user">
+        <div class="img">
+            @_user.FirstName[0]@_user.LastName[0]
+        </div>
+        <div class="info">
+            <span class="title">Firstname:</span><span>@_user.FirstName</span>
+            <span class="title">Lastname:</span><span>@_user.LastName</span>
+            <span class="title">Username:</span><span>@_user.UserName</span>
+            <span class="title">Gamername:</span><span>@_user.GamerName</span>
+        </div>
+    </div>
+}
