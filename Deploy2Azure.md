@@ -53,7 +53,10 @@ These resources are now available:
 
 ## Create databases
 
-For easier use, on starting the application, the SQL Server database is migrated to the new version. With Azure Cosmos DB, a container named `GamesV3` with the partition key named `/PartitionKey` is created.
+For easier use, on starting the games API service, the SQL Server database is migrated to the new version. With Azure Cosmos DB, a container named `GamesV3` with the partition key named `/PartitionKey` is created.
+
+Before preview 4:
+To use the Cosmos database in the local environment, install and start the Cosmos emulator outside of the games solution.
 
 1. Create a container named `GamesV3`
 2. Specify the partition key name `/PartitionKey`

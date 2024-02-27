@@ -14,8 +14,9 @@ public partial class CodeBreakerThemeSwitch : ComponentBase
 
     [Inject] private IJSRuntime JsRuntime { get; set; } = default!;
 
-    protected async Task SwitchTheme(bool isDark)
+    protected Task SwitchTheme(bool isDark)
     {
+        return Task.CompletedTask;
         //IsDark = isDark;
         //await _themeService.SwitchThemeAsync(IsDark);
     }
