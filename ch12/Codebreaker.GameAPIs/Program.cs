@@ -20,8 +20,6 @@ builder.Services.AddHealthChecks().AddCheck("dbupdate", () =>
 
 builder.AddServiceDefaults();
 
-
-
 // Swagger/EndpointDocumentation
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>

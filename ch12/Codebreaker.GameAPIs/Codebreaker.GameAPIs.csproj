@@ -6,6 +6,13 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<InvariantGlobalization>false</InvariantGlobalization>
 		<Configurations>Debug;Release</Configurations>
+		<UserSecretsId>fd1d3a37-908b-4899-ac69-4a1f3942d57b</UserSecretsId>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<ContainerRegistry>acrokccxl67xgpc6.azurecr.io</ContainerRegistry>
+		<ContainerRepository>codebgreakergames</ContainerRepository>
+		<ContainerImageTags>4.6.3;latest</ContainerImageTags>
 	</PropertyGroup>
 
 	<ItemGroup>

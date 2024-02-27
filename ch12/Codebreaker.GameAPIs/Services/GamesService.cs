@@ -106,7 +106,8 @@ public class GamesService(IGamesRepository dataRepository, IDistributedCache dis
     }
 
     public async Task DeleteGameAsync(Guid id, CancellationToken cancellationToken = default)
-    {        
+    {
+        _ = distributedCache.RemoveAsync(id.ToString(), cancellationToken);
         await dataRepository.DeleteGameAsync(id, cancellationToken);
     }
 
