@@ -1,3 +1,5 @@
+using Azure.Monitor.OpenTelemetry.AspNetCore;
+using Codebreaker.ServiceDefaults;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.DependencyInjection;
@@ -6,79 +8,12 @@ using Microsoft.Extensions.Logging;
 using OpenTelemetry.Logs;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
-using Microsoft.Extensions.Configuration;
-
-using Azure.Core.Diagnostics;
-using Azure.Identity;
-using Azure.Monitor.OpenTelemetry.AspNetCore;
-
-using Microsoft.Extensions.Configuration.AzureAppConfiguration;
-using Codebreaker.ServiceDefaults;
 
 namespace Microsoft.Extensions.Hosting;
 
 public static class Extensions
 {
-    public static void AddAppConfiguration(this IHostApplicationBuilder builder)
-    {
-        if (!builder.Environment.IsPrometheus())
-        {
-#if DEBUG
-
-            DefaultAzureCredentialOptions credentialOptions = new()
-            {
-                Diagnostics =
-            {
-                LoggedHeaderNames = { "x-ms-request-id" },
-                LoggedQueryParameters = { "api-version" },
-                IsLoggingContentEnabled = true
-            },
-                ExcludeSharedTokenCacheCredential = true,
-                ExcludeAzurePowerShellCredential = true,
-                ExcludeVisualStudioCodeCredential = true,
-                ExcludeEnvironmentCredential = true,
-                ExcludeInteractiveBrowserCredential = true,
-                ExcludeAzureCliCredential = false,
-                ExcludeManagedIdentityCredential = false,
-                ExcludeVisualStudioCredential = false
-            };
-#elif RELEASE
-        string? managedIdentityClientId = builder.Configuration["ManagedIdentityClientId"];
-
-        DefaultAzureCredentialOptions credentialOptions = new()
-        {
-            ManagedIdentityClientId = managedIdentityClientId,
-            ExcludeSharedTokenCacheCredential = true,
-            ExcludeAzurePowerShellCredential = true,
-            ExcludeVisualStudioCodeCredential = true,
-            ExcludeEnvironmentCredential = true,
-            ExcludeInteractiveBrowserCredential = true,
-            ExcludeAzureCliCredential = false,
-            ExcludeManagedIdentityCredential = false,
-            ExcludeVisualStudioCredential = false
-        };
-#endif
-
-            DefaultAzureCredential credential = new(credentialOptions);
-          //  string endpoint = builder.Configuration.GetConnectionString("CodebreakerAppConfiguration") ?? throw new InvalidOperationException("Could not read AzureAppConfiguration");
-
-            //try
-            //{
-            //    builder.Configuration.AddAzureAppConfiguration(options =>
-            //    {
-            //        options.Connect(new Uri(endpoint), credential)
-            //            .Select("BotService*", labelFilter: LabelFilter.Null)
-            //            .Select("BotService*", builder.Environment.EnvironmentName);
-            //    });
-            //}
-            //catch (Exception ex)
-            //{
-
-            //}
-        }
-    }
-
-    public static IHostApplicationBuilder AddServiceDefaults(this IHostApplicationBuilder builder)
+     public static IHostApplicationBuilder AddServiceDefaults(this IHostApplicationBuilder builder)
     {
         builder.ConfigureOpenTelemetry();
 
@@ -165,7 +100,7 @@ public static class Extensions
     {
         builder.Services.AddHealthChecks()
             // Add a default liveness check to ensure app is responsive
-            .AddCheck("self", () => HealthCheckResult.Healthy(), ["live"]);
+            .AddCheck("self", () => HealthCheckResult.Healthy(), tags: ["live"]);
 
         return builder;
     }
@@ -175,16 +110,16 @@ public static class Extensions
         if (app.Environment.IsPrometheus())
         { 
             app.MapPrometheusScrapingEndpoint();
-        }   
-
-        // All health checks must pass for app to be considered ready to accept traffic after starting
-        app.MapHealthChecks("/health");
+        }
 
         // Only health checks tagged with the "live" tag must pass for app to be considered alive
         app.MapHealthChecks("/alive", new HealthCheckOptions
         {
             Predicate = r => r.Tags.Contains("live")
         });
+
+        // All health checks must pass for app to be considered ready to accept traffic after starting
+        app.MapHealthChecks("/health");
 
         return app;
     }
