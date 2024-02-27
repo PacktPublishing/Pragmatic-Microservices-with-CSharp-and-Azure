@@ -2,33 +2,25 @@
 
 ## Technical Requirements
 
-> The follwing part will change with the next versions of .NET Aspire and the Azure Developer CLI!
-
-To publish the solution to Azure, see [Deploy to Azure using azd](../Deploy2Azure.md)
-
-TODO: update this for the scaling chapter
-
-With this chapter, like the previous chapters, you need an Azure subscription and Docker desktop. To create all the Azure resources for the solution, you can use the Azure Developer CLI – azd up creates all the resources.  
+With this chapter, like the previous chapters, you need an Azure subscription, the Azure Developer CLI (winget install Microsoft.Azd) and Docker desktop.
 The code for this chapter can be found in this GitHub repository: https://github.com/PacktPublishing/Pragmatic-Microservices-With-CSharp-and-Azure
-In the ch11 folder, you’ll see these projects with the result of this chapter. Multiple configurations are available, with the Debug environment Debug-Prometheus and Debug, and similar Release configurations. With the Prometheus configurations, the constant PROMETHEUS is configured. This allows us to differentiate code sections. If the PROMETHEUS constant is defined, the SQL Server database hosted in a Docker container, Prometheus, and Grafana are used. Without this constant, we use Azure Cosmos DB, and Azure Application Insights.
-These are the important projects for this chapter:
+In the ch12 folder, you’ll see these projects with the final result of this chapter. To add the functionality from this chapter, you can start with the source code from the previous chapter.
 
-* Common projects
-  * Codebreaker.AppHost – the .NET Aspire host project. 
-  * Codebreaker.ServiceDefaults – common service configuration. This project is enhanced with service configurations for monitoring.
-* Services and clients
-  * Codebreaker.GamesAPI – the service project is enhanced with logging, metrics, and distributed tracing.
-  * Codebreaker.Bot – this project has monitoring information included and will be used to play games that can be monitored.
-* Configuration folders
-  * The grafana folder contains configuration files that are used within the Grafana Docker container.
-  * The prometheus folder contains a configuration file that is used by the Prometheus Docker container.
-Working through the code with this chapter, you can start using the Start folder which contains the same projects without the code which needs to be added for monitoring.
+The important projects part of this chapters repository folder are
+
+*	Codebreaker.AppHost - the .NET Aspire host project. This project is enhanced by adding a Redis resource for caching.
+*	Codebreaker.ServiceDefaults – here we use common health check configuration for all the services.
+*	Codebreaker.GameAPIs – with this project we implement caching games to reduce database access and add a custom health check.
+
+> Running the local Azure Cosmos DB emulator, uncomment the corresponding code within ApplicationServices.cs! With preview 4, this will not be necessary - the Azure Cosmos Docker container emulator is already configured. With Aspire Preview 4, the code will be updated, and the emulator locally started within a Docker container. With Preview 3 there's also the issue that `azd up publishes debug build. Fixed with https://github.com/Azure/azure-dev/pull/3443
 
 ## Deploy the application to Azure
 
 [See Deploy the application to Azure using azd](../Deploy2Azure.md)
 
 ## Azure Load Testing test requests
+
+To create the URL based Azure Load Test, you can use this information.
 
 ### Create game
 
@@ -111,7 +103,3 @@ Body:
 Request name: Delete game
 URL: <link to your games API ACA>/games/${gameId}
 HTTP method: DELETE
-
-## Run Playwright tests
-
-[See Playwright tests](../TestWithPlaywright.md)
