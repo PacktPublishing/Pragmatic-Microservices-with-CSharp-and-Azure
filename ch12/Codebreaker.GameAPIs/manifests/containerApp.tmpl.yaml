@@ -1,0 +1,43 @@
+location: {{ .Env.AZURE_LOCATION }}
+identity:
+  type: UserAssigned
+  userAssignedIdentities:
+    ? "{{ .Env.AZURE_CONTAINER_REGISTRY_MANAGED_IDENTITY_ID }}"
+    : {}
+properties:
+  environmentId: {{ .Env.AZURE_CONTAINER_APPS_ENVIRONMENT_ID }}
+  configuration:
+    activeRevisionsMode: single
+    ingress:
+      external: false
+      targetPort: 8080
+      transport: http
+      allowInsecure: true
+    registries:
+    - server: {{ .Env.AZURE_CONTAINER_REGISTRY_ENDPOINT }}
+      identity: {{ .Env.AZURE_CONTAINER_REGISTRY_MANAGED_IDENTITY_ID }}
+  template:
+    containers:
+    - image: {{ .Image }}
+      name: gameapis
+      env:
+      - name: AZURE_CLIENT_ID
+        value: {{ .Env.MANAGED_IDENTITY_CLIENT_ID }}
+      - name: ApplicationInsightsConnectionString
+        value: InstrumentationKey=b5421587-a682-4dc3-b990-5b15fe1fdd9c;IngestionEndpoint=https://westeurope-5.in.applicationinsights.azure.com/;LiveEndpoint=https://westeurope.livediagnostics.monitor.azure.com/
+      - name: ConnectionStrings__GamesCosmosConnection
+        value: AccountEndpoint=https://cosmos-codebreaker-7fsgtcbtnn5m4-dev.documents.azure.com:443/;AccountKey=hbyZYDvYIO4BBgdHUAj85vRBOHlcqfzSG5tOsCaScqC42fVQEAIVQaCugUjCWfMDKlItfF2lDnU8ACDbzojWMA==;
+      - name: ConnectionStrings__redis
+        value: redis:6379
+      - name: DataStore
+        value: InMemory
+      - name: OTEL_DOTNET_EXPERIMENTAL_OTLP_EMIT_EVENT_LOG_ATTRIBUTES
+        value: "true"
+      - name: OTEL_DOTNET_EXPERIMENTAL_OTLP_EMIT_EXCEPTION_LOG_ATTRIBUTES
+        value: "true"
+    scale:
+      minReplicas: 1
+      maxReplicas: 1
+tags:
+  azd-service-name: gameapis
+  aspire-resource-name: gameapis

@@ -1,0 +1,76 @@
+﻿<div class="@(GameFinished ? "container finished" : "container")">
+    <div class="numbers">
+        @for (int i = Game.MaxMoves; i > 0; i--)
+        {
+            <div class="move-number">@i</div>
+        }
+    </div>
+    <div class="game-container">
+        @for (int i = OpenMoves; i > 0; i--)
+        {
+            <div class="@(i == 1 ? "game-row selectable": "game-row")">
+                @for (int y = 0; y < Game.NumberCodes; y++)
+                {
+                    var localVariable = y;
+                    @if (!_isMobile)
+                    {
+                        <div class="@(i == 1 ? $"{_currentMove[localVariable].Item2}" : string.Empty)"
+                             ondragover="event.preventDefault();"
+                             @ondragenter="@(() => SetDropClass(localVariable))"
+                             @ondragleave="@RemoveDropClass"
+                             @ondrop="() => UpdateColor(localVariable)" />
+                    }
+                    else
+                    {
+                        <div class="@(i == 1 ? _currentMove[localVariable].Item2 : string.Empty)" @onclick="() => SelectField(localVariable)" />
+                    }
+                }
+                @if (i == 1 && !GameFinished)
+                {
+                    <div>
+                        <CodeBreakerIconButton Disabled="PlayButtonDisabled" OnClick="async () => await SetMoveAsync()" />
+                    </div>
+                }
+                else
+                {
+                    <div class="key-pegs" />
+                }
+            </div>
+        }
+        @foreach (var move in _gameMoves.Reverse())
+        {
+            <div class="game-move">
+                @foreach (var guess in move.GuessPegs)
+                {
+                    <div class="@(guess.ToLower())" />
+                }
+                <div class="@($"key-pegs {KeyPegsFormat}")">
+                    @foreach (var keypeg in move.KeyPegs)
+                    {
+                        <div class="@keypeg.ToLowerInvariant()" />
+                    }
+                </div>
+            </div>
+        }
+    </div>
+    <div class="@(!_isMobile ? "colors draggable" : "colors")">
+        @foreach (string colorField in Game.FieldValues.Values.FirstOrDefault() ?? [])
+        {
+            @if (!_isMobile)
+            {
+                <div draggable="true"
+                     class="@($"draggable {colorField.ToLower()}")"
+                     @ondragstart="@(() => _activeColor = colorField)">
+                     @colorField[0]
+                </div>
+            }
+            else
+            {
+                <div class="@(_selectable && _selectedField > -1 ? $"{colorField.ToLower()} selectable": colorField.ToLower())"
+                     @onclick="() => SelectColor(colorField)">
+                    @colorField[0]
+                </div>
+            }
+        }
+    </div>
+</div>
