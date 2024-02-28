@@ -3,7 +3,7 @@ using System.Diagnostics;
 
 namespace Codebreaker.GameAPIs.Services;
 
-public class GamesService(IGamesRepository dataRepository, IDistributedCache distributedCache, ILogger<GamesService> logger, GamesMetrics metrics, [FromKeyedServices("Codebreaker.GameAPIs")] ActivitySource activitySource) : IGamesService
+public class GamesService(IGamesRepository dataRepository, IDistributedCache distributedCache, ILiveClient liveClient, ILogger<GamesService> logger, GamesMetrics metrics, [FromKeyedServices("Codebreaker.GameAPIs")] ActivitySource activitySource) : IGamesService
 {
     private const string GameTypeTagName = "codebreaker.gameType";
     private const string GameIdTagName = "codebreaker.gameId";
@@ -71,6 +71,7 @@ public class GamesService(IGamesRepository dataRepository, IDistributedCache dis
             {
                 logger.GameEnded(game);
                 metrics.GameEnded(game);
+                await liveClient.ReportGameEndedAsync(game, cancellationToken);
             }
             activity?.SetStatus(ActivityStatusCode.Ok);
         }
@@ -121,7 +122,9 @@ public class GamesService(IGamesRepository dataRepository, IDistributedCache dis
         game.Duration = duration;
         metrics.GameEnded(game);
         game = await dataRepository.UpdateGameAsync(game, cancellationToken);
-        await distributedCache.RemoveAsync(id.ToString(), cancellationToken);
+        await Task.WhenAll(
+            distributedCache.RemoveAsync(id.ToString(), cancellationToken),
+            liveClient.ReportGameEndedAsync(game, cancellationToken));
         return game;
     }
 

@@ -27,6 +27,12 @@ public static partial class Log
     public static partial void InvalidMoveReceived(this ILogger logger, Guid gameId, string guesses, string errorMessage);
 
     [LoggerMessage(
+        EventId = 3004,
+        Level = LogLevel.Error,
+        Message = "Error writing game completed event, game id: {gameId}")]
+    public static partial void ErrorWritingGameCompletedEvent(this ILogger logger, Guid gameId, Exception ex);
+
+    [LoggerMessage(
         EventId = 4000,
         Level = LogLevel.Information,
         Message = "The game {GameId} started")]

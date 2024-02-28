@@ -1,7 +1,4 @@
-﻿using Microsoft.Azure.Cosmos;
-using System.Net;
-
-namespace Codebreaker.GameAPIs;
+﻿namespace Codebreaker.GameAPIs;
 
 public static class ApplicationServices
 {
@@ -22,8 +19,6 @@ public static class ApplicationServices
                 });
             builder.Services.AddScoped<IGamesRepository, DataContextProxy<GamesSqlServerContext>>();
         }
-
-
 
         static void ConfigureCosmos(IHostApplicationBuilder builder)
         {
@@ -87,13 +82,12 @@ public static class ApplicationServices
         }
 
         builder.Services.AddScoped<IGamesService, GamesService>();
+        builder.Services.AddHttpClient<ILiveClient, APILiveClient>(client =>
+        {
+            client.BaseAddress = new Uri("http://live");
+        });
 
         builder.AddRedisDistributedCache("redis");
-
-#if DEBUG
-        // TODO: remove with preview 4, workaround for Cosmos emulator
-        ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
-#endif
     }
 
     private static bool s_IsDatabaseUpdateComplete = false;
