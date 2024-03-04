@@ -12,7 +12,7 @@ Content-Type: {{ContentType}}
 
 ### Set a move
 
-@id = 9e1aba87-46c2-4bf2-a033-af7f49eddd55
+@id = c9831346-7233-43cf-bb8f-7bc9a09c7d93
 
 PATCH {{Codebreaker.GameAPIs_HostAddress}}/games/{{id}}
 Content-Type: {{ContentType}}
@@ -20,11 +20,11 @@ Content-Type: {{ContentType}}
 {
   "gameType": "Game6x4",
   "playerName": "test",
-  "moveNumber": 1,
+  "moveNumber": 2,
   "guessPegs": [
-    "Red",
     "Green",
     "Blue",
+    "Red",
     "Yellow"
   ]
 }

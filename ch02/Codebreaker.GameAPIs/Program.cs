@@ -2,7 +2,7 @@ using System.Runtime.CompilerServices;
 
 using Microsoft.OpenApi.Models;
 
-[assembly: InternalsVisibleTo("Codbreaker.APIs.Tests")]
+[assembly: InternalsVisibleTo("Codebreaker.APIs.Tests")]
 
 var builder = WebApplication.CreateBuilder(args);
 

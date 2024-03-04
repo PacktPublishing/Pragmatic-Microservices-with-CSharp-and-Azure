@@ -2,5 +2,7 @@
 
 public static class GameExtensions
 {
-    public static bool Ended(this Game game) => game.EndTime != null;
+    [Obsolete("Use HasEnded instead")]
+    public static bool Ended(this Game game) => HasEnded(game);
+    public static bool HasEnded(this Game game) => game.EndTime != null;
 }
