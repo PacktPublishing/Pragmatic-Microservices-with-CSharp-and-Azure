@@ -20,11 +20,9 @@ The source code folder ch02 contains the code samples for this chapter. You’ll
 
 ### Development tools used
 
-This chapter requires using Visual Studio 2022 or Visual Studio Code and .NET Aspire:
+See [Installation](../installation.md) to install Visual Studio 2022 or Visual Studio Code and .NET Aspire. 
 
-- [Download Visual Studio](https://visualstudio.microsoft.com/downloads/?WT.mc_id=DT-MVP-10160).
-- [Download Visual Studio Code](https://code.visualstudio.com/download/?WT.mc_id=DT-MVP-10160).
-- [Install .NET Aspire](https://learn.microsoft.com/en-us/dotnet/aspire/fundamentals/setup-tooling?tabs=visual-studio#install-net-aspire/?WT.mc_id=DT-MVP-10160).
+This chapter requires using Visual Studio 2022 or Visual Studio Code and .NET Aspire:
 
 ## Codebreaker diagrams
 
