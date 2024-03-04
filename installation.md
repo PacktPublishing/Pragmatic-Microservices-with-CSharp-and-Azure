@@ -1,10 +1,26 @@
 # Installation
 
+Mar-2024
+
 ## Visual Studio
+
+To install Visual Studio: `winget install Microsoft.VisualStudio.2022.Community.Preview`
+
+[Visual Studio 2022 Download](https://visualstudio.microsoft.com/downloads/)
 
 ## Visual Studio Code
 
+Install Visual Studio Code: `winget install Microsoft.VisualStudioCode`
+
+## Aspire
+
+[Install daily builds .NET Aspire](https://github.com/dotnet/aspire/blob/main/docs/using-latest-daily.md)
+
+With some chapters, this is currently required to build the code successfully.
+
 ## Docker desktop
+
+Install Docker Desktop on Windows: `winget install Docker.DockerDesktop`
 
 ## SQL server
 
