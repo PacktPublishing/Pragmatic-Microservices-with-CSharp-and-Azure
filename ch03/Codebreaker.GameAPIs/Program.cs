@@ -1,5 +1,4 @@
 
-
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
@@ -21,8 +20,8 @@ builder.Services.AddSwaggerGen(options =>
         },
         License = new OpenApiLicense
         {
-            Name="License API Usage",
-            Url= new Uri("https://www.cninnovation.com/apiusage")
+            Name = "License API Usage",
+            Url = new Uri("https://www.cninnovation.com/apiusage")
         }
     });
 });
@@ -35,28 +34,46 @@ builder.Services.AddScoped<IGamesService, GamesService>();
 
 var app = builder.Build();
 
-app.MapDefaultEndpoints();
-
-if (app.Environment.IsDevelopment())
+// TODO: temporary workaround - wait for Cosmos emulator to be available
+if (app.Configuration["DataStore"] == "Cosmos")
 {
-    app.UseSwagger();
-    app.UseSwaggerUI(options =>
+    bool succeed = false;
+    int maxRetries = 30;
+    int i = 0;
+    HttpClient client = new();
+    string cosmosConnection = app.Configuration.GetConnectionString("codebreakercosmos");
+    var ix1 = cosmosConnection.IndexOf("https");
+    var ix2 = cosmosConnection.IndexOf(";DisableServer");
+    string url = cosmosConnection[ix1..ix2];
+    while (!succeed && i++ < maxRetries)
     {
-        options.SwaggerEndpoint("/swagger/v3/swagger.json", "v3");
-    });
-}
-
-// Update or create the SQL Server database 
-string? dataStore = builder.Configuration.GetValue<string>("DataStore");
-if (dataStore == "SqlServer")
-{
-    using var scope = app.Services.CreateScope();
-    var service = scope.ServiceProvider.GetRequiredService<IGamesRepository>();
-    if (service is DataContextProxy<GamesSqlServerContext> proxy)
-    {
-        await proxy.UpdateDatabaseAsync(app.Logger);
+        try
+        {
+            await Task.Delay(5000);
+            await client.GetAsync(url);
+            succeed = true;
+        }
+        catch (Exception ex)
+        {
+            app.Logger.LogWarning(ex, ex.Message);
+            if (ex.InnerException is not null)
+            {
+                app.Logger.LogWarning(ex.InnerException, ex.InnerException.Message);
+            }
+        }
     }
 }
+
+
+app.MapDefaultEndpoints();
+
+app.UseSwagger();
+app.UseSwaggerUI(options =>
+{
+    options.SwaggerEndpoint("/swagger/v3/swagger.json", "v3");
+});
+
+await app.CreateOrUpdateDatabaseAsync();
 
 app.MapGameEndpoints();
 
