@@ -1,27 +1,37 @@
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
+
 var builder = DistributedApplication.CreateBuilder(args);
 
 string sqlPassword = builder.Configuration["SqlPassword"] ?? throw new InvalidOperationException("could not read password");
 
 var sqlServer = builder.AddSqlServer("sql", sqlPassword)
-    .PublishAsContainer<SqlServerServerResource>()
-    .WithVolume("volume.codebreaker.sql", "/var/opt/mssql", isReadOnly: false)
-    .AddDatabase("CodebreakerSql");
+    .AddDatabase("CodebreakerSql", "codebreaker");
 
-var cosmos = builder.AddAzureCosmosDB("codebreakercosmos")
-    .AddDatabase("codebreaker")
-    .RunAsEmulator();
+// TODO: currently having issues with the Docker container for the Cosmos DB emulator
+// Use the local installed emulator for now
 
 string dataStore = builder.Configuration["DataStore"] ?? "InMemory";
 
-// Use the following code to set the connection strings for the SQL Server and Cosmos DB databases
-// var sqlServerConnectionString = builder.Configuration.GetConnectionString("CodebreakerSql") ?? throw new InvalidOperationException("Could not read SQL Server connection");
-// var cosmosConnectionString = builder.Configuration.GetConnectionString("codebreaker") ?? throw new InvalidOperationException("Could not read Azure Cosmos DB connection");
+if (builder.Environment.IsDevelopment())
+{
+    string cosmosConnection = builder.Configuration.GetConnectionString("GamesCosmosConnection") ?? throw new InvalidOperationException("Could not read CosmosConnection");
 
-builder.AddProject<Projects.Codebreaker_GameAPIs>("gameapis")
-    .WithEnvironment("DataStore", dataStore)
-    .WithReference(cosmos)
-    .WithReference(sqlServer);
-//    .WithEnvironment("ConnectionStrings__GamesSqlServerConnection", sqlServerConnectionString)
-//    .WithEnvironment("ConnectionStrings__GamesCosmosConnection", cosmosConnectionString);
+    builder.AddProject<Projects.Codebreaker_GameAPIs>("gameapis")
+        .WithEnvironment("DataStore", dataStore)
+        .WithReference(sqlServer)
+        .WithEnvironment("ConnectionStrings__codebreakercosmos", cosmosConnection);
+}
+else
+{
+    var cosmos = builder.AddAzureCosmosDB("codebreakercosmos")
+        .AddDatabase("codebreaker")
+        .RunAsEmulator();
+
+    builder.AddProject<Projects.Codebreaker_GameAPIs>("gameapis")
+        .WithEnvironment("DataStore", dataStore)
+        .WithReference(cosmos)
+        .WithReference(sqlServer);
+}
 
 builder.Build().Run();

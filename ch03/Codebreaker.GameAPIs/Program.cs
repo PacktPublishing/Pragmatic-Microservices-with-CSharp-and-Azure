@@ -35,35 +35,7 @@ builder.Services.AddScoped<IGamesService, GamesService>();
 var app = builder.Build();
 
 // TODO: temporary workaround - wait for Cosmos emulator to be available
-if (app.Configuration["DataStore"] == "Cosmos")
-{
-    bool succeed = false;
-    int maxRetries = 30;
-    int i = 0;
-    HttpClient client = new();
-    string cosmosConnection = app.Configuration.GetConnectionString("codebreakercosmos");
-    var ix1 = cosmosConnection.IndexOf("https");
-    var ix2 = cosmosConnection.IndexOf(";DisableServer");
-    string url = cosmosConnection[ix1..ix2];
-    while (!succeed && i++ < maxRetries)
-    {
-        try
-        {
-            await Task.Delay(5000);
-            await client.GetAsync(url);
-            succeed = true;
-        }
-        catch (Exception ex)
-        {
-            app.Logger.LogWarning(ex, ex.Message);
-            if (ex.InnerException is not null)
-            {
-                app.Logger.LogWarning(ex.InnerException, ex.InnerException.Message);
-            }
-        }
-    }
-}
-
+// await app.WaitForEmulatorToBeRadyAsync();
 
 app.MapDefaultEndpoints();
 
