@@ -1,8 +1,3 @@
-using System.Runtime.CompilerServices;
-
-using Microsoft.OpenApi.Models;
-
-[assembly: InternalsVisibleTo("Codbreaker.APIs.Tests")]
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,30 +20,32 @@ builder.Services.AddSwaggerGen(options =>
         },
         License = new OpenApiLicense
         {
-            Name="License API Usage",
-            Url= new Uri("https://www.cninnovation.com/apiusage")
+            Name = "License API Usage",
+            Url = new Uri("https://www.cninnovation.com/apiusage")
         }
     });
 });
 
 // Application Services
 
-builder.AddDataStores();
+builder.AddApplicationServices();
 
 builder.Services.AddScoped<IGamesService, GamesService>();
 
 var app = builder.Build();
 
+// TODO: temporary workaround - wait for Cosmos emulator to be available
+// await app.WaitForEmulatorToBeRadyAsync();
+
 app.MapDefaultEndpoints();
 
-if (app.Environment.IsDevelopment())
+app.UseSwagger();
+app.UseSwaggerUI(options =>
 {
-    app.UseSwagger();
-    app.UseSwaggerUI(options =>
-    {
-        options.SwaggerEndpoint("/swagger/v3/swagger.json", "v3");
-    });
-}
+    options.SwaggerEndpoint("/swagger/v3/swagger.json", "v3");
+});
+
+await app.CreateOrUpdateDatabaseAsync();
 
 app.MapGameEndpoints();
 
