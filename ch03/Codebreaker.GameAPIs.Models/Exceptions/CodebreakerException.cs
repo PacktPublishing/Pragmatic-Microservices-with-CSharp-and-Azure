@@ -31,7 +31,7 @@ public class CodebreakerException : Exception
 
     public static void ThrowIfEnded(Game game)
     {
-        if (game.Ended())
+        if (game.HasEnded())
         {
             throw new CodebreakerException("Game is not active") { Code = CodebreakerExceptionCodes.GameNotActive };
         }

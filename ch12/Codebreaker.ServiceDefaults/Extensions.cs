@@ -87,11 +87,11 @@ public static class Extensions
         }
         else
         {
-            builder.Services.AddOpenTelemetry()
-               .UseAzureMonitor(options =>
-               {
-                   options.ConnectionString = builder.Configuration["ApplicationInsightsConnectionString"];
-               });
+            if (!string.IsNullOrEmpty(builder.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"]))
+            {
+                builder.Services.AddOpenTelemetry()
+                   .UseAzureMonitor();
+            }
         }
         return builder;
     }

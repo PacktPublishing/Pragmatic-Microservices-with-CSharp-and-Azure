@@ -40,29 +40,27 @@ Set this setting with `appsettings.Development.json` (project `Codebreaker.AppHo
 Set the `DataStore` and the `GamesSqlServerConnection with `appsettings.Development.json`
 
 ```json
-  "DataStore": "SqlServer",
-  "ConnectionStrings": {
-    "GamesSqlServerConnection": "server=(localdb)\\mssqllocaldb;database=CodebreakerGames;trusted_connection=true"
-  }
+  "DataStore": "SqlServer"
 ```
 
 Database migration happens when starting the application, thus the database is created on first use with the `SqlServer` setting.
 
 ### Azure Cosmos DB
 
-Running the application with Azure Cosmos DB, set the `DataStore` and the `GamesSqlServerConnection with `appsettings.Development.json`
+> Currently there's an issue with the Cosmos Docker container - see https://github.com/dotnet/aspire/discussions/2535. As a temporary workaround, use the Azure Cosmos DB local emulator on Windows.
+
+Install the Cosmos emulator: `winget install Microsoft.Azure.CosmosEmulator`
+
+In case there are previous installations of the Cosmos emulator which stopped working, reset the data, or if this fails, uninstall the emulator and install it again.
+
+Running the application with Azure Cosmos DB, set the `DataStore` with `appsettings.Development.json` (project Codebreaker.AppHost), and set the `GamesCosmosConnection` (with a well-known endpoint to the emulator):
 
 ```json
   "DataStore": "Cosmos",
   "ConnectionStrings": {
-    "CosmosConnectionString": "AccountEndpoint=https://localhost:8081/;AccountKey=C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==;",
-
+    "GamesCosmosConnection": "AccountEndpoint=https://localhost:8081/;AccountKey=C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==;"
   }
 ```
-
-This is a connection string to the Azure Cosmos DB emulator with a well-known key. Start the emulator, open the data explorer, create the database *Codebreaker*, a container *GamesV3* with the partition key *PartitionKey* as explained in the chapter. 
-
-> Don't add the Cosmos connection string with your Azure environment to the `appsettings.json` file. Instead, use *user secrets* on your local system.
 
 ## Codebreaker diagrams
 

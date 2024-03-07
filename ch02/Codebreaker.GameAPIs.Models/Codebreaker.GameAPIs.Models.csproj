@@ -13,7 +13,8 @@
       See https://github.com/codebreakerapp for more information on the complete solution.
     </Description>
     <PackageReadmeFile>readme.md</PackageReadmeFile>
-    <PackageIcon>codebreaker.jpeg</PackageIcon>   
+    <PackageIcon>codebreaker.jpeg</PackageIcon>
+    <IsAotCompatible>true</IsAotCompatible>
   </PropertyGroup>
 
   <ItemGroup>

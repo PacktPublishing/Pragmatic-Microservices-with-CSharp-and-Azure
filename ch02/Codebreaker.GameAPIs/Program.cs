@@ -2,7 +2,7 @@ using System.Runtime.CompilerServices;
 
 using Microsoft.OpenApi.Models;
 
-[assembly: InternalsVisibleTo("Codbreaker.APIs.Tests")]
+[assembly: InternalsVisibleTo("Codebreaker.APIs.Tests")]
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,8 +25,8 @@ builder.Services.AddSwaggerGen(options =>
         },
         License = new OpenApiLicense
         {
-            Name="License API Usage",
-            Url= new Uri("https://www.cninnovation.com/apiusage")
+            Name = "License API Usage",
+            Url = new Uri("https://www.cninnovation.com/apiusage")
         }
     });
 });
@@ -40,15 +40,12 @@ var app = builder.Build();
 
 app.MapDefaultEndpoints();
 
-if (app.Environment.IsDevelopment())
+app.UseSwagger();
+app.UseSwaggerUI(options =>
 {
-    app.UseSwagger();
-    app.UseSwaggerUI(options =>
-    {
-        // options.InjectStylesheet("/swagger-ui/swaggerstyle.css");
-        options.SwaggerEndpoint("/swagger/v3/swagger.json", "v3");
-    });
-}
+    // options.InjectStylesheet("/swagger-ui/swaggerstyle.css");
+    options.SwaggerEndpoint("/swagger/v3/swagger.json", "v3");
+});
 
 app.MapGameEndpoints();
 
