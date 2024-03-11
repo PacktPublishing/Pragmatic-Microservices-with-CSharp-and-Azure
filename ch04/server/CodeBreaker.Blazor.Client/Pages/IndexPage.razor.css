@@ -1,0 +1,19 @@
+﻿.content-container {
+    overflow-y: auto;
+    padding: 1rem 0.25rem 2rem;
+}
+
+h6 {
+    font-size: 1.5rem;
+}
+
+::deep .card {
+    min-width: 20rem;
+    flex: 1;
+}
+
+@media (max-width: 599px) {
+    .page-title {
+        display: none;
+    }
+}
