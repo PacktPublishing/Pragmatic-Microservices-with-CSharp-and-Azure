@@ -16,36 +16,30 @@ namespace Codebreaker.Client.Games {
     public class GamesRequestBuilder : BaseRequestBuilder {
         /// <summary>Gets an item from the Codebreaker.Client.games.item collection</summary>
         /// <param name="position">The id of the game to set a move</param>
+        /// <returns>A <see cref="GamesItemRequestBuilder"/></returns>
         public GamesItemRequestBuilder this[Guid position] { get {
             var urlTplParams = new Dictionary<string, object>(PathParameters);
             urlTplParams.Add("id", position);
             return new GamesItemRequestBuilder(urlTplParams, RequestAdapter);
         } }
-        /// <summary>Gets an item from the Codebreaker.Client.games.item collection</summary>
-        /// <param name="position">The id of the game to set a move</param>
-        [Obsolete("This indexer is deprecated and will be removed in the next major version. Use the one with the typed parameter instead.")]
-        public GamesItemRequestBuilder this[string position] { get {
-            var urlTplParams = new Dictionary<string, object>(PathParameters);
-            if (!string.IsNullOrWhiteSpace(position)) urlTplParams.Add("id", position);
-            return new GamesItemRequestBuilder(urlTplParams, RequestAdapter);
-        } }
         /// <summary>
-        /// Instantiates a new GamesRequestBuilder and sets the default values.
+        /// Instantiates a new <see cref="GamesRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="pathParameters">Path parameters for the request</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
-        public GamesRequestBuilder(Dictionary<string, object> pathParameters, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/games{?gameType*,playerName*,date*,ended*}", pathParameters) {
+        public GamesRequestBuilder(Dictionary<string, object> pathParameters, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/games{?date*,ended*,gameType*,playerName*}", pathParameters) {
         }
         /// <summary>
-        /// Instantiates a new GamesRequestBuilder and sets the default values.
+        /// Instantiates a new <see cref="GamesRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
-        public GamesRequestBuilder(string rawUrl, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/games{?gameType*,playerName*,date*,ended*}", rawUrl) {
+        public GamesRequestBuilder(string rawUrl, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/games{?date*,ended*,gameType*,playerName*}", rawUrl) {
         }
         /// <summary>
         /// Get games based on query parameters
         /// </summary>
+        /// <returns>A List&lt;Game&gt;</returns>
         /// <param name="cancellationToken">Cancellation token to use when cancelling requests</param>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
@@ -62,9 +56,11 @@ namespace Codebreaker.Client.Games {
         /// <summary>
         /// Creates and starts a game
         /// </summary>
+        /// <returns>A <see cref="CreateGameResponse"/></returns>
         /// <param name="body">The request body</param>
         /// <param name="cancellationToken">Cancellation token to use when cancelling requests</param>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
+        /// <exception cref="GameError">When receiving a 400 status code</exception>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
         public async Task<CreateGameResponse?> PostAsync(CreateGameRequest body, Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default) {
@@ -82,6 +78,7 @@ namespace Codebreaker.Client.Games {
         /// <summary>
         /// Get games based on query parameters
         /// </summary>
+        /// <returns>A <see cref="RequestInformation"/></returns>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
@@ -98,6 +95,7 @@ namespace Codebreaker.Client.Games {
         /// <summary>
         /// Creates and starts a game
         /// </summary>
+        /// <returns>A <see cref="RequestInformation"/></returns>
         /// <param name="body">The request body</param>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
@@ -108,7 +106,7 @@ namespace Codebreaker.Client.Games {
         public RequestInformation ToPostRequestInformation(CreateGameRequest body, Action<RequestConfiguration<DefaultQueryParameters>> requestConfiguration = default) {
 #endif
             _ = body ?? throw new ArgumentNullException(nameof(body));
-            var requestInfo = new RequestInformation(Method.POST, UrlTemplate, PathParameters);
+            var requestInfo = new RequestInformation(Method.POST, "{+baseurl}/games", PathParameters);
             requestInfo.Configure(requestConfiguration);
             requestInfo.Headers.TryAdd("Accept", "application/json");
             requestInfo.SetContentFromParsable(RequestAdapter, "application/json", body);
@@ -117,6 +115,7 @@ namespace Codebreaker.Client.Games {
         /// <summary>
         /// Returns a request builder with the provided arbitrary URL. Using this method means any other path or query parameters are ignored.
         /// </summary>
+        /// <returns>A <see cref="GamesRequestBuilder"/></returns>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
         public GamesRequestBuilder WithUrl(string rawUrl) {
             return new GamesRequestBuilder(rawUrl, RequestAdapter);
@@ -151,18 +150,6 @@ namespace Codebreaker.Client.Games {
             [QueryParameter("playerName")]
             public string PlayerName { get; set; }
 #endif
-        }
-        /// <summary>
-        /// Configuration for the request such as headers, query parameters, and middleware options.
-        /// </summary>
-        [Obsolete("This class is deprecated. Please use the generic RequestConfiguration class generated by the generator.")]
-        public class GamesRequestBuilderGetRequestConfiguration : RequestConfiguration<GamesRequestBuilderGetQueryParameters> {
-        }
-        /// <summary>
-        /// Configuration for the request such as headers, query parameters, and middleware options.
-        /// </summary>
-        [Obsolete("This class is deprecated. Please use the generic RequestConfiguration class generated by the generator.")]
-        public class GamesRequestBuilderPostRequestConfiguration : RequestConfiguration<DefaultQueryParameters> {
         }
     }
 }

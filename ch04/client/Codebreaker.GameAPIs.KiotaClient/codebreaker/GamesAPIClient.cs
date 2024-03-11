@@ -21,7 +21,7 @@ namespace Codebreaker.Client {
             new GamesRequestBuilder(PathParameters, RequestAdapter);
         }
         /// <summary>
-        /// Instantiates a new GamesAPIClient and sets the default values.
+        /// Instantiates a new <see cref="GamesAPIClient"/> and sets the default values.
         /// </summary>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
         public GamesAPIClient(IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}", new Dictionary<string, object>()) {

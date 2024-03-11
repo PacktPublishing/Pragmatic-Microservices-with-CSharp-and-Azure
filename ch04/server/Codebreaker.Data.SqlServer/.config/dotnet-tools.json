@@ -2,10 +2,10 @@
   "version": 1,
   "isRoot": true,
   "tools": {
-    "microsoft.openapi.kiota": {
-      "version": "1.12.0",
+    "dotnet-ef": {
+      "version": "8.0.2",
       "commands": [
-        "kiota"
+        "dotnet-ef"
       ]
     }
   }

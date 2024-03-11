@@ -32,7 +32,21 @@ builder.AddApplicationServices();
 
 builder.Services.AddScoped<IGamesService, GamesService>();
 
+const string AllowCodeBreakerOrigins = "_allowCodeBreakerOrigins";
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: AllowCodeBreakerOrigins,
+        builder =>
+        {
+            builder.AllowAnyOrigin()
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+        });
+});
+
 var app = builder.Build();
+
+app.UseCors(AllowCodeBreakerOrigins);
 
 // TODO: temporary workaround - wait for Cosmos emulator to be available
 // await app.WaitForEmulatorToBeRadyAsync();
@@ -45,8 +59,10 @@ app.UseSwaggerUI(options =>
     options.SwaggerEndpoint("/swagger/v3/swagger.json", "v3");
 });
 
+await app.WaitForEmulatorToBeRadyAsync();
 await app.CreateOrUpdateDatabaseAsync();
 
 app.MapGameEndpoints();
+app.MapCreateCosmosEndpoints();
 
 app.Run();
