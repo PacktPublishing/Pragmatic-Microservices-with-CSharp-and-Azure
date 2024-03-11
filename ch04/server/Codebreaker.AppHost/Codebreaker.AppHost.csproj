@@ -15,7 +15,6 @@
   </ItemGroup>
   
   <ItemGroup>
-    <ProjectReference Include="..\CodeBreaker.Blazor\CodeBreaker.Blazor.csproj" />
     <ProjectReference Include="..\Codebreaker.GameAPIs\Codebreaker.GameAPIs.csproj" />
   </ItemGroup>
 

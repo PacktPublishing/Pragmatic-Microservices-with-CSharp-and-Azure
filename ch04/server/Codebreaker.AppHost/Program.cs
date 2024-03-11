@@ -11,7 +11,6 @@ var sqlServer = builder.AddSqlServer("sql", sqlPassword)
 
 string dataStore = builder.Configuration["DataStore"] ?? "InMemory";
 
-
 string cosmosConnection = builder.Configuration.GetConnectionString("GamesCosmosConnection") ?? throw new InvalidOperationException("Could not read CosmosConnection");
 
 //builder.AddProject<Projects.Codebreaker_GameAPIs>("gameapis")
@@ -27,8 +26,5 @@ var gameApis = builder.AddProject<Projects.Codebreaker_GameAPIs>("gameapis")
     .WithEnvironment("DataStore", dataStore)
     .WithReference(cosmos)
     .WithReference(sqlServer);
-
-builder.AddProject<Projects.CodeBreaker_Blazor>("blazor")
-    .WithReference(gameApis);
 
 builder.Build().Run();
