@@ -1,4 +1,5 @@
-﻿using System.Security.Authentication;
+﻿using System.Net;
+using System.Security.Authentication;
 
 namespace Codebreaker.GameAPIs;
 
@@ -25,13 +26,13 @@ public static class ApplicationServices
                 var connectionString = builder.Configuration.GetConnectionString("codebreakercosmos") ?? throw new InvalidOperationException("Could not read Cosmos connection string");
                 options.UseCosmos(connectionString, "codebreaker", cosmosOptions =>
                 {
-                    //cosmosOptions.HttpClientFactory(() =>
-                    //    new HttpClient(new HttpClientHandler
-                    //    {
-                    //        ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
-                    //    }));
-                    ////cosmosOptions.RequestTimeout(TimeSpan.FromMinutes(10));
-                    //cosmosOptions.ConnectionMode(Microsoft.Azure.Cosmos.ConnectionMode.Gateway);
+                    cosmosOptions.HttpClientFactory(() =>
+                        new HttpClient(new HttpClientHandler
+                        {
+                            ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+                        }));
+                    //cosmosOptions.RequestTimeout(TimeSpan.FromMinutes(10));
+                    cosmosOptions.ConnectionMode(Microsoft.Azure.Cosmos.ConnectionMode.Gateway);
                 });
                 options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
             });
@@ -42,7 +43,7 @@ public static class ApplicationServices
             });
 
             // TODO: cosmos workaround
-            // ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
+            ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
         }
 
         static void ConfigureInMemory(IHostApplicationBuilder builder)
@@ -91,20 +92,42 @@ public static class ApplicationServices
         }
         else if (dataStore == "Cosmos")
         {
-            try
+            bool succeeded = false;
+            int maxRetries = 30;
+            int i = 0;
+            while (!succeeded)
             {
-                using var scope = app.Services.CreateScope();
-                var repo = scope.ServiceProvider.GetRequiredService<IGamesRepository>();
-                if (repo is GamesCosmosContext context)
+                CancellationTokenSource cts = new(TimeSpan.FromSeconds(180));
+                try
                 {
-                    bool created = await context.Database.EnsureCreatedAsync();
-                    app.Logger.LogInformation("Cosmos database created: {created}", created);
+                    using var scope = app.Services.CreateScope();
+                    var repo = scope.ServiceProvider.GetRequiredService<IGamesRepository>();
+                    if (repo is GamesCosmosContext context)
+                    {
+                        bool created = await context.Database.EnsureCreatedAsync(cts.Token);
+                        succeeded = true;
+                        app.Logger.LogInformation("Cosmos database created: {created}", created);
+                    }
                 }
-            }
-            catch (Exception ex)
-            {
-                app.Logger.LogError(ex, "Error updating database");
-                throw;
+                catch (Exception ex)
+                {
+                    if (ex.InnerException is IOException ioEx)
+                    {
+                        app.Logger.LogWarning(ioEx, "IOException with emulator, {error}", ioEx.Message);
+                        i++;
+                        if (i >= maxRetries)
+                        {
+                            app.Logger.LogError(ioEx, "Error updating database");
+                            throw;
+                        }
+                        await Task.Delay(5000); // it takes a minute!
+                    }
+                    else
+                    {
+                        app.Logger.LogError(ex, "Error updating database");
+                        throw;
+                    }
+                }
             }
         }
     }
@@ -112,6 +135,8 @@ public static class ApplicationServices
     // TODO: temporary workaround to wait for Cosmos emulator to be available
     public static async Task WaitForEmulatorToBeRadyAsync(this WebApplication app)
     {
+        ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
+
         if (app.Configuration["DataStore"] != "Cosmos")
         {
             return;
