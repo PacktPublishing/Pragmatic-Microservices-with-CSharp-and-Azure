@@ -1,0 +1,6 @@
+@Codebreaker.Live_HostAddress = http://localhost:5130
+
+GET {{Codebreaker.Live_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
