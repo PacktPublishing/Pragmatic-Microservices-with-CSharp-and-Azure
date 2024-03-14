@@ -97,7 +97,7 @@ public sealed class GamesMetrics : IDisposable
 
     public void GameEnded(Game game)
     {
-        if (!game.Ended())
+        if (!game.HasEnded())
         {
             return;
         }

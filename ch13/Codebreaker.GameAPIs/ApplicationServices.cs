@@ -1,56 +1,77 @@
-﻿namespace Codebreaker.GameAPIs;
+﻿using Microsoft.Extensions.Diagnostics.HealthChecks;
+using System.Diagnostics;
+
+namespace Codebreaker.GameAPIs;
 
 public static class ApplicationServices
 {
+    public static void AddApplicationTelemetry(this IHostApplicationBuilder builder)
+    {
+        builder.Services.AddMetrics();
+
+        builder.Services.AddOpenTelemetry().WithMetrics(m => m.AddMeter(GamesMetrics.MeterName));
+
+        builder.Services.AddSingleton<GamesMetrics>();
+
+        builder.Services.AddKeyedSingleton("Codebreaker.GameAPIs", (services, _) => new ActivitySource("Codebreaker.GameAPIs", "1.0.0"));
+
+        builder.Services.AddHealthChecks().AddCheck("databaseupdate", () =>
+        {
+            return IsDatabaseUpdateComplete ?
+                HealthCheckResult.Healthy("DB update done") :
+                HealthCheckResult.Degraded("DB update not ready");
+        }, ["ready"]);
+    }
+
     public static void AddApplicationServices(this IHostApplicationBuilder builder)
     {
         static void ConfigureSqlServer(IHostApplicationBuilder builder)
         {
-            builder.AddSqlServerDbContext<GamesSqlServerContext>("CodebreakerSql",
-                configureSettings: static settings =>
-                {
-                    settings.Metrics = true;
-                    settings.Tracing = true;
-                    settings.HealthChecks = true;
-                },
-                configureDbContextOptions: static options =>
-                {
-                    options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
-                });
-            builder.Services.AddScoped<IGamesRepository, DataContextProxy<GamesSqlServerContext>>();
+            builder.Services.AddDbContextPool<IGamesRepository, GamesSqlServerContext>(options =>
+            {
+                string connectionString = builder.Configuration.GetConnectionString("CodebreakerSql") ?? 
+                    throw new InvalidOperationException("Connection string CodebreakerSql not configured");
+                options.UseSqlServer(connectionString);
+                options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+            });
+
+            builder.EnrichSqlServerDbContext<GamesSqlServerContext>(settings =>
+            {
+                
+                settings.Metrics = true;
+                settings.Tracing = true;
+                settings.HealthChecks = true;
+            });
         }
 
         static void ConfigureCosmos(IHostApplicationBuilder builder)
         {
             // TODO: workaround for preview 3 to use the Cosmos emulator - remove with preview 4
             // azd up uses a debug build - just uncomment this workaround to run this on the local machine
-//#if DEBUG
-//            builder.Services.AddDbContext<IGamesRepository, GamesCosmosContext>(options =>
-//            {
-//                options.UseCosmos("AccountEndpoint = http://localhost:8082/;AccountKey=C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==", "codebreaker",
-//                    cosmosOptions =>
-//                    {
-//                        cosmosOptions.HttpClientFactory(() => new HttpClient(new HttpClientHandler()
-//                        {
-//                            ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
-//                        }));
-//                        cosmosOptions.ConnectionMode(ConnectionMode.Gateway);
-//                    });
-//            });
-//#else
-            builder.AddCosmosDbContext<GamesCosmosContext>("codebreaker", "codebreaker",
-                configureSettings: settings =>
-                {
-                    settings.IgnoreEmulatorCertificate = true;
-                    settings.Metrics = true;
-                    settings.Tracing = true;
-                },
-                configureDbContextOptions: options =>
-                {
-                    options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
-                });
+            //#if DEBUG
+            //            builder.Services.AddDbContext<IGamesRepository, GamesCosmosContext>(options =>
+            //            {
+            //                options.UseCosmos("AccountEndpoint = http://localhost:8082/;AccountKey=C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==", "codebreaker",
+            //                    cosmosOptions =>
+            //                    {
+            //                        cosmosOptions.HttpClientFactory(() => new HttpClient(new HttpClientHandler()
+            //                        {
+            //                            ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+            //                        }));
+            //                        cosmosOptions.ConnectionMode(ConnectionMode.Gateway);
+            //                    });
+            //            });
+            //#else
 
-            builder.Services.AddScoped<IGamesRepository, DataContextProxy<GamesCosmosContext>>();
+            builder.Services.AddDbContext<IGamesRepository, GamesCosmosContext>(options =>
+            {
+                options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+            });
+            builder.EnrichCosmosDbContext<GamesCosmosContext>(settings =>
+            {
+                settings.Metrics = true;
+                settings.Tracing = true;
+            });
 // #endif
         }
 
@@ -82,7 +103,7 @@ public static class ApplicationServices
         }
 
         builder.Services.AddScoped<IGamesService, GamesService>();
-        builder.Services.AddHttpClient<ILiveClient, APILiveClient>(client =>
+        builder.Services.AddHttpClient<ILiveReportClient, LiveReportClient>(client =>
         {
             client.BaseAddress = new Uri("http://live");
         });
@@ -91,7 +112,7 @@ public static class ApplicationServices
     }
 
     private static bool s_IsDatabaseUpdateComplete = false;
-    public static bool IsDatabaseUpdateComplete
+    internal static bool IsDatabaseUpdateComplete
     {
         get => s_IsDatabaseUpdateComplete;
     }

@@ -3,7 +3,7 @@ using System.Diagnostics;
 
 namespace Codebreaker.GameAPIs.Services;
 
-public class GamesService(IGamesRepository dataRepository, IDistributedCache distributedCache, ILiveClient liveClient, ILogger<GamesService> logger, GamesMetrics metrics, [FromKeyedServices("Codebreaker.GameAPIs")] ActivitySource activitySource) : IGamesService
+public class GamesService(IGamesRepository dataRepository, IDistributedCache distributedCache, ILiveReportClient liveClient, ILogger<GamesService> logger, GamesMetrics metrics, [FromKeyedServices("Codebreaker.GameAPIs")] ActivitySource activitySource) : IGamesService
 {
     private const string GameTypeTagName = "codebreaker.gameType";
     private const string GameIdTagName = "codebreaker.gameId";
@@ -67,11 +67,11 @@ public class GamesService(IGamesRepository dataRepository, IDistributedCache dis
                 UpdateGameInCacheAsync(game, cancellationToken));
 
             metrics.MoveSet(game.Id, DateTime.UtcNow, game.GameType);
-            if (game.Ended())
+            if (game.HasEnded())
             {
                 logger.GameEnded(game);
                 metrics.GameEnded(game);
-                await liveClient.ReportGameEndedAsync(game, cancellationToken);
+                await liveClient.ReportGameEndedAsync(game.ToGameSummary1(), cancellationToken);
             }
             activity?.SetStatus(ActivityStatusCode.Ok);
         }
@@ -124,7 +124,7 @@ public class GamesService(IGamesRepository dataRepository, IDistributedCache dis
         game = await dataRepository.UpdateGameAsync(game, cancellationToken);
         await Task.WhenAll(
             distributedCache.RemoveAsync(id.ToString(), cancellationToken),
-            liveClient.ReportGameEndedAsync(game, cancellationToken));
+            liveClient.ReportGameEndedAsync(game.ToGameSummary1(), cancellationToken));
         return game;
     }
 

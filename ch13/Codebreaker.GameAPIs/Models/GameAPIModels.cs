@@ -30,5 +30,3 @@ public record class UpdateGameResponse(
     bool Ended,
     bool IsVictory,
     string[]? Results);
-
-public record GameSummary(Guid Id, string PlayerName, DateTime StartTime, int NumberMoves, bool Won, TimeSpan? Duration);
