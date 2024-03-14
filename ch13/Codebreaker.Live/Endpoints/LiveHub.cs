@@ -2,13 +2,13 @@
 
 public class LiveHub : Hub
 {
-    public async Task RegisterGameCompletions(string gameType, CancellationToken cancellationToken)
+    public override Task OnConnectedAsync()
     {
-        await Groups.AddToGroupAsync(Context.ConnectionId, gameType, cancellationToken);
+        return base.OnConnectedAsync();
     }
 
-    //public async Task SendGameCompletion(GameSummary gameSummary)
-    //{
-    //    await Clients.Group(gameSummary.GameType).SendGameSummaryAsync("GameCompletion", gameSummary);
-    //}
+    public async Task RegisterGameCompletions(string gameType)
+    {
+        await Groups.AddToGroupAsync(Context.ConnectionId, gameType);
+    }
 }

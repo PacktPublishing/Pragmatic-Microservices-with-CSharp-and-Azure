@@ -7,12 +7,15 @@ public static class ApplicationServices
     public static void AddApplicationServices(this IHostApplicationBuilder builder)
     {
         builder.Services.AddSignalR();
-        builder.Services.AddSingleton<IGameSummaryService, GameSummaryService>();
     }
 
-    public static WebApplication MapApplicationEndpoints(this WebApplication app)
+    public static WebApplication MapApplicationEndpoints(this WebApplication app, ILogger logger)
     {
-        app.MapHub<LiveHub>("/live");
+        // map REST endpoints
+        app.MapLiveGamesEndpoints(logger);
+
+        // map SignalR hub
+        app.MapHub<LiveHub>("/livesubscribe");
         return app;
     }
 }
