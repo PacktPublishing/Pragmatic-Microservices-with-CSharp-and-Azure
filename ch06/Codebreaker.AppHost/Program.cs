@@ -9,7 +9,9 @@ builder.AddAzureProvisioning();
 //    .PublishAsAzureSqlDatabase()
 //    .AddDatabase("codebreaker");
 
-var cosmos = builder.AddAzureCosmosDB("cb-cosmos")
+// the name needs to be reduced until this fix: https://github.com/Azure/azure-dev/issues/3496
+// don't use cb-cosmos, because of dpeloy failing with the '-' in the name
+var cosmos = builder.AddAzureCosmosDB("cbcosmos")
     .AddDatabase("codebreaker");
 
 var gameAPIs = builder.AddProject<Projects.Codebreaker_GameAPIs>("gameapis")

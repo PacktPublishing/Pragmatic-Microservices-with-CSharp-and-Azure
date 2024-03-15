@@ -11,7 +11,7 @@ builder.AddServiceDefaults();
 builder.Services.AddOpenTelemetry()
     .WithTracing(tracing => tracing.AddSource(ApiDbInitializer.ActivitySourceName));
 
-builder.AddCosmosDbContext<GamesCosmosContext>(connectionName: "codebreakercosmos", databaseName: "codebreaker");
+builder.AddCosmosDbContext<GamesCosmosContext>(connectionName: "cbcosmos", databaseName: "codebreaker");
 
 var app = builder.Build();
 

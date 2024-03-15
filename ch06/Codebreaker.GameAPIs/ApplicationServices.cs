@@ -26,7 +26,7 @@ public static class ApplicationServices
         {
             builder.Services.AddDbContextPool<IGamesRepository, GamesCosmosContext>(options =>
             {
-                string connectionString = builder.Configuration.GetConnectionString("cb-cosmos") ??
+                string connectionString = builder.Configuration.GetConnectionString("cbcosmos") ??
                     throw new InvalidOperationException("Cosmos connection string not configured");
                 options.UseCosmos(connectionString, "codebreaker");
                 options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
