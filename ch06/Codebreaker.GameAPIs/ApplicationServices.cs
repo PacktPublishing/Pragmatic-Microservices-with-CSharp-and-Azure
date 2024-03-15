@@ -55,4 +55,52 @@ public static class ApplicationServices
 
         builder.Services.AddScoped<IGamesService, GamesService>();
     }
+
+    public static async Task CreateOrUpdateDatabaseAsync(this WebApplication app)
+    {
+        var dataStore = app.Configuration["DataStore"] ?? "InMemory";
+
+        if (dataStore == "SqlServer")
+        {
+
+            try
+            {
+                using var scope = app.Services.CreateScope();
+
+                var repo = scope.ServiceProvider.GetRequiredService<IGamesRepository>();
+                if (repo is GamesSqlServerContext context)
+                {
+                    await context.Database.MigrateAsync();
+                    app.Logger.LogInformation("SQL Server database updated");
+                    // add a delay to try out /health checks
+                    // await Task.Delay(TimeSpan.FromSeconds(25));
+                }
+            }
+            catch (Exception ex)
+            {
+                app.Logger.LogError(ex, "Error updating database");
+                throw;
+            }
+        }
+
+        // The database is created from the AppHost AddDatabase method. The Cosmos container is created here - if it doesn't exist yet.
+        if (dataStore == "Cosmos")
+        {
+            try
+            {
+                using var scope = app.Services.CreateScope();
+                var repo = scope.ServiceProvider.GetRequiredService<IGamesRepository>();
+                if (repo is GamesCosmosContext context)
+                {
+                    bool created = await context.Database.EnsureCreatedAsync();
+                    app.Logger.LogInformation("Cosmos database created: {created}", created);
+                }
+            }
+            catch (Exception ex)
+            {
+                app.Logger.LogError(ex, "Error updating database");
+                throw;
+            }
+        }
+    }
 }
