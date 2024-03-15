@@ -7,12 +7,6 @@
     <UserSecretsId>4053495e-84a4-48c2-91d3-4b8290310020</UserSecretsId>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
-
-  <PropertyGroup>     
-    <ContainerRegistry>codebreakertest.azurecr.io</ContainerRegistry>     
-    <ContainerRepository>codebreaker/bot</ContainerRepository>
-    <ContainerImageTags>3.5.3;latest</ContainerImageTags>
-  </PropertyGroup>
   
   <ItemGroup>
     <PackageReference Include="CNinnovation.Codebreaker.GamesClient" Version="3.6.0-beta.23" />

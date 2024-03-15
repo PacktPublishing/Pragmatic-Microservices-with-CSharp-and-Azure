@@ -9,12 +9,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-	<InternalsVisibleTo Include="Codbreaker.APIs.Tests"/>
+	<InternalsVisibleTo Include="Codbreaker.APIs.Tests" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Aspire.Microsoft.EntityFrameworkCore.Cosmos" Version="8.0.0-preview.5.24163.20" />
-    <PackageReference Include="Aspire.Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.0-preview.5.24163.20" />
+    <PackageReference Include="Aspire.Microsoft.EntityFrameworkCore.Cosmos" Version="8.0.0-preview.5.24165.2" />
+    <PackageReference Include="Aspire.Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.0-preview.5.24165.2" />
     <PackageReference Include="CNinnovation.Codebreaker.Cosmos" Version="3.6.0-beta.19" />
     <PackageReference Include="CNinnovation.Codebreaker.SqlServer" Version="3.6.0-beta.16" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.3" />
