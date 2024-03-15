@@ -9,7 +9,7 @@ builder.AddAzureProvisioning();
 //    .PublishAsAzureSqlDatabase()
 //    .AddDatabase("codebreaker");
 
-var cosmos = builder.AddAzureCosmosDB("codebreakercosmos")
+var cosmos = builder.AddAzureCosmosDB("cb-cosmos")
     .AddDatabase("codebreaker");
 
 var gameAPIs = builder.AddProject<Projects.Codebreaker_GameAPIs>("gameapis")
