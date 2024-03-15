@@ -16,7 +16,9 @@
   
   <ItemGroup>
     <ProjectReference Include="..\CodeBreaker.Bot\CodeBreaker.Bot.csproj" />
+    <ProjectReference Include="..\Codebreaker.CosmosCreate\Codebreaker.CosmosCreate.csproj" />
     <ProjectReference Include="..\Codebreaker.GameAPIs\Codebreaker.GameAPIs.csproj" />
+    <ProjectReference Include="..\Codebreaker.SqlServerMigration\Codebreaker.SqlServerMigration.csproj" />
   </ItemGroup>
 
 </Project>

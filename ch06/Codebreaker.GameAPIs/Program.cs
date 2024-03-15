@@ -4,8 +4,6 @@ using Codebreaker.GameAPIs;
 
 using Microsoft.OpenApi.Models;
 
-[assembly: InternalsVisibleTo("Codbreaker.APIs.Tests")]
-
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
