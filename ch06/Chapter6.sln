@@ -13,6 +13,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Codebreaker.AppHost", "Code
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Codebreaker.ServiceDefaults", "Codebreaker.ServiceDefaults\Codebreaker.ServiceDefaults.csproj", "{B0ABA7A0-8FED-4754-8EF1-D6F5DC87BBA2}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Codebreaker.SqlServerMigration", "Codebreaker.SqlServerMigration\Codebreaker.SqlServerMigration.csproj", "{83F7B300-5745-4DE3-91E2-04A2721347E6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Codebreaker.CosmosCreate", "Codebreaker.CosmosCreate\Codebreaker.CosmosCreate.csproj", "{05ACFD1F-2521-4FC7-9971-A95756B9B68A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +43,14 @@ Global
 		{B0ABA7A0-8FED-4754-8EF1-D6F5DC87BBA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B0ABA7A0-8FED-4754-8EF1-D6F5DC87BBA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B0ABA7A0-8FED-4754-8EF1-D6F5DC87BBA2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{83F7B300-5745-4DE3-91E2-04A2721347E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{83F7B300-5745-4DE3-91E2-04A2721347E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{83F7B300-5745-4DE3-91E2-04A2721347E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{83F7B300-5745-4DE3-91E2-04A2721347E6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{05ACFD1F-2521-4FC7-9971-A95756B9B68A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{05ACFD1F-2521-4FC7-9971-A95756B9B68A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{05ACFD1F-2521-4FC7-9971-A95756B9B68A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{05ACFD1F-2521-4FC7-9971-A95756B9B68A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -9,16 +9,17 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["Codebreaker.GameAPIs/Codebreaker.GameAPIs.csproj", "Codebreaker.GameAPIs/"]
-COPY ["Codebreaker.Data.Cosmos/Codebreaker.Data.Cosmos.csproj", "Codebreaker.Data.Cosmos/"]
-COPY ["Codebreaker.GameAPIs.Models/Codebreaker.GameAPIs.Models.csproj", "Codebreaker.GameAPIs.Models/"]
-COPY ["Codebreaker.Data.SqlServer/Codebreaker.Data.SqlServer.csproj", "Codebreaker.Data.SqlServer/"]
-RUN dotnet restore "Codebreaker.GameAPIs/Codebreaker.GameAPIs.csproj"
+COPY ["Codebreaker.ServiceDefaults/Codebreaker.ServiceDefaults.csproj", "Codebreaker.ServiceDefaults/"]
+#Following copy not needed anymore when we don't use the .NET Aspire daily build
+COPY ["nuget.config", "nuget.config"]
+RUN dotnet restore "./Codebreaker.GameAPIs/Codebreaker.GameAPIs.csproj"
 COPY . .
 WORKDIR "/src/Codebreaker.GameAPIs"
-RUN dotnet build "Codebreaker.GameAPIs.csproj" -c $BUILD_CONFIGURATION -o /app/build
+RUN dotnet build "./Codebreaker.GameAPIs.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "Codebreaker.GameAPIs.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+ARG BUILD_CONFIGURATION=Release
+RUN dotnet publish "./Codebreaker.GameAPIs.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
