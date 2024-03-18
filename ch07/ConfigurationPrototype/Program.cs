@@ -1,18 +1,26 @@
-using System.Collections;
-
-Console.WriteLine("Defined environment variables");
-IDictionary vars = Environment.GetEnvironmentVariables();
-foreach (object? key in vars.Keys)
-{
-    Console.WriteLine($"{key} {vars[key]}");
-}
-Console.WriteLine();
+using Azure.Data.AppConfiguration;
+using Azure.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.AddServiceDefaults();
 builder.Configuration.AddJsonFile("connectionstrings.json", optional: true);
 
-string appConfigConnectionString = builder.Configuration["AzureAppConfigurationConnection"] ?? throw new InvalidOperationException("AzureAppConfigurationConnection not found");
-builder.Configuration.AddAzureAppConfiguration(appConfigConnectionString);
+builder.Configuration.AddAzureAppConfiguration(appConfigOptions =>
+{
+    DefaultAzureCredentialOptions credentialOptions = new()
+    {
+        // ManagedIdentityClientId = ""
+    };
+
+    DefaultAzureCredential cred = new();
+    string appConfigUrl = builder.Configuration.GetConnectionString("codebreakerconfig") ?? throw new InvalidOperationException("could not read codebreakerconfig");
+    appConfigOptions.Connect(new Uri(appConfigUrl), cred)
+        .ConfigureKeyVault(keyVaultOptions =>
+        {
+            keyVaultOptions.SetCredential(cred);
+        });
+});
 
 // Add services to the container.
 
@@ -24,14 +32,12 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+app.MapDefaultEndpoints();
 
-app.UseHttpsRedirection();
+// Configure the HTTP request pipeline.
+app.UseSwagger();
+app.UseSwaggerUI();
+
 
 app.MapGet("/readconfig", (IConfiguration config) =>
 {
@@ -48,6 +54,12 @@ app.MapGet("/azureconfig", (IConfiguration config) =>
 {
     string? connectionString = config.GetSection("ConfigurationPrototype").GetConnectionString("SqlServer");
     return $"Configuration value from Azure App Configuration: {connectionString}";
+});
+
+app.MapGet("/secret", (IConfiguration config) =>
+{
+    string? connectionString = config.GetSection("ConfigurationPrototype").GetConnectionString("Cosmos");
+    return $"Configuration value from Azure Key Vault via App Configuration: {connectionString}";
 });
 
 app.Run();
