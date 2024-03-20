@@ -18,6 +18,14 @@ Install Visual Studio Code: `winget install Microsoft.VisualStudioCode`
 
 With some chapters, this is currently required to build the code successfully.
 
+Using these instructions, install the .NET Aspire dotnet workload. To retrieve the NuGet packages, a nuget.config file is used.
+
+## Azure Developer CLI
+
+Install the Azure Developer CLI at least with version **azd version 1.7.0-beta.1-pr.3518885 (commit d62cc4c16bda2eefabf48b7d7f8bd616cad1445a)**:
+
+
+
 ## Docker desktop
 
 Install Docker Desktop on Windows: `winget install Docker.DockerDesktop`

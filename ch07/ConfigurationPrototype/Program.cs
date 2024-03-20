@@ -1,4 +1,3 @@
-using Azure.Data.AppConfiguration;
 using Azure.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,17 +7,24 @@ builder.Configuration.AddJsonFile("connectionstrings.json", optional: true);
 
 builder.Configuration.AddAzureAppConfiguration(appConfigOptions =>
 {
+#if DEBUG
+    DefaultAzureCredential credential = new();
+#else
+    string managedIdentityClientId = builder.Configuration["AZURE_CLIENT_ID"] ?? string.Empty;
     DefaultAzureCredentialOptions credentialOptions = new()
     {
-        // ManagedIdentityClientId = ""
+        ManagedIdentityClientId = managedIdentityClientId,
+        ExcludeEnvironmentCredential = true,
+        ExcludeWorkloadIdentityCredential = true
     };
-
-    DefaultAzureCredential cred = new();
+    DefaultAzureCredential credential = new(credentialOptions);
+#endif
     string appConfigUrl = builder.Configuration.GetConnectionString("codebreakerconfig") ?? throw new InvalidOperationException("could not read codebreakerconfig");
-    appConfigOptions.Connect(new Uri(appConfigUrl), cred)
+    appConfigOptions.Connect(new Uri(appConfigUrl), credential)
+        .Select("ConfigurationPrototype*")
         .ConfigureKeyVault(keyVaultOptions =>
         {
-            keyVaultOptions.SetCredential(cred);
+            keyVaultOptions.SetCredential(credential);
         });
 });
 
