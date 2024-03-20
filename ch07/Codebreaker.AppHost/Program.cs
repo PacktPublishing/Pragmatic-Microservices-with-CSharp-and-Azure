@@ -1,17 +1,44 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
-var appConfiguration = builder.AddAzureAppConfiguration("CodebreakerAppConfiguration");
+string dataStore = builder.Configuration["DataStore"] ?? "InMemory";
 
-string cosmosConnectionString = builder.Configuration["CosmosConnectionString"] ?? throw new InvalidOperationException("Could not find CosmosConnectionString");
+builder.AddAzureProvisioning();
 
-var cosmos = builder.AddAzureCosmosDB("GamesCosmosConnection", cosmosConnectionString);
+//var sqlServer = builder.AddSqlServer("codebreakersql")
+//    .PublishAsAzureSqlDatabase()
+//    .AddDatabase("codebreaker");
+
+var appConfig = builder.AddAzureAppConfiguration("codebreakerconfig");
+
+var keyVault = builder.AddAzureKeyVault("codebreakervault");
+
+builder.AddProject<Projects.ConfigurationPrototype>("configurationprototype")
+    .WithReference(appConfig)
+    .WithReference(keyVault);
+
+builder.AddProject<Projects.Codebreaker_InitalizeAppConfig>("initappconfig")
+    .WithReference(appConfig);
+
+// the name needs to be reduced until this fix: https://github.com/Azure/azure-dev/issues/3496
+// don't use cb-cosmos, because of deploy failing with the '-' in the name
+var cosmos = builder.AddAzureCosmosDB("cbcosmos")
+    .AddDatabase("codebreaker");
 
 var gameAPIs = builder.AddProject<Projects.Codebreaker_GameAPIs>("gameapis")
+    // .WithReference(sqlServer)
     .WithReference(cosmos)
-    .WithReference(appConfiguration);
+    .WithReference(appConfig)
+    .WithEnvironment("DataStore", dataStore);
 
 builder.AddProject<Projects.CodeBreaker_Bot>("bot")
-    .WithReference(gameAPIs)
-    .WithReference(appConfiguration);
+    .WithReference(appConfig)
+    .WithReference(gameAPIs);
+
+// currently disabled - see https://github.com/PacktPublishing/Pragmatic-Microservices-with-CSharp-and-Azure/issues/81
+//builder.AddProject<Projects.Codebreaker_CosmosCreate>("createcosmos")
+//    .WithReference(cosmos);
+
+//builder.AddProject<Projects.Codebreaker_SqlServerMigration>("sqlcreate")
+//    .WithReference(sqlServer);
 
 builder.Build().Run();

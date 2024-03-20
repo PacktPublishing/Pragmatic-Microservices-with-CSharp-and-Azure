@@ -1,8 +1,4 @@
-﻿using Azure.Identity;
-
-using Microsoft.Extensions.Configuration.AzureAppConfiguration;
-
-namespace CodeBreaker.Bot;
+﻿namespace CodeBreaker.Bot;
 
 internal static class ApplicationServices
 {
