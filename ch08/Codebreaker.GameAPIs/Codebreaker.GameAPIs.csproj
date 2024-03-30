@@ -13,8 +13,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Aspire.Microsoft.EntityFrameworkCore.Cosmos" Version="8.0.0-preview.5.24170.4" />
-    <PackageReference Include="Aspire.Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.0-preview.5.24170.4" />
+    <PackageReference Include="Aspire.Microsoft.EntityFrameworkCore.Cosmos" Version="8.1.0-preview.1.24179.9" />
+    <PackageReference Include="Aspire.Microsoft.EntityFrameworkCore.SqlServer" Version="8.1.0-preview.1.24179.9" />
     <PackageReference Include="CNinnovation.Codebreaker.Cosmos" Version="3.6.0-beta.19" />
     <PackageReference Include="CNinnovation.Codebreaker.SqlServer" Version="3.6.0-beta.16" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.3" />
