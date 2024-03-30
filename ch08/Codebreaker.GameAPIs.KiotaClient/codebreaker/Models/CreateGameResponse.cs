@@ -14,10 +14,10 @@ namespace Codebreaker.Client.Models {
 #else
         public CreateGameResponse_fieldValues FieldValues { get; set; }
 #endif
-        /// <summary>The gameId property</summary>
-        public Guid? GameId { get; set; }
         /// <summary>The gameType property</summary>
         public Codebreaker.Client.Models.GameType? GameType { get; set; }
+        /// <summary>The id property</summary>
+        public Guid? Id { get; set; }
         /// <summary>The maxMoves property</summary>
         public int? MaxMoves { get; set; }
         /// <summary>The numberCodes property</summary>
@@ -33,6 +33,7 @@ namespace Codebreaker.Client.Models {
         /// <summary>
         /// Creates a new instance of the appropriate class based on discriminator value
         /// </summary>
+        /// <returns>A <see cref="CreateGameResponse"/></returns>
         /// <param name="parseNode">The parse node to use to read the discriminator value and create the object</param>
         public static CreateGameResponse CreateFromDiscriminatorValue(IParseNode parseNode) {
             _ = parseNode ?? throw new ArgumentNullException(nameof(parseNode));
@@ -41,11 +42,12 @@ namespace Codebreaker.Client.Models {
         /// <summary>
         /// The deserialization information for the current model
         /// </summary>
-        public IDictionary<string, Action<IParseNode>> GetFieldDeserializers() {
+        /// <returns>A IDictionary&lt;string, Action&lt;IParseNode&gt;&gt;</returns>
+        public virtual IDictionary<string, Action<IParseNode>> GetFieldDeserializers() {
             return new Dictionary<string, Action<IParseNode>> {
                 {"fieldValues", n => { FieldValues = n.GetObjectValue<CreateGameResponse_fieldValues>(CreateGameResponse_fieldValues.CreateFromDiscriminatorValue); } },
-                {"gameId", n => { GameId = n.GetGuidValue(); } },
                 {"gameType", n => { GameType = n.GetEnumValue<GameType>(); } },
+                {"id", n => { Id = n.GetGuidValue(); } },
                 {"maxMoves", n => { MaxMoves = n.GetIntValue(); } },
                 {"numberCodes", n => { NumberCodes = n.GetIntValue(); } },
                 {"playerName", n => { PlayerName = n.GetStringValue(); } },
@@ -55,11 +57,11 @@ namespace Codebreaker.Client.Models {
         /// Serializes information the current object
         /// </summary>
         /// <param name="writer">Serialization writer to use to serialize this model</param>
-        public void Serialize(ISerializationWriter writer) {
+        public virtual void Serialize(ISerializationWriter writer) {
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
             writer.WriteObjectValue<CreateGameResponse_fieldValues>("fieldValues", FieldValues);
-            writer.WriteGuidValue("gameId", GameId);
             writer.WriteEnumValue<GameType>("gameType", GameType);
+            writer.WriteGuidValue("id", Id);
             writer.WriteIntValue("maxMoves", MaxMoves);
             writer.WriteIntValue("numberCodes", NumberCodes);
             writer.WriteStringValue("playerName", PlayerName);
