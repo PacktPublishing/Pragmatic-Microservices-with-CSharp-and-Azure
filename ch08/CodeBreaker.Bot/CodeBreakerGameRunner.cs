@@ -14,7 +14,7 @@ public class CodeBreakerGameRunner(GamesClient gamesClient, ILogger<CodeBreakerG
     private readonly GamesClient _gamesClient = gamesClient;
 
     // initialize a list of all the possible options using numbers for every color
-    private List<int> InitializePossibleValues()
+    private static List<int> InitializePossibleValues()
     {
         static List<int> Create8Colors(int shift)
         {
@@ -52,8 +52,14 @@ public class CodeBreakerGameRunner(GamesClient gamesClient, ILogger<CodeBreakerG
         return list4;
     }
 
+    /// <summary>
+    /// Starts a new game asynchronously.
+    /// </summary>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
     public async Task StartGameAsync(CancellationToken cancellationToken = default)
     {
+        // Generate a unique key for each color
         static int NextKey(ref int key)
         {
             int next = key;
@@ -61,10 +67,12 @@ public class CodeBreakerGameRunner(GamesClient gamesClient, ILogger<CodeBreakerG
             return next;
         }
 
+        // Initialize the possible values for the game
         _possibleValues = InitializePossibleValues();
         _moves.Clear();
         _moveNumber = 0;
 
+        // Start a new game and retrieve the game ID and color names
         (_gameId, _, _, IDictionary<string, string[]> fieldValues) = await _gamesClient.StartGameAsync(GameType.Game6x4, "Bot", cancellationToken);
         int key = 1;
         _colorNames = fieldValues["colors"]
@@ -148,13 +156,13 @@ public class CodeBreakerGameRunner(GamesClient gamesClient, ILogger<CodeBreakerG
         return (IntToColors(value), value);
     }
 
-    private string[] IntToColors(int value) => new[]
-    {
+    private string[] IntToColors(int value) =>
+    [
         _colorNames?[value & 0b111111] ?? string.Empty,
         _colorNames?[(value >> 6) & 0b111111] ?? string.Empty,
         _colorNames?[(value >> 12) & 0b111111] ?? string.Empty,
         _colorNames?[(value >> 18) & 0b111111] ?? string.Empty
-    };
+    ];
 }
 
 public enum CodeColors

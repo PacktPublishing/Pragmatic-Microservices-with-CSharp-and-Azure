@@ -1,0 +1,28 @@
+name: Codebreaker production
+
+on:
+  workflow_dispatch:
+
+# GitHub Actions workflow to deploy to Azure using azd
+# To configure required secrets for connecting to Azure, simply run `azd pipeline config`
+
+# Set up permissions for deploying with secretless Azure federated credentials
+# https://learn.microsoft.com/en-us/azure/developer/github/connect-from-azure?tabs=azure-portal%2Clinux#set-up-azure-login-with-openid-connect-authentication
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  build-and-test:
+    uses: ./.github/workflows/shared-test.yml
+    with:
+      project-name: Codebreaker-Backend
+      solution-path: src/Chapter08.sln
+
+  build-and-deploy:
+    needs:  build-and-test
+    uses: ./.github/workflows/shared-deploy-withenvironment.yml
+    secrets: inherit
+    with:
+      environment-name: codebreaker-08-prod
+  
