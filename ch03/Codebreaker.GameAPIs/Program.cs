@@ -1,5 +1,4 @@
 
-
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
@@ -21,8 +20,8 @@ builder.Services.AddSwaggerGen(options =>
         },
         License = new OpenApiLicense
         {
-            Name="License API Usage",
-            Url= new Uri("https://www.cninnovation.com/apiusage")
+            Name = "License API Usage",
+            Url = new Uri("https://www.cninnovation.com/apiusage")
         }
     });
 });
@@ -35,28 +34,18 @@ builder.Services.AddScoped<IGamesService, GamesService>();
 
 var app = builder.Build();
 
+// TODO: temporary workaround - wait for Cosmos emulator to be available
+// await app.WaitForEmulatorToBeRadyAsync();
+
 app.MapDefaultEndpoints();
 
-if (app.Environment.IsDevelopment())
+app.UseSwagger();
+app.UseSwaggerUI(options =>
 {
-    app.UseSwagger();
-    app.UseSwaggerUI(options =>
-    {
-        options.SwaggerEndpoint("/swagger/v3/swagger.json", "v3");
-    });
-}
+    options.SwaggerEndpoint("/swagger/v3/swagger.json", "v3");
+});
 
-// Update or create the SQL Server database 
-string? dataStore = builder.Configuration.GetValue<string>("DataStore");
-if (dataStore == "SqlServer")
-{
-    using var scope = app.Services.CreateScope();
-    var service = scope.ServiceProvider.GetRequiredService<IGamesRepository>();
-    if (service is DataContextProxy<GamesSqlServerContext> proxy)
-    {
-        await proxy.UpdateDatabaseAsync(app.Logger);
-    }
-}
+await app.CreateOrUpdateDatabaseAsync();
 
 app.MapGameEndpoints();
 

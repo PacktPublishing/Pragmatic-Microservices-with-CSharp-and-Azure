@@ -9,6 +9,7 @@
 
 	<PropertyGroup>
 		<ContainerRepository>codebreaker-bot</ContainerRepository>
+		<UserSecretsId>87a37cf2-8531-434a-b31c-fb3a0bbb46e4</UserSecretsId>
 	</PropertyGroup>
 
 	<ItemGroup>

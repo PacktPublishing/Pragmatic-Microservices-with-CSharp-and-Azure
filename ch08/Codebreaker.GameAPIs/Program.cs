@@ -1,86 +1,34 @@
-using System.Data.Common;
-using System.Runtime.CompilerServices;
-
-using Azure.Core.Diagnostics;
 using Azure.Identity;
+using Codebreaker.GameAPIs;
 
-using Codebreaker.Data.Cosmos;
-using Codebreaker.Data.SqlServer;
-
-using Microsoft.EntityFrameworkCore;
-using Microsoft.FeatureManagement;
-using Microsoft.FeatureManagement.FeatureFilters;
 using Microsoft.OpenApi.Models;
-
-[assembly: InternalsVisibleTo("Codbreaker.APIs.Tests")]
 
 var builder = WebApplication.CreateBuilder(args);
 
-string? solutionEnvironment = builder.Configuration["SolutionEnvironment"];
-string? managedIdentityClientId = builder.Configuration["ManagedIdentityClientId"];
+builder.AddServiceDefaults();
 
-#if DEBUG
-using AzureEventSourceListener listener = AzureEventSourceListener.CreateConsoleLogger();
-
-DefaultAzureCredentialOptions credentialOptions = new()
-{
-    Diagnostics =
-    {
-        LoggedHeaderNames = { "x-ms-request-id" },
-        LoggedQueryParameters = { "api-version" },
-        IsLoggingContentEnabled = true
-    },
-    ExcludeSharedTokenCacheCredential = true,
-    ExcludeAzurePowerShellCredential = true,
-    ExcludeVisualStudioCodeCredential = true,
-    ExcludeEnvironmentCredential = true,
-    ExcludeInteractiveBrowserCredential = true,
-    ExcludeAzureCliCredential = false,
-    ExcludeManagedIdentityCredential = false,
-    ExcludeVisualStudioCredential = false
-};
-
-DefaultAzureCredential credential = new(credentialOptions);
-#else
-DefaultAzureCredentialOptions credentialOptions = new()
-{
-    // ManagedIdentityClientId = managedIdentityClientId,
-    ExcludeSharedTokenCacheCredential = true,
-    ExcludeAzurePowerShellCredential = true,
-    ExcludeVisualStudioCodeCredential = true,
-    ExcludeEnvironmentCredential = true,
-    ExcludeInteractiveBrowserCredential = true,
-    ExcludeAzureCliCredential = false,
-    ExcludeManagedIdentityCredential = false,
-    ExcludeVisualStudioCredential = false
-};
-
-DefaultAzureCredential credential = new(credentialOptions);
-#endif
-
-//builder.Services.AddFeatureManagement()
-//    .AddFeatureFilter<TargetingFilter>()
-//    .AddFeatureFilter<TimeWindowFilter>();
-
-if (solutionEnvironment == "Azure")
-{
-    string endpoint = builder.Configuration["AzureAppConfigurationUri"] ?? throw new InvalidOperationException("Could not read AzureAppConfigurationUri");
-
-    builder.Configuration.AddAzureAppConfiguration(options =>
-    {
-        options.Connect(new Uri(endpoint), credential)
-            .Select("GamesAPI*")
-            .ConfigureKeyVault(kv =>
-            {
-                kv.SetCredential(credential);
-            });
-//            .UseFeatureFlags();
-    });
-}
-else
-{
-   // builder.Services.AddFeatureManagement(builder.Configuration.GetSection("FeatureManagement"));
-}
+//builder.Configuration.AddAzureAppConfiguration(appConfigOptions =>
+//{
+//#if DEBUG
+//    DefaultAzureCredential credential = new();
+//#else
+//    string managedIdentityClientId = builder.Configuration["AZURE_CLIENT_ID"] ?? string.Empty;
+//    DefaultAzureCredentialOptions credentialOptions = new()
+//    {
+//        ManagedIdentityClientId = managedIdentityClientId,
+//        ExcludeEnvironmentCredential = true,
+//        ExcludeWorkloadIdentityCredential = true
+//    };
+//    DefaultAzureCredential credential = new(credentialOptions);
+//#endif
+//    string appConfigUrl = builder.Configuration.GetConnectionString("codebreakerconfig") ?? throw new InvalidOperationException("could not read codebreakerconfig");
+//    appConfigOptions.Connect(new Uri(appConfigUrl), credential)
+//        .Select("gameapis")
+//        .ConfigureKeyVault(keyVaultOptions =>
+//        {
+//            keyVaultOptions.SetCredential(credential);
+//        });
+//});
 
 // Swagger/EndpointDocumentation
 builder.Services.AddEndpointsApiExplorer();
@@ -90,7 +38,7 @@ builder.Services.AddSwaggerGen(options =>
     {
         Version = "v3",
         Title = "Codebreaker Games API",
-        Description = "An ASP.NET Core minimal APIs to play Codebreaker games",
+        Description = "An ASP.NET Core minimal API to play Codebreaker games",
         TermsOfService = new Uri("https://www.cninnovation.com/terms"),
         Contact = new OpenApiContact
         {
@@ -107,48 +55,11 @@ builder.Services.AddSwaggerGen(options =>
 
 // Application Services
 
-string dataStorage = builder.Configuration.GetSection("GamesAPI")["DataStorage"] ??= "InMemory";
-
-if (dataStorage == "Cosmos")
-{
-    builder.Services.AddDbContext<IGamesRepository, GamesCosmosContext>(options =>
-    {
-        // this configuration is using the secret from the Key Vault via the Azure App Configuration
-        string cosmosConnectionString = builder.Configuration.GetSection("GamesAPI").GetConnectionString("CosmosConnectionString") ?? throw new InvalidOperationException("Could not read CosmosConnectionString");
-        options.UseCosmos(cosmosConnectionString, databaseName: "codebreaker")
-            .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
-    });
-}
-else if (dataStorage == "SqlServer")
-{
-    builder.Services.AddDbContext<IGamesRepository, GamesSqlServerContext>(options =>
-    {
-        string connectionString = builder.Configuration.GetConnectionString("GamesSqlServerConnection") ?? throw new InvalidOperationException("Could not find GamesSqlServerConnection");
-        DbConnectionStringBuilder connectionStringBuilder = new()
-        {
-            ConnectionString = connectionString
-        };
-        if (connectionStringBuilder.ContainsKey("user id"))
-        {
-            if (File.Exists("/run/secrets/sqlpassword"))
-            {
-                string password = File.ReadAllText("/run/secrets/sqlpassword");
-                connectionStringBuilder.Add("password", password);
-            }
-        }
-
-        options.UseSqlServer(connectionString)
-            .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
-    });
-}
-else
-{
-    builder.Services.AddSingleton<IGamesRepository, GamesMemoryRepository>();
-}
-
-builder.Services.AddScoped<IGamesService, GamesService>();
+builder.AddApplicationServices();
 
 var app = builder.Build();
+
+app.MapDefaultEndpoints();
 
 app.UseSwagger();
 app.UseSwaggerUI(options =>
@@ -157,5 +68,7 @@ app.UseSwaggerUI(options =>
 });
 
 app.MapGameEndpoints();
+
+await app.CreateOrUpdateDatabaseAsync();
 
 app.Run();

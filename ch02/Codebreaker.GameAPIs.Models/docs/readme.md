@@ -13,11 +13,12 @@ See [Codebreakerlight](https://github.com/codebreakerapp/codebreakerlight) for a
 | --- | --- |
 | Game | This represents the game state. |
 | Move | This represents a move in the game. |
+| GameSummary | This represents the game information, and is used e.g. from the monitoring service |
 
 ### Supporting types
 
 | Type | Description |
 | --- | --- |
 | CodebreakerException | Exceptions thrown within the backend. |
-| CodebreakerExceptionCodes | Contants of exception codes. |
+| CodebreakerExceptionCodes | Constants of exception codes. |
 | GameExtensions | Extension methods for the Game type. |

@@ -1,4 +1,6 @@
-﻿namespace Codebreaker.GameAPIs;
+﻿using System.Security.Authentication;
+
+namespace Codebreaker.GameAPIs;
 
 public static class ApplicationServices
 {
@@ -6,24 +8,41 @@ public static class ApplicationServices
     {
         static void ConfigureSqlServer(IHostApplicationBuilder builder)
         {
-            builder.AddSqlServerDbContext<GamesSqlServerContext>("GamesSqlServerConnection",
-                configureDbContextOptions: options =>
-                {
-                    options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
-                });
-
-            builder.Services.AddScoped<IGamesRepository, DataContextProxy<GamesSqlServerContext>>();
+            builder.Services.AddDbContextPool<IGamesRepository, GamesSqlServerContext>(options =>
+            {
+                var connectionString = builder.Configuration.GetConnectionString("CodebreakerSql") ?? throw new InvalidOperationException("Could not read SQL Server connection string");
+                options.UseSqlServer(connectionString);
+                options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+            });
+            builder.EnrichSqlServerDbContext<GamesSqlServerContext>();
         }
 
+        // TODO: remove certificate workaround when the emulator is fixed
         static void ConfigureCosmos(IHostApplicationBuilder builder)
         {
-            builder.AddCosmosDbContext<GamesCosmosContext>("GamesCosmosConnection", "codebreaker",
-                configureDbContextOptions: options =>
+            builder.Services.AddDbContext<IGamesRepository, GamesCosmosContext>(options =>
+            {
+                var connectionString = builder.Configuration.GetConnectionString("codebreakercosmos") ?? throw new InvalidOperationException("Could not read Cosmos connection string");
+                options.UseCosmos(connectionString, "codebreaker", cosmosOptions =>
                 {
-                    options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+                    //cosmosOptions.HttpClientFactory(() =>
+                    //    new HttpClient(new HttpClientHandler
+                    //    {
+                    //        ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+                    //    }));
+                    ////cosmosOptions.RequestTimeout(TimeSpan.FromMinutes(10));
+                    //cosmosOptions.ConnectionMode(Microsoft.Azure.Cosmos.ConnectionMode.Gateway);
                 });
+                options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+            });
 
-            builder.Services.AddScoped<IGamesRepository, DataContextProxy<GamesCosmosContext>>();
+            builder.EnrichCosmosDbContext<GamesCosmosContext>(settings =>
+            {
+               
+            });
+
+            // TODO: cosmos workaround
+            // ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
         }
 
         static void ConfigureInMemory(IHostApplicationBuilder builder)
@@ -46,5 +65,86 @@ public static class ApplicationServices
         }
 
         builder.Services.AddScoped<IGamesService, GamesService>();
+    }
+
+    public static async Task CreateOrUpdateDatabaseAsync(this WebApplication app)
+    {
+        var dataStore = app.Configuration["DataStore"] ?? "InMemory";
+        if (dataStore == "SqlServer")
+        {
+            try
+            {
+                using var scope = app.Services.CreateScope();
+
+                var repo = scope.ServiceProvider.GetRequiredService<IGamesRepository>();
+                if (repo is GamesSqlServerContext context)
+                {
+                    await context.Database.MigrateAsync();
+                    app.Logger.LogInformation("SQL Server database updated");
+                }
+            }
+            catch (Exception ex)
+            {
+                app.Logger.LogError(ex, "Error updating database");
+                throw;
+            }
+        }
+        else if (dataStore == "Cosmos")
+        {
+            try
+            {
+                using var scope = app.Services.CreateScope();
+                var repo = scope.ServiceProvider.GetRequiredService<IGamesRepository>();
+                if (repo is GamesCosmosContext context)
+                {
+                    bool created = await context.Database.EnsureCreatedAsync();
+                    app.Logger.LogInformation("Cosmos database created: {created}", created);
+                }
+            }
+            catch (Exception ex)
+            {
+                app.Logger.LogError(ex, "Error updating database");
+                throw;
+            }
+        }
+    }
+
+    // TODO: temporary workaround to wait for Cosmos emulator to be available
+    public static async Task WaitForEmulatorToBeRadyAsync(this WebApplication app)
+    {
+        if (app.Configuration["DataStore"] != "Cosmos")
+        {
+            return;
+        }
+        bool succeeded = false;
+        int maxRetries = 30;
+        int i = 0;
+        HttpClient client = new();
+        string cosmosConnection = app.Configuration.GetConnectionString("codebreakercosmos") ?? throw new InvalidOperationException();
+        var ix1 = cosmosConnection.IndexOf("https");
+        var ix2 = cosmosConnection.IndexOf(";DisableServer");
+        string url = cosmosConnection[ix1..ix2];
+        while (!succeeded && i++ < maxRetries)
+        {
+            try
+            {
+                await Task.Delay(5000);
+                await client.GetAsync(url);
+                succeeded = true;
+            }
+            catch (Exception ex)
+            {
+                app.Logger.LogWarning(ex, "{error}", ex.Message);
+                app.Logger.LogWarning(ex, ex.Message);
+                if (ex.InnerException is not null)
+                {
+                    app.Logger.LogWarning(ex.InnerException, "{error}", ex.InnerException.Message);
+                }
+                if (ex.InnerException is AuthenticationException)
+                {
+                    succeeded = true;  // let's be ok with untrusted root with the emulator, we ignore this with the Cosmos config
+                }
+            }
+        }
     }
 }

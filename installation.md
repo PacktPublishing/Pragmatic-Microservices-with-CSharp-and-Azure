@@ -1,10 +1,34 @@
 # Installation
 
+Mar-2024
+
 ## Visual Studio
+
+To install Visual Studio: `winget install Microsoft.VisualStudio.2022.Community.Preview`
+
+[Visual Studio 2022 Download](https://visualstudio.microsoft.com/downloads/)
 
 ## Visual Studio Code
 
+Install Visual Studio Code: `winget install Microsoft.VisualStudioCode`
+
+## Aspire
+
+[Install daily builds .NET Aspire](https://github.com/dotnet/aspire/blob/main/docs/using-latest-daily.md)
+
+With some chapters, this is currently required to build the code successfully.
+
+Using these instructions, install the .NET Aspire dotnet workload. To retrieve the NuGet packages, a nuget.config file is used.
+
+## Azure Developer CLI
+
+Install the Azure Developer CLI at least with version **azd version 1.7.0-beta.1-pr.3518885 (commit d62cc4c16bda2eefabf48b7d7f8bd616cad1445a)**:
+
+
+
 ## Docker desktop
+
+Install Docker Desktop on Windows: `winget install Docker.DockerDesktop`
 
 ## SQL server
 

@@ -19,7 +19,7 @@ public class Move(Guid id, int moveNumber)
     [Required]
     public required string[] GuessPegs { get; init; }
     /// <summary>
-    /// The result from the analyer for this move based on the associated game that contains the move.
+    /// The result from the analyzer for this move based on the associated game that contains the move.
     /// </summary>
     [Required]
     public required string[] KeyPegs { get; init; }
