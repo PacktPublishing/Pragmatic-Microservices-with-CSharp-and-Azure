@@ -1,0 +1,44 @@
+name: Codebreaker test and deploy
+
+on:
+  workflow_dispatch:
+#  push:
+#    branches:
+#      - main
+#    paths:
+#      - 'src/**'
+#  pull_request:
+#    types:
+#    - opened
+#    branches:
+#      - main
+#    paths:
+#      - 'src/**'
+
+# GitHub Actions workflow to deploy to Azure using azd
+# To configure required secrets for connecting to Azure, simply run `azd pipeline config`
+
+# Set up permissions for deploying with secretless Azure federated credentials
+# https://learn.microsoft.com/en-us/azure/developer/github/connect-from-azure?tabs=azure-portal%2Clinux#set-up-azure-login-with-openid-connect-authentication
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  build-and-test:
+    uses: ./.github/workflows/shared-test.yml
+    with:
+      project-name: Codebreaker-Backend
+      solution-path: src/Chapter08.sln
+
+  build-and-deploy:
+    needs:  build-and-test
+    uses: ./.github/workflows/shared-deploy.yml
+    with:
+      environment-name: ${{ vars.AZURE_ENV_NAME }}
+      location: ${{ vars.AZURE_LOCATION }}
+    secrets:
+      AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+  

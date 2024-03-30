@@ -1,0 +1,22 @@
+name: Codebreaker Test
+
+on:
+  workflow_dispatch:
+#  push:
+#    branches:
+#      - main
+#    paths:
+#      - 'src/**'
+#  pull_request:
+#    branches:
+#      - main
+#    paths:
+#      - 'src/**'
+
+jobs:
+  build-and-test:
+    uses: ./.github/workflows/shared-test.yml
+    with:
+      project-name: Codebreaker-Backend
+      solution-path: src/Chapter08.sln
+ 
