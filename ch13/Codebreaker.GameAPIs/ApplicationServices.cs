@@ -7,6 +7,7 @@ public static class ApplicationServices
 {
     public static void AddApplicationTelemetry(this IHostApplicationBuilder builder)
     {
+        string? mode = builder.Configuration["StartupMode"];
         builder.Services.AddMetrics();
 
         builder.Services.AddOpenTelemetry().WithMetrics(m => m.AddMeter(GamesMetrics.MeterName));
@@ -37,8 +38,6 @@ public static class ApplicationServices
 
             builder.EnrichSqlServerDbContext<GamesSqlServerContext>(settings =>
             {
-                
-                settings.Metrics = true;
                 settings.Tracing = true;
                 settings.HealthChecks = true;
             });
@@ -65,12 +64,14 @@ public static class ApplicationServices
 
             builder.Services.AddDbContext<IGamesRepository, GamesCosmosContext>(options =>
             {
+                string connectionString = builder.Configuration.GetConnectionString("codebreakercosmos") ?? throw new InvalidOperationException("Could not read Cosmos connectionstring");
+                options.UseCosmos(connectionString, "codebreaker");
+
                 options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
             });
             builder.EnrichCosmosDbContext<GamesCosmosContext>(settings =>
             {
-                settings.Metrics = true;
-                settings.Tracing = true;
+                settings.Tracing = false;
             });
 // #endif
         }

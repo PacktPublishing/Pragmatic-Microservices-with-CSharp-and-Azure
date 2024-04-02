@@ -1,5 +1,4 @@
 using Azure.Monitor.OpenTelemetry.AspNetCore;
-using Codebreaker.ServiceDefaults;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.DependencyInjection;
@@ -27,7 +26,7 @@ public static class Extensions
             http.AddStandardResilienceHandler();
 
             // Turn on service discovery by default
-            http.UseServiceDiscovery();
+            http.AddServiceDiscovery();
         });
 
         return builder;
@@ -41,28 +40,53 @@ public static class Extensions
             logging.IncludeScopes = true;
         });
 
+        // TODO: add this back!
         builder.Services.AddOpenTelemetry()
-            .WithMetrics(metrics =>
-            {
-                metrics.AddRuntimeInstrumentation()
-                       .AddBuiltInMeters();
-            })
-            .WithTracing(tracing =>
-            {
-                if (builder.Environment.IsDevelopment())
-                {
-                    // We want to view all traces in development
-                    tracing.SetSampler(new AlwaysOnSampler());
-                }
+         .WithMetrics(metrics =>
+         {
+             metrics.AddAspNetCoreInstrumentation()
+                 .AddHttpClientInstrumentation()
+                 .AddRuntimeInstrumentation();
+         })
+         .WithTracing(tracing =>
+         {
+             if (builder.Environment.IsDevelopment())
+             {
+                 // We want to view all traces in development
+                 tracing.SetSampler(new AlwaysOnSampler());
+             }
 
-                tracing.AddSource("Codebreaker.GameAPIs.Client", "Codebreaker.GameAPIs", 
-                    "OpenTelemetry.Instrumentation.EntityFrameworkCore", "Azure.Cosmos.Operation")
-                    .AddAspNetCoreInstrumentation()
-                    .AddGrpcClientInstrumentation()
-                    .AddHttpClientInstrumentation();
-            });
+             tracing.AddAspNetCoreInstrumentation()
+                 // Uncomment the following line to enable gRPC instrumentation (requires the OpenTelemetry.Instrumentation.GrpcNetClient package)
+                 //.AddGrpcClientInstrumentation()
+                 .AddHttpClientInstrumentation();
+         });
 
         builder.AddOpenTelemetryExporters();
+
+        //builder.Services.AddOpenTelemetry()
+        //    .WithMetrics(metrics =>
+        //    {
+        //        metrics.AddAspNetCoreInstrumentation()
+        //            .AddHttpClientInstrumentation()
+        //            .AddRuntimeInstrumentation();
+        //    })
+        //    .WithTracing(tracing =>
+        //    {
+        //        if (builder.Environment.IsDevelopment())
+        //        {
+        //            We want to view all traces in development
+        //            tracing.SetSampler(new AlwaysOnSampler());
+        //        }
+
+        //        tracing.AddSource("Codebreaker.GameAPIs.Client", "Codebreaker.GameAPIs",
+        //            "OpenTelemetry.Instrumentation.EntityFrameworkCore", "Azure.Cosmos.Operation")
+        //            .AddAspNetCoreInstrumentation()
+        //             .AddGrpcClientInstrumentation()
+        //            .AddHttpClientInstrumentation();
+        //    });
+
+        //builder.AddOpenTelemetryExporters();
 
         return builder;
     }
@@ -80,19 +104,16 @@ public static class Extensions
             builder.Services.ConfigureOpenTelemetryMeterProvider(metrics => metrics.AddOtlpExporter());
             builder.Services.ConfigureOpenTelemetryTracerProvider(tracing => tracing.AddOtlpExporter());
         }
-        if (builder.Environment.IsPrometheus())
-        {
-            builder.Services.AddOpenTelemetry()
-               .WithMetrics(metrics => metrics.AddPrometheusExporter());
-        }
-        else
-        {
-            builder.Services.AddOpenTelemetry()
-               .UseAzureMonitor(options =>
-               {
-                   options.ConnectionString = builder.Configuration["ApplicationInsightsConnectionString"];
-               });
-        }
+        //if (Environment.GetEnvironmentVariable("STARTUP") == "Prometheus")
+        //{
+        //    builder.Services.AddOpenTelemetry()
+        //       .WithMetrics(metrics => metrics.AddPrometheusExporter());
+        //}
+        //else
+        //{
+        //    builder.Services.AddOpenTelemetry()
+        //        .UseAzureMonitor();
+        //}
         return builder;
     }
 
@@ -107,10 +128,10 @@ public static class Extensions
 
     public static WebApplication MapDefaultEndpoints(this WebApplication app)
     {
-        if (app.Environment.IsPrometheus())
-        { 
-            app.MapPrometheusScrapingEndpoint();
-        }
+        //if (Environment.GetEnvironmentVariable("STARTUP") == "Prometheus")
+        //{ 
+        //    app.MapPrometheusScrapingEndpoint();
+        //}
 
         // Only health checks tagged with the "live" tag must pass for app to be considered alive
         app.MapHealthChecks("/alive", new HealthCheckOptions
@@ -123,11 +144,4 @@ public static class Extensions
 
         return app;
     }
-
-    private static MeterProviderBuilder AddBuiltInMeters(this MeterProviderBuilder meterProviderBuilder) =>
-        meterProviderBuilder.AddMeter(
-            "Microsoft.AspNetCore.Hosting",
-            "Microsoft.AspNetCore.Server.Kestrel",
-            "Microsoft.EntityFrameworkCore",
-            "System.Net.Http");
 }

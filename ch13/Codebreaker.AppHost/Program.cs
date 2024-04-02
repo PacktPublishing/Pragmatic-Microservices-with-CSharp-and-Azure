@@ -1,80 +1,74 @@
 
-using Codebreaker.AppHost;
-using Codebreaker.ServiceDefaults;
 
 var builder = DistributedApplication.CreateBuilder(args);
 
+//var startupMode = builder.AddParameter("StartupMode");
+
+
 string dataStore = builder.Configuration["DataStore"] ?? "InMemory";
 
-if (builder.Environment.IsPrometheus())
-{
-    builder.AddUserSecretsForPrometheusEnvironment();
-    string sqlPassword = builder.Configuration["SqlPassword"] ?? throw new InvalidOperationException("could not read password");
+//if (builder.Environment.IsPrometheus())
+//{
+//    var sqlPasswordResource = builder.AddParameter("sqlPassword", secret: true);
 
-    var sqlServer = builder.AddSqlServerContainer("sql", sqlPassword)
-        .WithVolumeMount("volume.codebreaker.sql", "/var/opt/mssql", VolumeMountType.Named)
-        .AddDatabase("CodebreakerSql");
+////    string sqlPassword = builder.Configuration["SqlPassword"] ?? throw new InvalidOperationException("could not read password");
 
-    var prometheus = builder.AddContainer("prometheus", "prom/prometheus")
-           .WithVolumeMount("../prometheus", "/etc/prometheus")
-           .WithHttpEndpoint(containerPort: 9090, hostPort: 9090);
+//    var sqlServer = builder.AddSqlServer("sql", password: sqlPasswordResource)
+//        .WithVolume("volume.codebreaker.sql", "/var/opt/mssql")
+//        .AddDatabase("CodebreakerSql");
 
-    var grafana = builder.AddContainer("grafana", "grafana/grafana")
-                         .WithVolumeMount("../grafana/config", "/etc/grafana")
-                         .WithVolumeMount("../grafana/dashboards", "/var/lib/grafana/dashboards")
-                         .WithHttpEndpoint(containerPort: 3000, hostPort: 3000, name: "grafana-http");
+//    var prometheus = builder.AddContainer("prometheus", "prom/prometheus")
+//           .WithVolume("../prometheus", "/etc/prometheus")
+//           .WithHttpEndpoint(containerPort: 9090, hostPort: 9090);
 
-    var redis = builder.AddRedisContainer("redis");
+//    var grafana = builder.AddContainer("grafana", "grafana/grafana")
+//                         .WithVolume("../grafana/config", "/etc/grafana")
+//                         .WithVolume("../grafana/dashboards", "/var/lib/grafana/dashboards")
+//                         .WithHttpEndpoint(containerPort: 3000, hostPort: 3000, name: "grafana-http");
 
-    var gameAPIs = builder.AddProject<Projects.Codebreaker_GameAPIs>("gameapis")
-        .WithReference(sqlServer)
-        .WithReference(redis)
-        .WithEnvironment("DataStore", dataStore)
-        .WithEnvironment("GRAFANA_URL", grafana.GetEndpoint("grafana-http"))
-        .WithReplicas(1);
+//    var redis = builder.AddRedis("redis")
+//        .PublishAsContainer();
 
-    builder.AddProject<Projects.CodeBreaker_Blazor_Host>("blazor")
-        .WithReference(gameAPIs);
+//    var gameAPIs = builder.AddProject<Projects.Codebreaker_GameAPIs>("gameapis")
+//        .WithReference(sqlServer)
+//        .WithReference(redis)
+//        .WithEnvironment("DataStore", dataStore)
+//        .WithEnvironment("")
+//        .WithEnvironment("GRAFANA_URL", grafana.GetEndpoint("grafana-http"))
+//        .WithReplicas(1);
 
-    builder.AddProject<Projects.CodeBreaker_Bot>("bot")
-        .WithReference(gameAPIs);
+//    builder.AddProject<Projects.CodeBreaker_Bot>("bot")
+//        .WithReference(gameAPIs);
 
-}
-else
-{
-    var appInsightsConnectionString = builder.Configuration["ApplicationInsightsConnectionString"] ?? throw new InvalidOperationException("Could not read AppInsightsConnectionString");
+//}
+//else
 
-    var redis = builder.AddRedisContainer("redis");
+builder.AddAzureProvisioning();
 
-    //string sqlPassword = builder.Configuration["SqlPassword"] ?? throw new InvalidOperationException("could not read password");
-    //var sqlServer = builder.AddSqlServerContainer("sql", sqlPassword)
-    //    .WithVolumeMount("volume.codebreaker.sql", "/var/opt/mssql", VolumeMountType.Named)
-    //    .AddDatabase("CodebreakerSql");
+var logs = builder.AddAzureLogAnalyticsWorkspace("logs");
+var insights = builder.AddAzureApplicationInsights("insights", logs);
 
-//#if DEBUG
-//    var cosmos = builder.AddAzureCosmosDB("codebreakercosmos")
-//        .UseEmulator(port: 8081)
-//        .AddDatabase("codebreaker")
-//        .WithHttpEndpoint(8081, hostPort: 8082, name: "cosmos");
-//#else
-    var cosmos = builder.AddAzureCosmosDB("codebreakercosmos")
-        .AddDatabase("codebreaker");
-//#endif
+var redis = builder.AddRedis("redis")
+    .PublishAsContainer();
 
-    var gameAPIs = builder.AddProject<Projects.Codebreaker_GameAPIs>("gameapis")
-        .WithReference(cosmos)
-        .WithReference(redis)
-        .WithEnvironment("DataStore", dataStore)
-        .WithEnvironment("ApplicationInsightsConnectionString", appInsightsConnectionString)
-        .WithReplicas(1);
+var cosmos = builder.AddAzureCosmosDB("codebreakercosmos")
+    .AddDatabase("codebreaker");
 
-    builder.AddProject<Projects.CodeBreaker_Blazor_Host>("blazor")
-        .WithReference(gameAPIs)
-        .WithEnvironment("ApplicationInsightsConnectionString", appInsightsConnectionString);
+//var live = builder.AddProject<Projects.Codebreaker_Live>("live")
+//    .WithReference(insights)
+//    .WithReplicas(1);
 
-    builder.AddProject<Projects.CodeBreaker_Bot>("bot")
-        .WithReference(gameAPIs)
-        .WithEnvironment("ApplicationInsightsConnectionString", appInsightsConnectionString);
-}
+var gameAPIs = builder.AddProject<Projects.Codebreaker_GameAPIs>("gameapis")
+    .WithReference(cosmos)
+    .WithReference(redis)
+    .WithReference(insights)
+    // .WithReference(live)
+    .WithEnvironment("DataStore", dataStore);
+
+builder.AddProject<Projects.CodeBreaker_Bot>("bot")
+    .WithReference(insights)
+    .WithReference(gameAPIs);
+
+
 
 builder.Build().Run();

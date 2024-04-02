@@ -6,7 +6,8 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "DOTNET_ENVIRONMENT": "Development",
-        "DOTNET_DASHBOARD_OTLP_ENDPOINT_URL": "http://localhost:16263"
+        "DOTNET_DASHBOARD_OTLP_ENDPOINT_URL": "http://localhost:16263",
+        "ASPIRE_ALLOW_UNSECURED_TRANSPORT": "true"
       },
       "dotnetRunMessages": true,
       "applicationUrl": "http://localhost:15100"
@@ -15,9 +16,10 @@
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Prometheus",
-        "DOTNET_ENVIRONMENT": "Prometheus",
-        "DOTNET_DASHBOARD_OTLP_ENDPOINT_URL": "http://localhost:16263"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "DOTNET_ENVIRONMENT": "Development",
+        "DOTNET_DASHBOARD_OTLP_ENDPOINT_URL": "http://localhost:16263",
+        "ASPIRE_ALLOW_UNSECURED_TRANSPORT": "true"
       },
       "dotnetRunMessages": true,
       "applicationUrl": "http://localhost:15100"
