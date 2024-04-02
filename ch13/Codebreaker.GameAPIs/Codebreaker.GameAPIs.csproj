@@ -34,7 +34,7 @@
 
 
 	<ItemGroup>
-		<PackageReference Include="CNinnovation.Codebreaker.BackendModels" Version="3.6.0-beta.25" />
+		<PackageReference Include="CNinnovation.Codebreaker.BackendModels" Version="3.6.0-beta.26" />
 		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.3" />
 		<PackageReference Include="Microsoft.Extensions.ApiDescription.Server" Version="8.0.3">
 		  <PrivateAssets>all</PrivateAssets>

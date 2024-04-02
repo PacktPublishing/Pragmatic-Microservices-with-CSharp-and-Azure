@@ -9,7 +9,7 @@ public class LiveReportClient(HttpClient httpClient, ILogger<LiveReportClient> l
         PropertyNameCaseInsensitive = true
     };
 
-    public async Task ReportGameEndedAsync(GameSummary1 gameSummary, CancellationToken cancellationToken = default)
+    public async Task ReportGameEndedAsync(GameSummary gameSummary, CancellationToken cancellationToken = default)
     {
         try
         {

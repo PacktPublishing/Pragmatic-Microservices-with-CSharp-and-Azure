@@ -71,7 +71,7 @@ public class GamesService(IGamesRepository dataRepository, IDistributedCache dis
             {
                 logger.GameEnded(game);
                 metrics.GameEnded(game);
-                await liveClient.ReportGameEndedAsync(game.ToGameSummary1(), cancellationToken);
+                await liveClient.ReportGameEndedAsync(game.ToGameSummary(), cancellationToken);
             }
             activity?.SetStatus(ActivityStatusCode.Ok);
         }
@@ -124,7 +124,7 @@ public class GamesService(IGamesRepository dataRepository, IDistributedCache dis
         game = await dataRepository.UpdateGameAsync(game, cancellationToken);
         await Task.WhenAll(
             distributedCache.RemoveAsync(id.ToString(), cancellationToken),
-            liveClient.ReportGameEndedAsync(game.ToGameSummary1(), cancellationToken));
+            liveClient.ReportGameEndedAsync(game.ToGameSummary(), cancellationToken));
         return game;
     }
 
