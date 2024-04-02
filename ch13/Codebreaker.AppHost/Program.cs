@@ -49,23 +49,27 @@ var logs = builder.AddAzureLogAnalyticsWorkspace("logs");
 var insights = builder.AddAzureApplicationInsights("insights", logs);
 
 var redis = builder.AddRedis("redis")
+    .WithRedisCommander()
     .PublishAsContainer();
 
 var cosmos = builder.AddAzureCosmosDB("codebreakercosmos")
     .AddDatabase("codebreaker");
 
-//var live = builder.AddProject<Projects.Codebreaker_Live>("live")
-//    .WithReference(insights)
-//    .WithReplicas(1);
+var live = builder.AddProject<Projects.Codebreaker_Live>("live")
+    .WithExternalHttpEndpoints()
+    .WithReference(insights)
+    .WithReplicas(1);
 
 var gameAPIs = builder.AddProject<Projects.Codebreaker_GameAPIs>("gameapis")
+    .WithExternalHttpEndpoints()
     .WithReference(cosmos)
     .WithReference(redis)
     .WithReference(insights)
-    // .WithReference(live)
+    .WithReference(live)
     .WithEnvironment("DataStore", dataStore);
 
 builder.AddProject<Projects.CodeBreaker_Bot>("bot")
+    .WithExternalHttpEndpoints()
     .WithReference(insights)
     .WithReference(gameAPIs);
 
