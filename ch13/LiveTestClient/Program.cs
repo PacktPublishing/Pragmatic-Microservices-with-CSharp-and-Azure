@@ -1,31 +1,21 @@
-﻿using Codebreaker.GameAPIs.Models;
-using Microsoft.AspNetCore.SignalR.Client;
-using System.Net.Http.Json;
+﻿using LiveTestClient;
+
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 Console.WriteLine("Test client - wait for service");
 Console.ReadLine();
 
-var connection = new HubConnectionBuilder()
-    .WithUrl("http://localhost:5130/livesubscribe")
-    .Build();
+var builder = Host.CreateApplicationBuilder(args);
 
-connection.On<GameSummary>("GameCompleted", (GameSummary summary) =>
-{
-    Console.WriteLine($"Game {summary.Id} completed");
-});
+builder.Services.AddSingleton<LiveClient>();
+builder.Services.Configure<LiveClientOptions>(builder.Configuration.GetSection("Codebreaker.Live"));
+using var host = builder.Build();
 
-await connection.StartAsync();
+var client = host.Services.GetRequiredService<LiveClient>();
+await client.StartMonitorAsync();
+await client.SubscribeToGame("Game6x4");
 
-// subscribe
-await connection.InvokeAsync("RegisterGameCompletions", "Game6x4");
+await host.RunAsync();
 
-using HttpClient client = new();
-client.BaseAddress = new Uri("http://localhost:5130");
-
-for (int i = 0; i < 10; i++)
-{
-    await Task.Delay(100);
-    Console.WriteLine("sending a game");
-    GameSummary summary = new(Guid.NewGuid(), "Game6x4", "Test", true, true, DateTime.Now, TimeSpan.FromSeconds(10));
-    await client.PostAsJsonAsync("/live/game", summary);
-}
+Console.WriteLine("Bye...");
