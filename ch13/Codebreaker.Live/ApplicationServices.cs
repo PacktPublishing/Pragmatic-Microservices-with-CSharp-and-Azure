@@ -1,6 +1,4 @@
-﻿using Codebreaker.Live.Endpoints;
-
-namespace Codebreaker.Live;
+﻿namespace Codebreaker.Live;
 
 public static class ApplicationServices
 {

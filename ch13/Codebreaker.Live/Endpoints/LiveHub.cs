@@ -1,14 +1,16 @@
 ﻿namespace Codebreaker.Live.Endpoints;
 
-public class LiveHub : Hub
+public class LiveHub(ILogger<LiveHub> logger) : Hub
 {
-    public override Task OnConnectedAsync()
+    public async Task SubscribeToGameCompletions(string gameType)
     {
-        return base.OnConnectedAsync();
+        logger.ClientSubscribed(Context.ConnectionId, gameType);
+        await Groups.AddToGroupAsync(Context.ConnectionId, gameType);
     }
 
-    public async Task RegisterGameCompletions(string gameType)
+    public async Task UnsubscribeFromGameCompletions(string gameType)
     {
-        await Groups.AddToGroupAsync(Context.ConnectionId, gameType);
+        logger.ClientUnsubscribed(Context.ConnectionId, gameType);
+        await Groups.RemoveFromGroupAsync(Context.ConnectionId, gameType);
     }
 }

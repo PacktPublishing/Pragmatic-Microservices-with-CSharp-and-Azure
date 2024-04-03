@@ -1,5 +1,4 @@
 using Codebreaker.Live;
-using Codebreaker.Live.Endpoints;
 
 var builder = WebApplication.CreateBuilder(args);
 
