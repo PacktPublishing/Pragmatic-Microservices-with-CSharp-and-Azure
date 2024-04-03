@@ -45,23 +45,6 @@ public static class ApplicationServices
 
         static void ConfigureCosmos(IHostApplicationBuilder builder)
         {
-            // TODO: workaround for preview 3 to use the Cosmos emulator - remove with preview 4
-            // azd up uses a debug build - just uncomment this workaround to run this on the local machine
-            //#if DEBUG
-            //            builder.Services.AddDbContext<IGamesRepository, GamesCosmosContext>(options =>
-            //            {
-            //                options.UseCosmos("AccountEndpoint = http://localhost:8082/;AccountKey=C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==", "codebreaker",
-            //                    cosmosOptions =>
-            //                    {
-            //                        cosmosOptions.HttpClientFactory(() => new HttpClient(new HttpClientHandler()
-            //                        {
-            //                            ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
-            //                        }));
-            //                        cosmosOptions.ConnectionMode(ConnectionMode.Gateway);
-            //                    });
-            //            });
-            //#else
-
             builder.Services.AddDbContext<IGamesRepository, GamesCosmosContext>(options =>
             {
                 string connectionString = builder.Configuration.GetConnectionString("codebreakercosmos") ?? throw new InvalidOperationException("Could not read Cosmos connectionstring");
@@ -73,7 +56,6 @@ public static class ApplicationServices
             {
                 settings.Tracing = false;
             });
-// #endif
         }
 
         static void ConfigureInMemory(IHostApplicationBuilder builder)
