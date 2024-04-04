@@ -1,13 +1,8 @@
-﻿using LiveTestClient;
-
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-
-Console.WriteLine("Test client - wait for service");
+﻿
+Console.WriteLine("Test client - wait for service, then press return to continue");
 Console.ReadLine();
 
 var builder = Host.CreateApplicationBuilder(args);
-
 builder.Services.AddSingleton<LiveClient>();
 builder.Services.Configure<LiveClientOptions>(builder.Configuration.GetSection("Codebreaker.Live"));
 using var host = builder.Build();
