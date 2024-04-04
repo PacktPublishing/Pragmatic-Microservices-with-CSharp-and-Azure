@@ -10,6 +10,7 @@
   <ItemGroup>
     <PackageReference Include="CNinnovation.Codebreaker.BackendModels" Version="3.6.0-beta.26" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.2" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Protocols.MessagePack" Version="8.0.3" />
     <PackageReference Include="Microsoft.Azure.SignalR" Version="1.25.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
   </ItemGroup>

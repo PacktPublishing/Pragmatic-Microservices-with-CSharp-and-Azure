@@ -47,7 +47,7 @@ public static class ApplicationServices
         {
             builder.Services.AddDbContext<IGamesRepository, GamesCosmosContext>(options =>
             {
-                string connectionString = builder.Configuration.GetConnectionString("codebreakercosmos") ?? throw new InvalidOperationException("Could not read Cosmos connectionstring");
+                string connectionString = builder.Configuration.GetConnectionString("codebreakercosmos") ?? throw new InvalidOperationException("Could not read the Cosmos connection-string");
                 options.UseCosmos(connectionString, "codebreaker");
 
                 options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
