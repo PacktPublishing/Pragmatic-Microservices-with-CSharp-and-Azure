@@ -1,10 +1,10 @@
 # Diagrams
 
-## Docker Containers
+## Codebreaker
 
 ```mermaid
-C4Container
-    title Container diagram Codebreaker
+C4Context
+    title Codebreaker services
 
     Person(tester, "Tester" "A tester using the bot service")
     Person(player, "Player", "A user playing the game")
@@ -14,6 +14,9 @@ C4Container
         Container(codebreaker.bot, "Bot Service", "ASP.NET Core minimal APIs, HttpClient", "Offers an API to automatically play games")
         Container(codebreaker.gameapis, "Game APIs", "ASP.NET Core minimal API", "Start games, set moves")
         Container(codebreaker.live, "Live Service", "SignalR Service", "Monitor games")
+    }
+
+    System_Boundary(c2, "Storage") {
         ContainerDb(codebreaker.cosmos, "Cosmos DB", "Azure Cosmos DB", "Stores games, moves")
     }
 
@@ -33,5 +36,7 @@ C4Container
     UpdateRelStyle(codebreaker.gameapis, codebreaker.live, $offsetX="-20" $offsetY="-40")
 
     Rel(codebreaker.gameapis, codebreaker.cosmos, "R/W", "EF Core")
-    UpdateRelStyle(codebreaker.gameapis, codebreaker.cosmos, $offsetX="-20" $offsetY="-40")
+    UpdateRelStyle(codebreaker.gameapis, codebreaker.cosmos, $offsetX="80" $offsetY="0")
+
+      UpdateLayoutConfig($c4ShapeInRow="3", $c4BoundaryInRow="1")
 ```
