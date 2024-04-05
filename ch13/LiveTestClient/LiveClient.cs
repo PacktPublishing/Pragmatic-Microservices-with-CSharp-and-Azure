@@ -13,6 +13,11 @@ internal class LiveClient(IOptions<LiveClientOptions> options, ILogger<LiveClien
             string liveUrl = options.Value.LiveUrl ?? throw new InvalidOperationException("LiveUrl not configured");
             _hubConnection = new HubConnectionBuilder()
                 .WithUrl(liveUrl)
+                .ConfigureLogging(logging =>
+                {
+                    logging.AddConsole();
+                    logging.SetMinimumLevel(LogLevel.Debug);
+                })
                 .AddMessagePackProtocol()
                 .Build();
 
