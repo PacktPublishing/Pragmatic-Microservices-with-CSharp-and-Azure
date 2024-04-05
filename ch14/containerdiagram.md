@@ -20,19 +20,19 @@ C4Context
         ContainerDb(codebreaker.cosmos, "Cosmos DB", "Azure Cosmos DB", "Stores games, moves")
     }
 
-    Rel(tester, codebreaker.bot, "Uses", "HTTP")
+    Rel(tester, codebreaker.bot, "Uses", "REST")
     UpdateRelStyle(tester, codebreaker.bot, $offsetX="4" $offsetY="-60")
 
-    Rel(player, codebreaker.gameapis, "Uses", "HTTP")
+    Rel(player, codebreaker.gameapis, "Uses", "REST or gRPC")
     UpdateRelStyle(player, codebreaker.gameapis, $offsetY="-60")
 
     Rel(monitor, codebreaker.live, "Uses", "SignalR")
     UpdateRelStyle(monitor, codebreaker.live, $offxsetY="-90")
 
-    Rel(codebreaker.bot, codebreaker.gameapis, "Uses", "HTTP")
+    Rel(codebreaker.bot, codebreaker.gameapis, "Uses", "gRPC")
     UpdateRelStyle(codebreaker.bot, codebreaker.gameapis, $offsetX="-20" $offsetY="-40")
 
-    Rel(codebreaker.gameapis, codebreaker.live, "Uses", "HTTP")
+    Rel(codebreaker.gameapis, codebreaker.live, "Uses", "gRPC")
     UpdateRelStyle(codebreaker.gameapis, codebreaker.live, $offsetX="-20" $offsetY="-40")
 
     Rel(codebreaker.gameapis, codebreaker.cosmos, "R/W", "EF Core")
