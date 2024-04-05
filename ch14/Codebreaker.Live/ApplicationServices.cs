@@ -9,10 +9,12 @@ public static class ApplicationServices
             .AddNamedAzureSignalR("signalr");
     }
 
-    public static WebApplication MapApplicationEndpoints(this WebApplication app, ILogger logger)
+    public static WebApplication MapApplicationEndpoints(this WebApplication app)
     {
         // map REST endpoints
-        app.MapLiveGamesEndpoints(logger);
+        // app.MapLiveGamesEndpoints(logger);
+        // map gRPC endpoints
+        app.MapGrpcService<LiveGameService>();
 
         // map SignalR hub
         app.MapHub<LiveHub>("/livesubscribe");

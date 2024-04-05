@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+option csharp_namespace = "Codebreaker.Grpc";
+
+package LiveAPI;
+
+import "google/protobuf/empty.proto";
+
+service ReportGame {
+  rpc ReportGameCompleted (PublishGameRequest) returns (google.protobuf.Empty);
+}
+
+message PublishGameRequest {
+  string id = 1;
+  string gameType = 2;
+  string playerName = 3;
+  bool isComleted = 4;
+  bool isVictory = 5;
+  int32 numberMoves = 6;
+  int64 startTime = 7;
+  int64 duration = 8;
+}
+

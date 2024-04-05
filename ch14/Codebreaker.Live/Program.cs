@@ -11,7 +11,7 @@ builder.Services.AddSwaggerGen();
 var app = builder.Build();
 
 app.MapDefaultEndpoints();
-app.MapApplicationEndpoints(app.Logger);
+app.MapApplicationEndpoints();
 
 // Swagger currently has an issue with TimeSpan; I expect this is solved latest with .NET 9
 // https://github.com/dotnet/aspnetcore/issues/54526
