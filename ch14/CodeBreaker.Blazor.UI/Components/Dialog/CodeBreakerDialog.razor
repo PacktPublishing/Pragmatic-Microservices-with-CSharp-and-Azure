@@ -1,0 +1,30 @@
+﻿@using CodeBreaker.Blazor.UI.Models.Icon;
+
+@namespace CodeBreaker.Blazor.UI.Components
+
+<div class="@(ModalHidden ? "pop-up" : "pop-up visible")">
+    <div class="pop-up__title">
+        <h3>
+            @if (!string.IsNullOrWhiteSpace(_title))
+            {
+                @_title
+            }
+        </h3>
+        <CodeBreakerIconButton Class="close" @onclick="CloseDialog" Icon="CodeBreakerIcon.Cancel" />
+    </div>
+    <div class="pop-up__content">
+        @_dialogContent
+    </div>
+    <div class="checkbox-wrapper">
+        @foreach (var context in _dialogActions)
+        {
+            <CodeBreakerButton @onclick="() => CallAction(context.Action)">
+                @context.Label
+            </CodeBreakerButton>
+        }
+    </div>
+</div>
+
+
+
+
