@@ -1,0 +1,17 @@
+﻿@namespace CodeBreaker.Blazor.UI.Components
+
+<div class="top-nav-bar-menu">
+    @foreach (var item in MenuItems)
+    {
+        <NavLink class="menu-link" href="@item.Href" ActiveClass="is-active" Match="NavLinkMatch.All">@item.Label</NavLink>
+    }
+</div>
+
+<div class="mobile-nav-bar-menu">
+    @foreach (var item in MenuItems)
+    {
+        <NavLink class="menu-link" href="@item.Href" ActiveClass="is-active" Match="NavLinkMatch.All">
+            @GetIcon(item.Icon)
+        </NavLink>
+    }
+</div>

@@ -1,0 +1,17 @@
+﻿@namespace CodeBreaker.Blazor.UI.Components
+@typeparam T
+
+<nav>
+    <label class="@(_isOpen ? "is-checked" : "")" for="touch" @onclick=@(() => _isOpen = !_isOpen)>
+        <span>@(string.IsNullOrWhiteSpace(_selectedKey) ? "Select..." : _selectedKey)</span>
+        <i class='bx bx-chevron-down' />
+    </label>
+    <input type="checkbox" id="touch" class="@(_isOpen ? "is-checked" : "")">
+
+    <ul class="slide">
+        @foreach (var item in Items)
+        {
+            <li class="@(_selectedKey == item.Key ? "select-item" : string.Empty)" @onclick="@(() => OnSelectionChanged(item.Key, item.Value))">@item.Key</li>
+        }
+    </ul>
+</nav>
