@@ -35,6 +35,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="CNinnovation.Codebreaker.BackendModels" Version="3.6.0-beta.26" />
+		<PackageReference Include="Grpc.AspNetCore" Version="2.49.0" />
 		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.3" />
 		<PackageReference Include="Microsoft.Extensions.ApiDescription.Server" Version="8.0.3">
 		  <PrivateAssets>all</PrivateAssets>
@@ -48,6 +49,14 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\Codebreaker.ServiceDefaults\Codebreaker.ServiceDefaults.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Protos\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Protobuf Include="..\Codebreaker.Live\Protos\LiveGame.proto" GrpcServices="Client" />
 	</ItemGroup>
 
 </Project>

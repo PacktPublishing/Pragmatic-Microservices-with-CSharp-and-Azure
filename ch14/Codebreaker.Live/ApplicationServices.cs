@@ -7,6 +7,8 @@ public static class ApplicationServices
         builder.Services.AddSignalR()
             .AddMessagePackProtocol()
             .AddNamedAzureSignalR("signalr");
+
+        builder.Services.AddGrpc();
     }
 
     public static WebApplication MapApplicationEndpoints(this WebApplication app)
@@ -14,7 +16,7 @@ public static class ApplicationServices
         // map REST endpoints
         // app.MapLiveGamesEndpoints(logger);
         // map gRPC endpoints
-        app.MapGrpcService<LiveGameService>();
+        app.MapGrpcService<GRPCLiveGameService>();
 
         // map SignalR hub
         app.MapHub<LiveHub>("/livesubscribe");

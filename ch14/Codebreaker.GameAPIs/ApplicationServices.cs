@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Diagnostics.HealthChecks;
+﻿using Codebreaker.Grpc;
+
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using System.Diagnostics;
 
 namespace Codebreaker.GameAPIs;
@@ -86,10 +88,29 @@ public static class ApplicationServices
         }
 
         builder.Services.AddScoped<IGamesService, GamesService>();
-        builder.Services.AddHttpClient<ILiveReportClient, LiveReportClient>(client =>
-        {
-            client.BaseAddress = new Uri("http://live");
-        });
+
+        //builder.Services.AddGrpcClient<ReportGame.ReportGameClient>(grpcClient =>
+        //{
+        //    grpcClient.Address = new Uri("http://live");
+        //    grpcClient.ChannelOptionsActions.Add(channelOptions =>
+        //    {
+        //        channelOptions.ThrowOperationCanceledOnCancellation = true;
+        //    });
+        //});
+
+        builder.Services.AddSingleton<ILiveReportClient, GrpcLiveReportClient>()
+            .AddGrpcClient<ReportGame.ReportGameClient>(grpcClient =>
+            {
+                grpcClient.Address = new Uri("http://live");
+                grpcClient.ChannelOptionsActions.Add(channelOptions =>
+                {
+                    channelOptions.ThrowOperationCanceledOnCancellation = true;
+                });
+            });
+        //builder.Services.AddHttpClient<ILiveReportClient, LiveReportClient>(client =>
+        //{
+        //    client.BaseAddress = new Uri("http://live");
+        //});
 
         builder.AddRedisDistributedCache("redis");
     }

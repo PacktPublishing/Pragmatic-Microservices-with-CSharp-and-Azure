@@ -1,9 +1,10 @@
-using Azure.Monitor.OpenTelemetry.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;
+
+using OpenTelemetry;
 using OpenTelemetry.Logs;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
@@ -40,53 +41,27 @@ public static class Extensions
             logging.IncludeScopes = true;
         });
 
-        // TODO: add this back!
         builder.Services.AddOpenTelemetry()
-         .WithMetrics(metrics =>
-         {
-             metrics.AddAspNetCoreInstrumentation()
-                 .AddHttpClientInstrumentation()
-                 .AddRuntimeInstrumentation();
-         })
+          .WithMetrics(metrics =>
+          {
+            metrics.AddAspNetCoreInstrumentation()
+              .AddHttpClientInstrumentation()
+              .AddRuntimeInstrumentation();
+          })
          .WithTracing(tracing =>
          {
-             if (builder.Environment.IsDevelopment())
-             {
-                 // We want to view all traces in development
-                 tracing.SetSampler(new AlwaysOnSampler());
-             }
+             //if (builder.Environment.IsDevelopment())
+             //{
+             //    // We want to view all traces in development
+             //    tracing.SetSampler(new AlwaysOnSampler());
+             //}
 
-             tracing.AddAspNetCoreInstrumentation()
-                 // Uncomment the following line to enable gRPC instrumentation (requires the OpenTelemetry.Instrumentation.GrpcNetClient package)
-                 //.AddGrpcClientInstrumentation()
-                 .AddHttpClientInstrumentation();
+           tracing.AddAspNetCoreInstrumentation()
+             .AddGrpcClientInstrumentation()
+             .AddHttpClientInstrumentation();
          });
 
         builder.AddOpenTelemetryExporters();
-
-        //builder.Services.AddOpenTelemetry()
-        //    .WithMetrics(metrics =>
-        //    {
-        //        metrics.AddAspNetCoreInstrumentation()
-        //            .AddHttpClientInstrumentation()
-        //            .AddRuntimeInstrumentation();
-        //    })
-        //    .WithTracing(tracing =>
-        //    {
-        //        if (builder.Environment.IsDevelopment())
-        //        {
-        //            We want to view all traces in development
-        //            tracing.SetSampler(new AlwaysOnSampler());
-        //        }
-
-        //        tracing.AddSource("Codebreaker.GameAPIs.Client", "Codebreaker.GameAPIs",
-        //            "OpenTelemetry.Instrumentation.EntityFrameworkCore", "Azure.Cosmos.Operation")
-        //            .AddAspNetCoreInstrumentation()
-        //             .AddGrpcClientInstrumentation()
-        //            .AddHttpClientInstrumentation();
-        //    });
-
-        //builder.AddOpenTelemetryExporters();
 
         return builder;
     }
@@ -102,9 +77,10 @@ public static class Extensions
 
         if (useOtlpExporter)
         {
-            builder.Services.Configure<OpenTelemetryLoggerOptions>(logging => logging.AddOtlpExporter());
-            builder.Services.ConfigureOpenTelemetryMeterProvider(metrics => metrics.AddOtlpExporter());
-            builder.Services.ConfigureOpenTelemetryTracerProvider(tracing => tracing.AddOtlpExporter());
+            builder.Services.AddOpenTelemetry().UseOtlpExporter();
+            //builder.Services.Configure<OpenTelemetryLoggerOptions>(logging => logging.AddOtlpExporter());
+            //builder.Services.ConfigureOpenTelemetryMeterProvider(metrics => metrics.AddOtlpExporter());
+            //builder.Services.ConfigureOpenTelemetryTracerProvider(tracing => tracing.AddOtlpExporter());
         }
         //if (Environment.GetEnvironmentVariable("STARTUP") == "Prometheus")
         //{
