@@ -102,4 +102,10 @@ public static partial class Log
         Level = LogLevel.Information,
         Message = "Cleaned up {NumberGames} games")]
     public static partial void CleanedUpGames(this ILogger logger, int numberGames);
+
+    [LoggerMessage(
+        EventId = 4008,
+        Level = LogLevel.Information,
+        Message = "Game start with {GameType} requested")]
+    public static partial void GameStart(this ILogger logger, string gameType);
 }

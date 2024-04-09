@@ -20,13 +20,7 @@
 		<InternalsVisibleTo Include="Codebreaker.GameAPIs.IntegrationTests" />
 	</ItemGroup>
 
-<!--<ItemGroup>
-		<PackageReference Include="Aspire.StackExchange.Redis.DistributedCaching" Version="8.0.0-preview.6.*" />
-		<PackageReference Include="Aspire.Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.0-preview.6.*" />
-		<PackageReference Include="Aspire.Microsoft.EntityFrameworkCore.Cosmos" Version="8.0.0-preview.6.*" />
-	</ItemGroup>-->
-
-		<ItemGroup>
+    <ItemGroup>
 		<PackageReference Include="Aspire.StackExchange.Redis.DistributedCaching" Version="8.1.0-preview.*" />
 		<PackageReference Include="Aspire.Microsoft.EntityFrameworkCore.SqlServer" Version="8.1.0-preview.*" />
 		<PackageReference Include="Aspire.Microsoft.EntityFrameworkCore.Cosmos" Version="8.1.0-preview.*" />
@@ -57,6 +51,7 @@
 
 	<ItemGroup>
 	  <Protobuf Include="..\Codebreaker.Live\Protos\LiveGame.proto" GrpcServices="Client" />
+	  <Protobuf Include=".\Protos\GameService.proto" GrpcServices="Server" />
 	</ItemGroup>
 
 </Project>

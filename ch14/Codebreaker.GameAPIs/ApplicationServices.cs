@@ -1,6 +1,9 @@
 ﻿using Codebreaker.Grpc;
 
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.Extensions.ServiceDiscovery;
+
 using System.Diagnostics;
 
 namespace Codebreaker.GameAPIs;
@@ -89,28 +92,27 @@ public static class ApplicationServices
 
         builder.Services.AddScoped<IGamesService, GamesService>();
 
-        //builder.Services.AddGrpcClient<ReportGame.ReportGameClient>(grpcClient =>
-        //{
-        //    grpcClient.Address = new Uri("http://live");
-        //    grpcClient.ChannelOptionsActions.Add(channelOptions =>
-        //    {
-        //        channelOptions.ThrowOperationCanceledOnCancellation = true;
-        //    });
-        //});
+        builder.Services.AddGrpc();
 
         builder.Services.AddSingleton<ILiveReportClient, GrpcLiveReportClient>()
-            .AddGrpcClient<ReportGame.ReportGameClient>(grpcClient =>
+
+            .AddGrpcClient<ReportGame.ReportGameClient>(async (sp, client) =>
             {
-                grpcClient.Address = new Uri("http://live");
-                grpcClient.ChannelOptionsActions.Add(channelOptions =>
-                {
-                    channelOptions.ThrowOperationCanceledOnCancellation = true;
-                });
+                //var resolver = sp.GetRequiredService<ServiceEndpointResolver>();
+
+                //var endpointSource = await resolver.GetEndpointsAsync("https+http://gameapis", CancellationToken.None);
+
+                //var endpoint = endpointSource.Endpoints
+                //    .Select(e => e.EndPoint).First();
+
+                //client.Address = new Uri(endpoint.ToString() ?? throw new InvalidOperationException());
+
+                var endpoint = builder.Configuration["services:live:https:0"] ?? throw new InvalidOperationException();
+                client.Address = new Uri(endpoint);
+
+                // TODO: change to:
+                // client.Address = new Uri("http+https://live");
             });
-        //builder.Services.AddHttpClient<ILiveReportClient, LiveReportClient>(client =>
-        //{
-        //    client.BaseAddress = new Uri("http://live");
-        //});
 
         builder.AddRedisDistributedCache("redis");
     }

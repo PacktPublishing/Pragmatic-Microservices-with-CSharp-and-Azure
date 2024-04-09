@@ -1,19 +1,24 @@
 {
   "profiles": {
-    "Codebreaker.GameAPIs": {
+    "http": {
       "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": true,
       "launchUrl": "swagger",
+      "applicationUrl": "http://localhost:9400",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
-      },
-      "applicationUrl": "http://localhost:9400",
-      "dotnetRunMessages": true
+      }
     },
-    "Docker": {
-      "commandName": "Docker",
+    "https": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
       "launchBrowser": true,
-      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/swagger",
-      "publishAllPorts": true
+      "launchUrl": "swagger",
+      "applicationUrl": "https://localhost:9401",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
     }
   },
   "$schema": "https://json.schemastore.org/launchsettings.json"

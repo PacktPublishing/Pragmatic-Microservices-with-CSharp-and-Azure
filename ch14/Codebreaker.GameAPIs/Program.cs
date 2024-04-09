@@ -46,4 +46,6 @@ _ = app.CreateOrUpdateDatabaseAsync();
 
 app.MapGameEndpoints();
 
+app.MapGrpcService<GrpcGameEndpoints>();
+
 app.Run();

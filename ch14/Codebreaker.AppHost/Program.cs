@@ -2,6 +2,7 @@
 
 var builder = DistributedApplication.CreateBuilder(args);
 
+
 string dataStore = builder.Configuration["DataStore"] ?? "InMemory";
 
 builder.AddAzureProvisioning();
@@ -17,12 +18,12 @@ var redis = builder.AddRedis("redis")
 var cosmos = builder.AddAzureCosmosDB("codebreakercosmos")
     .AddDatabase("codebreaker");
 
-var live = builder.AddProject<Projects.Codebreaker_Live>("live")
+var live = builder.AddProject<Projects.Codebreaker_Live>("live", "https")
     .WithExternalHttpEndpoints()
     .WithReference(insights)
     .WithReference(signalR);
 
-var gameAPIs = builder.AddProject<Projects.Codebreaker_GameAPIs>("gameapis")
+var gameAPIs = builder.AddProject<Projects.Codebreaker_GameAPIs>("gameapis", "https")
     .WithExternalHttpEndpoints()
     .WithReference(cosmos)
     .WithReference(redis)

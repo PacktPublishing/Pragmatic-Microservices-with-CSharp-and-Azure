@@ -37,7 +37,7 @@ internal class LiveClient(IOptions<LiveClientOptions> options, ILogger<LiveClien
         }
         catch (OperationCanceledException ex)
         {
-            logger.LogWarning(ex.Message);
+            logger.LogWarning(message: ex.Message);
         }
     }
 

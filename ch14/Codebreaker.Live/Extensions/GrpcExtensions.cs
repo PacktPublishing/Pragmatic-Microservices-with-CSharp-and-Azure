@@ -2,7 +2,7 @@
 
 namespace Codebreaker.Live.Extensions;
 
-public static class ReportGameCompletedRequestExtensions
+internal static class GrpcExtensions
 {
     public static GameSummary ToGameSummary(this ReportGameCompletedRequest request)
     {

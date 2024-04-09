@@ -13,7 +13,7 @@ namespace Microsoft.Extensions.Hosting;
 
 public static class Extensions
 {
-     public static IHostApplicationBuilder AddServiceDefaults(this IHostApplicationBuilder builder)
+    public static IHostApplicationBuilder AddServiceDefaults(this IHostApplicationBuilder builder)
     {
         builder.ConfigureOpenTelemetry();
 
@@ -42,23 +42,24 @@ public static class Extensions
         });
 
         builder.Services.AddOpenTelemetry()
-          .WithMetrics(metrics =>
-          {
-            metrics.AddAspNetCoreInstrumentation()
-              .AddHttpClientInstrumentation()
-              .AddRuntimeInstrumentation();
-          })
+         .WithMetrics(metrics =>
+         {
+             metrics.AddAspNetCoreInstrumentation()
+                 .AddHttpClientInstrumentation()
+                 .AddRuntimeInstrumentation();
+         })
          .WithTracing(tracing =>
          {
-             //if (builder.Environment.IsDevelopment())
-             //{
-             //    // We want to view all traces in development
-             //    tracing.SetSampler(new AlwaysOnSampler());
-             //}
+             if (builder.Environment.IsDevelopment())
+             {
+                 // We want to view all traces in development
+                 tracing.SetSampler(new AlwaysOnSampler());
+             }
 
-           tracing.AddAspNetCoreInstrumentation()
-             .AddGrpcClientInstrumentation()
-             .AddHttpClientInstrumentation();
+             tracing.AddAspNetCoreInstrumentation()
+                 // Uncomment the following line to enable gRPC instrumentation (requires the OpenTelemetry.Instrumentation.GrpcNetClient package)
+                 //.AddGrpcClientInstrumentation()
+                 .AddHttpClientInstrumentation();
          });
 
         builder.AddOpenTelemetryExporters();
@@ -68,19 +69,15 @@ public static class Extensions
 
     private static IHostApplicationBuilder AddOpenTelemetryExporters(this IHostApplicationBuilder builder)
     {
-        // TODO: what's the strategy using the OLTP exporter?
-        // note here: not supported https://learn.microsoft.com/en-us/azure/azure-monitor/app/opentelemetry-configuration?tabs=aspnetcore
-        // but it's configured by default with .NET Aspire
+        // note: https://learn.microsoft.com/en-us/azure/azure-monitor/app/opentelemetry-configuration?tabs=aspnetcore
+
         bool useOtlpExporter = !string.IsNullOrWhiteSpace(builder.Configuration["OTEL_EXPORTER_OTLP_ENDPOINT"]);
-        // could not load library....
-        useOtlpExporter = false;
 
         if (useOtlpExporter)
         {
-            builder.Services.AddOpenTelemetry().UseOtlpExporter();
-            //builder.Services.Configure<OpenTelemetryLoggerOptions>(logging => logging.AddOtlpExporter());
-            //builder.Services.ConfigureOpenTelemetryMeterProvider(metrics => metrics.AddOtlpExporter());
-            //builder.Services.ConfigureOpenTelemetryTracerProvider(tracing => tracing.AddOtlpExporter());
+            builder.Services.Configure<OpenTelemetryLoggerOptions>(logging => logging.AddOtlpExporter());
+            builder.Services.ConfigureOpenTelemetryMeterProvider(metrics => metrics.AddOtlpExporter());
+            builder.Services.ConfigureOpenTelemetryTracerProvider(tracing => tracing.AddOtlpExporter());
         }
         //if (Environment.GetEnvironmentVariable("STARTUP") == "Prometheus")
         //{
