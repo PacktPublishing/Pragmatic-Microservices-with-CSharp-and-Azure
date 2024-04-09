@@ -1,4 +1,4 @@
-# Chapter 13 - Real-time messaging with SignalR
+# Chapter 14 - gRPC for binary communication
 
 ## Technical Requirements
 
@@ -11,11 +11,12 @@ The code for this chapter can be found in the following GitHub repository: https
 The important projects part of this chapters repository folder are
 
 - Codebreaker.AppHost - the .NET Aspire host project. The app model is enhanced by an additional project running a SignalR hub and using Azure SignalR Services.
-- Codebreaker.Live – this is a new project hosting minimal APIs invoked by the game APIs service, and the SignalR hub.
-- Codebreaker.GameAPIs – this project is enhanced forwarding completed games to the live service.
-- LiveTestClient – this is a new console application registering with the SignalR hub to receive completed games.
+- Codebreaker.Live – the project we created in the previous chapter is changed to offer a gRPC service instead of a REST service.
+- Codebreaker.GameAPIs – this project is updated to include a gRPC client to invoke the live service. In addition to the REST service used by many different clients, as an alternative a gRPC service is added which is invoked by the bot service.
+- Codebreaker.Bot - the bot service is updated to use a gRPC client instead of REST to invoke the game APIs service.
+- LiveTestClient – you use the live test client from the previous chapter to verify if the SignalR service.
 
-Working through the code with this chapter, you can start using the service and bot projects from the previous chapter.
+Working through the code with this chapter, you can start using the service, bot, and live projects from the previous chapter.
 
 ## Deploy the application to Microsoft Azure
 
