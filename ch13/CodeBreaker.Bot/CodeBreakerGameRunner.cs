@@ -2,7 +2,7 @@
 
 namespace CodeBreaker.Bot;
 
-public class CodeBreakerGameRunner(GamesClient gamesClient, ILogger<CodeBreakerGameRunner> logger)
+public class CodeBreakerGameRunner(IGamesClient gamesClient, ILogger<CodeBreakerGameRunner> logger)
 {
     private const string PlayerName = "Bot";
     private Guid? _gameId;
@@ -10,7 +10,7 @@ public class CodeBreakerGameRunner(GamesClient gamesClient, ILogger<CodeBreakerG
     private readonly List<Move> _moves = [];
     private List<int>? _possibleValues;
     private Dictionary<int, string>? _colorNames;
-    private readonly GamesClient _gamesClient = gamesClient;
+    private readonly IGamesClient _gamesClient = gamesClient;
 
     // initialize a list of all the possible options using numbers for every color
     private List<int> InitializePossibleValues()
