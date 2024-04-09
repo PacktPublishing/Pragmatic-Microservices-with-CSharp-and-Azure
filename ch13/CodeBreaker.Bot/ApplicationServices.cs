@@ -4,7 +4,7 @@ internal static class ApplicationServices
 {
     public static void AddApplicationServices(this IHostApplicationBuilder builder)
     {
-        builder.Services.AddHttpClient<GamesClient>(client =>
+        builder.Services.AddHttpClient<IGamesClient, GamesClient>(client =>
         {
             client.BaseAddress = new Uri("http://gameapis");
         });

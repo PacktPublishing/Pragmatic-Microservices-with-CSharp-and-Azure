@@ -1,9 +1,9 @@
-using Azure.Monitor.OpenTelemetry.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;
+
 using OpenTelemetry.Logs;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
@@ -40,7 +40,6 @@ public static class Extensions
             logging.IncludeScopes = true;
         });
 
-        // TODO: add this back!
         builder.Services.AddOpenTelemetry()
          .WithMetrics(metrics =>
          {
@@ -64,41 +63,14 @@ public static class Extensions
 
         builder.AddOpenTelemetryExporters();
 
-        //builder.Services.AddOpenTelemetry()
-        //    .WithMetrics(metrics =>
-        //    {
-        //        metrics.AddAspNetCoreInstrumentation()
-        //            .AddHttpClientInstrumentation()
-        //            .AddRuntimeInstrumentation();
-        //    })
-        //    .WithTracing(tracing =>
-        //    {
-        //        if (builder.Environment.IsDevelopment())
-        //        {
-        //            We want to view all traces in development
-        //            tracing.SetSampler(new AlwaysOnSampler());
-        //        }
-
-        //        tracing.AddSource("Codebreaker.GameAPIs.Client", "Codebreaker.GameAPIs",
-        //            "OpenTelemetry.Instrumentation.EntityFrameworkCore", "Azure.Cosmos.Operation")
-        //            .AddAspNetCoreInstrumentation()
-        //             .AddGrpcClientInstrumentation()
-        //            .AddHttpClientInstrumentation();
-        //    });
-
-        //builder.AddOpenTelemetryExporters();
-
         return builder;
     }
 
     private static IHostApplicationBuilder AddOpenTelemetryExporters(this IHostApplicationBuilder builder)
     {
-        // TODO: what's the strategy using the OLTP exporter?
-        // note here: not supported https://learn.microsoft.com/en-us/azure/azure-monitor/app/opentelemetry-configuration?tabs=aspnetcore
-        // but it's configured by default with .NET Aspire
+        // note: https://learn.microsoft.com/en-us/azure/azure-monitor/app/opentelemetry-configuration?tabs=aspnetcore
+
         bool useOtlpExporter = !string.IsNullOrWhiteSpace(builder.Configuration["OTEL_EXPORTER_OTLP_ENDPOINT"]);
-        // could not load library....
-        useOtlpExporter = false;
 
         if (useOtlpExporter)
         {
@@ -134,6 +106,9 @@ public static class Extensions
         //{ 
         //    app.MapPrometheusScrapingEndpoint();
         //}
+
+        // Adding health checks endpoints to applications in non-development environments has security implications.
+        // See https://aka.ms/dotnet/aspire/healthchecks for details before enabling these endpoints in non-development environments.
 
         // Only health checks tagged with the "live" tag must pass for app to be considered alive
         app.MapHealthChecks("/alive", new HealthCheckOptions
