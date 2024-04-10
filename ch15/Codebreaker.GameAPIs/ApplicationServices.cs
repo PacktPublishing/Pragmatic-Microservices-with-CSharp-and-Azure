@@ -96,7 +96,7 @@ public static class ApplicationServices
 
         builder.Services.AddSingleton<ILiveReportClient, GrpcLiveReportClient>()
 
-            .AddGrpcClient<ReportGame.ReportGameClient>(async (sp, client) =>
+            .AddGrpcClient<ReportGame.ReportGameClient>((sp, client) =>
             {
                 //var resolver = sp.GetRequiredService<ServiceEndpointResolver>();
 

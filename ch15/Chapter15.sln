@@ -66,6 +66,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Codebreaker.SqlServerMigrat
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{3B4E3B22-683D-4647-B712-570248BDF689}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Codebreaker.BotQ", "Codebreaker.BotQ\Codebreaker.BotQ.csproj", "{3E16E5A4-BADF-4B7C-95D2-0B9E5FF2BB6C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -112,6 +114,10 @@ Global
 		{B31A9EED-347E-4F5B-AEF3-E652BE82FF83}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B31A9EED-347E-4F5B-AEF3-E652BE82FF83}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B31A9EED-347E-4F5B-AEF3-E652BE82FF83}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3E16E5A4-BADF-4B7C-95D2-0B9E5FF2BB6C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E16E5A4-BADF-4B7C-95D2-0B9E5FF2BB6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E16E5A4-BADF-4B7C-95D2-0B9E5FF2BB6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E16E5A4-BADF-4B7C-95D2-0B9E5FF2BB6C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -130,6 +136,7 @@ Global
 		{86429330-4A88-4860-9C54-3B0B42CB3A3D} = {AF5E8961-B161-4D04-8493-1F737833ECEC}
 		{48ABE834-9080-49D5-BDB2-3B6BCF9AAD25} = {3B4E3B22-683D-4647-B712-570248BDF689}
 		{B31A9EED-347E-4F5B-AEF3-E652BE82FF83} = {3B4E3B22-683D-4647-B712-570248BDF689}
+		{3E16E5A4-BADF-4B7C-95D2-0B9E5FF2BB6C} = {3B5D2B1C-03DF-4A9D-8AA1-99C0837D86DB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {AB3739EB-14D4-4A4A-A6DC-44E1D103FE67}

@@ -2,7 +2,6 @@
 
 var builder = DistributedApplication.CreateBuilder(args);
 
-
 string dataStore = builder.Configuration["DataStore"] ?? "InMemory";
 
 builder.AddAzureProvisioning();
@@ -33,7 +32,7 @@ var gameAPIs = builder.AddProject<Projects.Codebreaker_GameAPIs>("gameapis", "ht
     .WithReference(live)
     .WithEnvironment("DataStore", dataStore);
 
-builder.AddProject<Projects.CodeBreaker_Bot>("bot")
+builder.AddProject<Projects.Codebreaker_BotQ>("bot")
     .WithReference(insights)
     .WithReference(queue)
     .WithReference(gameAPIs);

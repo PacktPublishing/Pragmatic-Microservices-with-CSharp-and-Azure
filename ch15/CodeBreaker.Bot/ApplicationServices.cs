@@ -1,20 +1,14 @@
 ﻿using Codebreaker.Grpc;
 
-using Microsoft.Extensions.Http.Resilience;
-using Microsoft.Extensions.ServiceDiscovery;
-// using Microsoft.Extensions.ServiceDiscovery;
-
 namespace CodeBreaker.Bot;
 
 internal static class ApplicationServices
 {
     public static void AddApplicationServices(this IHostApplicationBuilder builder)
     {
-        // services__gameapis__https__0
-
         builder.Services.AddSingleton<IGamesClient, GrpcGamesClient>()
             .AddGrpcClient<GrpcGame.GrpcGameClient>(
-                async (sp, client) =>
+                client =>
                 {
                     //var resolver = sp.GetRequiredService<ServiceEndpointResolver>();
 
@@ -34,7 +28,5 @@ internal static class ApplicationServices
 
         builder.Services.AddScoped<CodeBreakerTimer>();
         builder.Services.AddScoped<CodeBreakerGameRunner>();
-
     }
-
 }

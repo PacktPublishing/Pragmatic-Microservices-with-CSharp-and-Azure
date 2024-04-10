@@ -12,14 +12,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <Compile Remove="Endpoints\BotEndpoints.cs" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <None Include="Endpoints\BotEndpoints.cs" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<PackageReference Include="Azure.Identity" Version="1.10.4" />
 		<PackageReference Include="CNinnovation.Codebreaker.GamesClient" Version="3.6.0-beta.24" />
 		<PackageReference Include="Grpc.AspNetCore" Version="2.49.0" />
