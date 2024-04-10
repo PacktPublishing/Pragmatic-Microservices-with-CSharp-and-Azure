@@ -1,0 +1,35 @@
+.mobile-nav-bar-menu {
+    display: none;
+}
+@media screen and (max-width: 599px) {
+    .top-nav-bar-menu {
+        display: none;
+    }
+
+    .mobile-nav-bar-menu {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        z-index: 100;
+        padding: 1rem 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        background: rgba(0, 0, 0, 0.45);
+    }
+
+        .mobile-nav-bar-menu ::deep a.menu-link {
+            color: #ffffff;
+            width: 3.5rem;
+            height: 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 100vh;
+        }
+
+            .mobile-nav-bar-menu ::deep a.menu-link.is-active {
+                background: rgba(255, 255, 255, 0.25);
+            }
+}

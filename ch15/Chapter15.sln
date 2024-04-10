@@ -1,0 +1,137 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.7.34024.191
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Codebreaker.GameAPIs", "Codebreaker.GameAPIs\Codebreaker.GameAPIs.csproj", "{288B3955-47C4-47D4-8B2B-D87D0E7E303B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeBreaker.Bot", "CodeBreaker.Bot\CodeBreaker.Bot.csproj", "{DFA6264C-D06B-4A3C-B195-88A0E61E2A8F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Codebreaker.AppHost", "Codebreaker.AppHost\Codebreaker.AppHost.csproj", "{29A7178E-88ED-4B24-904A-D197C752A916}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Codebreaker.ServiceDefaults", "Codebreaker.ServiceDefaults\Codebreaker.ServiceDefaults.csproj", "{B95032AF-9711-4912-A232-E7977DFD2F85}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "prometheus", "prometheus", "{C687EA60-8134-4768-A9B1-D7870B0F13DD}"
+	ProjectSection(SolutionItems) = preProject
+		prometheus\prometheus.yml = prometheus\prometheus.yml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{281ADBDF-78AF-4CDB-9E25-EBF2A6A6F4CF}"
+	ProjectSection(SolutionItems) = preProject
+		grafana\config\provisioning\dashboards\default.yaml = grafana\config\provisioning\dashboards\default.yaml
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Codebreaker.GameAPIs.Tests", "Codebreaker.GameAPIs.Tests\Codebreaker.GameAPIs.Tests.csproj", "{3F67AC70-DBD4-46FC-91D3-671CFB6C51F9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeBreaker.Bot.Tests", "CodeBreaker.Bot.Tests\CodeBreaker.Bot.Tests.csproj", "{6F24F509-90E2-4EF4-BD3D-04ECE970340E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "grafana", "grafana", "{5F6717A8-03CF-4A25-83F1-5809B7E373C1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dashboards", "dashboards", "{63E66D67-72F4-4B2D-A45F-B45A86AACB2B}"
+	ProjectSection(SolutionItems) = preProject
+		grafana\dashboards\aspnetcore-endpoint.json = grafana\dashboards\aspnetcore-endpoint.json
+		grafana\dashboards\aspnetcore.json = grafana\dashboards\aspnetcore.json
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "config", "config", "{495095E0-3696-4E53-AB77-1147201B9EBD}"
+	ProjectSection(SolutionItems) = preProject
+		grafana\config\grafana.ini = grafana\config\grafana.ini
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "provisioning", "provisioning", "{71AA58F9-8633-4166-80E1-5187347B9675}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dashboards", "dashboards", "{6D3BA9A0-FD83-4796-B11D-AE35EB7AADE2}"
+	ProjectSection(SolutionItems) = preProject
+		grafana\config\provisioning\dashboards\default.yaml = grafana\config\provisioning\dashboards\default.yaml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "datasources", "datasources", "{3D542520-A5A9-4D96-84C1-0935F581BE18}"
+	ProjectSection(SolutionItems) = preProject
+		grafana\config\provisioning\datasources\default.yaml = grafana\config\provisioning\datasources\default.yaml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Bot", "Bot", "{3B5D2B1C-03DF-4A9D-8AA1-99C0837D86DB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GameAPIs", "GameAPIs", "{40B7F37F-AF45-4362-9F70-F5A57B5B52EB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Live", "Live", "{AF5E8961-B161-4D04-8493-1F737833ECEC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Codebreaker.Live", "Codebreaker.Live\Codebreaker.Live.csproj", "{D925E421-20AC-4E02-B19F-BF2A7F898425}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveTestClient", "LiveTestClient\LiveTestClient.csproj", "{86429330-4A88-4860-9C54-3B0B42CB3A3D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Codebreaker.CosmosCreate", "Codebreaker.CosmosCreate\Codebreaker.CosmosCreate.csproj", "{48ABE834-9080-49D5-BDB2-3B6BCF9AAD25}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Codebreaker.SqlServerMigration", "Codebreaker.SqlServerMigration\Codebreaker.SqlServerMigration.csproj", "{B31A9EED-347E-4F5B-AEF3-E652BE82FF83}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{3B4E3B22-683D-4647-B712-570248BDF689}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{288B3955-47C4-47D4-8B2B-D87D0E7E303B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{288B3955-47C4-47D4-8B2B-D87D0E7E303B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{288B3955-47C4-47D4-8B2B-D87D0E7E303B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{288B3955-47C4-47D4-8B2B-D87D0E7E303B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DFA6264C-D06B-4A3C-B195-88A0E61E2A8F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DFA6264C-D06B-4A3C-B195-88A0E61E2A8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DFA6264C-D06B-4A3C-B195-88A0E61E2A8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DFA6264C-D06B-4A3C-B195-88A0E61E2A8F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{29A7178E-88ED-4B24-904A-D197C752A916}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{29A7178E-88ED-4B24-904A-D197C752A916}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{29A7178E-88ED-4B24-904A-D197C752A916}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{29A7178E-88ED-4B24-904A-D197C752A916}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B95032AF-9711-4912-A232-E7977DFD2F85}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B95032AF-9711-4912-A232-E7977DFD2F85}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B95032AF-9711-4912-A232-E7977DFD2F85}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B95032AF-9711-4912-A232-E7977DFD2F85}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3F67AC70-DBD4-46FC-91D3-671CFB6C51F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F67AC70-DBD4-46FC-91D3-671CFB6C51F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3F67AC70-DBD4-46FC-91D3-671CFB6C51F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3F67AC70-DBD4-46FC-91D3-671CFB6C51F9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F24F509-90E2-4EF4-BD3D-04ECE970340E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F24F509-90E2-4EF4-BD3D-04ECE970340E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F24F509-90E2-4EF4-BD3D-04ECE970340E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F24F509-90E2-4EF4-BD3D-04ECE970340E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D925E421-20AC-4E02-B19F-BF2A7F898425}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D925E421-20AC-4E02-B19F-BF2A7F898425}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D925E421-20AC-4E02-B19F-BF2A7F898425}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D925E421-20AC-4E02-B19F-BF2A7F898425}.Release|Any CPU.Build.0 = Release|Any CPU
+		{86429330-4A88-4860-9C54-3B0B42CB3A3D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{86429330-4A88-4860-9C54-3B0B42CB3A3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{86429330-4A88-4860-9C54-3B0B42CB3A3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{86429330-4A88-4860-9C54-3B0B42CB3A3D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{48ABE834-9080-49D5-BDB2-3B6BCF9AAD25}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{48ABE834-9080-49D5-BDB2-3B6BCF9AAD25}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{48ABE834-9080-49D5-BDB2-3B6BCF9AAD25}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{48ABE834-9080-49D5-BDB2-3B6BCF9AAD25}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B31A9EED-347E-4F5B-AEF3-E652BE82FF83}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B31A9EED-347E-4F5B-AEF3-E652BE82FF83}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B31A9EED-347E-4F5B-AEF3-E652BE82FF83}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B31A9EED-347E-4F5B-AEF3-E652BE82FF83}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{288B3955-47C4-47D4-8B2B-D87D0E7E303B} = {40B7F37F-AF45-4362-9F70-F5A57B5B52EB}
+		{DFA6264C-D06B-4A3C-B195-88A0E61E2A8F} = {3B5D2B1C-03DF-4A9D-8AA1-99C0837D86DB}
+		{3F67AC70-DBD4-46FC-91D3-671CFB6C51F9} = {40B7F37F-AF45-4362-9F70-F5A57B5B52EB}
+		{6F24F509-90E2-4EF4-BD3D-04ECE970340E} = {3B5D2B1C-03DF-4A9D-8AA1-99C0837D86DB}
+		{63E66D67-72F4-4B2D-A45F-B45A86AACB2B} = {5F6717A8-03CF-4A25-83F1-5809B7E373C1}
+		{495095E0-3696-4E53-AB77-1147201B9EBD} = {5F6717A8-03CF-4A25-83F1-5809B7E373C1}
+		{71AA58F9-8633-4166-80E1-5187347B9675} = {495095E0-3696-4E53-AB77-1147201B9EBD}
+		{6D3BA9A0-FD83-4796-B11D-AE35EB7AADE2} = {71AA58F9-8633-4166-80E1-5187347B9675}
+		{3D542520-A5A9-4D96-84C1-0935F581BE18} = {71AA58F9-8633-4166-80E1-5187347B9675}
+		{D925E421-20AC-4E02-B19F-BF2A7F898425} = {AF5E8961-B161-4D04-8493-1F737833ECEC}
+		{86429330-4A88-4860-9C54-3B0B42CB3A3D} = {AF5E8961-B161-4D04-8493-1F737833ECEC}
+		{48ABE834-9080-49D5-BDB2-3B6BCF9AAD25} = {3B4E3B22-683D-4647-B712-570248BDF689}
+		{B31A9EED-347E-4F5B-AEF3-E652BE82FF83} = {3B4E3B22-683D-4647-B712-570248BDF689}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {AB3739EB-14D4-4A4A-A6DC-44E1D103FE67}
+	EndGlobalSection
+EndGlobal
