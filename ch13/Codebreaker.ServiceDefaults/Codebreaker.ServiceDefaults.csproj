@@ -26,7 +26,7 @@
 	<ItemGroup>
 		<FrameworkReference Include="Microsoft.AspNetCore.App" />
 
-		<PackageReference Include="Azure.Identity" Version="1.10.4" />
+		<PackageReference Include="Azure.Identity" Version="1.11.0" />
 		<PackageReference Include="Microsoft.Extensions.Http.Resilience" Version="8.3.0" />
 		<PackageReference Include="Microsoft.Extensions.ServiceDiscovery" Version="8.1.0-preview.1.24206.1" />
         <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.8.0" />
