@@ -5,11 +5,11 @@ using CodeBreaker.Bot.Exceptions;
 
 namespace CodeBreaker.Bot;
 
-public class CodeBreakerTimer(CodeBreakerGameRunner runner, ILogger<CodeBreakerTimer> logger)
+public class CodebreakerTimer(CodebreakerGameRunner runner, ILogger<CodebreakerTimer> logger)
 {
-    private readonly CodeBreakerGameRunner _gameRunner = runner;
+    private readonly CodebreakerGameRunner _gameRunner = runner;
 
-    private static readonly ConcurrentDictionary<Guid, CodeBreakerTimer> _bots = new();
+    private static readonly ConcurrentDictionary<Guid, CodebreakerTimer> _bots = new();
 
     private PeriodicTimer? _timer;
 
@@ -73,7 +73,7 @@ public class CodeBreakerTimer(CodeBreakerGameRunner runner, ILogger<CodeBreakerT
         if (id == default)
             throw new ArgumentException("Invalid argument value {id}", nameof(id));
 
-        if (_bots.TryGetValue(id, out CodeBreakerTimer? timer))
+        if (_bots.TryGetValue(id, out CodebreakerTimer? timer))
         {
             timer.Stop();
             _bots.TryRemove(id, out _);
@@ -87,7 +87,7 @@ public class CodeBreakerTimer(CodeBreakerGameRunner runner, ILogger<CodeBreakerT
         if (id == default)
             throw new ArgumentException("Invalid argument value {id}", nameof(id));
 
-        if (_bots.TryGetValue(id, out CodeBreakerTimer? timer))
+        if (_bots.TryGetValue(id, out CodebreakerTimer? timer))
             return timer?.Status() ?? throw new UnknownStatusException("id found, but unknown status");
 
         throw new BotNotFoundException();

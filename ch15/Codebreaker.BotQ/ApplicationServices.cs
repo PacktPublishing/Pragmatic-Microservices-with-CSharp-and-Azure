@@ -12,9 +12,8 @@ internal static class ApplicationServices
         builder.Services.AddScoped<BotQueueClient>();
         var section = builder.Configuration.GetSection("Bot");
         builder.Services.Configure<BotQueueClientOptions>(section);
-//            builder.Configuration.GetSection("Bot"));
-        builder.Services.AddScoped<CodeBreakerTimer>();
-        builder.Services.AddScoped<CodeBreakerGameRunner>();
+        builder.Services.AddScoped<CodebreakerTimer>();
+        builder.Services.AddScoped<CodebreakerGameRunner>();
 
         builder.Services.AddSingleton<IGamesClient, GrpcGamesClient>()
             .AddGrpcClient<GrpcGame.GrpcGameClient>(

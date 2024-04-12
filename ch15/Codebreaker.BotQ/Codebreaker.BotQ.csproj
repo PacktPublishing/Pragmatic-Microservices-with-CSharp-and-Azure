@@ -9,7 +9,7 @@
 
   
 	<ItemGroup>
-		<PackageReference Include="Aspire.Azure.Storage.Queues" Version="8.1.0-preview.1.24210.3" />
+		<PackageReference Include="Aspire.Azure.Storage.Queues" Version="8.1.0-preview.*" />
 		<PackageReference Include="Azure.Identity" Version="1.11.0" />
 		<PackageReference Include="CNinnovation.Codebreaker.GamesClient" Version="3.6.0-beta.24" />
 		<PackageReference Include="Google.Protobuf" Version="3.26.1" />
@@ -18,13 +18,7 @@
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.3" />
 		<PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
-		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<ProjectReference Include="..\Codebreaker.ServiceDefaults\Codebreaker.ServiceDefaults.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

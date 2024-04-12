@@ -8,6 +8,3 @@ var app = builder.Build();
 
 BotQueueClient botQueueClient = app.Services.GetRequiredService<BotQueueClient>();
 await botQueueClient.RunAsync();
-
-// app.Run();
-

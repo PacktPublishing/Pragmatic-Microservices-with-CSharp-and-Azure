@@ -4,7 +4,7 @@ namespace CodeBreaker.Bot;
 
 public record struct KeyPegWithFlag(int Value, bool Used);
 
-public static class CodeBreakerAlgorithms
+public static class CodebreakerAlgorithms
 {
     // definitions to mask the different pegs
     private const int C0001 = 0b_111111;

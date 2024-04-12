@@ -9,6 +9,30 @@ internal static partial class Log
     public static partial void Error(this ILogger logger, Exception ex, string errorMessage);
 
     [LoggerMessage(
+        EventId = 3001,
+        Level = LogLevel.Error,
+        Message = "Failed to deserialize JSON message {Message}")]
+    public static partial void FailedToDeserializeMessage(this ILogger logger, Exception ex, string message);
+
+    [LoggerMessage(
+        EventId = 3002,
+        Level = LogLevel.Error,
+        Message = "Failed to decode message {Message}")]
+    public static partial void FailedToDecodeMessage(this ILogger logger, Exception ex, string message);
+
+    [LoggerMessage(
+        EventId = 3003,
+        Level = LogLevel.Warning,
+        Message = "Deserialized null message {Message}")]
+    public static partial void DeserializedNullMessage(this ILogger logger, string message);
+
+    [LoggerMessage(
+        EventId = 3004,
+        Level = LogLevel.Warning,
+        Message = "Message dequeue count exceeded for message {MessageId} with count {Count}")]
+    public static partial void MessageDequeueCountExceeded(this ILogger logger, string messageId, long count);
+
+    [LoggerMessage(
         EventId = 4000,
         Level = LogLevel.Information,
         Message = "Sending the move {Move} to {GameId}")]
@@ -51,8 +75,14 @@ internal static partial class Log
     public static partial void WaitingForNextTick(this ILogger logger, int loop);
 
     [LoggerMessage
-    (EventId = 4007,
-    Level = LogLevel.Trace,
-    Message = "Timer tick fired in loop {Loop}")]
+        (EventId = 4007,
+        Level = LogLevel.Trace,
+        Message = "Timer tick fired in loop {Loop}")]
     public static partial void TimerTickFired(this ILogger logger, int loop);
+
+    [LoggerMessage
+        (EventId = 4008,
+        Level = LogLevel.Information,
+        Message = "Started playing games with sequence {Id}")]
+    public static partial void StartedPlayingGames(this ILogger logger, Guid id);
 }

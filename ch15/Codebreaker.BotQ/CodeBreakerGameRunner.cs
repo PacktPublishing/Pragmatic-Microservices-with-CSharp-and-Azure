@@ -2,7 +2,7 @@
 
 namespace CodeBreaker.Bot;
 
-public class CodeBreakerGameRunner(IGamesClient gamesClient, ILogger<CodeBreakerGameRunner> logger)
+public class CodebreakerGameRunner(IGamesClient gamesClient, ILogger<CodebreakerGameRunner> logger)
 {
     private const string PlayerName = "Bot";
     private Guid? _gameId;

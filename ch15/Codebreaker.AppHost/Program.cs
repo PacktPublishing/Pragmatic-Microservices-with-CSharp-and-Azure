@@ -13,6 +13,7 @@ var insights = builder.AddAzureApplicationInsights("insights", logs);
 var signalR = builder.AddAzureSignalR("signalr");
 var queue = builder.AddAzureStorage("storage")
     .AddQueues("botqueue");
+
 var eventHub = builder.AddAzureEventHubs("codebreakerevents")
     .AddEventHub("games");
 
