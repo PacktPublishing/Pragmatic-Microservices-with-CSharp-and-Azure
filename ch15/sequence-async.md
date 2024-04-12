@@ -1,18 +1,29 @@
 ```mermaid
 sequenceDiagram
+  box QUEUE
   participant bot-client
+  end
+
+  box EVENT-PRODUCER
   participant bot-service
   participant game-apis
+  end
+
+  box EVENT-SUBSCRIBE
+  participant ranking-service
   participant live-service
   participant live-client
-  participant ranking-service
+  end
 
-  bot-client->>bot-service: QUEUE - start games
+  bot-client-)bot-service: - message: start games
   bot-service->>game-apis: gRPC - start game
   loop repeat until complete
     bot-service->>game-apis: gRPC - set move
   end
-  game-apis->>live-service: EVENT - game complete
+  par
+    game-apis-)ranking-service: event - game complete
+  and
+    game-apis-)live-service: event game completed
+  end
   live-service->>live-client: SignalR game complete
-  game-apis->>ranking-service: EVENT - game complete
 ```
