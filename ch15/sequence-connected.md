@@ -13,6 +13,6 @@ sequenceDiagram
     bot-service->>game-apis: gRPC - set move
   end
   game-apis->>live-service: gRPC - game complete
-  live-service->>live-client: signalR game complete
+  live-service->>live-client: SignalR game complete
   game-apis->>ranking-service: gRPC - game complete
 ```
