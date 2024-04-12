@@ -108,4 +108,10 @@ public static partial class Log
         Level = LogLevel.Information,
         Message = "Game start with {GameType} requested")]
     public static partial void GameStart(this ILogger logger, string gameType);
+
+    [LoggerMessage(
+        EventId = 4009,
+        Level = LogLevel.Information,
+        Message = "Game {GameId} completion sent via {Service}")]
+    public static partial void GameCompletionSent(this ILogger logger, Guid gameId, string service);
 }

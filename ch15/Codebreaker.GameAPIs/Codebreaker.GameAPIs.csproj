@@ -21,6 +21,7 @@
 	</ItemGroup>
 
     <ItemGroup>
+		<PackageReference Include="Aspire.Azure.Messaging.EventHubs" Version="8.1.0-preview.*" />
 		<PackageReference Include="Aspire.StackExchange.Redis.DistributedCaching" Version="8.1.0-preview.*" />
 		<PackageReference Include="Aspire.Microsoft.EntityFrameworkCore.SqlServer" Version="8.1.0-preview.*" />
 		<PackageReference Include="Aspire.Microsoft.EntityFrameworkCore.Cosmos" Version="8.1.0-preview.*" />

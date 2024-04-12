@@ -10,6 +10,9 @@ internal static class ApplicationServices
     {
         builder.AddAzureQueueClient("botqueue");
         builder.Services.AddScoped<BotQueueClient>();
+        var section = builder.Configuration.GetSection("Bot");
+        builder.Services.Configure<BotQueueClientOptions>(section);
+//            builder.Configuration.GetSection("Bot"));
         builder.Services.AddScoped<CodeBreakerTimer>();
         builder.Services.AddScoped<CodeBreakerGameRunner>();
 
@@ -17,15 +20,6 @@ internal static class ApplicationServices
             .AddGrpcClient<GrpcGame.GrpcGameClient>(
         client =>
         {
-            //var resolver = sp.GetRequiredService<ServiceEndpointResolver>();
-
-            //var endpointSource = await resolver.GetEndpointsAsync("https+http://gameapis", CancellationToken.None);
-
-            //var endpoint = endpointSource.Endpoints
-            //    .Select(e => e.EndPoint).First();
-
-            //client.Address = new Uri(endpoint.ToString() ?? throw new InvalidOperationException());
-
             var endpoint = builder.Configuration["services:gameapis:https:0"] ?? throw new InvalidOperationException();
             client.Address = new Uri(endpoint);
 

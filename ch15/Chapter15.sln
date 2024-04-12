@@ -1,4 +1,3 @@
-﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34024.191
@@ -66,7 +65,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Codebreaker.SqlServerMigrat
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{3B4E3B22-683D-4647-B712-570248BDF689}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Codebreaker.BotQ", "Codebreaker.BotQ\Codebreaker.BotQ.csproj", "{3E16E5A4-BADF-4B7C-95D2-0B9E5FF2BB6C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Codebreaker.BotQ", "Codebreaker.BotQ\Codebreaker.BotQ.csproj", "{3E16E5A4-BADF-4B7C-95D2-0B9E5FF2BB6C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Codebreaker.Ranking", "Codebreaker.Ranking\Codebreaker.Ranking.csproj", "{6E579F72-2BAB-4355-AFD2-7769B97D72E5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -78,6 +79,10 @@ Global
 		{288B3955-47C4-47D4-8B2B-D87D0E7E303B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{288B3955-47C4-47D4-8B2B-D87D0E7E303B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{288B3955-47C4-47D4-8B2B-D87D0E7E303B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6E579F72-2BAB-4355-AFD2-7769B97D72E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E579F72-2BAB-4355-AFD2-7769B97D72E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6E579F72-2BAB-4355-AFD2-7769B97D72E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6E579F72-2BAB-4355-AFD2-7769B97D72E5}.Release|Any CPU.Build.0 = Release|Any CPU
 		{DFA6264C-D06B-4A3C-B195-88A0E61E2A8F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{DFA6264C-D06B-4A3C-B195-88A0E61E2A8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DFA6264C-D06B-4A3C-B195-88A0E61E2A8F}.Release|Any CPU.ActiveCfg = Release|Any CPU

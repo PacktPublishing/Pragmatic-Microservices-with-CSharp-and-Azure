@@ -1,19 +1,30 @@
 ﻿using Azure.Storage.Queues;
 using Azure.Storage.Queues.Models;
 
+using Microsoft.Extensions.Options;
+
 using System.Text;
 using System.Text.Json;
 
 namespace Codebreaker.BotQ.Endpoints;
 
-public class BotQueueClient(QueueServiceClient client, CodeBreakerTimer timer, ILogger<BotQueueClient> logger)
+public class BotQueueClient(QueueServiceClient client, CodeBreakerTimer timer, ILogger<BotQueueClient> logger, IOptions<BotQueueClientOptions> options)
 {
     public async Task RunAsync()
-    {   
+    {
         var queueClient = client.GetQueueClient("botqueue");
         await queueClient.CreateIfNotExistsAsync();
 
+        bool repeat = options.Value.Loop;
+        do
+        {
+            await ProcessMessagesAsync(queueClient);
+            await Task.Delay(options.Value.Delay);
+        } while (repeat);
+    }
 
+    private async Task ProcessMessagesAsync(QueueClient queueClient)
+    {
         QueueProperties properties = await queueClient.GetPropertiesAsync();
         if (properties.ApproximateMessagesCount > 0)
         {
@@ -38,6 +49,13 @@ public class BotQueueClient(QueueServiceClient client, CodeBreakerTimer timer, I
             }
         }
     }
+}
+
+public class BotQueueClientOptions
+{
+    public bool Loop { get; set; } = false;
+    
+    public int Delay { get; set; } = 1000;
 }
 
 public record class BotMessage(int Count, int Delay, int ThinkTime);

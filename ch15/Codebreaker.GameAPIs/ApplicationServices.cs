@@ -1,8 +1,8 @@
-﻿using Codebreaker.Grpc;
+﻿using Azure.Identity;
 
-using Microsoft.Extensions.DependencyInjection;
+using Codebreaker.Grpc;
+
 using Microsoft.Extensions.Diagnostics.HealthChecks;
-using Microsoft.Extensions.ServiceDiscovery;
 
 using System.Diagnostics;
 
@@ -94,27 +94,34 @@ public static class ApplicationServices
 
         builder.Services.AddGrpc();
 
-        builder.Services.AddSingleton<ILiveReportClient, GrpcLiveReportClient>()
+        //builder.Services.AddSingleton<ILiveReportClient, GrpcLiveReportClient>()
+        //    .AddGrpcClient<ReportGame.ReportGameClient>((sp, client) =>
+        //    {
+        //        //var resolver = sp.GetRequiredService<ServiceEndpointResolver>();
 
-            .AddGrpcClient<ReportGame.ReportGameClient>((sp, client) =>
-            {
-                //var resolver = sp.GetRequiredService<ServiceEndpointResolver>();
+        //        //var endpointSource = await resolver.GetEndpointsAsync("https+http://gameapis", CancellationToken.None);
 
-                //var endpointSource = await resolver.GetEndpointsAsync("https+http://gameapis", CancellationToken.None);
+        //        //var endpoint = endpointSource.Endpoints
+        //        //    .Select(e => e.EndPoint).First();
 
-                //var endpoint = endpointSource.Endpoints
-                //    .Select(e => e.EndPoint).First();
+        //        //client.Address = new Uri(endpoint.ToString() ?? throw new InvalidOperationException());
 
-                //client.Address = new Uri(endpoint.ToString() ?? throw new InvalidOperationException());
+        //        var endpoint = builder.Configuration["services:live:https:0"] ?? throw new InvalidOperationException();
+        //        client.Address = new Uri(endpoint);
 
-                var endpoint = builder.Configuration["services:live:https:0"] ?? throw new InvalidOperationException();
-                client.Address = new Uri(endpoint);
+        //        // TODO: change to:
+        //        // client.Address = new Uri("http+https://live");
+        //    });
 
-                // TODO: change to:
-                // client.Address = new Uri("http+https://live");
-            });
+        builder.Services.AddScoped<ILiveReportClient, EventHubLiveReportClient>();
 
         builder.AddRedisDistributedCache("redis");
+
+        builder.AddAzureEventHubProducerClient("codebreakerevents",settings =>
+        {
+            settings.EventHubName = "games";
+//            settings.Credential = new DefaultAzureCredential();
+        });
     }
 
     private static bool s_IsDatabaseUpdateComplete = false;
