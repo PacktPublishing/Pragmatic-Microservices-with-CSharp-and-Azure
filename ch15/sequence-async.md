@@ -1,21 +1,21 @@
 ```mermaid
 sequenceDiagram
-  box QUEUE
-  participant bot-client
+  box
+    participant bot-client
   end
 
-  box EVENT-PRODUCER
-  participant bot-service
-  participant game-apis
+  box
+    participant bot-service
+    participant game-apis
   end
 
-  box EVENT-SUBSCRIBE
-  participant ranking-service
-  participant live-service
-  participant live-client
+  box
+    participant ranking-service
+    participant live-service
+    participant live-client
   end
 
-  bot-client-)bot-service: - message: start games
+  bot-client-)bot-service: message: start games
   bot-service->>game-apis: gRPC - start game
   loop repeat until complete
     bot-service->>game-apis: gRPC - set move
