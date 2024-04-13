@@ -13,7 +13,7 @@ public class CodebreakerGameRunner(IGamesClient gamesClient, ILogger<Codebreaker
     private readonly IGamesClient _gamesClient = gamesClient;
 
     // initialize a list of all the possible options using numbers for every color
-    private List<int> InitializePossibleValues()
+    private static List<int> InitializePossibleValues()
     {
         static List<int> Create8Colors(int shift)
         {
