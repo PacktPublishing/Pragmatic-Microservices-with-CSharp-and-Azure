@@ -1,23 +1,29 @@
 ```mermaid
 sequenceDiagram
-  participant bot-client
-  participant bot-service
-  participant game-apis
-  participant cosmos-games
-  participant live-service
-  participant live-client
-  participant ranking-service
-  participant cosmos-ranking
+  box
+    participant bot-client
+  end
 
-  bot-client->>game-apis: QUEUE - start games
+  box
+    participant bot-service
+    participant game-apis
+  end
+
+  box
+    participant ranking-service
+    participant live-service
+    participant live-client
+  end
+
+  bot-client-)bot-service: message: start games
   bot-service->>game-apis: gRPC - start game
-  game-apis->>cosmos-db: EF Core - add game
   loop repeat until complete
     bot-service->>game-apis: gRPC - set move
-    game-apis->>cosmos-db: EF Core - update game
   end
-  game-apis->>live-service: EVENT - game complete
-  live-service->>live-client: signalR game complete
-  game-apis->>ranking-service: EVENT - game complete
-  ranking-service->>cosmos-ranking: EF Core add gamesummary
+  par
+    game-apis-)ranking-service: event - game complete
+  and
+    game-apis-)live-service: event game completed
+  end
+  live-service->>live-client: SignalR game complete
 ```
