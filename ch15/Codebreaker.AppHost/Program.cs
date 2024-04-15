@@ -11,8 +11,10 @@ builder.AddAzureProvisioning();
 var logs = builder.AddAzureLogAnalyticsWorkspace("logs");
 var insights = builder.AddAzureApplicationInsights("insights", logs);
 var signalR = builder.AddAzureSignalR("signalr");
-var queue = builder.AddAzureStorage("storage")
-    .AddQueues("botqueue");
+var storage = builder.AddAzureStorage("storage");
+
+var botQueue = storage.AddQueues("botqueue");
+var blob = storage.AddBlobs("checkpoints");
 
 var eventHub = builder.AddAzureEventHubs("codebreakerevents")
     .AddEventHub("games");
@@ -30,26 +32,31 @@ var live = builder.AddProject<Projects.Codebreaker_Live>("live", "https")
     .WithReference(eventHub)
     .WithReference(signalR);
 
-var gameAPIs = builder.AddProject<Projects.Codebreaker_GameAPIs>("gameapis", "https")
+var gameAPIs = builder.AddProject<Projects.Codebreaker_GameAPIs>("gameapis")
     .WithExternalHttpEndpoints()
     .WithReference(cosmos)
     .WithReference(redis)
     .WithReference(insights)
-    .WithReference(live)
     .WithReference(eventHub)
     .WithEnvironment("DataStore", dataStore);
 
 builder.AddProject<Projects.Codebreaker_BotQ>("bot")
     .WithReference(insights)
-    .WithReference(queue)
+    .WithReference(botQueue)
     .WithReference(gameAPIs)
     .WithEnvironment("Bot__Loop", botLoop)
     .WithEnvironment("Bot__Delay", botDelay);
 
 builder.AddProject<Projects.Codebreaker_Ranking>("ranking")
-    .WithReference(cosmos)
     .WithExternalHttpEndpoints()
+    .WithReference(cosmos)
     .WithReference(insights)
-    .WithReference(eventHub);
+    .WithReference(eventHub)
+    .WithReference(blob);
+
+if (builder.Environment.EnvironmentName == "OnPremises")
+{
+    
+}
 
 builder.Build().Run();
