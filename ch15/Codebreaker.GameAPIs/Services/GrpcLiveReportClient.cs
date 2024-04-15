@@ -13,7 +13,7 @@ public class GrpcLiveReportClient(ReportGame.ReportGameClient client, ILogger<Li
         try
         {
             ReportGameCompletedRequest request = gameSummary.ToReportGameCompletedRequest();
-            await client.ReportGameCompletedAsync(request);
+            await client.ReportGameCompletedAsync(request, cancellationToken: cancellationToken);
         }
         catch (Exception ex) when (ex is RpcException or SocketException)
         {

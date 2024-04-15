@@ -92,7 +92,8 @@ public static class ApplicationServices
 
         builder.Services.AddScoped<IGamesService, GamesService>();
 
-        builder.Services.AddGrpc();
+        // temporary turn off grpc services
+        // builder.Services.AddGrpc();
 
         //builder.Services.AddSingleton<ILiveReportClient, GrpcLiveReportClient>()
         //    .AddGrpcClient<ReportGame.ReportGameClient>((sp, client) =>
@@ -113,14 +114,13 @@ public static class ApplicationServices
         //        // client.Address = new Uri("http+https://live");
         //    });
 
-        builder.Services.AddScoped<ILiveReportClient, EventHubLiveReportClient>();
+        builder.Services.AddScoped<ILiveReportClient, EventHubLiveReportProducer>();
 
         builder.AddRedisDistributedCache("redis");
 
         builder.AddAzureEventHubProducerClient("codebreakerevents",settings =>
         {
             settings.EventHubName = "games";
-//            settings.Credential = new DefaultAzureCredential();
         });
     }
 

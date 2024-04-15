@@ -46,6 +46,7 @@ _ = app.CreateOrUpdateDatabaseAsync();
 
 app.MapGameEndpoints();
 
-app.MapGrpcService<GrpcGameEndpoints>();
+// temporary turn off grpc services
+// app.MapGrpcService<GrpcGameEndpoints>();
 
 app.Run();
