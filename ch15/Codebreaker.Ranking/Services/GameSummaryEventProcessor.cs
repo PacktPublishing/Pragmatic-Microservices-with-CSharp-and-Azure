@@ -15,7 +15,7 @@ public class GameSummaryEventProcessor(EventProcessorClient client, IDbContextFa
         {
             logger.LogInformation("Processing event");
 
-            GameSummary1 summary = args.Data.EventBody.ToObjectFromJson<GameSummary1>();
+            GameSummary summary = args.Data.EventBody.ToObjectFromJson<GameSummary>();
 
             logger.LogInformation("Received game completion event for game {gameId}", summary.Id);
             var context = await factory.CreateDbContextAsync(cancellationToken);
@@ -42,7 +42,7 @@ public class GameSummaryEventProcessor(EventProcessorClient client, IDbContextFa
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, message: ex.Message);
+            logger.LogError(ex, "Error: {Error}", ex.Message);
             throw;
         }
     }

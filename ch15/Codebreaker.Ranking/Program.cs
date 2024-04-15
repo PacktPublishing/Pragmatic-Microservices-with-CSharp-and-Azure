@@ -1,4 +1,5 @@
 using Codebreaker.Live;
+using Codebreaker.Ranking.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,4 +20,9 @@ app.UseSwaggerUI();
 
 app.MapApplicationEndpoints();
 
+var eventProcessor = app.Services.GetRequiredService<GameSummaryEventProcessor>();
+await eventProcessor.StartProcessingAsync();
+
 app.Run();
+
+await eventProcessor.StopProcessingAsync();

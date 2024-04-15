@@ -3,6 +3,7 @@
 using Codebreaker.Data.Cosmos;
 using Codebreaker.Ranking.Data;
 using Codebreaker.Ranking.Endpoints;
+using Codebreaker.Ranking.Services;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -27,6 +28,8 @@ public static class ApplicationServices
         });
 
         builder.EnrichCosmosDbContext<RankingsContext>();
+
+        builder.Services.AddSingleton<GameSummaryEventProcessor>();
     }
 
     public static WebApplication MapApplicationEndpoints(this WebApplication app)
@@ -62,4 +65,5 @@ public static class ApplicationServices
 
         s_IsDatabaseUpdateComplete = true;
     }
+
 }

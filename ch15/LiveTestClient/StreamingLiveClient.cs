@@ -1,7 +1,6 @@
-﻿
-namespace LiveTestClient;
+﻿namespace LiveTestClient;
 
-internal class LiveClient(IOptions<LiveClientOptions> options, ILogger<LiveClient> logger) : IAsyncDisposable
+internal class StreamingLiveClient(IOptions<LiveClientOptions> options, ILogger<LiveClient> logger)
 {
     private HubConnection? _hubConnection;
 
@@ -18,25 +17,18 @@ internal class LiveClient(IOptions<LiveClientOptions> options, ILogger<LiveClien
                     logging.SetMinimumLevel(LogLevel.Debug);
                 })
                 .AddMessagePackProtocol()
-                .Build();
-
-            _hubConnection.On("GameCompleted", (GameSummary summary) =>
-            {
-                string status = summary.IsVictory ? "won" : "lost";
-                Console.WriteLine($"Game {summary.Id} {status} by {summary.PlayerName} after " +
-                    $"{summary.Duration:g} with {summary.NumberMoves} moves");
-            });
+            .Build();
 
             await _hubConnection.StartAsync(cancellationToken);
         }
         catch (HttpRequestException ex)
         {
-            logger.LogError(ex, "Error: {Error}", ex.Message);
+            logger.LogError(ex, ex.Message);
             throw;
         }
         catch (OperationCanceledException ex)
         {
-            logger.LogWarning("Error: {Error}", ex.Message);
+            logger.LogWarning(message: ex.Message);
         }
     }
 
@@ -46,16 +38,21 @@ internal class LiveClient(IOptions<LiveClientOptions> options, ILogger<LiveClien
 
         try
         {
-            await _hubConnection.InvokeAsync("SubscribeToGameCompletions", gameType, cancellationToken);
+            await foreach (GameSummary summary in _hubConnection.StreamAsync<GameSummary>("SubscribeToGameCompletions", gameType, cancellationToken))
+            {
+                string status = summary.IsVictory ? "won" : "lost";
+                Console.WriteLine($"Game {summary.Id} {status} by {summary.PlayerName} after " +
+                    $"{summary.Duration:g} with {summary.NumberMoves} moves");
+            }
         }
         catch (HubException ex)
         {
-            logger.LogError(ex, "Error: {Error}", ex.Message);
+            logger.LogError(ex, ex.Message);
             throw;
         }
         catch (OperationCanceledException ex)
         {
-            logger.LogWarning("Error: {Error}", ex.Message);
+            logger.LogWarning(ex.Message);
         }
     }
 
@@ -63,13 +60,7 @@ internal class LiveClient(IOptions<LiveClientOptions> options, ILogger<LiveClien
     {
         if (_hubConnection is not null)
         {
-            await _hubConnection.InvokeAsync("UnsubscribeFromGameCompletions");
             await _hubConnection.DisposeAsync();
         }
     }
-}
-
-public class LiveClientOptions
-{
-    public string? LiveUrl { get; set; }
 }

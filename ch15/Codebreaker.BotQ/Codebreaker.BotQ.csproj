@@ -21,6 +21,11 @@
 		<PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
 	</ItemGroup>
 
+  
+	<ItemGroup>
+	  <ProjectReference Include="..\Codebreaker.ServiceDefaults\Codebreaker.ServiceDefaults.csproj" />
+	</ItemGroup>
+
 	<ItemGroup>
 	  <Protobuf Include="..\Codebreaker.GameAPIs\Protos\GameService.proto" GrpcServices="Client" />
 	</ItemGroup>

@@ -11,7 +11,7 @@ public static class RankingEndpoints
         var group = routes.MapGroup("/ranking")
             .WithTags("Ranking API");
 
-        group.MapGet("/{day:Date}", async (DateOnly day, IDbContextFactory<RankingsContext> factory) =>
+        group.MapGet("/{day}", async (DateOnly day, IDbContextFactory<RankingsContext> factory) =>
         {
             using var context = await factory.CreateDbContextAsync();
             var summaries = await context.GetGameSummariesByDayAsync(day);
