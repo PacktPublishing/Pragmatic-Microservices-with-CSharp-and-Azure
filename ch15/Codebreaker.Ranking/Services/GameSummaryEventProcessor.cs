@@ -18,11 +18,10 @@ public class GameSummaryEventProcessor(EventProcessorClient client, IDbContextFa
             GameSummary summary = args.Data.EventBody.ToObjectFromJson<GameSummary>();
 
             logger.LogInformation("Received game completion event for game {gameId}", summary.Id);
-            var context = await factory.CreateDbContextAsync(cancellationToken);
+            using var context = await factory.CreateDbContextAsync(cancellationToken);
 
-            await Task.WhenAll(
-                context.AddGameSummaryAsync(summary, cancellationToken),
-                args.UpdateCheckpointAsync(cancellationToken));
+            await context.AddGameSummaryAsync(summary, cancellationToken);
+            await args.UpdateCheckpointAsync(cancellationToken);
         };
 
         client.ProcessErrorAsync += (args) =>
