@@ -1,6 +1,5 @@
 using Codebreaker.Live;
 
-using Microsoft.Identity.Client;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 

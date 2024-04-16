@@ -8,7 +8,7 @@ public class EventHubLiveReportProducer(EventHubProducerClient producerClient, I
     public async Task ReportGameEndedAsync(GameSummary game, CancellationToken cancellationToken = default)
     {
         var data = BinaryData.FromObjectAsJson(game);
-        await producerClient.SendAsync([ new EventData(data) ], cancellationToken);
+        await producerClient.SendAsync([new EventData(data)], cancellationToken);
 
         logger.GameCompletionSent(game.Id, "Event Hub");
     }

@@ -1,3 +1,5 @@
+using Confluent.Kafka;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
@@ -48,5 +50,13 @@ app.MapGameEndpoints();
 
 // temporary turn off grpc services
 // app.MapGrpcService<GrpcGameEndpoints>();
+
+//string? mode = builder.Configuration["StartupMode"];
+//if (mode == "OnPremises")
+//{
+//    var kafkaproducer = app.Services.GetRequiredService<IProducer<string, string>>();
+//    await kafkaproducer.ProduceAsync("gamesummary", new Message<string, string> { Key = "init", Value = "init" });
+//}
+
 
 app.Run();

@@ -6,21 +6,13 @@ public static class ApplicationServices
 {
     public static void AddApplicationServices(this IHostApplicationBuilder builder)
     {
-        builder.Services.AddSignalR()
-            .AddMessagePackProtocol()
-            .AddNamedAzureSignalR("signalr");
+        var signalRBuilder = builder.Services.AddSignalR()
+            .AddMessagePackProtocol();
 
-        // builder.AddKeyedAzureBlobClient("checkpoints");
-       // builder.AddAzureBlobClient("checkpoints");
-
-       // builder.Services.AddSingleton<LiveGamesEventProcessor>();
-
-        //builder.AddAzureEventProcessorClient("codebreakerevents", settings =>
-        //{
-        //    settings.Credential = new AzureCliCredential();
-        //    settings.EventHubName = "games";
-        //    // settings.BlobClientServiceKey = "checkpoints";
-        //});
+        if (builder.Configuration["StartupMode"] is not "OnPremises")
+        {
+            signalRBuilder.AddNamedAzureSignalR("signalr");
+        }
 
         builder.AddAzureEventHubConsumerClient("codebreakerevents",
             settings =>

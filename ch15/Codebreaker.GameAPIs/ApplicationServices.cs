@@ -1,8 +1,4 @@
-﻿using Azure.Identity;
-
-using Codebreaker.Grpc;
-
-using Microsoft.Extensions.Diagnostics.HealthChecks;
+﻿using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 using System.Diagnostics;
 
@@ -12,7 +8,6 @@ public static class ApplicationServices
 {
     public static void AddApplicationTelemetry(this IHostApplicationBuilder builder)
     {
-        string? mode = builder.Configuration["StartupMode"];
         builder.Services.AddMetrics();
 
         builder.Services.AddOpenTelemetry().WithMetrics(m => m.AddMeter(GamesMetrics.MeterName));
@@ -92,6 +87,30 @@ public static class ApplicationServices
 
         builder.Services.AddScoped<IGamesService, GamesService>();
 
+        string? mode = builder.Configuration["StartupMode"];
+        if (mode == "OnPremises")
+        {
+            builder.AddKafkaProducer<string, string>("kafkamessaging", settings =>
+            {
+                settings.Config.AllowAutoCreateTopics = true;
+              
+            }, config =>
+            {
+               
+            });
+
+            builder.Services.AddSingleton<ILiveReportClient, KafkaLiveReportProducer>();
+        }
+        else
+        {
+            builder.Services.AddScoped<ILiveReportClient, EventHubLiveReportProducer>();
+
+            builder.AddAzureEventHubProducerClient("codebreakerevents", settings =>
+            {
+                settings.EventHubName = "games";
+            });
+        }
+
         // temporary turn off grpc services
         // builder.Services.AddGrpc();
 
@@ -113,15 +132,7 @@ public static class ApplicationServices
         //        // TODO: change to:
         //        // client.Address = new Uri("http+https://live");
         //    });
-
-        builder.Services.AddScoped<ILiveReportClient, EventHubLiveReportProducer>();
-
         builder.AddRedisDistributedCache("redis");
-
-        builder.AddAzureEventHubProducerClient("codebreakerevents",settings =>
-        {
-            settings.EventHubName = "games";
-        });
     }
 
     private static bool s_IsDatabaseUpdateComplete = false;

@@ -22,6 +22,7 @@
 
     <ItemGroup>
 		<PackageReference Include="Aspire.Azure.Messaging.EventHubs" Version="8.1.0-preview.*" />
+		<PackageReference Include="Aspire.Confluent.Kafka" Version="8.1.0-preview.*" />
 		<PackageReference Include="Aspire.StackExchange.Redis.DistributedCaching" Version="8.1.0-preview.*" />
 		<PackageReference Include="Aspire.Microsoft.EntityFrameworkCore.SqlServer" Version="8.1.0-preview.*" />
 		<PackageReference Include="Aspire.Microsoft.EntityFrameworkCore.Cosmos" Version="8.1.0-preview.*" />
@@ -29,7 +30,7 @@
 
 
 	<ItemGroup>
-		<PackageReference Include="CNinnovation.Codebreaker.BackendModels" Version="3.6.0-beta.26" />
+		<PackageReference Include="CNinnovation.Codebreaker.BackendModels" Version="3.6.0-beta.27" />
 		<PackageReference Include="Grpc.AspNetCore" Version="2.62.0" />
 		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.4" />
 		<PackageReference Include="Microsoft.Extensions.ApiDescription.Server" Version="8.0.4">

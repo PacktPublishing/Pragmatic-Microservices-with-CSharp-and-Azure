@@ -1,4 +1,5 @@
 {
+  "$schema": "http://json.schemastore.org/launchsettings.json",
   "profiles": {
     "https": {
       "commandName": "Project",
@@ -36,18 +37,20 @@
         }
       }
     },
-    "prometheus": {
+    "OnPremises": {
       "commandName": "Project",
       "launchBrowser": true,
+      "dotnetRunMessages": true,
+      "applicationUrl": "http://localhost:15100",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "DOTNET_ENVIRONMENT": "Development",
-        "DOTNET_DASHBOARD_OTLP_ENDPOINT_URL": "http://localhost:16263",
-        "ASPIRE_ALLOW_UNSECURED_TRANSPORT": "true"
-      },
-      "dotnetRunMessages": true,
-      "applicationUrl": "http://localhost:15100"
+        "DOTNET_DASHBOARD_OTLP_ENDPOINT_URL": "http://localhost:16037",
+        "DOTNET_RESOURCE_SERVICE_ENDPOINT_URL": "http://localhost:17037",
+        "DOTNET_ASPIRE_SHOW_DASHBOARD_RESOURCES": "true",
+        "ASPIRE_ALLOW_UNSECURED_TRANSPORT": "true",
+        "STARTUP_MODE": "OnPremises"
+      }
     }
-  },
-  "$schema": "http://json.schemastore.org/launchsettings.json"
+  }
 }

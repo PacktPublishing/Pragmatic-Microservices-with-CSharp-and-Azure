@@ -1,25 +1,42 @@
-﻿using Azure.Identity;
-
-using Codebreaker.Data.Cosmos;
-using Codebreaker.Ranking.Data;
+﻿using Codebreaker.Ranking.Data;
 using Codebreaker.Ranking.Endpoints;
 using Codebreaker.Ranking.Services;
 
 using Microsoft.EntityFrameworkCore;
 
-namespace Codebreaker.Live;
+namespace Codebreaker.Ranking;
 
 public static class ApplicationServices
 {
     public static void AddApplicationServices(this IHostApplicationBuilder builder)
     {
-        builder.AddKeyedAzureBlobClient("checkpoints");
-
-        builder.AddAzureEventProcessorClient("codebreakerevents", settings =>
+        string? mode = builder.Configuration["StartupMode"];
+        if (mode == "OnPremises")
         {
-            settings.EventHubName = "games";
-            settings.BlobClientServiceKey = "checkpoints";
-        });
+            builder.AddKafkaConsumer<string, string>("kafkamessaging", settings =>
+            {
+               settings.Config.GroupId = "Ranking"; 
+               settings.Config.AllowAutoCreateTopics = true;
+            }, config =>
+            {
+               
+            });
+
+            builder.Services.AddSingleton<IGameSummaryProcessor, GameSummaryKafkaConsumer>();
+
+        }
+        else
+        {
+            builder.AddKeyedAzureBlobClient("checkpoints");
+
+            builder.AddAzureEventProcessorClient("codebreakerevents", settings =>
+            {
+                settings.EventHubName = "games";
+                settings.BlobClientServiceKey = "checkpoints";
+            });
+
+            builder.Services.AddSingleton<IGameSummaryProcessor, GameSummaryEventProcessor>();
+        }
 
         builder.Services.AddDbContextFactory<RankingsContext>(options =>
         {
@@ -28,8 +45,6 @@ public static class ApplicationServices
         });
 
         builder.EnrichCosmosDbContext<RankingsContext>();
-
-        builder.Services.AddSingleton<GameSummaryEventProcessor>();
     }
 
     public static WebApplication MapApplicationEndpoints(this WebApplication app)

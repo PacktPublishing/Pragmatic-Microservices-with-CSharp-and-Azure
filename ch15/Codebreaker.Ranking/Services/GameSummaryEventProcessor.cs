@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Codebreaker.Ranking.Services;
 
-public class GameSummaryEventProcessor(EventProcessorClient client, IDbContextFactory<RankingsContext> factory, ILogger<GameSummaryEventProcessor> logger)
+public class GameSummaryEventProcessor(EventProcessorClient client, IDbContextFactory<RankingsContext> factory, ILogger<GameSummaryEventProcessor> logger) : IGameSummaryProcessor
 {
     public async Task StartProcessingAsync(CancellationToken cancellationToken = default)
     {
