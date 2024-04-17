@@ -10,13 +10,25 @@ The code for this chapter can be found in the following GitHub repository: https
 
 The important projects part of this chapters repository folder are
 
-- Codebreaker.AppHost - the .NET Aspire host project. The app model is enhanced by an additional project running a SignalR hub and using Azure SignalR Services.
-- Codebreaker.Live – the project we created in the previous chapter is changed to offer a gRPC service instead of a REST service.
-- Codebreaker.GameAPIs – this project is updated to include a gRPC client to invoke the live service. In addition to the REST service used by many different clients, as an alternative a gRPC service is added which is invoked by the bot service.
-- Codebreaker.Bot - the bot service is updated to use a gRPC client instead of REST to invoke the game APIs service.
-- LiveTestClient – you use the live test client from the previous chapter to verify if the SignalR service.
+-	Codebreaker.AppHost - the .NET Aspire host project. The app model is enhanced by adding Azure Storage, Azure Event Hub, and Kafka services.
+-	Codebreaker.BotQ – this is a new project with nearly the same code as Codebreaker.Bot – but instead of using a REST API to trigger the game plays, a message queue is used.
+-	Codebreaker.GameAPIs – this project is updated to forward completed games not directly to the live service, but publishing events to Azure Event Hub, or with a different start of the application to Kafka.
+-	Codebreaker.Live – this project is changed to subscribe events from Azure Event Hub using async streaming. The SignalR implementation is changed as well to use async streaming.
+-	Codebreaker.Ranking – this is a new project receiving events from Azure Event Hub or Kafka, writes this information to an Azure Cosmos DB database, and offers a REST service to retrieve the rank of the day. With the Event Hub we use a different way to receive events than with the live service.
 
 Working through the code with this chapter, you can start using the service, bot, and live projects from the previous chapter.
+
+## Create an Azure Container App Job
+
+To create an Azure Container App job, use:
+
+1. azd init
+2. azd infra synth
+3. azd provision
+4. Change the YML file of the bot to 
+5. azd deploy
+
+More details coming here!
 
 ## Deploy the application to Microsoft Azure
 
