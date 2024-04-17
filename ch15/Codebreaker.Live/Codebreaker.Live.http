@@ -1,0 +1,15 @@
+@Live_HostAddress = http://localhost:5130
+
+POST {{Live_HostAddress}}/live/game
+Accept: application/json
+Content-Type: application/json
+
+{
+    "id": "2BB21B6A-3B21-4C76-AB46-2D616C8DBB4B",
+    "gameType": "Game6x4",
+    "playerName": "Player1",
+    "isCompleted": true,
+    "isVictory": true,
+    "startTime": "2016-11-01T00:00:00Z",
+    "duration": "00:00:18"
+}
