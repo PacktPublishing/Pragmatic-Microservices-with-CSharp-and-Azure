@@ -65,34 +65,38 @@ public class CodeBreakerTimer(CodeBreakerGameRunner runner, ILogger<CodeBreakerT
         _timer?.Dispose();
     }
 
-    public StatusResponse Status()
+    public StatusInfo GetStatus()
     {
-        return new StatusResponse(_loop + 1, _statusMessage);
+        return new StatusInfo(_loop + 1, _statusMessage);
     }
 
     public static void Stop(Guid id)
     {
         if (id == default)
-            throw new ArgumentException("id {id} not set", nameof(id));
+            throw new ArgumentException("Invalid argument value {id}", nameof(id));
 
         if (_bots.TryGetValue(id, out CodeBreakerTimer? timer))
         {
             timer.Stop();
             _bots.TryRemove(id, out _);
-            return;
         }
 
         throw new BotNotFoundException();
     }
 
-    public static StatusResponse Status(Guid id)
+    public static StatusInfo GetStatus(Guid id)
     {
         if (id == default)
             throw new ArgumentException("Invalid argument value {id}", nameof(id));
 
         if (_bots.TryGetValue(id, out CodeBreakerTimer? timer))
-            return timer?.Status() ?? throw new UnknownStatusException("id found, but unknown status");
+            return timer?.GetStatus() ?? throw new UnknownStatusException("id found, but unknown status");
 
         throw new BotNotFoundException();
+    }
+
+    public static IEnumerable<StatusInfo> GetAllStatuses()
+    {
+        return _bots.Select(b => b.Value.GetStatus()).ToArray();
     }
 }

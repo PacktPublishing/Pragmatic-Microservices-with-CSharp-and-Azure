@@ -1,10 +1,4 @@
-﻿using System.Security.Claims;
-
-using CodeBreaker.Bot.Api;
-using CodeBreaker.Bot.Exceptions;
-
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http.HttpResults;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace CodeBreaker.Bot.Endpoints;
 
@@ -13,12 +7,10 @@ public static class BotEndpoints
     public static void MapBotEndpoints(this IEndpointRouteBuilder routes)
     {
         var group = routes.MapGroup("/bot")
-            .RequireAuthorization("botpolicy")
             .WithTags("Bot API");
 
-        group.MapPost("/bots", Results<BadRequest, Accepted<Guid>> (
+        group.MapPost("/session", Results<BadRequest, Accepted<Guid>> (
             CodeBreakerTimer timer,
-            //ClaimsIdentity identity,
             int count = 3,
             int delay = 10,
             int thinkTime = 3) =>
@@ -46,13 +38,23 @@ public static class BotEndpoints
             return x;
         });
 
-        group.MapGet("/bots/{id}", Results<Ok<StatusResponse>, BadRequest<string>, NotFound>(Guid id) =>
+        group.MapGet("/session", () =>
         {
-            StatusResponse result;
+            IEnumerable<StatusInfo> results = CodeBreakerTimer.GetAllStatuses();
+
+            return TypedResults.Ok(results);
+        })
+        .WithName("GetSessions")
+        .WithSummary("Gets the statuses of all sessions")
+        .WithOpenApi();
+
+        group.MapGet("/session/{id}", Results<Ok<StatusInfo>, BadRequest<string>, NotFound> (Guid id) =>
+        {
+            StatusInfo result;
 
             try
             {
-                result = CodeBreakerTimer.Status(id);
+                result = CodeBreakerTimer.GetStatus(id);
             }
             catch (ArgumentException)
             {
@@ -65,15 +67,15 @@ public static class BotEndpoints
 
             return TypedResults.Ok(result);
         })
-        .WithName("GetBot")
+        .WithName("GetSession")
         .WithSummary("Gets the status of a bot")
         .WithOpenApi(x =>
         {
-            x.Parameters[0].Description = "The id of the bot instance           ";
+            x.Parameters[0].Description = "The id of the bot";
             return x;
         });
 
-        group.MapDelete("/bots/{id}", Results<NoContent, NotFound, BadRequest<string>> (Guid id) =>
+        group.MapDelete("/session/{id}", Results<NoContent, NotFound, BadRequest<string>> (Guid id) =>
         {
             try
             {
