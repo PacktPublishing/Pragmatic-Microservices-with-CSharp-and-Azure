@@ -1,7 +1,7 @@
 ﻿namespace Codebreaker.GameAPIs.Client.Models;
 
 public record class UpdateGameResponse(
-    Guid GameId,
+    Guid Id,
     GameType GameType,
     int MoveNumber,
     bool Ended,

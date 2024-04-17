@@ -1,0 +1,16 @@
+﻿@namespace CodeBreaker.Blazor.UI.Components
+@typeparam T
+
+<div class="flex-responsive gap-2">
+<InputRadioGroup Name="group-1" Value="Value" ValueChanged="ValueChanged" ValueExpression="ValueExpression">
+    @foreach (var item in Items)
+    {
+        <label>
+            <InputRadio TValue="T" Value="@item.Value" Name="group-1" />
+            <span class="design" />
+            <span class="text">@item.Key</span>
+        </label>
+    }
+</InputRadioGroup>
+</div>
+

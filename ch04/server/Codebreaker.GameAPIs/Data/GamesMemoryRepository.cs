@@ -9,44 +9,32 @@ public class GamesMemoryRepository(ILogger<GamesMemoryRepository> logger) : IGam
 
     public Task AddGameAsync(Game game, CancellationToken cancellationToken = default)
     {
-        if (!_games.TryAdd(game.GameId, game))
+        if (!_games.TryAdd(game.Id, game))
         {
-            _logger.LogWarning("gameid {gameId} already exists", game.GameId);
+            _logger.LogWarning("id {id} already exists", game.Id);
         }
         return Task.CompletedTask;
     }
 
-    public Task<bool> DeleteGameAsync(Guid gameId, CancellationToken cancellationToken = default)
+    public Task<bool> DeleteGameAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        if (!_games.TryRemove(gameId, out _))
+        if (!_games.TryRemove(id, out _))
         {
-            _logger.LogWarning("gamid {gameId} not available", gameId);
+            _logger.LogWarning("id {id} not available", id);
             return Task.FromResult(false);
         }
         return Task.FromResult(true);
     }
 
-    public Task<Game?> GetGameAsync(Guid gameId, CancellationToken cancellationToken = default)
+    public Task<Game?> GetGameAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        _games.TryGetValue(gameId, out Game? game);
+        _games.TryGetValue(id, out Game? game);
         return Task.FromResult(game);
-    }
-
-    public Task<IEnumerable<Game>> GetGamesByDateAsync(string gameType, DateOnly date, CancellationToken cancellationToken = default)
-    {
-        var games = _games.Values.Where(g => DateOnly.FromDateTime(g.StartTime) == date).ToArray();
-        return Task.FromResult<IEnumerable<Game>>(games);
-    }
-
-    public Task<IEnumerable<Game>> GetGamesByPlayerAsync(string playerName, CancellationToken cancellationToken = default)
-    {
-        var games = _games.Values.Where(g => g.PlayerName == playerName).ToArray();
-        return Task.FromResult<IEnumerable<Game>>(games);
     }
 
     public Task AddMoveAsync(Game game, Move move, CancellationToken cancellationToken = default)
     {
-        _games[game.GameId] = game;
+        _games[game.Id] = game;
         return Task.CompletedTask;
     }
 
@@ -66,12 +54,12 @@ public class GamesMemoryRepository(ILogger<GamesMemoryRepository> logger) : IGam
 
         if (gamesQuery.RunningOnly)
         {
-            filteredGames = filteredGames.Where(g => !g.Ended());
+            filteredGames = filteredGames.Where(g => !g.HasEnded());
         }
 
         if (gamesQuery.Ended)
         {
-            filteredGames = filteredGames.Where(g => g.Ended());
+            filteredGames = filteredGames.Where(g => g.HasEnded());
         }
 
         return Task.FromResult(filteredGames);
@@ -79,15 +67,15 @@ public class GamesMemoryRepository(ILogger<GamesMemoryRepository> logger) : IGam
 
     public Task<Game> UpdateGameAsync(Game game, CancellationToken cancellationToken = default)
     {
-        _games.TryGetValue(game.GameId, out var existingGame);
+        _games.TryGetValue(game.Id, out var existingGame);
         CodebreakerException.ThrowIfNull(existingGame);
 
-        if (_games.TryUpdate(game.GameId, game, existingGame))
+        if (_games.TryUpdate(game.Id, game, existingGame))
         {
             return Task.FromResult(game);
         }
 
-        throw new CodebreakerException($"Game update failed with game id {game.GameId}") 
+        throw new CodebreakerException($"Game update failed with game id {game.Id}") 
         { 
             Code = CodebreakerExceptionCodes.GameUpdateFailed 
         };

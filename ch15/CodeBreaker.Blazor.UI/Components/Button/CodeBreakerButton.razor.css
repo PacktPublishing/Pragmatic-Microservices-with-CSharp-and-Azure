@@ -1,0 +1,68 @@
+﻿.btn {
+    background-color: var(--accent-color);
+    border: none;
+    padding: 8px 26px;
+    color: #fff;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+    .btn:not(.is-disabled):hover {
+        background: var(--accent-color-hover);
+    }
+
+    .btn.icon {
+        width: 2rem;
+        height: 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: transparent;
+        color: var(--accent-color);
+        border: 1px solid var(--accent-color);
+        margin-top: 0;
+        padding: 0;
+        border-radius: 100vh;
+        cursor: pointer;
+        transition: 0.3s;
+        white-space: nowrap;
+    }
+
+        .btn.icon:not(.is-disabled):hover {
+            background-color: var(--accent-color);
+            color: #fff;
+        }
+
+        .btn.icon:not(.is-disabled):active {
+            background-color: var(--accent-color-hover);
+            color: #fff;
+        }
+
+    .btn.is-disabled {
+        pointer-events: none;
+        cursor: auto;
+        background: none;
+        color: var(--button-inactive);
+        border: 1px solid var(--button-inactive);
+    }
+
+    .btn.small {
+        padding: 0.25rem 1.5rem;
+        border-radius: 1rem;
+    }
+
+@media only screen and (max-width: 599px) {
+    .btn.icon {
+        width: 1.75rem;
+        height: 1.75rem;
+    }
+
+        .btn.icon ::deep i {
+            font-size: 0.75rem;
+        }
+}

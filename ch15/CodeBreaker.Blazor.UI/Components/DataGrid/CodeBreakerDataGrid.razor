@@ -1,0 +1,52 @@
+﻿@using Microsoft.AspNetCore.Components.QuickGrid
+@using Microsoft.AspNetCore.Components.Web.Virtualization
+@namespace CodeBreaker.Blazor.UI.Components
+@typeparam T
+
+<div class="grid">
+    <QuickGrid TGridItem=T Items="@_source" Pagination="@pagination">
+        @foreach (var col in Columns)
+        {
+            <PropertyColumn Title="@col.Title" Property="@col.FieldSelectorExpression" Sortable="true" />
+        }
+        <TemplateColumn Title="Actions" Sortable="true">
+            <div style="margin: 0.25rem;">
+                <CodeBreakerButton Class="small" @onclick="@(() => Hire(context))">Show</CodeBreakerButton>
+            </div>
+        </TemplateColumn>
+    </QuickGrid>
+    @if (_source?.Count() > 7)
+    {
+        <div class="page-buttons">
+            Page:
+            @if (pagination.TotalItemCount.HasValue)
+            {
+                for (var pageIndex = 0; pageIndex <= pagination.LastPageIndex; pageIndex++)
+                {
+                    var capturedIndex = pageIndex;
+                    <button @onclick="@(() => GoToPageAsync(capturedIndex))"
+                            class="@PageButtonClass(capturedIndex)"
+                            aria-current="@AriaCurrentValue(capturedIndex)"
+                            aria-label="Go to page @(pageIndex + 1)">
+                        @(pageIndex + 1)
+                    </button>
+                }
+            }
+        </div>
+    }
+</div>
+
+
+<div class="list">
+    <Virtualize Items="_source?.ToArray()" Context="item">
+        <ItemContent>
+            <div class="card" @onclick="@(() => Hire(item))">
+                @foreach (var col in Columns.Where(col => col.ShowMobile))
+                {
+                    <p>@col.Title: @(col.FieldSelector!(item!)?.ToString())</p>
+                }
+            </div>
+        </ItemContent>
+    </Virtualize>
+</div>
+

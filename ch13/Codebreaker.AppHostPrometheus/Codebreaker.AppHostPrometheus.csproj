@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<IsAspireHost>true</IsAspireHost>
+		<UserSecretsId>e5b2b032-a39b-47c9-a686-c8e69576dc7a</UserSecretsId>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Aspire.Hosting" Version="8.0.0-preview.5.24163.6" />
+		<PackageReference Include="Aspire.Hosting.Azure" Version="8.0.0-preview.5.24163.6" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\CodeBreaker.Blazor.Host\CodeBreaker.Blazor.Host.csproj" />
+		<ProjectReference Include="..\CodeBreaker.Bot\CodeBreaker.Bot.csproj" />
+		<ProjectReference Include="..\Codebreaker.GameAPIs\Codebreaker.GameAPIs.csproj" />
+		<ProjectReference Include="..\Codebreaker.Live\Codebreaker.Live.csproj" />
+		<ProjectReference Include="..\Codebreaker.ServiceDefaults\Codebreaker.ServiceDefaults.csproj" IsAspireProjectResource="false" />
+		<ProjectReference Include="..\Codebreaker.SqlServerMigration\Codebreaker.SqlServerMigration.csproj" />
+	</ItemGroup>
+
+</Project>

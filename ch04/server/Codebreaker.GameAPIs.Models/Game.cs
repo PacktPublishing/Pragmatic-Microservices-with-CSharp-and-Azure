@@ -1,11 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-using Codebreaker.GameAPIs.Contracts;
+﻿using Codebreaker.GameAPIs.Contracts;
+using System.ComponentModel.DataAnnotations;
 
 namespace Codebreaker.GameAPIs.Models;
 
 public class Game(
-    Guid gameId,
+    Guid id,
     string gameType,
     string playerName,
     DateTime startTime,
@@ -13,7 +12,7 @@ public class Game(
     int maxMoves) : IGame
 {
     [Required]
-    public Guid GameId { get; private set; } = gameId;
+    public Guid Id { get; private set; } = id;
     [Required]
     public string GameType { get; private set; } = gameType;
     [Required, MinLength(4), MaxLength(25)]
@@ -38,7 +37,7 @@ public class Game(
     [Required]
     public required string[] Codes { get; init; }
     [Required]
-    public ICollection<Move> Moves { get; } = new List<Move>();
+    public ICollection<Move> Moves { get; } = [];
 
-    public override string ToString() => $"{GameId}:{GameType} - {StartTime}";
+    public override string ToString() => $"{Id}:{GameType} - {StartTime}";
 }

@@ -1,0 +1,94 @@
+{
+  "resources": {
+    "redis": {
+      "type": "container.v0",
+      "image": "redis:latest",
+      "bindings": {
+        "tcp": {
+          "scheme": "tcp",
+          "protocol": "tcp",
+          "transport": "tcp",
+          "containerPort": 6379
+        }
+      },
+      "connectionString": "{redis.bindings.tcp.host}:{redis.bindings.tcp.port}"
+    },
+    "codebreakercosmos": {
+      "type": "azure.cosmosdb.account.v0"
+    },
+    "codebreaker": {
+      "type": "azure.cosmosdb.database.v0",
+      "parent": "codebreakercosmos"
+    },
+    "gameapis": {
+      "type": "project.v0",
+      "path": "../Codebreaker.GameAPIs/Codebreaker.GameAPIs.csproj",
+      "env": {
+        "OTEL_DOTNET_EXPERIMENTAL_OTLP_EMIT_EXCEPTION_LOG_ATTRIBUTES": "true",
+        "OTEL_DOTNET_EXPERIMENTAL_OTLP_EMIT_EVENT_LOG_ATTRIBUTES": "true",
+        "ConnectionStrings__codebreaker": "{codebreaker.connectionString}",
+        "ConnectionStrings__redis": "{redis.connectionString}",
+        "DataStore": "Cosmos",
+        "ApplicationInsightsConnectionString": "InstrumentationKey=b5421587-a682-4dc3-b990-5b15fe1fdd9c;IngestionEndpoint=https://westeurope-5.in.applicationinsights.azure.com/;LiveEndpoint=https://westeurope.livediagnostics.monitor.azure.com/"
+      },
+      "bindings": {
+        "http": {
+          "scheme": "http",
+          "protocol": "tcp",
+          "transport": "http"
+        },
+        "https": {
+          "scheme": "https",
+          "protocol": "tcp",
+          "transport": "http"
+        }
+      }
+    },
+    "blazor": {
+      "type": "project.v0",
+      "path": "../CodeBreaker.Blazor.Host/CodeBreaker.Blazor.Host.csproj",
+      "env": {
+        "OTEL_DOTNET_EXPERIMENTAL_OTLP_EMIT_EXCEPTION_LOG_ATTRIBUTES": "true",
+        "OTEL_DOTNET_EXPERIMENTAL_OTLP_EMIT_EVENT_LOG_ATTRIBUTES": "true",
+        "ApplicationInsightsConnectionString": "InstrumentationKey=b5421587-a682-4dc3-b990-5b15fe1fdd9c;IngestionEndpoint=https://westeurope-5.in.applicationinsights.azure.com/;LiveEndpoint=https://westeurope.livediagnostics.monitor.azure.com/",
+        "services__gameapis__0": "{gameapis.bindings.http.url}",
+        "services__gameapis__1": "{gameapis.bindings.https.url}"
+      },
+      "bindings": {
+        "http": {
+          "scheme": "http",
+          "protocol": "tcp",
+          "transport": "http"
+        },
+        "https": {
+          "scheme": "https",
+          "protocol": "tcp",
+          "transport": "http"
+        }
+      }
+    },
+    "bot": {
+      "type": "project.v0",
+      "path": "../CodeBreaker.Bot/CodeBreaker.Bot.csproj",
+      "env": {
+        "OTEL_DOTNET_EXPERIMENTAL_OTLP_EMIT_EXCEPTION_LOG_ATTRIBUTES": "true",
+        "OTEL_DOTNET_EXPERIMENTAL_OTLP_EMIT_EVENT_LOG_ATTRIBUTES": "true",
+        "ApplicationInsightsConnectionString": "InstrumentationKey=b5421587-a682-4dc3-b990-5b15fe1fdd9c;IngestionEndpoint=https://westeurope-5.in.applicationinsights.azure.com/;LiveEndpoint=https://westeurope.livediagnostics.monitor.azure.com/",
+        "services__gameapis__0": "{gameapis.bindings.http.url}",
+        "services__gameapis__1": "{gameapis.bindings.https.url}"
+      },
+      "bindings": {
+        "http": {
+          "scheme": "http",
+          "protocol": "tcp",
+          "transport": "http"
+        },
+        "https": {
+          "scheme": "https",
+          "protocol": "tcp",
+          "transport": "http"
+        }
+      }
+    }
+  }
+}

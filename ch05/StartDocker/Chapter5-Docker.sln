@@ -1,0 +1,33 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.7.33920.267
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Codebreaker.GameAPIs", "Codebreaker.GameAPIs\Codebreaker.GameAPIs.csproj", "{DD1EDC04-0D2C-4FBF-8444-23120DAD2797}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{072595C8-26C4-4FA1-9EC6-3C801CABE4E3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeBreaker.Bot", "CodeBreaker.Bot\CodeBreaker.Bot.csproj", "{70D58CC2-7801-48E8-860A-DA90A72ABD54}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DD1EDC04-0D2C-4FBF-8444-23120DAD2797}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD1EDC04-0D2C-4FBF-8444-23120DAD2797}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD1EDC04-0D2C-4FBF-8444-23120DAD2797}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD1EDC04-0D2C-4FBF-8444-23120DAD2797}.Release|Any CPU.Build.0 = Release|Any CPU
+		{70D58CC2-7801-48E8-860A-DA90A72ABD54}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{70D58CC2-7801-48E8-860A-DA90A72ABD54}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70D58CC2-7801-48E8-860A-DA90A72ABD54}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{70D58CC2-7801-48E8-860A-DA90A72ABD54}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {30EDEFB8-BAE2-4D40-8488-0325F600D4ED}
+	EndGlobalSection
+EndGlobal

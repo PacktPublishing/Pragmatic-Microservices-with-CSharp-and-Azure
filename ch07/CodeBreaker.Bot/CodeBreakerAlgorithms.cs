@@ -181,7 +181,7 @@ public static class CodeBreakerAlgorithms
 [InlineArray(4)]
 internal struct KeyPegArray
 {
-#pragma warning disable IDE0051 // Remove unused private members - Inline array needs a member
+#pragma warning disable IDE0051 // Remove unused private members
     private KeyPegWithFlag _keyPegWithFlag;
 #pragma warning restore IDE0051 // Remove unused private members
 }

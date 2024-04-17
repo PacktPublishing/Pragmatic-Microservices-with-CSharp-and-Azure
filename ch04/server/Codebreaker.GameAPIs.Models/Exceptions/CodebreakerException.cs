@@ -6,6 +6,7 @@ namespace Codebreaker.GameAPIs.Exceptions;
 
 public class CodebreakerException : Exception
 {
+
     public string Code { get; set; } = string.Empty;
 
 	public CodebreakerException() { }
@@ -20,9 +21,17 @@ public class CodebreakerException : Exception
         }
     }
 
+    public static void ThrowIfUnexpectedGameType(Game game, string gameType)
+    {
+        if (game.GameType != gameType)
+        {
+            throw new CodebreakerException("Game type not expected") { Code = CodebreakerExceptionCodes.UnexpectedGameType };
+        }
+    }
+
     public static void ThrowIfEnded(Game game)
     {
-        if (game.Ended())
+        if (game.HasEnded())
         {
             throw new CodebreakerException("Game is not active") { Code = CodebreakerExceptionCodes.GameNotActive };
         }
