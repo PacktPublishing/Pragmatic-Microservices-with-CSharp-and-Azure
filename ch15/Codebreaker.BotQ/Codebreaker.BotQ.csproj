@@ -6,28 +6,26 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
-
+ 
+  <ItemGroup>
+	<PackageReference Include="Aspire.Azure.Storage.Queues" Version="8.1.0-preview.*" />
+	<PackageReference Include="Azure.Identity" Version="1.11.0" />
+	<PackageReference Include="CNinnovation.Codebreaker.GamesClient" Version="3.6.0-beta.24" />
+	<PackageReference Include="Google.Protobuf" Version="3.26.1" />
+	<PackageReference Include="Grpc.Net.ClientFactory" Version="2.62.0" />
+	<PackageReference Include="Grpc.Tools" Version="2.62.0">
+	  <PrivateAssets>all</PrivateAssets>
+	  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+	</PackageReference>
+	<PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
+  </ItemGroup>
   
-	<ItemGroup>
-		<PackageReference Include="Aspire.Azure.Storage.Queues" Version="8.1.0-preview.*" />
-		<PackageReference Include="Azure.Identity" Version="1.11.0" />
-		<PackageReference Include="CNinnovation.Codebreaker.GamesClient" Version="3.6.0-beta.24" />
-		<PackageReference Include="Google.Protobuf" Version="3.26.1" />
-		<PackageReference Include="Grpc.Net.ClientFactory" Version="2.62.0" />
-		<PackageReference Include="Grpc.Tools" Version="2.62.0">
-		  <PrivateAssets>all</PrivateAssets>
-		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
-		<PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
-	</ItemGroup>
+  <ItemGroup>
+	<ProjectReference Include="..\Codebreaker.ServiceDefaults\Codebreaker.ServiceDefaults.csproj" />
+  </ItemGroup>
 
-  
-	<ItemGroup>
-	  <ProjectReference Include="..\Codebreaker.ServiceDefaults\Codebreaker.ServiceDefaults.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Protobuf Include="..\Codebreaker.GameAPIs\Protos\GameService.proto" GrpcServices="Client" />
-	</ItemGroup>
+  <ItemGroup>
+	<Protobuf Include="..\Codebreaker.GameAPIs\Protos\GameService.proto" GrpcServices="Client" />
+  </ItemGroup>
 
 </Project>

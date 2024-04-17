@@ -1,7 +1,7 @@
 ﻿
 namespace Codebreaker.GameAPIs.Services;
 
-public interface ILiveReportClient
+public interface IGameReport
 {
     Task ReportGameEndedAsync(GameSummary game, CancellationToken cancellationToken = default);
 }

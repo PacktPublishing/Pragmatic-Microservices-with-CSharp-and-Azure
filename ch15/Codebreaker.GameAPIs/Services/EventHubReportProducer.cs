@@ -3,7 +3,7 @@ using Azure.Messaging.EventHubs.Producer;
 
 namespace Codebreaker.GameAPIs.Services;
 
-public class EventHubLiveReportProducer(EventHubProducerClient producerClient, ILogger<EventHubLiveReportProducer> logger) : ILiveReportClient
+public class EventHubReportProducer(EventHubProducerClient producerClient, ILogger<EventHubReportProducer> logger) : IGameReport
 {
     public async Task ReportGameEndedAsync(GameSummary game, CancellationToken cancellationToken = default)
     {

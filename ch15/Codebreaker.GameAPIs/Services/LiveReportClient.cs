@@ -2,7 +2,7 @@
 
 namespace Codebreaker.GameAPIs.Services;
 
-public class LiveReportClient(HttpClient httpClient, ILogger<LiveReportClient> logger) : ILiveReportClient
+public class LiveReportClient(HttpClient httpClient, ILogger<LiveReportClient> logger) : IGameReport
 {
     private readonly static JsonSerializerOptions s_jsonOptions = new()
     {

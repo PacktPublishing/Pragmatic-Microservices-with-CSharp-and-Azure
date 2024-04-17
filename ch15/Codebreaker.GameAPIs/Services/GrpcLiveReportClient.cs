@@ -6,7 +6,7 @@ using System.Net.Sockets;
 
 namespace Codebreaker.GameAPIs.Services;
 
-public class GrpcLiveReportClient(ReportGame.ReportGameClient client, ILogger<LiveReportClient> logger) : ILiveReportClient
+public class GrpcLiveReportClient(ReportGame.ReportGameClient client, ILogger<LiveReportClient> logger) : IGameReport
 {
     public async Task ReportGameEndedAsync(GameSummary gameSummary, CancellationToken cancellationToken = default)
     {

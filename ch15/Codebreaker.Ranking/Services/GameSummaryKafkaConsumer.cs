@@ -13,10 +13,8 @@ public class GameSummaryKafkaConsumer(IConsumer<string, string> kafkaClient, IDb
 {
     public async Task StartProcessingAsync(CancellationToken cancellationToken = default)
     {
-        // wait until a topic is created
-        await Task.Delay(TimeSpan.FromSeconds(10));
 
-        kafkaClient.Subscribe("gamesummary");
+        kafkaClient.Subscribe("ranking");
 
         try
         {

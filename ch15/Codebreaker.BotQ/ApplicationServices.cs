@@ -8,10 +8,14 @@ internal static class ApplicationServices
 {
     public static void AddApplicationServices(this IHostApplicationBuilder builder)
     {
+
         builder.AddAzureQueueClient("botqueue");
         builder.Services.AddScoped<BotQueueClient>();
-        var section = builder.Configuration.GetSection("Bot");
-        builder.Services.Configure<BotQueueClientOptions>(section);
+
+
+
+        var botConfig = builder.Configuration.GetSection("Bot");
+        builder.Services.Configure<BotQueueClientOptions>(botConfig);
         builder.Services.AddScoped<CodebreakerTimer>();
         builder.Services.AddScoped<CodebreakerGameRunner>();
 

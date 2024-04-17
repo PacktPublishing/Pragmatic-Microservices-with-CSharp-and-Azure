@@ -3,7 +3,7 @@ using System.Diagnostics;
 
 namespace Codebreaker.GameAPIs.Services;
 
-public class GamesService(IGamesRepository dataRepository, IDistributedCache distributedCache, ILiveReportClient liveClient, ILogger<GamesService> logger, GamesMetrics metrics, [FromKeyedServices("Codebreaker.GameAPIs")] ActivitySource activitySource) : IGamesService
+public class GamesService(IGamesRepository dataRepository, IDistributedCache distributedCache, IGameReport liveClient, ILogger<GamesService> logger, GamesMetrics metrics, [FromKeyedServices("Codebreaker.GameAPIs")] ActivitySource activitySource) : IGamesService
 {
     private const string GameTypeTagName = "codebreaker.gameType";
     private const string GameIdTagName = "codebreaker.gameId";

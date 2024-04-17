@@ -17,7 +17,7 @@ public class GamesServiceTests
     private readonly Guid _running6x4MoveId1 = Guid.Parse("4786C27B-3F9A-4C47-9947-F983CF7053E9");
     private readonly string[] _guessesMove1 = ["Red", "Green", "Blue", "Yellow"];
     private readonly Mock<IDistributedCache> _distributedCacheMock = new();
-    private readonly Mock<ILiveReportClient> _liveClientMock = new();
+    private readonly Mock<IGameReport> _liveClientMock = new();
 
     public GamesServiceTests()
     {

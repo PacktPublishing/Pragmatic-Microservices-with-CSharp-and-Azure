@@ -93,17 +93,13 @@ public static class ApplicationServices
             builder.AddKafkaProducer<string, string>("kafkamessaging", settings =>
             {
                 settings.Config.AllowAutoCreateTopics = true;
-              
-            }, config =>
-            {
-               
             });
 
-            builder.Services.AddSingleton<ILiveReportClient, KafkaLiveReportProducer>();
+            builder.Services.AddSingleton<IGameReport, KafkaGameReportProducer>();
         }
         else
         {
-            builder.Services.AddScoped<ILiveReportClient, EventHubLiveReportProducer>();
+            builder.Services.AddScoped<IGameReport, EventHubReportProducer>();
 
             builder.AddAzureEventHubProducerClient("codebreakerevents", settings =>
             {

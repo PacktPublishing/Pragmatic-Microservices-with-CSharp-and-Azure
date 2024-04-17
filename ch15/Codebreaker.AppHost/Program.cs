@@ -1,6 +1,7 @@
+using Microsoft.Extensions.Azure;
+
 var builder = DistributedApplication.CreateBuilder(args);
 
-// string sqlPassword = builder.Configuration["SqlPassword"] ?? throw new InvalidOperationException("could not read password");
 string dataStore = builder.Configuration["DataStore"] ?? "InMemory";
 string startupMode = builder.Configuration["STARTUP_MODE"] ?? "Azure";
 string botLoop = builder.Configuration.GetSection("Bot")["Loop"] ?? "false";
@@ -12,8 +13,7 @@ var redis = builder.AddRedis("redis")
 
 if (startupMode == "OnPremises")
 {
-    var kafka = builder.AddKafka("kafkamessaging")
-        .WithExternalHttpEndpoints();
+    var kafka = builder.AddKafka("kafkamessaging");
 
     var sqlServer = builder.AddSqlServer("sql")
         .WithDataVolume()

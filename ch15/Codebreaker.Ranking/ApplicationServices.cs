@@ -16,14 +16,9 @@ public static class ApplicationServices
             builder.AddKafkaConsumer<string, string>("kafkamessaging", settings =>
             {
                settings.Config.GroupId = "Ranking"; 
-               settings.Config.AllowAutoCreateTopics = true;
-            }, config =>
-            {
-               
             });
 
             builder.Services.AddSingleton<IGameSummaryProcessor, GameSummaryKafkaConsumer>();
-
         }
         else
         {
@@ -80,5 +75,4 @@ public static class ApplicationServices
 
         s_IsDatabaseUpdateComplete = true;
     }
-
 }
