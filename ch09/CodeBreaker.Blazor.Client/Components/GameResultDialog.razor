@@ -1,0 +1,26 @@
+﻿@if (GameMode == Client.Models.GameMode.Timeout)
+{
+    <p>Das Spiel wurde automatisch beendet, da seit einer Stunde kein Zug mehr gemacht wurde.</p>
+}
+else
+{
+    <div class="content">
+        <svg viewBox="0 0 800 200" style="min-height: 90px;">
+            <!-- Symbol-->
+            <symbol id="s-text">
+                <text text-anchor="middle" x="50%" y="50%" dy=".35em">
+                    @(GameMode == Client.Models.GameMode.Won
+                        ? Loc["GamePage_FinishGame_Win"]
+                        : Loc["GamePage_FinishGame_Lose"])
+                </text>
+            </symbol>
+            <!-- Duplicate symbols-->
+            <use class="text" xlink:href="#s-text"></use>
+            <use class="text" xlink:href="#s-text"></use>
+            <use class="text" xlink:href="#s-text"></use>
+            <use class="text" xlink:href="#s-text"></use>
+            <use class="text" xlink:href="#s-text"></use>
+        </svg>
+    </div>
+}
+

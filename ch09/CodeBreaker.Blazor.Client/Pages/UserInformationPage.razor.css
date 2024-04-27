@@ -1,0 +1,43 @@
+﻿.user {
+    display: flex;
+    gap: 2rem;
+    flex-direction: column;
+}
+
+    .user .img {
+        align-self: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 5rem;
+        height: 5rem;
+        font-size: 2.5rem;
+        background: var(--primary);
+        color: var(--on-primary);
+        border-radius: 50%;
+        box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+    }
+
+    .user .info {
+        display: grid;
+        gap: 0.5rem;
+        grid-template-columns: min-content 1fr;
+    }
+
+        .user .info .title {
+            font-weight: 600;
+        }
+
+@media (min-width: 767px) {
+    .user {
+        flex-direction: row;
+        margin: 2rem;
+    }
+
+        .user .img {
+            height: 6rem;
+            width: 6rem;
+            font-size: 3rem;
+            border-radius: 0.25rem;
+        }
+}
