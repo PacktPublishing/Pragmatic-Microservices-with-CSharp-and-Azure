@@ -1,8 +1,10 @@
 ﻿using Codebreaker.GameAPIs.Errors;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.FeatureManagement;
+
+using System.Security.Claims;
 
 namespace Codebreaker.GameAPIs.Endpoints;
 
@@ -13,23 +15,25 @@ public static class GameEndpoints
         var group = routes.MapGroup("/games")
             .WithTags("Games API");
 
-        group.MapPost("/", async Task<Results<Created<CreateGameResponse>, BadRequest<GameError>>> (
+        group.MapPost("/", async Task<Results<Created<CreateGameResponse>, BadRequest<GameError>, UnauthorizedHttpResult>> (
             CreateGameRequest request,
             IGamesService gameService,
-            IFeatureManager featureManager,
             HttpContext context,
+            ClaimsPrincipal user,
+            IAuthorizationService authService,
             CancellationToken cancellationToken) =>
         {
+            if (request.GameType is not GameType.Game6x4) // game6x4 is allowed by anonymous users
+            {
+                var authResult = await authService.AuthorizeAsync(user, "playPolicy");
+                if (!authResult.Succeeded)
+                {
+                    return TypedResults.Unauthorized();
+                }
+            }
             Game game;
             try
             {
-                bool featureAvailable = await featureManager.IsGameTypeAvailable(request.GameType);
-                if (!featureAvailable)
-                {
-                    GameError error = new(ErrorCodes.GameTypeCurrentlyNotAvailable, "Game type currently not available", context.Request.GetDisplayUrl());
-                    return TypedResults.BadRequest(error);
-                }
-
                 game = await gameService.StartGameAsync(request.GameType.ToString(), request.PlayerName, cancellationToken);
             }
             catch (CodebreakerException ex) when (ex.Code == CodebreakerExceptionCodes.InvalidGameType)
@@ -37,13 +41,7 @@ public static class GameEndpoints
                 GameError error = new(ErrorCodes.InvalidGameType, $"Game type {request.GameType} does not exist", context.Request.GetDisplayUrl(),   Enum.GetNames<GameType>());
                 return TypedResults.BadRequest(error);
             }
-            // TODO: update to strongly typed exception code with a model library update
-            catch (CodebreakerException ex) when (ex.Code == "CGTNA")
-            {
-                GameError error = new(ErrorCodes.GameTypeCurrentlyNotAvailable, $"Game type currently not available {request.GameType}", context.Request.GetDisplayUrl(), Enum.GetNames<GameType>());
-                return TypedResults.BadRequest(error);
-            }
-            return TypedResults.Created($"/games/{game.GameId}", game.AsCreateGameResponse());
+            return TypedResults.Created($"/games/{game.Id}", game.ToCreateGameResponse());
         })
         .WithName("CreateGame")
         .WithSummary("Creates and starts a game")
@@ -54,30 +52,39 @@ public static class GameEndpoints
         });
 
         // Update the game resource with a move
-        group.MapPatch("/{gameId:guid}", async Task<Results<Ok<UpdateGameResponse>, NotFound, BadRequest<GameError>>> (
-            Guid gameId,
+        group.MapPatch("/{id:guid}", async Task<Results<Ok<UpdateGameResponse>, NotFound, BadRequest<GameError>, UnauthorizedHttpResult>> (
+            Guid id,
             UpdateGameRequest request,
             IGamesService gameService,
             HttpContext context,
+            ClaimsPrincipal principal,
             CancellationToken cancellationToken) =>
         {
-            if (!request.End && request.GuessPegs == null)
+            if (request.GuessPegs == null && !request.End)
             {
                 return TypedResults.BadRequest(new GameError(ErrorCodes.InvalidMove, "End the game or set guesses", context.Request.GetDisplayUrl()));
+            }
+            if (request.GameType is not GameType.Game6x4) // game6x4 is allowed by anonymous users
+            {
+                if (!principal.Identity?.IsAuthenticated ?? false)
+                {
+                    return TypedResults.Unauthorized();
+                }
             }
             try
             {
                 if (request.End)
                 {
-                    Game? game = await gameService.EndGameAsync(gameId, cancellationToken);
+                    Game? game = await gameService.EndGameAsync(id, cancellationToken);
                     if (game is null)
                         return TypedResults.NotFound();
-                    return TypedResults.Ok(game.AsUpdateGameResponse());
+                    return TypedResults.Ok(game.ToUpdateGameResponse());
                 }
                 else
                 {
-                    (Game game, Move move) = await gameService.SetMoveAsync(gameId, request.GuessPegs!, request.MoveNumber, cancellationToken);
-                    return TypedResults.Ok(game.AsUpdateGameResponse(move.KeyPegs));
+                    // guess pegs could only be null if request.End is true, checked above
+                    (Game game, Move move) = await gameService.SetMoveAsync(id, request.GameType.ToString(), request.GuessPegs!, request.MoveNumber, cancellationToken);
+                    return TypedResults.Ok(game.ToUpdateGameResponse(move.KeyPegs));
                 }
             }
             catch (ArgumentException ex) when (ex.HResult is >= 4200 and <= 4500)
@@ -87,18 +94,20 @@ public static class GameEndpoints
                 {
                     4200 => TypedResults.BadRequest(new GameError(ErrorCodes.InvalidGuessNumber, "Invalid number of guesses received", url)),
                     4300 => TypedResults.BadRequest(new GameError(ErrorCodes.UnexpectedMoveNumber, "Unexpected move number received", url)),
-                    4400 => TypedResults.BadRequest(new GameError(ErrorCodes.InvalidGuess, "Invalid guess values received!", url)),
+                    > 4400 and < 4490 => TypedResults.BadRequest(new GameError(ErrorCodes.InvalidGuess, "Invalid guess values received!", url)),
                     _ => TypedResults.BadRequest(new GameError(ErrorCodes.InvalidMove,"Invalid move received!", url))
                 };
             }
-            catch (CodebreakerException ex) when (ex.Code == CodebreakerExceptionCodes.GameNotFound)
-            {
-                return TypedResults.NotFound();
-            }
-            catch (CodebreakerException ex) when (ex.Code == CodebreakerExceptionCodes.GameNotActive)
+            catch (CodebreakerException ex)
             {
                 string url = context.Request.GetDisplayUrl();
-                return TypedResults.BadRequest(new GameError(ErrorCodes.GameNotActive, "The game already ended", url));
+                return ex.Code switch
+                {
+                    CodebreakerExceptionCodes.GameNotFound => TypedResults.NotFound(),
+                    CodebreakerExceptionCodes.UnexpectedGameType => TypedResults.BadRequest(new GameError(ErrorCodes.UnexpectedGameType, "The game type specified with the move does not match the type of the running game", url)),
+                    CodebreakerExceptionCodes.GameNotActive => TypedResults.BadRequest(new GameError(ErrorCodes.GameNotActive, "The game already ended", url)),
+                    _ => TypedResults.BadRequest(new GameError("Unexpected", "Game error", url))
+                };
             }
         })
         .WithName("SetMove")
@@ -111,13 +120,13 @@ public static class GameEndpoints
         });
 
         // Get game by id
-        group.MapGet("/{gameId:guid}", async Task<Results<Ok<Game>, NotFound>> (
-            Guid gameId,
+        group.MapGet("/{id:guid}", async Task<Results<Ok<Game>, NotFound>> (
+            Guid id,
             IGamesService gameService,
             CancellationToken cancellationToken
         ) =>
         {
-            Game? game = await gameService.GetGameAsync(gameId, cancellationToken);
+            Game? game = await gameService.GetGameAsync(id, cancellationToken);
 
             if (game is null)
             {
@@ -146,6 +155,7 @@ public static class GameEndpoints
                     var games = await gameService.GetGamesAsync(query, cancellationToken);
                     return TypedResults.Ok(games);
                 })
+                .RequireAuthorization("queryPolicy")
                 .WithName("GetGames")
                 .WithSummary("Get games based on query parameters")
                 .WithOpenApi(op =>
@@ -157,16 +167,17 @@ public static class GameEndpoints
                     return op;
                 });
 
-        group.MapDelete("/{gameId:guid}", async (
-            Guid gameId,
-            IGamesService gameService, 
+        group.MapDelete("/{id:guid}", async (
+            Guid id,
+            IGamesService gameService,
             CancellationToken cancellationToken
         ) =>
         {
-            await gameService.DeleteGameAsync(gameId, cancellationToken);
+            await gameService.DeleteGameAsync(id, cancellationToken);
 
             return TypedResults.NoContent();
         })
+        .RequireAuthorization("playPolicy")
         .WithName("DeleteGame")
         .WithSummary("Deletes the game with the given id")
         .WithDescription("Deletes a game from the database")
