@@ -14,11 +14,16 @@
     <PackageReference Include="Aspire.Hosting.Azure" Version="8.0.0-preview.6.24214.1" />
     <PackageReference Include="Aspire.Hosting.Azure.AppConfiguration" Version="8.0.0-preview.6.24214.1" />
     <PackageReference Include="Aspire.Hosting.Azure.CosmosDB" Version="8.0.0-preview.6.24214.1" />
+    <PackageReference Include="Aspire.Hosting.MySql" Version="8.0.0-preview.6.24214.1" />
   </ItemGroup>
   
   <ItemGroup>
+    <ProjectReference Include="..\Codebreaker.ApiGateway.Identities\Codebreaker.ApiGateway.Identities\Codebreaker.ApiGateway.Identities.csproj" />
+    <ProjectReference Include="..\Codebreaker.ApiGateway\Codebreaker.ApiGateway.csproj" />
+    <ProjectReference Include="..\CodeBreaker.Blazor\CodeBreaker.Blazor.csproj" />
     <ProjectReference Include="..\CodeBreaker.Bot\CodeBreaker.Bot.csproj" />
     <ProjectReference Include="..\Codebreaker.GameAPIs\Codebreaker.GameAPIs.csproj" />
+    <ProjectReference Include="..\WebAppAuth\WebAppAuth.csproj" />
   </ItemGroup>
 
 </Project>

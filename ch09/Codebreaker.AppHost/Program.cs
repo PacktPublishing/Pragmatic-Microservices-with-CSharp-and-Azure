@@ -2,21 +2,50 @@ var builder = DistributedApplication.CreateBuilder(args);
 
 string dataStore = builder.Configuration["DataStore"] ?? "InMemory";
 
-var cosmos = builder.AddAzureCosmosDB("cbcosmos")
+string startupMode = Environment.GetEnvironmentVariable("STARTUP_MODE") ?? "Azure";
+bool useAzureADB2C = startupMode == "Azure";
+
+var cosmos = builder.AddAzureCosmosDB("codebreakercosmos")
     .AddDatabase("codebreaker");
 
 var gameAPIs = builder.AddProject<Projects.Codebreaker_GameAPIs>("gameapis")
   .WithReference(cosmos)
   .WithEnvironment("DataStore", dataStore);
 
-builder.AddProject<Projects.CodeBreaker_Bot>("bot")
-    .WithReference(gameAPIs);
+var bot = builder.AddProject<Projects.CodeBreaker_Bot>("bot")
+  .WithReference(gameAPIs);
 
-// currently disabled - see https://github.com/PacktPublishing/Pragmatic-Microservices-with-CSharp-and-Azure/issues/81
-//builder.AddProject<Projects.Codebreaker_CosmosCreate>("createcosmos")
-//    .WithReference(cosmos);
+if (startupMode == "OnPremises")
+{
+    var usersDbName = "usersdb";
+    var mySqlPassword = builder.AddParameter("mysql-password", secret: true);
 
-//builder.AddProject<Projects.Codebreaker_SqlServerMigration>("sqlcreate")
-//    .WithReference(sqlServer);
+    var usersDb = builder.AddMySql("mysql", password: mySqlPassword)
+        .WithEnvironment("MYSQL_DATABASE", usersDbName)
+        .WithDataVolume()
+        .WithPhpMyAdmin()
+        .AddDatabase(usersDbName);
+
+    var gateway = builder.AddProject<Projects.Codebreaker_ApiGateway_Identities>("gateway-identities")
+        .WithReference(gameAPIs)
+        .WithReference(bot)
+        .WithReference(usersDb)
+        .WithExternalHttpEndpoints();
+
+    builder.AddProject<Projects.WebAppAuth>("webapp")
+        .WithReference(gateway)
+        .WithEnvironment("USEAADB2C", useAzureADB2C.ToString());
+}
+else
+{
+    var gateway = builder.AddProject<Projects.Codebreaker_ApiGateway>("gateway")
+        .WithReference(gameAPIs)
+        .WithReference(bot)
+        .WithExternalHttpEndpoints();
+
+    builder.AddProject<Projects.WebAppAuth>("webapp")
+        .WithReference(gateway)
+        .WithEnvironment("USEAADB2C", useAzureADB2C.ToString());
+}
 
 builder.Build().Run();
