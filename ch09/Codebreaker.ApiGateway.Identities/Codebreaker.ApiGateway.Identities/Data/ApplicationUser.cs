@@ -6,4 +6,3 @@ namespace Codebreaker.ApiGateway.Identities.Data;
 public class ApplicationUser : IdentityUser
 {
 }
-

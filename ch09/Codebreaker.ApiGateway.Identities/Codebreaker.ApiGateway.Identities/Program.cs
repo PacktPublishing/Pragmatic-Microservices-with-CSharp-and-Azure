@@ -28,9 +28,18 @@ builder.Services.AddAuthentication(options =>
     })
     .AddIdentityCookies();
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlite(connectionString));
+// original code
+//var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+//builder.Services.AddDbContext<ApplicationDbContext>(options =>
+//    options.UseSqlite(connectionString));
+
+// to create migrations
+// var connectionString = builder.Configuration.GetConnectionString("usersdb") ?? throw new InvalidOperationException("Connection string 'usersdb' not found.");
+// builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlite(connectionString));
+
+// with.NET Aspire
+builder.AddMySqlDbContext<ApplicationDbContext>("usersdb");
+
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
@@ -93,4 +102,9 @@ app.MapAdditionalIdentityEndpoints();
 
 app.MapReverseProxy();
 
+{
+    using var scope = app.Services.CreateScope();
+    var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    context.Database.Migrate();
+}
 app.Run();
