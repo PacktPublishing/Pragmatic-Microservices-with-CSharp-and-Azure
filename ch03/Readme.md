@@ -25,7 +25,7 @@ See [Installation of SQL Server, Azure Cosmos DB](../installation.md)
 
 ## Running the application
 
-To run the application from this chapter, these options are available:
+To run the application from this chapter, you can storing games in-memory, using SQL Server, or using Azure Cosmos DB.
 
 ### In-Memory
 
@@ -43,13 +43,21 @@ Set the `DataStore` and the `GamesSqlServerConnection with `appsettings.Developm
   "DataStore": "SqlServer"
 ```
 
+set a password for the SQL Server Docker container using:
+
+```bash
+cd Codebreaker.AppHost
+dotnet user-secrets set Parameters:sql-password Passw0rd!Passw0rd
+
 Database migration happens when starting the application, thus the database is created on first use with the `SqlServer` setting.
 
 ### Azure Cosmos DB
 
-> Currently there's an issue with the Cosmos Docker container - see https://github.com/dotnet/aspire/discussions/2535. As a temporary workaround, use the Azure Cosmos DB local emulator on Windows.
+> Currently there's an issue with the Cosmos Linux Docker container - see https://github.com/dotnet/aspire/discussions/2535 and https://github.com/Azure/azure-cosmos-dotnet-v3/issues/4315.
 
-Install the Cosmos emulator: `winget install Microsoft.Azure.CosmosEmulator`
+As an alternative, to test the application running Azure Cosmos DB, run the Azure Cosmos DB emulator locally:
+
+Install the Cosmos emulator: `winget install Microsoft.Azure.CosmosEmulator` and create the **codebreaker** database within this emulator.
 
 In case there are previous installations of the Cosmos emulator which stopped working, reset the data, or if this fails, uninstall the emulator and install it again.
 
@@ -61,6 +69,8 @@ Running the application with Azure Cosmos DB, set the `DataStore` with `appsetti
     "GamesCosmosConnection": "AccountEndpoint=https://localhost:8081/;AccountKey=C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==;"
   }
 ```
+
+Make sure the app model in the App Host has the correct configuration - either using the local running emulator, or the Docker container if the container is running.
 
 ## Codebreaker diagrams
 
