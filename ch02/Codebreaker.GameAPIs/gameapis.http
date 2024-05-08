@@ -1,5 +1,7 @@
 ﻿@HostAddress=http://localhost:9400
 @ContentType=application/json
+# Game APIs
+
 ### Create a game
 
 POST {{HostAddress}}/games/
