@@ -15,7 +15,6 @@ public static class ApplicationServices
             builder.EnrichSqlServerDbContext<GamesSqlServerContext>();
         }
 
-        // TODO: remove certificate workaround when the emulator is fixed
         static void ConfigureCosmos(IHostApplicationBuilder builder)
         {
             builder.Services.AddDbContext<IGamesRepository, GamesCosmosContext>(options =>
