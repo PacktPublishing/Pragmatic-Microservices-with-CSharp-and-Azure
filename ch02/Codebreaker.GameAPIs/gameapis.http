@@ -1,9 +1,9 @@
-﻿@Codebreaker.GameAPIs_HostAddress = http://localhost:9400
-@ContentType = application/json
-
+﻿@HostAddress=http://localhost:9400
+@ContentType=application/json
 ### Create a game
-POST {{Codebreaker.GameAPIs_HostAddress}}/games/
-Content-Type: {{ContentType}}
+
+POST {{HostAddress}}/games/
+Content-Type: application/json
 
 {
   "gameType": "Game6x4",
@@ -12,15 +12,15 @@ Content-Type: {{ContentType}}
 
 ### Set a move
 
-@id = c9831346-7233-43cf-bb8f-7bc9a09c7d93
+@id = f0209808-7946-43aa-80ad-bef44b02eca3
 
-PATCH {{Codebreaker.GameAPIs_HostAddress}}/games/{{id}}
-Content-Type: {{ContentType}}
+PATCH {{HostAddress}}/games/{{id}}
+Content-Type: {{contenttype}}
 
 {
   "gameType": "Game6x4",
   "playerName": "test",
-  "moveNumber": 2,
+  "moveNumber": 1,
   "guessPegs": [
     "Green",
     "Blue",
@@ -30,7 +30,7 @@ Content-Type: {{ContentType}}
 }
 
 ### Create a 8x5 game
-POST {{Codebreaker.GameAPIs_HostAddress}}/games/
+POST {{HostAddress}}/games/
 Content-Type: {{ContentType}}
 
 {
@@ -40,7 +40,7 @@ Content-Type: {{ContentType}}
 
 ### Set a 8x5 move
 
-PATCH {{Codebreaker.GameAPIs_HostAddress}}/games/{{id}}
+PATCH {{HostAddress}}/games/{{id}}
 Content-Type: {{ContentType}}
 
 {
@@ -57,7 +57,7 @@ Content-Type: {{ContentType}}
 }
 
 ### Create a 5x5x4 game
-POST {{Codebreaker.GameAPIs_HostAddress}}/games/
+POST {{HostAddress}}/games/
 Content-Type: {{ContentType}}
 
 {
@@ -67,7 +67,7 @@ Content-Type: {{ContentType}}
 
 ### Set a 5x5x4 move
 
-PATCH {{Codebreaker.GameAPIs_HostAddress}}/games/{{id}}
+PATCH {{HostAddress}}/games/{{id}}
 Content-Type: {{ContentType}}
 
 {
@@ -86,27 +86,27 @@ Content-Type: {{ContentType}}
 
 ### Get game information
 
-GET {{Codebreaker.GameAPIs_HostAddress}}/games/{{id}}
+GET {{HostAddress}}/games/{{id}}
 
 ### Get games by date
 
-GET {{Codebreaker.GameAPIs_HostAddress}}/games/?date=2024-07-14
+GET {{HostAddress}}/games/?date=2024-07-14
 
 ### Get games by player
 
-GET {{Codebreaker.GameAPIs_HostAddress}}/games/?playerName=test&ended=false
+GET {{HostAddress}}/games/?playerName=test&ended=false
 
 ### Get games by date and player
 
-GET {{Codebreaker.GameAPIs_HostAddress}}/games/?date=2024-07-14&playerName=test
+GET {{HostAddress}}/games/?date=2024-07-14&playerName=test
 
 ### Get games by player
 
-GET {{Codebreaker.GameAPIs_HostAddress}}/games/?playerName=test
+GET {{HostAddress}}/games/?playerName=test
 
 ### Stop a game
 
-PATCH {{Codebreaker.GameAPIs_HostAddress}}/games/{{id}}
+PATCH {{HostAddress}}/games/{{id}}
 Content-Type: {{ContentType}}
 
 {
