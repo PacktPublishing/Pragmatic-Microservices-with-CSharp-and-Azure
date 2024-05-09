@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>c51559a1-d7fb-4ce2-9052-8b1828419b89</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Aspire.Microsoft.EntityFrameworkCore.Cosmos" Version="8.1.0-preview.*" />
+    <PackageReference Include="CNinnovation.Codebreaker.BackendModels" Version="3.6.0-beta.27" />
+    <PackageReference Include="CNinnovation.Codebreaker.Cosmos" Version="3.6.0-beta.19" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.4" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+    <PackageReference Include="Aspire.Azure.Messaging.EventHubs" Version="8.1.0-preview.*" />
+   	<PackageReference Include="Aspire.Confluent.Kafka" Version="8.1.0-preview.*" />
+    <PackageReference Include="Aspire.Azure.Storage.Blobs" Version="8.1.0-preview.*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Codebreaker.ServiceDefaults\Codebreaker.ServiceDefaults.csproj" />
+  </ItemGroup>
+
+</Project>

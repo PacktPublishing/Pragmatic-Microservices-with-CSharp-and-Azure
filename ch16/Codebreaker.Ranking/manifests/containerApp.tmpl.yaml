@@ -1,0 +1,56 @@
+location: {{ .Env.AZURE_LOCATION }}
+identity:
+  type: UserAssigned
+  userAssignedIdentities:
+    ? "{{ .Env.AZURE_CONTAINER_REGISTRY_MANAGED_IDENTITY_ID }}"
+    : {}
+properties:
+  environmentId: {{ .Env.AZURE_CONTAINER_APPS_ENVIRONMENT_ID }}
+  configuration:
+    activeRevisionsMode: single
+    ingress:
+      external: true
+      targetPort: {{ targetPortOrDefault 8080 }}
+      transport: http
+      allowInsecure: false
+    registries:
+    - server: {{ .Env.AZURE_CONTAINER_REGISTRY_ENDPOINT }}
+      identity: {{ .Env.AZURE_CONTAINER_REGISTRY_MANAGED_IDENTITY_ID }}
+    secrets:
+      - name: applicationinsights-connection-string
+        value: '{{ .Env.INSIGHTS_APPINSIGHTSCONNECTIONSTRING }}'
+      - name: connectionstrings--checkpoints
+        value: '{{ .Env.STORAGE_BLOBENDPOINT }}'
+      - name: connectionstrings--codebreakerevents
+        value: '{{ .Env.CODEBREAKEREVENTS_EVENTHUBSENDPOINT }}'
+      - name: connectionstrings--codebreakercosmos
+        keyVaultUrl: '{{ .Env.SERVICE_BINDING_CODEBREAKERCOSMOSKV_ENDPOINT }}secrets/connectionString'
+        identity: {{ .Env.AZURE_CONTAINER_REGISTRY_MANAGED_IDENTITY_ID }}
+  template:
+    containers:
+    - image: {{ .Image }}
+      name: ranking
+      env:
+      - name: AZURE_CLIENT_ID
+        value: {{ .Env.MANAGED_IDENTITY_CLIENT_ID }}
+      - name: ASPNETCORE_FORWARDEDHEADERS_ENABLED
+        value: "true"
+      - name: OTEL_DOTNET_EXPERIMENTAL_OTLP_EMIT_EVENT_LOG_ATTRIBUTES
+        value: "true"
+      - name: OTEL_DOTNET_EXPERIMENTAL_OTLP_EMIT_EXCEPTION_LOG_ATTRIBUTES
+        value: "true"
+      - name: OTEL_DOTNET_EXPERIMENTAL_OTLP_RETRY
+        value: in_memory
+      - name: APPLICATIONINSIGHTS_CONNECTION_STRING
+        secretRef: applicationinsights-connection-string
+      - name: ConnectionStrings__checkpoints
+        secretRef: connectionstrings--checkpoints
+      - name: ConnectionStrings__codebreakerevents
+        secretRef: connectionstrings--codebreakerevents
+      - name: ConnectionStrings__codebreakercosmos
+        secretRef: connectionstrings--codebreakercosmos
+    scale:
+      minReplicas: 1
+tags:
+  azd-service-name: ranking
+  aspire-resource-name: ranking
