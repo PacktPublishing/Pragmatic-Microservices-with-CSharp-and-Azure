@@ -2,6 +2,7 @@
 
 Pragmatic Microservices with CSharp and Azure, published by Packt
 
+* Chapter 1 - Introduction to .NET Aspire and Microservices
 * Chapter 2 - Minimal APIs – Creating REST Services
 * Chapter 3 - Writing data to relational and NoSQL databases
 * Chapter 4 - Creating Libraries for Client Applications
