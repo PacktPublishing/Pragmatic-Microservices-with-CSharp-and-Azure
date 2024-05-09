@@ -10,6 +10,7 @@
     <ProjectReference Include="..\..\Codebreaker.ServiceDefaults\Codebreaker.ServiceDefaults.csproj" />
     <ProjectReference Include="..\BlazorAuth.Client\BlazorAuth.Client.csproj" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.4" />
+    <PackageReference Include="Microsoft.Identity.Web" Version="2.18.1" />
   </ItemGroup>
 
 </Project>
