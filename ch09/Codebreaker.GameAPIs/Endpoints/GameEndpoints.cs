@@ -19,18 +19,8 @@ public static class GameEndpoints
             CreateGameRequest request,
             IGamesService gameService,
             HttpContext context,
-            ClaimsPrincipal user,
-            IAuthorizationService authService,
             CancellationToken cancellationToken) =>
         {
-            if (request.GameType is not GameType.Game6x4) // game6x4 is allowed by anonymous users
-            {
-                var authResult = await authService.AuthorizeAsync(user, "playPolicy");
-                if (!authResult.Succeeded)
-                {
-                    return TypedResults.Unauthorized();
-                }
-            }
             Game game;
             try
             {
@@ -57,19 +47,11 @@ public static class GameEndpoints
             UpdateGameRequest request,
             IGamesService gameService,
             HttpContext context,
-            ClaimsPrincipal principal,
             CancellationToken cancellationToken) =>
         {
             if (request.GuessPegs == null && !request.End)
             {
                 return TypedResults.BadRequest(new GameError(ErrorCodes.InvalidMove, "End the game or set guesses", context.Request.GetDisplayUrl()));
-            }
-            if (request.GameType is not GameType.Game6x4) // game6x4 is allowed by anonymous users
-            {
-                if (!principal.Identity?.IsAuthenticated ?? false)
-                {
-                    return TypedResults.Unauthorized();
-                }
             }
             try
             {

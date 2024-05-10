@@ -32,9 +32,15 @@ if (startupMode == "OnPremises")
         .WithReference(usersDb)
         .WithExternalHttpEndpoints();
 
-    builder.AddProject<Projects.WebAppAuth>("webapp")
+    var identityEndpoint = gateway.GetEndpoint("Https");
+
+    var webApp = builder.AddProject<Projects.WebAppAuth>("webapp")
         .WithReference(gateway)
-        .WithEnvironment("USEAADB2C", useAzureADB2C.ToString());
+        .WithEnvironment("USEAADB2C", useAzureADB2C.ToString())
+        .WithEnvironment("Identity__Url", identityEndpoint);
+
+    // Wire up the callback urls (self referencing)
+    webApp.WithEnvironment("CallBackUrl", webApp.GetEndpoint("Https"));
 }
 else
 {
@@ -43,7 +49,7 @@ else
         .WithReference(bot)
         .WithExternalHttpEndpoints();
 
-    builder.AddProject<Projects.WebAppAuth>("webapp")
+    var webApp = builder.AddProject<Projects.WebAppAuth>("webapp")
         .WithReference(gateway)
         .WithEnvironment("USEAADB2C", useAzureADB2C.ToString());
 }

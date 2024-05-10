@@ -11,12 +11,15 @@
     <ProjectReference Include="..\..\Codebreaker.ServiceDefaults\Codebreaker.ServiceDefaults.csproj" />
     <ProjectReference Include="..\BlazorWASMAuth.Client\BlazorWASMAuth.Client.csproj" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.4" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="8.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.4" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="8.0.4" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.4" />
     <PackageReference Include="Microsoft.Identity.Web" Version="2.18.1" />
+    <PackageReference Include="Microsoft.Identity.Web.DownstreamApi" Version="2.16.0" />
+    <PackageReference Include="Microsoft.Identity.Web.UI" Version="2.16.0" />
   </ItemGroup>
 
 </Project>

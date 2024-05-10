@@ -12,6 +12,11 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         base.OnModelCreating(builder);
         var applicationUser = builder.Entity<ApplicationUser>();
         applicationUser
+            .Property(u => u.GamerName)
+            .HasColumnType("varchar(56)")
+            .HasMaxLength(56);
+
+        applicationUser
             .Property(u => u.Id)
             .HasColumnType("varchar(256)")
             .HasMaxLength(256);

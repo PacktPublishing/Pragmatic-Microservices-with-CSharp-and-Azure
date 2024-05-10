@@ -6,10 +6,13 @@ using Codebreaker.ApiGateway.Identities.Components;
 using Codebreaker.ApiGateway.Identities.Components.Account;
 using Codebreaker.ApiGateway.Identities.Data;
 using Microsoft.Identity.Web;
+using System;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
+
+builder.Services.AddSwaggerGen();
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
@@ -21,12 +24,16 @@ builder.Services.AddScoped<IdentityUserAccessor>();
 builder.Services.AddScoped<IdentityRedirectManager>();
 builder.Services.AddScoped<AuthenticationStateProvider, PersistingRevalidatingAuthenticationStateProvider>();
 
-builder.Services.AddAuthentication(options =>
-    {
-        options.DefaultScheme = IdentityConstants.ApplicationScheme;
-        options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
-    })
-    .AddIdentityCookies();
+//builder.Services.AddAuthentication(options =>
+//    {
+//        options.DefaultScheme = IdentityConstants.ApplicationScheme;
+//        options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
+//    })
+//    .AddIdentityCookies();
+
+builder.Services
+    .AddIdentityApiEndpoints<ApplicationUser>()
+    .AddEntityFrameworkStores<ApplicationDbContext>();
 
 // original code
 //var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
@@ -74,9 +81,13 @@ var app = builder.Build();
 
 app.MapDefaultEndpoints();
 
+app.UseSwagger();
+app.UseSwaggerUI();
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+
     app.UseWebAssemblyDebugging();
     app.UseMigrationsEndPoint();
 }
@@ -88,6 +99,7 @@ else
 }
 
 app.UseHttpsRedirection();
+
 
 app.UseStaticFiles();
 app.UseAntiforgery();
@@ -107,4 +119,7 @@ app.MapReverseProxy();
     var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
     context.Database.Migrate();
 }
+
+app.MapGroup("/identity").MapIdentityApi<ApplicationUser>();
+
 app.Run();

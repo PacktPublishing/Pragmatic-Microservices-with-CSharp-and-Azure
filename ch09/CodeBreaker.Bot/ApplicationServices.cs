@@ -6,11 +6,10 @@ internal static class ApplicationServices
     {
         builder.Services.AddHttpClient<GamesClient>(client =>
         {
-            client.BaseAddress = new Uri("http://gameapis");
+            client.BaseAddress = new Uri("http+https://gameapis");
         });
 
         builder.Services.AddScoped<CodeBreakerTimer>();
         builder.Services.AddScoped<CodeBreakerGameRunner>();
     }
-
 }

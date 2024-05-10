@@ -1,36 +1,9 @@
 using Codebreaker.GameAPIs;
 
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Identity.Web;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
-
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddMicrosoftIdentityWebApi(bearerOptions =>
-    {
-        builder.Configuration.Bind("AzureAdB2C", bearerOptions);
-//        bearerOptions.TokenValidationParameters.NameClaimType = "name";
-    }, identityOptions =>
-    {
-        builder.Configuration.Bind("AzureAdB2C", identityOptions);
-    });
-
-
-builder.Services.AddAuthorization(options =>
-{
-    options.AddPolicy("playPolicy", config =>
-    {
-        config.RequireScope("Games.Play");      
-    });
-    options.AddPolicy("queryPolicy", config =>
-    {
-        config.RequireScope("Games.Query");
-        config.RequireAuthenticatedUser();
-
-        // config.RequireClaim("userType", [ "PowerUser" ]);
-    });
-});
+builder.Services.AddAuthorization();
 
 builder.AddServiceDefaults();
 
@@ -63,7 +36,6 @@ builder.AddApplicationServices();
 
 var app = builder.Build();
 
-app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapDefaultEndpoints();

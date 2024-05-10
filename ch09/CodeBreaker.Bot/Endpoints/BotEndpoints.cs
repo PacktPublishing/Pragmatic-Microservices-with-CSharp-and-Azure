@@ -26,7 +26,7 @@ public static class BotEndpoints
                 return TypedResults.BadRequest();
             }
 
-            return TypedResults.Accepted($"/games/{id}", id);
+            return TypedResults.Accepted($"/session/{id}", id);
         })
         .WithName("CreateBot")
         .WithSummary("Starts a bot playing one or more games")

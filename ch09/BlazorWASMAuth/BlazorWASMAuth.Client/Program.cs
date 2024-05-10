@@ -7,6 +7,12 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
+builder.Services.AddMsalAuthentication(options =>
+{
+   options.ProviderOptions.LoginMode = "redirect";
+    options.ProviderOptions.DefaultAccessTokenScopes.Add("TODO: complete path Game.Play");
+});
+
 builder.Services.AddHttpClient<BotClient>(client =>
 {
     client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress);   

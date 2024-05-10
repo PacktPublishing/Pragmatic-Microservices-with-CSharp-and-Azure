@@ -12,8 +12,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Aspire.Pomelo.EntityFrameworkCore.MySql" Version="8.0.0-preview.6.24214.1" />
-    <PackageReference Include="Microsoft.Extensions.ServiceDiscovery.Yarp" Version="8.0.0-preview.6.24214.1" />
+    <PackageReference Include="Aspire.Pomelo.EntityFrameworkCore.MySql" Version="8.0.0-preview.7.24251.11" />
+    <PackageReference Include="Microsoft.Extensions.ServiceDiscovery.Yarp" Version="8.0.0-preview.7.24251.11" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
     <PackageReference Include="Yarp.ReverseProxy" Version="2.1.0" />
     <PackageReference Include="Microsoft.Identity.Web" Version="2.18.1" />
   </ItemGroup>

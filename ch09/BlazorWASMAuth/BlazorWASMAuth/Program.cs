@@ -3,10 +3,10 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using BlazorWASMAuth.Client.Pages;
 using BlazorWASMAuth.Components;
-using BlazorWASMAuth.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Identity.Web;
 using BlazorWASMAuth.Components.Account;
+using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,7 +18,25 @@ builder.Services.AddRazorComponents()
 
 builder.Services.AddCascadingAuthenticationState();
 
-builder.Services.AddScoped<AuthenticationStateProvider, PersistingServerAuthenticationStateProvider>();
+builder.Services.AddScoped<AuthenticationStateProvider, PersistingServerAuthenticationStateProvider>(sp =>
+{
+{
+    var authorizationMessageHandler = sp.GetRequiredService<AuthorizationMessageHandler>();
+    authorizationMessageHandler.InnerHandler = new HttpClientHandler();
+    authorizationMessageHandler = authorizationMessageHandler.ConfigureHandler(
+        authorizedUrls: new[] { builder.Configuration["DownstreamApi:BaseUrl"] },
+        scopes: new[] { builder.Configuration["DownstreamApi:Scopes"] });
+    return new HttpClient(authorizationMessageHandler)
+    {
+        BaseAddress = new Uri(builder.Configuration["DownstreamApi:BaseUrl"] ?? string.Empty)
+    };
+}});
+
+builder.Services.AddMsalAuthentication(options =>
+{
+    builder.Configuration.Bind("AzureAd", options.ProviderOptions.Authentication);
+    options.ProviderOptions.DefaultAccessTokenScopes.Add(builder.Configuration["DownstreamApi:Scopes"]);
+});
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("AzureAdB2C"));

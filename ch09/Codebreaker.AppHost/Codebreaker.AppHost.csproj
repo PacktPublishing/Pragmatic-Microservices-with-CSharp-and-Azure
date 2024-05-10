@@ -20,10 +20,8 @@
   <ItemGroup>
     <ProjectReference Include="..\Codebreaker.ApiGateway.Identities\Codebreaker.ApiGateway.Identities\Codebreaker.ApiGateway.Identities.csproj" />
     <ProjectReference Include="..\Codebreaker.ApiGateway\Codebreaker.ApiGateway.csproj" />
-    <ProjectReference Include="..\CodeBreaker.Blazor\CodeBreaker.Blazor.csproj" />
     <ProjectReference Include="..\CodeBreaker.Bot\CodeBreaker.Bot.csproj" />
     <ProjectReference Include="..\Codebreaker.GameAPIs\Codebreaker.GameAPIs.csproj" />
-    <ProjectReference Include="..\ConsoleAuth\ConsoleAuth.csproj" />
     <ProjectReference Include="..\WebAppAuth\WebAppAuth.csproj" />
   </ItemGroup>
 
