@@ -38,8 +38,6 @@ public static class ApplicationServices
 
             builder.EnrichSqlServerDbContext<GamesSqlServerContext>(settings =>
             {
-                settings.Tracing = true;
-                settings.HealthChecks = true;
             });
         }
 
@@ -54,7 +52,6 @@ public static class ApplicationServices
             });
             builder.EnrichCosmosDbContext<GamesCosmosContext>(settings =>
             {
-                settings.Tracing = false;
             });
         }
 
