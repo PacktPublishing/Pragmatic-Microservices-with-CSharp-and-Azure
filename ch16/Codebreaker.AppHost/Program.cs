@@ -13,11 +13,13 @@ var redis = builder.AddRedis("redis")
 
 if (startupMode == "OnPremises")
 {
-    var kafka = builder.AddKafka("kafkamessaging");
+    var kafka = builder.AddKafka("kafkamessaging")
+        .PublishAsContainer();
 
     var sqlServer = builder.AddSqlServer("sql")
         .WithDataVolume()
-        .AddDatabase("CodebreakerSql");
+        .PublishAsContainer()
+        .AddDatabase("CodebreakerSql");        
 
     var cosmos = builder.AddAzureCosmosDB("codebreakercosmos")
         .AddDatabase("codebreaker");
