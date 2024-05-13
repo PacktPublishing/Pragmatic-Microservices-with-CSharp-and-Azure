@@ -1,34 +1,57 @@
-# Chapter 15 - Asynchronous Communication with messages and events
+# Chapter 16 - Running applications on-premises and in the cloud
 
 ## Technical Requirements
 
-With this chapter, similar to the previous chapter, you need an Azure subscription, .NET Aspire, the Azure CLI, the Azure Developer CLI.
+See [Installation](../installation.md) on how to install Visual Studio, Docker Desktop, and .NET Aspire.
 
-See [Installation](../installation.md) on how to install Visual Studio, Docker Desktop...
+[Aspir8](https://github.com/prom3theu5/aspirational-manifests) is used in this chapter.
+
+Install as a global tool:
+
+```bash
+dotnet tool install -g aspirate --prerelease
+```
 
 The code for this chapter can be found in the following GitHub repository: https://github.com/PacktPublishing/Pragmatic-Microservices-With-CSharp-and-Azure.
 
-The important projects part of this chapters repository folder are
+Chapter 16 contains code from the previous chapter.
 
--	Codebreaker.AppHost - the .NET Aspire host project. The app model is enhanced by adding Azure Storage, Azure Event Hub, and Kafka services.
--	Codebreaker.BotQ – this is a new project with nearly the same code as Codebreaker.Bot – but instead of using a REST API to trigger the game plays, a message queue is used.
--	Codebreaker.GameAPIs – this project is updated to forward completed games not directly to the live service, but publishing events to Azure Event Hub, or with a different start of the application to Kafka.
--	Codebreaker.Live – this project is changed to subscribe events from Azure Event Hub using async streaming. The SignalR implementation is changed as well to use async streaming.
--	Codebreaker.Ranking – this is a new project receiving events from Azure Event Hub or Kafka, writes this information to an Azure Cosmos DB database, and offers a REST service to retrieve the rank of the day. With the Event Hub we use a different way to receive events than with the live service.
+## Deploying to Kubernetes with Aspir8
 
-Working through the code with this chapter, you can start using the service, bot, and live projects from the previous chapter.
+1. generate the manifest for the AppHost with the OnPremises launch profile:
 
-## Create an Azure Container App Job
+```bash
+dotnet run --launch-profile OnPremises -- --publisher manifest --output-path onpremises-manifest.json
+```
 
-To create an Azure Container App job, use:
+2. Initialize Aspirate
 
-1. azd init
-2. azd infra synth
-3. azd provision
-4. Change the YML file of the bot to 
-5. azd deploy
+```bash
+aspirate init
+```
 
-More details coming here!
+Enter the URL of the ACR
+
+3. Generate Kubernetes manifests 
+
+```bash
+aspirate generate --aspire-manifest aspire-manifest.json --output-path ./kustomize-output -skip-build --namespace codebreakerns
+```
+
+4. Bulid and push Docker images to the ACR
+
+```bash
+az acr login –name <yourregistry>
+aspirate build --aspire-manifest aspire-manifest.json --container-image-tag 3.8 --container-image-tag latest --container-registry <yourregistry>.azurecr.io
+```
+
+5. Deploy to Kubernetes
+
+```bash
+aspirate apply --input-path kustomize-output
+kubectl get deployments --namespace codebreakerns
+kubectl get services --namespace codebreakerns
+```
 
 ## Deploy the application to Microsoft Azure
 
