@@ -1,0 +1,48 @@
+location: {{ .Env.AZURE_LOCATION }}
+identity:
+  type: UserAssigned
+  userAssignedIdentities:
+    ? "{{ .Env.AZURE_CONTAINER_REGISTRY_MANAGED_IDENTITY_ID }}"
+    : {}
+properties:
+  environmentId: {{ .Env.AZURE_CONTAINER_APPS_ENVIRONMENT_ID }}
+  configuration:
+    activeRevisionsMode: single
+    registries:
+    - server: {{ .Env.AZURE_CONTAINER_REGISTRY_ENDPOINT }}
+      identity: {{ .Env.AZURE_CONTAINER_REGISTRY_MANAGED_IDENTITY_ID }}
+    secrets:
+      - name: applicationinsights-connection-string
+        value: '{{ .Env.INSIGHTS_APPINSIGHTSCONNECTIONSTRING }}'
+      - name: connectionstrings--botqueue
+        value: '{{ .Env.STORAGE_QUEUEENDPOINT }}'
+  template:
+    containers:
+    - image: {{ .Image }}
+      name: bot
+      env:
+      - name: AZURE_CLIENT_ID
+        value: {{ .Env.MANAGED_IDENTITY_CLIENT_ID }}
+      - name: Bot__Delay
+        value: "10000"
+      - name: Bot__Loop
+        value: "True"
+      - name: OTEL_DOTNET_EXPERIMENTAL_OTLP_EMIT_EVENT_LOG_ATTRIBUTES
+        value: "true"
+      - name: OTEL_DOTNET_EXPERIMENTAL_OTLP_EMIT_EXCEPTION_LOG_ATTRIBUTES
+        value: "true"
+      - name: OTEL_DOTNET_EXPERIMENTAL_OTLP_RETRY
+        value: in_memory
+      - name: services__gameapis__http__0
+        value: http://gameapis.{{ .Env.AZURE_CONTAINER_APPS_ENVIRONMENT_DEFAULT_DOMAIN }}
+      - name: services__gameapis__https__0
+        value: https://gameapis.{{ .Env.AZURE_CONTAINER_APPS_ENVIRONMENT_DEFAULT_DOMAIN }}
+      - name: APPLICATIONINSIGHTS_CONNECTION_STRING
+        secretRef: applicationinsights-connection-string
+      - name: ConnectionStrings__botqueue
+        secretRef: connectionstrings--botqueue
+    scale:
+      minReplicas: 1
+tags:
+  azd-service-name: bot
+  aspire-resource-name: bot
