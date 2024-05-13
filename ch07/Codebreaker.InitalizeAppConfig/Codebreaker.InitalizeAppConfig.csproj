@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Worker">
+﻿<Project Sdk="Microsoft.NET.Sdk.Worker">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -6,6 +6,11 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>dotnet-Codebreaker.InitalizeAppConfig-3352ce58-f9c1-421b-a4f4-e502bec12b3e</UserSecretsId>
   </PropertyGroup>
+
+	<PropertyGroup>
+		<IsPublishable>true</IsPublishable>
+		<EnableSdkContainerSupport>true</EnableSdkContainerSupport>
+	</PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Azure.Data.AppConfiguration" Version="1.4.1" />
