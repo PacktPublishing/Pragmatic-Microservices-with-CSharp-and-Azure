@@ -7,7 +7,6 @@ using Microsoft.OpenApi.Models;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
-builder.AddAppConfiguration();
 
 // Swagger/EndpointDocumentation
 builder.Services.AddEndpointsApiExplorer();

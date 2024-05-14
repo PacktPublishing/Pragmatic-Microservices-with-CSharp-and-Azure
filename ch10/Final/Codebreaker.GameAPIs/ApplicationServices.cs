@@ -12,44 +12,27 @@ public static class ApplicationServices
     {
         static void ConfigureSqlServer(IHostApplicationBuilder builder)
         {
-            builder.AddSqlServerDbContext<GamesSqlServerContext>("CodebreakerSql",
-                configureDbContextOptions: static options =>
-                {
-                    options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
-                });
-            builder.Services.AddScoped<IGamesRepository, DataContextProxy<GamesSqlServerContext>>();
+            builder.Services.AddDbContextPool<IGamesRepository, GamesSqlServerContext>(options =>
+            {
+                string connectionString = builder.Configuration.GetConnectionString("codebreaker") ??
+                    throw new InvalidOperationException("SQL Server connection string not configured");
+                options.UseSqlServer(connectionString);
+                options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+            });
+
+            builder.EnrichSqlServerDbContext<GamesSqlServerContext>();
         }
 
         static void ConfigureCosmos(IHostApplicationBuilder builder)
         {
-            // TODO: workaround for preview 3 to use the Cosmos emulator - remove with preview 4
-#if DEBUG
-            builder.Services.AddDbContext<IGamesRepository, GamesCosmosContext>(options =>
+            builder.Services.AddDbContextPool<IGamesRepository, GamesCosmosContext>(options =>
             {
-                options.UseCosmos("AccountEndpoint = https://localhost:8081/;AccountKey=C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==", "codebreaker",
-                 cosmosOptions =>
-                 {
-                     cosmosOptions.HttpClientFactory(() => new HttpClient(new HttpClientHandler()
-                     {
-                         ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
-                     }));
-                     cosmosOptions.ConnectionMode(ConnectionMode.Gateway);
-                 });
+                string connectionString = builder.Configuration.GetConnectionString("codebreakercosmos") ??
+                    throw new InvalidOperationException("Cosmos connection string not configured");
+                options.UseCosmos(connectionString, "codebreaker");
+                options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
             });
-#else
-            builder.AddCosmosDbContext<GamesCosmosContext>("codebreaker", "codebreaker",
-                configureSettings: static options =>
-                {
-                    options.IgnoreEmulatorCertificate = true;
-                },
-                configureDbContextOptions: static options =>
-                {
-                  
-                    options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
-                });
-
-            builder.Services.AddScoped<IGamesRepository, DataContextProxy<GamesCosmosContext>>();
-#endif
+            builder.EnrichCosmosDbContext<GamesCosmosContext>();
         }
 
         static void ConfigureInMemory(IHostApplicationBuilder builder)
@@ -60,11 +43,11 @@ public static class ApplicationServices
         string? dataStore = builder.Configuration.GetValue<string>("DataStore");
         switch (dataStore)
         {
-            case "SqlServer":
-                ConfigureSqlServer(builder);
-                break;
             case "Cosmos":
                 ConfigureCosmos(builder);
+                break;
+            case "SqlServer":
+                ConfigureSqlServer(builder);
                 break;
             default:
                 ConfigureInMemory(builder);
@@ -72,11 +55,6 @@ public static class ApplicationServices
         }
 
         builder.Services.AddScoped<IGamesService, GamesService>();
-
-#if DEBUG
-        // TODO: remove with preview 4, workaround for Cosmos emulator
-        ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
-#endif
     }
 
     public static async Task CreateOrUpdateDatabaseAsync(this WebApplication app)

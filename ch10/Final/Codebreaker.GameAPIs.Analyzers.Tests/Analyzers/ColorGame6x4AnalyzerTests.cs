@@ -10,7 +10,7 @@ public class ColorGame6x4AnalyzerTests
     public void GetResult_Should_ReturnThreeWhite()
     {
         ColorResult expectedKeyPegs = new(0, 3);
-        ColorResult? resultKeyPegs = TestSkeleton(
+        ColorResult? resultKeyPegs = AnalyzeGame(
             [Green, Yellow, Green, Black],
             [Yellow, Green, Black, Blue]
         );
@@ -25,7 +25,7 @@ public class ColorGame6x4AnalyzerTests
     {
         string[] code = [Red, Green, Blue, Red];
         ColorResult expectedKeyPegs = new (expectedBlack, expectedWhite);
-        ColorResult resultKeyPegs = TestSkeleton(code, guessValues);
+        ColorResult resultKeyPegs = AnalyzeGame(code, guessValues);
         Assert.Equal(expectedKeyPegs, resultKeyPegs);
     }
 
@@ -33,7 +33,7 @@ public class ColorGame6x4AnalyzerTests
     [ClassData(typeof(TestData6x4))]
     public void GetResult_ShouldReturn_UsingClassData(string[] code, string[] guess, ColorResult expectedKeyPegs)
     {
-        ColorResult actualKeyPegs = TestSkeleton(code, guess);
+        ColorResult actualKeyPegs = AnalyzeGame(code, guess);
         Assert.Equal(expectedKeyPegs, actualKeyPegs);
     }
 
@@ -41,7 +41,7 @@ public class ColorGame6x4AnalyzerTests
     public void GetResult_Should_ThrowOnInvalidGuessCount()
     {
         Assert.Throws<ArgumentException>(() => 
-            TestSkeleton(
+            AnalyzeGame(
                 ["Black", "Black", "Black", "Black"],
                 ["Black"]
             ));
@@ -51,7 +51,7 @@ public class ColorGame6x4AnalyzerTests
     public void GetResult_Should_ThrowOnInvalidGuessValues()
     {
         Assert.Throws<ArgumentException>(() => 
-            TestSkeleton(
+            AnalyzeGame(
                 ["Black", "Black", "Black", "Black"],
                 ["Black", "Der", "Blue", "Yellow"]      // "Der" is the wrong value
             ));
@@ -61,7 +61,7 @@ public class ColorGame6x4AnalyzerTests
     public void GetResult_Should_ThrowOnInvalidMoveNumber()
     {
         Assert.Throws<ArgumentException>(() => 
-            TestSkeleton(
+            AnalyzeGame(
                 [Green, Yellow, Green, Black],
                 [Yellow, Green, Black, Blue], moveNumber: 2));
     }
@@ -69,7 +69,7 @@ public class ColorGame6x4AnalyzerTests
     [Fact]
     public void GetResult_Should_NotIncrementMoveNumberOnInvalidMove()
     {
-        IGame game = TestSkeletonCatchesArgumentException(
+        IGame game = AnalyzeGameCatchingException(
             [Green, Yellow, Green, Black],
             [Yellow, Green, Black, Blue], moveNumber: 2);
 
@@ -89,14 +89,14 @@ public class ColorGame6x4AnalyzerTests
         Codes = codes
     };
 
-    private static ColorResult TestSkeleton(string[] codes, string[] guesses, int moveNumber = 1)
+    private static ColorResult AnalyzeGame(string[] codes, string[] guesses, int moveNumber = 1)
     {
         MockColorGame game = CreateGame(codes);
         ColorGameGuessAnalyzer analyzer = new(game, [.. guesses.ToPegs<ColorField>()], moveNumber);
         return analyzer.GetResult();
     }
 
-    private static IGame TestSkeletonCatchesArgumentException(string[] codes, string[] guesses, int moveNumber = 1)
+    private static IGame AnalyzeGameCatchingException(string[] codes, string[] guesses, int moveNumber = 1)
     {
         MockColorGame game = CreateGame(codes);
         ColorGameGuessAnalyzer analyzer = new(game, [.. guesses.ToPegs<ColorField>()], moveNumber);
