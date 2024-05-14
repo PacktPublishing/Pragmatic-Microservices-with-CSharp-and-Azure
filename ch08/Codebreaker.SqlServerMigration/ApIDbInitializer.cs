@@ -45,7 +45,6 @@ internal class ApiDbInitializer(
         await strategy.ExecuteAsync(async () =>
         {
             // Create the database if it does not exist.
-            // Do this first so there is then a database to start a transaction against.
             if (!await dbCreator.ExistsAsync(cancellationToken))
             {
                 await dbCreator.CreateAsync(cancellationToken);

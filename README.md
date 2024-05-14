@@ -2,6 +2,7 @@
 
 Pragmatic Microservices with CSharp and Azure, published by Packt
 
+* Chapter 1 - Introduction to .NET Aspire and Microservices
 * Chapter 2 - Minimal APIs – Creating REST Services
 * Chapter 3 - Writing data to relational and NoSQL databases
 * Chapter 4 - Creating Libraries for Client Applications
@@ -16,5 +17,10 @@ Pragmatic Microservices with CSharp and Azure, published by Packt
 * Chapter 13 - Real-time messaging with SignalR
 * Chapter 14 - gRPC for binary communication
 * Chapter 15 - Asynchronous communication with messages and events
-* Chapter 16 - Microsoft Orleans
-* Chapter 17 - Running the application on-premises and in the cloud
+* Chapter 16 - Running the application on-premises and in the cloud
+
+[Installation of tools for development](installation.md)
+
+[Run the application with Azure resources from the local development environment](RunDevEnvironment.md)
+
+[Deploying the application to Azure](Deploy2Azure)

@@ -1,0 +1,120 @@
+﻿@HostAddress=http://localhost:9400
+@ContentType=application/json
+# Game APIs
+
+### Create a game
+
+POST {{HostAddress}}/games/
+Content-Type: application/json
+
+{
+  "gameType": "Game6x4",
+  "playerName": "test"
+}
+
+### Set a move
+
+@id = bf61cfa2-cb12-44f0-b3b5-ab2ddd560c8d
+# copy the game id to the id variable
+
+PATCH {{HostAddress}}/games/{{id}}
+Content-Type: {{contenttype}}
+
+{
+  "gameType": "Game6x4",
+  "playerName": "test",
+  "moveNumber": 1,
+  "guessPegs": [
+    "Green",
+    "Blue",
+    "Red",
+    "Yellow"
+  ]
+}
+
+### Create a 8x5 game
+POST {{HostAddress}}/games/
+Content-Type: {{ContentType}}
+
+{
+  "gameType": "Game8x5",
+  "playerName": "test"
+}
+
+### Set a 8x5 move
+
+PATCH {{HostAddress}}/games/{{id}}
+Content-Type: {{ContentType}}
+
+{
+  "gameType": "Game8x5",
+  "playerName": "test",
+  "moveNumber": 1,
+  "guessPegs": [
+    "Green",
+    "Green",
+    "Yellow",
+    "Purple",
+    "Pink"
+  ]
+}
+
+### Create a 5x5x4 game
+POST {{HostAddress}}/games/
+Content-Type: {{ContentType}}
+
+{
+  "gameType": "Game5x5x4",
+  "playerName": "test"
+}
+
+### Set a 5x5x4 move
+
+PATCH {{HostAddress}}/games/{{id}}
+Content-Type: {{ContentType}}
+
+{
+  "gameType": "Game5x5x4",
+  "playerName": "test",
+  "moveNumber": 1,
+  "guessPegs": [
+    "Square;Red",
+    "Rectangle;Red",
+    "Circle;Green",
+    "Rectangle;Purple"
+  ]
+}
+
+
+
+### Get game information
+
+GET {{HostAddress}}/games/{{id}}
+
+### Get games by date
+
+GET {{HostAddress}}/games/?date=2024-07-14
+
+### Get games by player
+
+GET {{HostAddress}}/games/?playerName=test&ended=false
+
+### Get games by date and player
+
+GET {{HostAddress}}/games/?date=2024-07-14&playerName=test
+
+### Get games by player
+
+GET {{HostAddress}}/games/?playerName=test
+
+### Stop a game
+
+PATCH {{HostAddress}}/games/{{id}}
+Content-Type: {{ContentType}}
+
+{
+  "gameType": "Game6x4",
+  "playerName": "test",
+  "moveNumber": 1,
+  "end": true
+}

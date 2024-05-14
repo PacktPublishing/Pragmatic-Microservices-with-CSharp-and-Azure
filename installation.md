@@ -1,6 +1,6 @@
 # Installation
 
-Mar-2024
+May-2024
 
 ## Visual Studio
 
@@ -12,23 +12,39 @@ To install Visual Studio: `winget install Microsoft.VisualStudio.2022.Community.
 
 Install Visual Studio Code: `winget install Microsoft.VisualStudioCode`
 
-## Aspire
-
-[Install daily builds .NET Aspire](https://github.com/dotnet/aspire/blob/main/docs/using-latest-daily.md)
-
-With some chapters, this is currently required to build the code successfully.
-
-Using these instructions, install the .NET Aspire dotnet workload. To retrieve the NuGet packages, a nuget.config file is used.
-
-## Azure Developer CLI
-
-Install the Azure Developer CLI at least with version **azd version 1.7.0-beta.1-pr.3518885 (commit d62cc4c16bda2eefabf48b7d7f8bd616cad1445a)**:
-
-
-
 ## Docker desktop
 
 Install Docker Desktop on Windows: `winget install Docker.DockerDesktop`
+
+## Aspire
+
+Install .NET Aspire (.NET CLI):
+
+- dotnet workload update
+- dotnet workload install aspire
+
+You can install .NET Aspire via Visual Studio 2022 Preview as well.
+
+See details:
+https://learn.microsoft.com/en-us/dotnet/aspire/fundamentals/setup-tooling?tabs=dotnet-cli
+
+### .NET Aspire Daily Build
+
+With a few chapters, the code is based on daily Aspire builds. For these, the daily build is reuired to compile and run the code successfully.
+
+[Install daily builds .NET Aspire](https://github.com/dotnet/aspire/blob/main/docs/using-latest-daily.md)
+
+> If possible, don't install the .NET Aspire daily build. There are some issues with uninstalling the workload. Soon all chapters will be updated to .NET Aspire Preview 7, and after this to the GA version of .NET Aspire.
+
+Using these instructions, install the .NET Aspire dotnet workload. To retrieve the NuGet packages, a nuget.config file is used.
+
+To remove Aspire daily builds, check [Downgrading dotnet aspire](https://github.com/dotnet/aspire/discussions/2829)
+
+## Azure Developer CLI
+
+Install the Azure Developer CLI at least with version **azd version 1.9.100**:
+
+winget install Microsoft.Azd
 
 ## SQL server
 

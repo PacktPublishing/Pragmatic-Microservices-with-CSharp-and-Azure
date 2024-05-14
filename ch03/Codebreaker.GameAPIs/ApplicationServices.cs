@@ -1,6 +1,4 @@
-﻿using System.Security.Authentication;
-
-namespace Codebreaker.GameAPIs;
+﻿namespace Codebreaker.GameAPIs;
 
 public static class ApplicationServices
 {
@@ -17,7 +15,6 @@ public static class ApplicationServices
             builder.EnrichSqlServerDbContext<GamesSqlServerContext>();
         }
 
-        // TODO: remove certificate workaround when the emulator is fixed
         static void ConfigureCosmos(IHostApplicationBuilder builder)
         {
             builder.Services.AddDbContext<IGamesRepository, GamesCosmosContext>(options =>
@@ -25,13 +22,6 @@ public static class ApplicationServices
                 var connectionString = builder.Configuration.GetConnectionString("codebreakercosmos") ?? throw new InvalidOperationException("Could not read Cosmos connection string");
                 options.UseCosmos(connectionString, "codebreaker", cosmosOptions =>
                 {
-                    //cosmosOptions.HttpClientFactory(() =>
-                    //    new HttpClient(new HttpClientHandler
-                    //    {
-                    //        ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
-                    //    }));
-                    ////cosmosOptions.RequestTimeout(TimeSpan.FromMinutes(10));
-                    //cosmosOptions.ConnectionMode(Microsoft.Azure.Cosmos.ConnectionMode.Gateway);
                 });
                 options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
             });
@@ -40,9 +30,6 @@ public static class ApplicationServices
             {
                
             });
-
-            // TODO: cosmos workaround
-            // ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
         }
 
         static void ConfigureInMemory(IHostApplicationBuilder builder)
@@ -105,45 +92,6 @@ public static class ApplicationServices
             {
                 app.Logger.LogError(ex, "Error updating database");
                 throw;
-            }
-        }
-    }
-
-    // TODO: temporary workaround to wait for Cosmos emulator to be available
-    public static async Task WaitForEmulatorToBeRadyAsync(this WebApplication app)
-    {
-        if (app.Configuration["DataStore"] != "Cosmos")
-        {
-            return;
-        }
-        bool succeeded = false;
-        int maxRetries = 30;
-        int i = 0;
-        HttpClient client = new();
-        string cosmosConnection = app.Configuration.GetConnectionString("codebreakercosmos") ?? throw new InvalidOperationException();
-        var ix1 = cosmosConnection.IndexOf("https");
-        var ix2 = cosmosConnection.IndexOf(";DisableServer");
-        string url = cosmosConnection[ix1..ix2];
-        while (!succeeded && i++ < maxRetries)
-        {
-            try
-            {
-                await Task.Delay(5000);
-                await client.GetAsync(url);
-                succeeded = true;
-            }
-            catch (Exception ex)
-            {
-                app.Logger.LogWarning(ex, "{error}", ex.Message);
-                app.Logger.LogWarning(ex, ex.Message);
-                if (ex.InnerException is not null)
-                {
-                    app.Logger.LogWarning(ex.InnerException, "{error}", ex.InnerException.Message);
-                }
-                if (ex.InnerException is AuthenticationException)
-                {
-                    succeeded = true;  // let's be ok with untrusted root with the emulator, we ignore this with the Cosmos config
-                }
             }
         }
     }

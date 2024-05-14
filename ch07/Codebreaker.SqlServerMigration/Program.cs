@@ -11,7 +11,7 @@ builder.AddServiceDefaults();
 builder.Services.AddOpenTelemetry()
     .WithTracing(tracing => tracing.AddSource(ApiDbInitializer.ActivitySourceName));
 
-builder.AddSqlServerDbContext<GamesSqlServerContext>("CodebreakerSql");
+builder.AddSqlServerDbContext<GamesSqlServerContext>("codebreaker");
 
 var app = builder.Build();
 
