@@ -16,67 +16,6 @@ namespace Microsoft.Extensions.Hosting;
 
 public static class Extensions
 {
-    public static void AddAppConfiguration(this IHostApplicationBuilder builder)
-    {
-        string? solutionEnvironment = builder.Configuration["SolutionEnvironment"];
-
-        if (solutionEnvironment == "Azure")
-        {
-#if DEBUG
-
-            DefaultAzureCredentialOptions credentialOptions = new()
-            {
-                Diagnostics =
-                {
-                    LoggedHeaderNames = { "x-ms-request-id" },
-                    LoggedQueryParameters = { "api-version" },
-                    IsLoggingContentEnabled = true
-                },
-                ExcludeSharedTokenCacheCredential = true,
-                ExcludeAzurePowerShellCredential = true,
-                ExcludeVisualStudioCodeCredential = true,
-                ExcludeEnvironmentCredential = true,
-                ExcludeInteractiveBrowserCredential = true,
-                ExcludeAzureCliCredential = false,
-                ExcludeManagedIdentityCredential = false,
-                ExcludeVisualStudioCredential = false
-            };
-#else
-            string? managedIdentityClientId = builder.Configuration["ManagedIdentityClientId"];
-
-            DefaultAzureCredentialOptions credentialOptions = new()
-            {
-                ManagedIdentityClientId = managedIdentityClientId,
-                ExcludeSharedTokenCacheCredential = true,
-                ExcludeAzurePowerShellCredential = true,
-                ExcludeVisualStudioCodeCredential = true,
-                ExcludeEnvironmentCredential = true,
-                ExcludeInteractiveBrowserCredential = true,
-                ExcludeAzureCliCredential = false,
-                ExcludeManagedIdentityCredential = false,
-                ExcludeVisualStudioCredential = false
-            };
-#endif
-
-            DefaultAzureCredential credential = new(credentialOptions);
-            string endpoint = builder.Configuration.GetConnectionString("CodebreakerAppConfiguration") ?? throw new InvalidOperationException("Could not read AzureAppConfiguration");
-
-            try
-            {
-                builder.Configuration.AddAzureAppConfiguration(options =>
-                {
-                    options.Connect(new Uri(endpoint), credential)
-                        .Select("BotService*", labelFilter: LabelFilter.Null)
-                        .Select("BotService*", builder.Environment.EnvironmentName);
-                });
-            }
-            catch (Exception ex)
-            {
-
-            }
-        }
-    }
-
     public static IHostApplicationBuilder AddServiceDefaults(this IHostApplicationBuilder builder)
     {
         builder.ConfigureOpenTelemetry();
