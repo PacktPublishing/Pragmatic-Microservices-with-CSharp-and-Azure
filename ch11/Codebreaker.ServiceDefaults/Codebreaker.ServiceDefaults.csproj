@@ -20,7 +20,8 @@
 		<PackageReference Include="OpenTelemetry.Instrumentation.GrpcNetClient" Version="1.6.0-beta.3" />
 		<PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.8.1" />
 		<PackageReference Include="OpenTelemetry.Instrumentation.Runtime" Version="1.8.0" />
-		<PackageReference Include="OpenTelemetry.Exporter.Prometheus.AspNetCore" Version="1.7.0-rc.1" />
+	    <!-- BUG: 1.8.0-rc.1 breaks prometheus exporter so sticking to 1.8.0-beta.1 for now https://github.com/open-telemetry/opentelemetry-dotnet-contrib/issues/1617 -->
+		<PackageReference Include="OpenTelemetry.Exporter.Prometheus.AspNetCore" Version="1.8.0-beta.1" />
 	</ItemGroup>
 	<Choose>
 		<When Condition=" '$(PROMETHEUS)'=='True' ">

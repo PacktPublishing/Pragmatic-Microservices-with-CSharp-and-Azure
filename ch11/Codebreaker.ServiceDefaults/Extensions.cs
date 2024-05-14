@@ -125,8 +125,14 @@ public static class Extensions
         }
         if (Environment.GetEnvironmentVariable("StartupMode") == "OnPremises")
         {
+            // The following lines enable the Prometheus exporter (requires the OpenTelemetry.Exporter.Prometheus.AspNetCore package)
+            //builder.Services.AddOpenTelemetry()
+            //    .WithMetrics(metrics => metrics.AddPrometheusExporter());
+
+
             builder.Services.AddOpenTelemetry()
-               .WithMetrics(metrics => metrics.AddPrometheusExporter());
+               // BUG: Part of the workaround for https://github.com/open-telemetry/opentelemetry-dotnet-contrib/issues/1617
+               .WithMetrics(metrics => metrics.AddPrometheusExporter(options => options.DisableTotalNameSuffixForCounters = true));
         }
         else
         {
