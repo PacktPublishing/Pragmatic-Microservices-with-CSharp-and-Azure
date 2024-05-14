@@ -1,30 +1,30 @@
-
-using Codebreaker.AppHost;
-using Codebreaker.ServiceDefaults;
-
 var builder = DistributedApplication.CreateBuilder(args);
 
 string dataStore = builder.Configuration["DataStore"] ?? "InMemory";
+string startupMode = builder.Configuration["STARTUP_MODE"] ?? "Azure";  // specified with environment variables in the launch profile
 
-if (builder.Environment.IsPrometheus())
+var redis = builder.AddRedis("redis")
+    .WithRedisCommander()
+    .PublishAsContainer();
+
+if (startupMode == "OnPremises")
 {
-#if DEBUG
-    builder.AddUserSecretsForPrometheusEnvironment();
-#endif
-    string sqlPassword = builder.Configuration["SqlPassword"] ?? throw new InvalidOperationException("Configure SqlPassword");
-
-    var sqlServer = builder.AddSqlServerContainer("sql", sqlPassword)
-        .WithVolumeMount("volume.codebreaker.sql", "/var/opt/mssql", VolumeMountType.Named)
-        .AddDatabase("CodebreakerSql");
+    var grafana = builder.AddContainer("grafana", "grafana/grafana")
+        .WithBindMount("../grafana/config", "/etc/grafana", isReadOnly: true)
+        .WithBindMount("../grafana/dashboards", "/var/lib/grafana/dashboards", isReadOnly: true)
+        .WithHttpEndpoint(targetPort: 3000, name: "grafana-http");
 
     var prometheus = builder.AddContainer("prometheus", "prom/prometheus")
-           .WithVolumeMount("../prometheus", "/etc/prometheus")
-           .WithHttpEndpoint(9090, hostPort: 9090);
+       .WithBindMount("../prometheus", "/etc/prometheus", isReadOnly: true)
+       .WithHttpEndpoint(/* This port is fixed as it's referenced from the Grafana config */ port: 9090, targetPort: 9090);
 
-    var grafana = builder.AddContainer("grafana", "grafana/grafana")
-                         .WithVolumeMount("../grafana/config", "/etc/grafana")
-                         .WithVolumeMount("../grafana/dashboards", "/var/lib/grafana/dashboards")
-                         .WithHttpEndpoint(containerPort: 3000, hostPort: 3000, name: "grafana-http");
+
+    string sqlPassword = builder.Configuration["SqlPassword"] ?? throw new InvalidOperationException("Configure SqlPassword");
+
+    var sqlServer = builder.AddSqlServer("sql")
+        .WithDataVolume()
+        .PublishAsContainer()
+        .AddDatabase("CodebreakerSql");
 
     var gameAPIs = builder.AddProject<Projects.Codebreaker_GameAPIs>("gameapis")
         .WithReference(sqlServer)
@@ -36,25 +36,22 @@ if (builder.Environment.IsPrometheus())
 }
 else
 {
-    var appInsightsConnectionString = builder.Configuration["ApplicationInsightsConnectionString"] ?? throw new InvalidOperationException("Could not read AppInsightsConnectionString");
+    var logs = builder.AddAzureLogAnalyticsWorkspace("logs");
+    var appInsights = builder.AddAzureApplicationInsights("insights", logs);
 
-#if DEBUG
-    var cosmos = builder.AddAzureCosmosDB("codebreakercosmos")
-        .UseEmulator()
-        .AddDatabase("codebreaker");
-#else
     var cosmos = builder.AddAzureCosmosDB("codebreakercosmos")
         .AddDatabase("codebreaker");
-#endif
 
     var gameAPIs = builder.AddProject<Projects.Codebreaker_GameAPIs>("gameapis")
         .WithReference(cosmos)
+        .WithReference(appInsights)
         .WithEnvironment("DataStore", dataStore)
-        .WithEnvironment("ApplicationInsightsConnectionString", appInsightsConnectionString);
+        .WithEnvironment("StartupMode", startupMode);
 
     builder.AddProject<Projects.CodeBreaker_Bot>("bot")
         .WithReference(gameAPIs)
-        .WithEnvironment("ApplicationInsightsConnectionString", appInsightsConnectionString);
+        .WithReference(appInsights)
+         .WithEnvironment("StartupMode", startupMode);
 }
 
 builder.Build().Run();
