@@ -1,53 +1,52 @@
-﻿using Microsoft.Azure.Cosmos;
-using Microsoft.EntityFrameworkCore;
-using System.Net;
+﻿using Microsoft.EntityFrameworkCore;
+
+using System.Diagnostics;
 
 namespace Codebreaker.GameAPIs;
 
 public static class ApplicationServices
 {
+    public static void AddApplicationTelemetry(this IHostApplicationBuilder builder)
+    {
+        builder.Services.AddMetrics();
+
+        builder.Services.AddOpenTelemetry().WithMetrics(m => m.AddMeter(GamesMetrics.MeterName));
+
+        builder.Services.AddSingleton<GamesMetrics>();
+
+        builder.Services.AddKeyedSingleton("Codebreaker.GameAPIs", (services, _) => new ActivitySource("Codebreaker.GameAPIs", "1.0.0"));
+    }
+
+
     public static void AddApplicationServices(this IHostApplicationBuilder builder)
     {
         static void ConfigureSqlServer(IHostApplicationBuilder builder)
         {
-            builder.AddSqlServerDbContext<GamesSqlServerContext>("CodebreakerSql",
-                configureDbContextOptions: static options =>
-                {
-                    options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
-                });
-            builder.Services.AddScoped<IGamesRepository, DataContextProxy<GamesSqlServerContext>>();
+            builder.Services.AddDbContextPool<IGamesRepository, GamesSqlServerContext>(options =>
+            {
+                string connectionString = builder.Configuration.GetConnectionString("CodebreakerSql") ??
+                    throw new InvalidOperationException("Connection string CodebreakerSql not configured");
+                options.UseSqlServer(connectionString);
+                options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+            });
+
+            builder.EnrichSqlServerDbContext<GamesSqlServerContext>(settings =>
+            {
+            });
         }
 
         static void ConfigureCosmos(IHostApplicationBuilder builder)
         {
-            // TODO: workaround for preview 3 to use the Cosmos emulator - remove with preview 4
-#if DEBUG
             builder.Services.AddDbContext<IGamesRepository, GamesCosmosContext>(options =>
             {
-                options.UseCosmos("AccountEndpoint = https://localhost:8081/;AccountKey=C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==", "codebreaker",
-                 cosmosOptions =>
-                 {
-                     cosmosOptions.HttpClientFactory(() => new HttpClient(new HttpClientHandler()
-                     {
-                         ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
-                     }));
-                     cosmosOptions.ConnectionMode(ConnectionMode.Gateway);
-                 });
-            });
-#else
-            builder.AddCosmosDbContext<GamesCosmosContext>("codebreaker", "codebreaker",
-                configureSettings: static options =>
-                {
-                    options.IgnoreEmulatorCertificate = true;
-                },
-                configureDbContextOptions: static options =>
-                {
-                  
-                    options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
-                });
+                string connectionString = builder.Configuration.GetConnectionString("codebreakercosmos") ?? throw new InvalidOperationException("Could not read the Cosmos connection-string");
+                options.UseCosmos(connectionString, "codebreaker");
 
-            builder.Services.AddScoped<IGamesRepository, DataContextProxy<GamesCosmosContext>>();
-#endif
+                options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+            });
+            builder.EnrichCosmosDbContext<GamesCosmosContext>(settings =>
+            {
+            });
         }
 
         static void ConfigureInMemory(IHostApplicationBuilder builder)
@@ -71,11 +70,9 @@ public static class ApplicationServices
 
         builder.Services.AddScoped<IGamesService, GamesService>();
 
-#if DEBUG
-        // TODO: remove with preview 4, workaround for Cosmos emulator
-        ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
-#endif
+        builder.AddApplicationTelemetry();
     }
+
 
     public static async Task CreateOrUpdateDatabaseAsync(this WebApplication app)
     {
@@ -84,10 +81,7 @@ public static class ApplicationServices
             try
             {
                 using var scope = app.Services.CreateScope();
-                var repo = scope.ServiceProvider.GetRequiredService<GamesSqlServerContext>();
-
-                // TODO: update with .NET Aspire Preview 4
-                // var repo = scope.ServiceProvider.GetRequiredService<IGamesRepository>();
+                var repo = scope.ServiceProvider.GetRequiredService<IGamesRepository>();
                 if (repo is GamesSqlServerContext context)
                 {
                     await context.Database.MigrateAsync();
@@ -106,9 +100,7 @@ public static class ApplicationServices
             try
             {
                 using var scope = app.Services.CreateScope();
-                // TODO: update with .NET Aspire Preview 4
-                var repo = scope.ServiceProvider.GetRequiredService<GamesCosmosContext>();
-                //                var repo = scope.ServiceProvider.GetRequiredService<IGamesRepository>();
+                var repo = scope.ServiceProvider.GetRequiredService<IGamesRepository>();
                 if (repo is GamesCosmosContext context)
                 {
                     bool created = await context.Database.EnsureCreatedAsync();

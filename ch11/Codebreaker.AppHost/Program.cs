@@ -1,60 +1,52 @@
-
-using Codebreaker.AppHost;
-using Codebreaker.ServiceDefaults;
-
 var builder = DistributedApplication.CreateBuilder(args);
 
 string dataStore = builder.Configuration["DataStore"] ?? "InMemory";
+string startupMode = builder.Configuration["STARTUP_MODE"] ?? "Azure";  // specified with environment variables in the launch profile
 
-if (builder.Environment.IsPrometheus())
+if (startupMode == "OnPremises")
 {
-#if DEBUG
-    builder.AddUserSecretsForPrometheusEnvironment();
-#endif
-    string sqlPassword = builder.Configuration["SqlPassword"] ?? throw new InvalidOperationException("Configure SqlPassword");
-
-    var sqlServer = builder.AddSqlServerContainer("sql", sqlPassword)
-        .WithVolumeMount("volume.codebreaker.sql", "/var/opt/mssql", VolumeMountType.Named)
+    var sqlServer = builder.AddSqlServer("sql")
+        .WithDataVolume()
+        .PublishAsContainer()
         .AddDatabase("CodebreakerSql");
 
-    var prometheus = builder.AddContainer("prometheus", "prom/prometheus")
-           .WithVolumeMount("../prometheus", "/etc/prometheus")
-           .WithHttpEndpoint(9090, hostPort: 9090);
-
     var grafana = builder.AddContainer("grafana", "grafana/grafana")
-                         .WithVolumeMount("../grafana/config", "/etc/grafana")
-                         .WithVolumeMount("../grafana/dashboards", "/var/lib/grafana/dashboards")
-                         .WithHttpEndpoint(containerPort: 3000, hostPort: 3000, name: "grafana-http");
+        .WithBindMount("../grafana/config", "/etc/grafana", isReadOnly: true)
+        .WithBindMount("../grafana/dashboards", "/var/lib/grafana/dashboards", isReadOnly: true)
+        .WithHttpEndpoint(targetPort: 3000, name: "grafana-http");
+
+    var prometheus = builder.AddContainer("prometheus", "prom/prometheus")
+       .WithBindMount("../prometheus", "/etc/prometheus", isReadOnly: true)
+       .WithHttpEndpoint(/* This port is fixed as it's referenced from the Grafana config */ port: 9090, targetPort: 9090);
 
     var gameAPIs = builder.AddProject<Projects.Codebreaker_GameAPIs>("gameapis")
         .WithReference(sqlServer)
         .WithEnvironment("DataStore", dataStore)
-        .WithEnvironment("GRAFANA_URL", grafana.GetEndpoint("grafana-http"));
-
-    builder.AddProject<Projects.CodeBreaker_Bot>("bot")
-        .WithReference(gameAPIs);
-}
-else
-{
-    var appInsightsConnectionString = builder.Configuration["ApplicationInsightsConnectionString"] ?? throw new InvalidOperationException("Could not read AppInsightsConnectionString");
-
-#if DEBUG
-    var cosmos = builder.AddAzureCosmosDB("codebreakercosmos")
-        .UseEmulator()
-        .AddDatabase("codebreaker");
-#else
-    var cosmos = builder.AddAzureCosmosDB("codebreakercosmos")
-        .AddDatabase("codebreaker");
-#endif
-
-    var gameAPIs = builder.AddProject<Projects.Codebreaker_GameAPIs>("gameapis")
-        .WithReference(cosmos)
-        .WithEnvironment("DataStore", dataStore)
-        .WithEnvironment("ApplicationInsightsConnectionString", appInsightsConnectionString);
+        .WithEnvironment("GRAFANA_URL", grafana.GetEndpoint("grafana-http"))
+        .WithEnvironment("StartupMode", startupMode);
 
     builder.AddProject<Projects.CodeBreaker_Bot>("bot")
         .WithReference(gameAPIs)
-        .WithEnvironment("ApplicationInsightsConnectionString", appInsightsConnectionString);
+        .WithEnvironment("StartupMode", startupMode);
+}
+else
+{
+    var logs = builder.AddAzureLogAnalyticsWorkspace("logs");
+    var appInsights = builder.AddAzureApplicationInsights("insights", logs);
+
+    var cosmos = builder.AddAzureCosmosDB("codebreakercosmos")
+        .AddDatabase("codebreaker");
+
+    var gameAPIs = builder.AddProject<Projects.Codebreaker_GameAPIs>("gameapis")
+        .WithReference(cosmos)
+        .WithReference(appInsights)
+        .WithEnvironment("DataStore", dataStore)
+        .WithEnvironment("StartupMode", startupMode);
+
+    builder.AddProject<Projects.CodeBreaker_Bot>("bot")
+        .WithReference(gameAPIs)
+        .WithReference(appInsights)
+        .WithEnvironment("StartupMode", startupMode);
 }
 
 builder.Build().Run();

@@ -1,6 +1,5 @@
 using Azure.Identity;
 using Azure.Monitor.OpenTelemetry.AspNetCore;
-using Codebreaker.ServiceDefaults;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,49 +13,49 @@ namespace Microsoft.Extensions.Hosting;
 
 public static class Extensions
 {
-    public static void AddAppConfiguration(this IHostApplicationBuilder builder)
-    {
-        if (!builder.Environment.IsPrometheus())
-        {
-#if DEBUG
+//    public static void AddAppConfiguration(this IHostApplicationBuilder builder)
+//    {
+//        if (!builder.Environment.IsPrometheus())
+//        {
+//#if DEBUG
 
-            DefaultAzureCredentialOptions credentialOptions = new()
-            {
-                Diagnostics =
-            {
-                LoggedHeaderNames = { "x-ms-request-id" },
-                LoggedQueryParameters = { "api-version" },
-                IsLoggingContentEnabled = true
-            },
-                ExcludeSharedTokenCacheCredential = true,
-                ExcludeAzurePowerShellCredential = true,
-                ExcludeVisualStudioCodeCredential = true,
-                ExcludeEnvironmentCredential = true,
-                ExcludeInteractiveBrowserCredential = true,
-                ExcludeAzureCliCredential = false,
-                ExcludeManagedIdentityCredential = false,
-                ExcludeVisualStudioCredential = false
-            };
-#elif RELEASE
-        string? managedIdentityClientId = builder.Configuration["ManagedIdentityClientId"];
+//            DefaultAzureCredentialOptions credentialOptions = new()
+//            {
+//                Diagnostics =
+//            {
+//                LoggedHeaderNames = { "x-ms-request-id" },
+//                LoggedQueryParameters = { "api-version" },
+//                IsLoggingContentEnabled = true
+//            },
+//                ExcludeSharedTokenCacheCredential = true,
+//                ExcludeAzurePowerShellCredential = true,
+//                ExcludeVisualStudioCodeCredential = true,
+//                ExcludeEnvironmentCredential = true,
+//                ExcludeInteractiveBrowserCredential = true,
+//                ExcludeAzureCliCredential = false,
+//                ExcludeManagedIdentityCredential = false,
+//                ExcludeVisualStudioCredential = false
+//            };
+//#elif RELEASE
+//        string? managedIdentityClientId = builder.Configuration["ManagedIdentityClientId"];
 
-        DefaultAzureCredentialOptions credentialOptions = new()
-        {
-            ManagedIdentityClientId = managedIdentityClientId,
-            ExcludeSharedTokenCacheCredential = true,
-            ExcludeAzurePowerShellCredential = true,
-            ExcludeVisualStudioCodeCredential = true,
-            ExcludeEnvironmentCredential = true,
-            ExcludeInteractiveBrowserCredential = true,
-            ExcludeAzureCliCredential = false,
-            ExcludeManagedIdentityCredential = false,
-            ExcludeVisualStudioCredential = false
-        };
-#endif
+//        DefaultAzureCredentialOptions credentialOptions = new()
+//        {
+//            ManagedIdentityClientId = managedIdentityClientId,
+//            ExcludeSharedTokenCacheCredential = true,
+//            ExcludeAzurePowerShellCredential = true,
+//            ExcludeVisualStudioCodeCredential = true,
+//            ExcludeEnvironmentCredential = true,
+//            ExcludeInteractiveBrowserCredential = true,
+//            ExcludeAzureCliCredential = false,
+//            ExcludeManagedIdentityCredential = false,
+//            ExcludeVisualStudioCredential = false
+//        };
+//#endif
 
-            DefaultAzureCredential credential = new(credentialOptions);
-        }
-    }
+//            DefaultAzureCredential credential = new(credentialOptions);
+//        }
+//    }
 
     public static IHostApplicationBuilder AddServiceDefaults(this IHostApplicationBuilder builder)
     {
@@ -72,7 +71,7 @@ public static class Extensions
             http.AddStandardResilienceHandler();
 
             // Turn on service discovery by default
-            http.UseServiceDiscovery();
+            http.AddServiceDiscovery();
         });
 
         return builder;
@@ -90,7 +89,8 @@ public static class Extensions
             .WithMetrics(metrics =>
             {
                 metrics.AddRuntimeInstrumentation()
-                       .AddBuiltInMeters();
+                    .AddHttpClientInstrumentation()
+                    .AddRuntimeInstrumentation();
             })
             .WithTracing(tracing =>
             {
@@ -113,7 +113,6 @@ public static class Extensions
 
     private static IHostApplicationBuilder AddOpenTelemetryExporters(this IHostApplicationBuilder builder)
     {
-        // TODO: what's the strategy using the OLTP exporter?
         // note here: not supported https://learn.microsoft.com/en-us/azure/azure-monitor/app/opentelemetry-configuration?tabs=aspnetcore
         // but it's configured by default with .NET Aspire
         bool useOtlpExporter = !string.IsNullOrWhiteSpace(builder.Configuration["OTEL_EXPORTER_OTLP_ENDPOINT"]);
@@ -124,10 +123,16 @@ public static class Extensions
             builder.Services.ConfigureOpenTelemetryMeterProvider(metrics => metrics.AddOtlpExporter());
             builder.Services.ConfigureOpenTelemetryTracerProvider(tracing => tracing.AddOtlpExporter());
         }
-        if (builder.Environment.IsPrometheus())
+        if (Environment.GetEnvironmentVariable("StartupMode") == "OnPremises")
         {
+            // The following lines enable the Prometheus exporter (requires the OpenTelemetry.Exporter.Prometheus.AspNetCore package)
+            //builder.Services.AddOpenTelemetry()
+            //    .WithMetrics(metrics => metrics.AddPrometheusExporter());
+
+
             builder.Services.AddOpenTelemetry()
-               .WithMetrics(metrics => metrics.AddPrometheusExporter());
+               // BUG: Part of the workaround for https://github.com/open-telemetry/opentelemetry-dotnet-contrib/issues/1617
+               .WithMetrics(metrics => metrics.AddPrometheusExporter(options => options.DisableTotalNameSuffixForCounters = true));
         }
         else
         {
@@ -151,7 +156,7 @@ public static class Extensions
 
     public static WebApplication MapDefaultEndpoints(this WebApplication app)
     {
-        if (app.Environment.IsPrometheus())
+        if (Environment.GetEnvironmentVariable("StartupMode") == "OnPremises")
         { 
             app.MapPrometheusScrapingEndpoint();
         }   
@@ -167,12 +172,4 @@ public static class Extensions
 
         return app;
     }
-
-    private static MeterProviderBuilder AddBuiltInMeters(this MeterProviderBuilder meterProviderBuilder) =>
-        meterProviderBuilder.AddMeter(
-            "Codebreaker.Games",
-            "Microsoft.AspNetCore.Hosting",
-            "Microsoft.AspNetCore.Server.Kestrel",
-            "Microsoft.EntityFrameworkCore",
-            "System.Net.Http");
 }
