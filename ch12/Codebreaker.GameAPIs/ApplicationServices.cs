@@ -18,9 +18,6 @@ public static class ApplicationServices
             });
             builder.EnrichSqlServerDbContext<GamesSqlServerContext>(static settings =>
             {
-                settings.Metrics = true;
-                settings.Tracing = true;
-                settings.HealthChecks = true;
             });
         }
 
