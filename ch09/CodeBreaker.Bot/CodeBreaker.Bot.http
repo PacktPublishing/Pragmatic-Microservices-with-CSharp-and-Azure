@@ -1,0 +1,9 @@
+﻿
+POST {{Bot_HostAddress}}/bot/bots?count=3&delay=1
+Content-Type: application/json
+
+{
+
+}
+
+###

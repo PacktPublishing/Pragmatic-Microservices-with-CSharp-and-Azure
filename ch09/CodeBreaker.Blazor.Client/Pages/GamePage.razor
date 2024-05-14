@@ -1,0 +1,36 @@
+﻿@page "/game"
+@using CodeBreaker.Blazor.Client.Models
+@using CodeBreaker.Blazor.UI.Models.Icon
+@using Codebreaker.GameAPIs.Client.Models
+
+<NavigationLock ConfirmExternalNavigation="_gameStatus == GameMode.MoveSet" OnBeforeInternalNavigation="OnBeforeInternalNavigation" />
+
+@if (_gameStatus == GameMode.NotRunning)
+{
+    <div class="flex-column start-game-container">
+        <CodeBreakerTextField CssClass="user-name flex-1" @bind-Value="_name" Label="@Loc["GamePage_NameInput"]" Placeholder="@Loc["GamePage_NameInputPlaceholder"]" Required="true" MaxLength="100" />
+        <div class="flex-responsive gap-2 full-width justify-between">
+            <CodeBreakerRadioGroup T="GameType" @bind-Value="_selectedGameType" Items="_gameTypes" />
+            <CodeBreakerButton Disabled="@(string.IsNullOrWhiteSpace(_name) || _name.Length < 4 || _loadingGame)" OnClick="StartGameAsync">
+                @if (_loadingGame)
+                {
+                    <CodeBreakerProgressCircular Class="progress" />
+                }
+                @Loc["GamePage_StartButtonText"]
+            </CodeBreakerButton>
+        </div>
+    </div>
+}
+else if (_game is not null)
+{
+    <div class="header flex">
+        <div>
+            <h2 class="flex-1">@_game?.GameType</h2>
+            <StopWatch Running="@(_gameStatus == GameMode.MoveSet || _gameStatus == GameMode.Started)" />
+        </div>
+        <div>
+            <CodeBreakerIconButton Disabled="_cancelGame" OnClick="CancelGame" Icon="CodeBreakerIcon.Cancel" />
+        </div>
+    </div>
+    <Playground Game="_game" GameStatusChanged="GameStatusChanged" />
+}

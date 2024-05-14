@@ -1,0 +1,13 @@
+﻿h2 {
+    margin-bottom: 2rem;
+}
+
+.reports-table {
+    margin-top: 2rem;
+}
+
+::deep .progress {
+    margin-right: 1rem;
+    width: 1rem !important;
+    height: 1rem !important;
+}
