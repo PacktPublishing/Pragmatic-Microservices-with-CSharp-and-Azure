@@ -4,9 +4,13 @@ public static class ApplicationServices
 {
     public static void AddApplicationServices(this IHostApplicationBuilder builder)
     {
-        builder.Services.AddSignalR()
-            .AddMessagePackProtocol()
-            .AddNamedAzureSignalR("signalr");
+        var signalRBuilder = builder.Services.AddSignalR()
+            .AddMessagePackProtocol();
+
+        if (Environment.GetEnvironmentVariable("StartupMode") != "OnPremises")
+        { 
+            signalRBuilder.AddNamedAzureSignalR("signalr");
+        }
     }
 
     public static WebApplication MapApplicationEndpoints(this WebApplication app, ILogger logger)

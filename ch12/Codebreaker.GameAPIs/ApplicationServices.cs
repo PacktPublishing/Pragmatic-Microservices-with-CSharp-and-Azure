@@ -26,7 +26,12 @@ public static class ApplicationServices
                 options.UseSqlServer(connectionString);
                 options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
             });
-            builder.EnrichSqlServerDbContext<GamesSqlServerContext>();
+            builder.EnrichSqlServerDbContext<GamesSqlServerContext>(static settings =>
+            {
+                settings.DisableTracing = false;
+                settings.DisableRetry = false;
+                settings.DisableHealthChecks = false;
+            });
         }
 
         // TODO: remove certificate workaround when the emulator is fixed
@@ -39,7 +44,10 @@ public static class ApplicationServices
                 options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
             });
 
-            builder.EnrichCosmosDbContext<GamesCosmosContext>();
+            builder.EnrichCosmosDbContext<GamesCosmosContext>(static settings =>
+            {
+                settings.DisableTracing = false;
+            });
         }
 
         static void ConfigureInMemory(IHostApplicationBuilder builder)
