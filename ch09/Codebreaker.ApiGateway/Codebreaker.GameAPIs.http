@@ -1,0 +1,126 @@
+﻿@CodebreakerGameAPIs_HostAddress=https://localhost:7125
+@hostname=localhost
+@port=7125
+@ContentType = application/json
+
+# this is a comment
+
+## this is another comment
+
+### Create a game
+# POST {{Codebreaker.GameAPIs_HostAddress}}/games/
+POST https://{{hostname}}:{{port}}/games/
+Content-Type: {{ContentType}}
+
+{
+  "gameType": "Game6x4",
+  "playerName": "test"
+}
+
+### Set a move
+
+@id = 77822526-76eb-4a8f-8186-461226168170
+
+PATCH {{Codebreaker.GameAPIs_HostAddress}}/games/{{id}}
+Content-Type: {{ContentType}}
+
+{
+  "gameType": "Game6x4",
+  "playerName": "test",
+  "moveNumber": 1,
+  "guessPegs": [
+    "Red",
+    "Green",
+    "Blue",
+    "Yellow"
+  ]
+}
+
+### Create a 8x5 game
+POST {{Codebreaker.GameAPIs_HostAddress}}/games/
+Content-Type: {{ContentType}}
+
+{
+  "gameType": "Game8x5",
+  "playerName": "test"
+}
+
+### Set a 8x5 move
+
+@id8x5 = 47b7f614-e0f8-4b5e-9673-0746aed98371
+
+PATCH {{Codebreaker.GameAPIs_HostAddress}}/games/{{id8x5}}
+Content-Type: {{ContentType}}
+
+{
+  "gameType": "Game8x5",
+  "playerName": "test",
+  "moveNumber": 1,
+  "guessPegs": [
+    "Green",
+    "Green",
+    "Yellow",
+    "Purple",
+    "Pink"
+  ]
+}
+
+### Create a 5x5x4 game
+POST {{Codebreaker.GameAPIs_HostAddress}}/games/
+Content-Type: {{ContentType}}
+
+{
+  "gameType": "Game5x5x4",
+  "playerName": "test"
+}
+
+### Set a 5x5x4 move
+
+@id5x5x4 = 74f4270b-8eba-4440-893c-a749ea857536
+
+PATCH {{Codebreaker.GameAPIs_HostAddress}}/games/{{id5x5x4}}
+Content-Type: {{ContentType}}
+
+{
+  "gameType": "Game5x5x4",
+  "playerName": "test",
+  "moveNumber": 1,
+  "guessPegs": [
+    "Rectangle;Purple",
+    "Circle;Green",
+    "Triangle;Blue",
+    "Circle;Red"
+  ]
+}
+
+### Get game information
+
+GET {{Codebreaker.GameAPIs_HostAddress}}/games/{{id}}
+
+### Get games by date
+
+GET {{Codebreaker.GameAPIs_HostAddress}}/games/?date=2024-07-14
+
+### Get games by player
+
+GET {{Codebreaker.GameAPIs_HostAddress}}/games/?playerName=test&ended=false
+
+### Get games by date and player
+
+GET {{Codebreaker.GameAPIs_HostAddress}}/games/?date=2024-07-14&playerName=test
+
+### Get games by player
+
+GET {{Codebreaker.GameAPIs_HostAddress}}/games/?playerName=test
+
+### Stop a game
+
+PATCH {{Codebreaker.GameAPIs_HostAddress}}/games/{{id}}
+Content-Type: {{ContentType}}
+
+{
+  "gameType": "Game6x4",
+  "playerName": "test",
+  "moveNumber": 1,
+  "end": true
+}

@@ -2,6 +2,7 @@
 using Codebreaker.Data.SqlServer;
 
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 
 namespace Codebreaker.GameAPIs;
 
@@ -11,23 +12,27 @@ public static class ApplicationServices
     {
         static void ConfigureSqlServer(IHostApplicationBuilder builder)
         {
-            builder.AddSqlServerDbContext<GamesSqlServerContext>("CodebreakerSql",
-                configureDbContextOptions: options =>
-                {
-                    options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
-                });
-            builder.Services.AddScoped<IGamesRepository, DataContextProxy<GamesSqlServerContext>>();
+            builder.Services.AddDbContextPool<IGamesRepository, GamesSqlServerContext>(options =>
+            {
+                string connectionString = builder.Configuration.GetConnectionString("codebreaker") ??
+                    throw new InvalidOperationException("SQL Server connection string not configured");
+                options.UseSqlServer(connectionString);
+                options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+            });
+
+            builder.EnrichSqlServerDbContext<GamesSqlServerContext>();
         }
 
         static void ConfigureCosmos(IHostApplicationBuilder builder)
         {
-            builder.AddCosmosDbContext<GamesCosmosContext>("GamesCosmosConnection", "codebreaker",
-                configureDbContextOptions: options =>
-                {
-                    options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
-                });
-
-            builder.Services.AddScoped<IGamesRepository, DataContextProxy<GamesCosmosContext>>();
+            builder.Services.AddDbContextPool<IGamesRepository, GamesCosmosContext>(options =>
+            {
+                string connectionString = builder.Configuration.GetConnectionString("codebreakercosmos") ??
+                    throw new InvalidOperationException("Cosmos connection string not configured");
+                options.UseCosmos(connectionString, "codebreaker");
+                options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+            });
+            builder.EnrichCosmosDbContext<GamesCosmosContext>();
         }
 
         static void ConfigureInMemory(IHostApplicationBuilder builder)

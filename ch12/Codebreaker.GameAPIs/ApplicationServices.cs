@@ -1,11 +1,21 @@
-﻿using Microsoft.Azure.Cosmos;
-using System.Net;
-using System.Security.Authentication;
+﻿using System.Diagnostics;
 
 namespace Codebreaker.GameAPIs;
 
 public static class ApplicationServices
 {
+    public static void AddApplicationTelemetry(this IHostApplicationBuilder builder)
+    {
+        builder.Services.AddMetrics();
+
+        builder.Services.AddOpenTelemetry().WithMetrics(m => m.AddMeter(GamesMetrics.MeterName));
+
+        builder.Services.AddSingleton<GamesMetrics>();
+
+        builder.Services.AddKeyedSingleton("Codebreaker.GameAPIs", (services, _) => new ActivitySource("Codebreaker.GameAPIs", "1.0.0"));
+    }
+
+
     public static void AddApplicationServices(this IHostApplicationBuilder builder)
     {
         static void ConfigureSqlServer(IHostApplicationBuilder builder)
@@ -18,9 +28,9 @@ public static class ApplicationServices
             });
             builder.EnrichSqlServerDbContext<GamesSqlServerContext>(static settings =>
             {
-                settings.Metrics = true;
-                settings.Tracing = true;
-                settings.HealthChecks = true;
+                settings.DisableTracing = false;
+                settings.DisableRetry = false;
+                settings.DisableHealthChecks = false;
             });
         }
 
@@ -29,27 +39,15 @@ public static class ApplicationServices
         {
             builder.Services.AddDbContext<IGamesRepository, GamesCosmosContext>(options =>
             {
-                var connectionString = builder.Configuration.GetConnectionString("cosmos") ?? throw new InvalidOperationException("Could not read Cosmos connection string");
-                options.UseCosmos(connectionString, "codebreaker", cosmosOptions =>
-                {
-                    //cosmosOptions.HttpClientFactory(() =>
-                    //    new HttpClient(new HttpClientHandler
-                    //    {
-                    //        ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
-                    //    }));
-                    ////cosmosOptions.RequestTimeout(TimeSpan.FromMinutes(10));
-                    //cosmosOptions.ConnectionMode(Microsoft.Azure.Cosmos.ConnectionMode.Gateway);
-                });
+                var connectionString = builder.Configuration.GetConnectionString("codebreakercosmos") ?? throw new InvalidOperationException("Could not read Cosmos connection string");
+                options.UseCosmos(connectionString, "codebreaker");
                 options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
             });
 
-            builder.EnrichCosmosDbContext<GamesCosmosContext>(settings =>
+            builder.EnrichCosmosDbContext<GamesCosmosContext>(static settings =>
             {
-
+                settings.DisableTracing = false;
             });
-
-            // TODO: cosmos workaround
-            // ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
         }
 
         static void ConfigureInMemory(IHostApplicationBuilder builder)
@@ -82,11 +80,7 @@ public static class ApplicationServices
         builder.Services.AddScoped<IGamesService, GamesService>();
 
         builder.AddRedisDistributedCache("redis");
-
-#if DEBUG
-        // TODO: remove with preview 4, workaround for Cosmos emulator
-        ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
-#endif
+        builder.AddApplicationTelemetry();
     }
 
     private static bool s_IsDatabaseUpdateComplete = false;
@@ -101,7 +95,6 @@ public static class ApplicationServices
 
         if (dataStore == "SqlServer")
         {
-
             try
             {
                 using var scope = app.Services.CreateScope();
@@ -143,43 +136,5 @@ public static class ApplicationServices
         }
 
         s_IsDatabaseUpdateComplete = true;
-    }
-
-    // TODO: temporary workaround to wait for Cosmos emulator to be available
-    public static async Task WaitForEmulatorToBeRadyAsync(this WebApplication app)
-    {
-        if (app.Configuration["DataStore"] != "Cosmos")
-        {
-            return;
-        }
-        bool succeeded = false;
-        int maxRetries = 30;
-        int i = 0;
-        HttpClient client = new();
-        string cosmosConnection = app.Configuration.GetConnectionString("codebreakercosmos") ?? throw new InvalidOperationException();
-        var ix1 = cosmosConnection.IndexOf("https");
-        var ix2 = cosmosConnection.IndexOf(";DisableServer");
-        string url = cosmosConnection[ix1..ix2];
-        while (!succeeded && i++ < maxRetries)
-        {
-            try
-            {
-                await Task.Delay(5000);
-                await client.GetAsync(url);
-                succeeded = true;
-            }
-            catch (Exception ex)
-            {
-                app.Logger.LogWarning(ex, "{error}", ex.Message);
-                if (ex.InnerException is not null)
-                {
-                    app.Logger.LogWarning(ex.InnerException, "{error}", ex.InnerException.Message);
-                }
-                if (ex.InnerException is AuthenticationException)
-                {
-                    succeeded = true;  // let's be ok with untrusted root with the emulator, we ignore this with the Cosmos config
-                }
-            }
-        }
     }
 }

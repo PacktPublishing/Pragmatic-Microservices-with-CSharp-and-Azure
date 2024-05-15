@@ -1,0 +1,6 @@
+@Codebreaker.Ranking_HostAddress = http://localhost:5021
+
+GET {{Codebreaker.Ranking_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

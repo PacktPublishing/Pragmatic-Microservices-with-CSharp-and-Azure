@@ -1,0 +1,77 @@
+syntax = "proto3";
+
+option csharp_namespace = "Codebreaker.Grpc";
+
+package GamesAPI;
+
+import "google/protobuf/duration.proto";
+import "google/protobuf/timestamp.proto";
+
+service GrpcGame {
+	rpc CreateGame(CreateGameRequest) returns (CreateGameResponse);
+	rpc SetMove(SetMoveRequest) returns (SetMoveResponse);
+	rpc GetGame(GetGameRequest) returns (GetGameResponse);
+}
+
+message CreateGameRequest {
+    string gameType = 2;
+    string playerName = 3;
+}
+
+message FieldNames {
+    repeated string values = 1;
+}
+
+message CreateGameResponse {
+    string id = 1;
+    string gameType = 2;
+    string playerName = 3;
+    int32 numberCodes = 4;
+    int32 maxMoves = 5;
+    map<string, FieldNames> fieldValues = 6;
+}
+
+message SetMoveRequest {
+    string id = 1;
+    string gameType = 2;
+    int32 moveNumber = 3;
+    bool end = 4;
+    repeated string guessPegs = 5;
+}
+
+message SetMoveResponse {
+    string id = 1;
+    string gameType = 2;
+    int32 moveNumber = 3;
+    bool ended = 4;
+    bool isVictory = 5;
+    repeated string results = 6;
+}
+
+message GetGameRequest {
+    string id = 1;
+}
+
+message GetGameResponse {
+    string id = 1;
+    string gameType = 2;
+    string playerName = 3;
+    bool playerIsAuthenticated = 4;
+    google.protobuf.Timestamp startTime = 5;
+    google.protobuf.Timestamp endTime = 6;
+    google.protobuf.Duration duration = 7;
+    int32 lastMoveNumber = 8;
+    int32 numberCodes = 9;
+    int32 maxMoves = 10;
+    bool isVictory = 11;
+    map<string, FieldNames> fieldValues = 12;
+    repeated string codes = 13;
+    repeated Move moves = 14;
+}
+
+message Move {
+    string id = 1;
+    int32 moveNumber = 2;
+    repeated string guessPegs = 3;
+    repeated string keyPegs = 4;
+}

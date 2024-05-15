@@ -9,7 +9,6 @@ builder.Services.AddSingleton<GamesMetrics>();
 builder.Services.AddKeyedSingleton("Codebreaker.GameAPIs", (services, _) => new ActivitySource("Codebreaker.GameAPIs", "1.0.0"));  
 
 builder.AddServiceDefaults();
-builder.AddAppConfiguration();
 
 // Swagger/EndpointDocumentation
 builder.Services.AddEndpointsApiExplorer();
