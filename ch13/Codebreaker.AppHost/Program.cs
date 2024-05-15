@@ -29,7 +29,8 @@ if (startupMode == "OnPremises")
        .WithHttpEndpoint(/* This port is fixed as it's referenced from the Grafana config */ port: 9090, targetPort: 9090);
 
     var live = builder.AddProject<Projects.Codebreaker_Live>("live")
-        .WithExternalHttpEndpoints();
+        .WithExternalHttpEndpoints()
+        .WithEnvironment("StartupMode", startupMode);
 
     var gameAPIs = builder.AddProject<Projects.Codebreaker_GameAPIs>("gameapis")
         .WithReference(sqlServer)
@@ -54,7 +55,8 @@ else
     var live = builder.AddProject<Projects.Codebreaker_Live>("live")
         .WithExternalHttpEndpoints()
         .WithReference(appInsights)
-        .WithReference(signalR);
+        .WithReference(signalR)
+        .WithEnvironment("StartupMode", startupMode);
 
     var gameAPIs = builder.AddProject<Projects.Codebreaker_GameAPIs>("gameapis")
         .WithExternalHttpEndpoints()
