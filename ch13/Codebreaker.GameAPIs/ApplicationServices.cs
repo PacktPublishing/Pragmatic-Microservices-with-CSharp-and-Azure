@@ -38,8 +38,8 @@ public static class ApplicationServices
 
             builder.EnrichSqlServerDbContext<GamesSqlServerContext>(settings =>
             {
-                settings.Tracing = true;
-                settings.HealthChecks = true;
+                settings.DisableTracing = false;
+                settings.DisableTracing = false;
             });
         }
 
@@ -54,7 +54,7 @@ public static class ApplicationServices
             });
             builder.EnrichCosmosDbContext<GamesCosmosContext>(settings =>
             {
-                settings.Tracing = false;
+                settings.DisableTracing = false;
             });
         }
 
@@ -88,7 +88,7 @@ public static class ApplicationServices
         builder.Services.AddScoped<IGamesService, GamesService>();
         builder.Services.AddHttpClient<ILiveReportClient, LiveReportClient>(client =>
         {
-            client.BaseAddress = new Uri("http://live");
+            client.BaseAddress = new Uri("https+http://live");
         });
 
         builder.AddRedisDistributedCache("redis");
