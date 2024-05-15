@@ -1,27 +1,59 @@
 {
+  "$schema": "http://json.schemastore.org/launchsettings.json",
   "profiles": {
-    "http": {
+    "https": {
       "commandName": "Project",
       "launchBrowser": true,
+      "dotnetRunMessages": true,
+      "applicationUrl": "https://localhost:15101;http://localhost:15100",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "DOTNET_ENVIRONMENT": "Development",
-        "DOTNET_DASHBOARD_OTLP_ENDPOINT_URL": "http://localhost:16263"
-      },
-      "dotnetRunMessages": true,
-      "applicationUrl": "http://localhost:15100"
+        "DOTNET_DASHBOARD_OTLP_ENDPOINT_URL": "https://localhost:16037",
+        "DOTNET_RESOURCE_SERVICE_ENDPOINT_URL": "https://localhost:17037",
+        "DOTNET_ASPIRE_SHOW_DASHBOARD_RESOURCES": "true",
+        "STARTUP_MODE": "Azure"
+      }
     },
-    "prometheus": {
+    "http": {
       "commandName": "Project",
       "launchBrowser": true,
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Prometheus",
-        "DOTNET_ENVIRONMENT": "Prometheus",
-        "DOTNET_DASHBOARD_OTLP_ENDPOINT_URL": "http://localhost:16263"
-      },
       "dotnetRunMessages": true,
-      "applicationUrl": "http://localhost:15100"
+      "applicationUrl": "http://localhost:15100",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "DOTNET_ENVIRONMENT": "Development",
+        "DOTNET_DASHBOARD_OTLP_ENDPOINT_URL": "http://localhost:16037",
+        "DOTNET_RESOURCE_SERVICE_ENDPOINT_URL": "http://localhost:17037",
+        "DOTNET_ASPIRE_SHOW_DASHBOARD_RESOURCES": "true",
+        "ASPIRE_ALLOW_UNSECURED_TRANSPORT": "true",
+        "STARTUP_MODE": "Azure"
+      }
+    },
+    "OnPremises": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "dotnetRunMessages": true,
+      "applicationUrl": "http://localhost:15100",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "DOTNET_ENVIRONMENT": "Development",
+        "DOTNET_DASHBOARD_OTLP_ENDPOINT_URL": "http://localhost:16037",
+        "DOTNET_RESOURCE_SERVICE_ENDPOINT_URL": "http://localhost:17037",
+        "DOTNET_ASPIRE_SHOW_DASHBOARD_RESOURCES": "true",
+        "ASPIRE_ALLOW_UNSECURED_TRANSPORT": "true",
+        "STARTUP_MODE": "OnPremises",
+        "DataStore": "SqlServer"
+      }
+    },
+    "generate-manifest": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "commandLineArgs": "--publisher manifest --output-path aspire-manifest.json",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "DOTNET_ENVIRONMENT": "Development"
+      }
     }
-  },
-  "$schema": "http://json.schemastore.org/launchsettings.json"
+  }
 }

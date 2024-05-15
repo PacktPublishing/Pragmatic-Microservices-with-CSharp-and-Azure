@@ -59,12 +59,12 @@ public partial class GamesMemoryRepository(ILogger<GamesMemoryRepository> logger
 
         if (gamesQuery.RunningOnly)
         {
-            filteredGames = filteredGames.Where(g => !g.Ended());
+            filteredGames = filteredGames.Where(g => !g.HasEnded());
         }
 
         if (gamesQuery.Ended)
         {
-            filteredGames = filteredGames.Where(g => g.Ended());
+            filteredGames = filteredGames.Where(g => g.HasEnded());
         }
 
         filteredGames = filteredGames.OrderBy(g => g.Duration).ThenBy(g => g.StartTime).Take(500);

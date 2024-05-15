@@ -67,7 +67,7 @@ public class GamesService(IGamesRepository dataRepository, IDistributedCache dis
                 UpdateGameInCacheAsync(game, cancellationToken));
 
             metrics.MoveSet(game.Id, DateTime.UtcNow, game.GameType);
-            if (game.Ended())
+            if (game.HasEnded())
             {
                 logger.GameEnded(game);
                 metrics.GameEnded(game);
