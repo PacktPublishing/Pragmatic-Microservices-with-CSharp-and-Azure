@@ -21,3 +21,13 @@ Working through the code with this chapter, you can start using the service, bot
 ## Deploy the application to Microsoft Azure
 
 [See Deploy the application to Azure using azd](../Deploy2Azure.md)
+
+## gRPC Service Discovery
+
+With .NET Aspire Preview 7, https+http://gameapis cannot be used (see Bot, and GameApis - ApplicationServices.cs). The sample code uses `https://gameapis` and `https://live`.
+
+See https://github.com/PacktPublishing/Pragmatic-Microservices-with-CSharp-and-Azure/issues/89
+
+An alternative would be to access the environment variable, and use the binding accordingly.
+
+Expecting updates with .NET Aspire 8.1
