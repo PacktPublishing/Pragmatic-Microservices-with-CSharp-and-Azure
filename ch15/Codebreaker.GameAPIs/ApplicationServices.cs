@@ -1,4 +1,7 @@
-﻿using Microsoft.Extensions.Diagnostics.HealthChecks;
+﻿using Codebreaker.GameAPIs.Services;
+using Codebreaker.Grpc;
+
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 using System.Diagnostics;
 
@@ -104,27 +107,13 @@ public static class ApplicationServices
             });
         }
 
-        // temporary turn off grpc services
-        // builder.Services.AddGrpc();
+        builder.Services.AddGrpc();
 
-        //builder.Services.AddSingleton<ILiveReportClient, GrpcLiveReportClient>()
-        //    .AddGrpcClient<ReportGame.ReportGameClient>((sp, client) =>
-        //    {
-        //        //var resolver = sp.GetRequiredService<ServiceEndpointResolver>();
-
-        //        //var endpointSource = await resolver.GetEndpointsAsync("https+http://gameapis", CancellationToken.None);
-
-        //        //var endpoint = endpointSource.Endpoints
-        //        //    .Select(e => e.EndPoint).First();
-
-        //        //client.Address = new Uri(endpoint.ToString() ?? throw new InvalidOperationException());
-
-        //        var endpoint = builder.Configuration["services:live:https:0"] ?? throw new InvalidOperationException();
-        //        client.Address = new Uri(endpoint);
-
-        //        // TODO: change to:
-        //        // client.Address = new Uri("http+https://live");
-        //    });
+        builder.Services.AddSingleton<IGameReport, GrpcLiveReportClient>()
+            .AddGrpcClient<ReportGame.ReportGameClient>(client =>
+            {
+                client.Address = new Uri("https://live");
+            });
         builder.AddRedisDistributedCache("redis");
     }
 
