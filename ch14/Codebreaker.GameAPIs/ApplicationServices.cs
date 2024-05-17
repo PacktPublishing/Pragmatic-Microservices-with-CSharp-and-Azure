@@ -43,8 +43,8 @@ public static class ApplicationServices
 
             builder.EnrichSqlServerDbContext<GamesSqlServerContext>(settings =>
             {
-                settings.Tracing = true;
-                settings.HealthChecks = true;
+                settings.DisableTracing = false;
+                settings.DisableHealthChecks = false;
             });
         }
 
@@ -59,7 +59,7 @@ public static class ApplicationServices
             });
             builder.EnrichCosmosDbContext<GamesCosmosContext>(settings =>
             {
-                settings.Tracing = false;
+                settings.DisableTracing = false;
             });
         }
 
@@ -96,22 +96,9 @@ public static class ApplicationServices
 
         builder.Services.AddSingleton<ILiveReportClient, GrpcLiveReportClient>()
 
-            .AddGrpcClient<ReportGame.ReportGameClient>(async (sp, client) =>
+            .AddGrpcClient<ReportGame.ReportGameClient>(client =>
             {
-                //var resolver = sp.GetRequiredService<ServiceEndpointResolver>();
-
-                //var endpointSource = await resolver.GetEndpointsAsync("https+http://gameapis", CancellationToken.None);
-
-                //var endpoint = endpointSource.Endpoints
-                //    .Select(e => e.EndPoint).First();
-
-                //client.Address = new Uri(endpoint.ToString() ?? throw new InvalidOperationException());
-
-                var endpoint = builder.Configuration["services:live:https:0"] ?? throw new InvalidOperationException();
-                client.Address = new Uri(endpoint);
-
-                // TODO: change to:
-                // client.Address = new Uri("http+https://live");
+                client.Address = new Uri("https://live");
             });
 
         builder.AddRedisDistributedCache("redis");
