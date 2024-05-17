@@ -12,14 +12,14 @@
 	<ItemGroup>
 		<FrameworkReference Include="Microsoft.AspNetCore.App" />
 
-		<PackageReference Include="Azure.Identity" Version="1.11.0" />
-		<PackageReference Include="Microsoft.Extensions.Http.Resilience" Version="8.3.0" />
+		<PackageReference Include="Azure.Identity" Version="1.11.3" />
+		<PackageReference Include="Microsoft.Extensions.Http.Resilience" Version="8.5.0" />
 		<PackageReference Include="Microsoft.Extensions.ServiceDiscovery" Version="8.1.0-preview.*" />
-        <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.8.0" />
-        <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.8.0" />
+        <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.8.1" />
+        <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.8.1" />
 		<PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.8.1" />
 		<PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.8.1" />
-		<PackageReference Include="OpenTelemetry.Instrumentation.Runtime" Version="1.7.0" />
+		<PackageReference Include="OpenTelemetry.Instrumentation.Runtime" Version="1.8.0" />
     </ItemGroup>
 
 
@@ -31,8 +31,8 @@
 		</When>
 		<Otherwise>
 			<ItemGroup>
-				<PackageReference Include="Microsoft.Extensions.Configuration.AzureAppConfiguration" Version="7.1.0" />
-				<PackageReference Include="Azure.Monitor.OpenTelemetry.AspNetCore" Version="1.1.0" />
+				<PackageReference Include="Microsoft.Extensions.Configuration.AzureAppConfiguration" Version="7.2.0" />
+				<PackageReference Include="Azure.Monitor.OpenTelemetry.AspNetCore" Version="1.1.1" />
 			</ItemGroup>
 		</Otherwise>
 	</Choose>
