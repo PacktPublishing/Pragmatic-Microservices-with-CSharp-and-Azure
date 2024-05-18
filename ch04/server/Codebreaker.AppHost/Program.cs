@@ -1,5 +1,4 @@
 using Aspire.Hosting;
-
 var builder = DistributedApplication.CreateBuilder(args);
 
 string dataStore = builder.Configuration["DataStore"] ?? "InMemory";
