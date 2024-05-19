@@ -9,10 +9,8 @@ var gameApis = builder.AddProject<Projects.Codebreaker_GameAPIs>("gameapis")
 
 if (dataStore == "SqlServer")
 {
-    // set the sql-password with user-secrets within the Parameters category
-    var sqlPassword = builder.AddParameter("sql-password", secret: true);
-
-    var sqlServer = builder.AddSqlServer("sql", sqlPassword)
+    var sqlServer = builder.AddSqlServer("sql")
+        .WithDataVolume()
         .AddDatabase("CodebreakerSql", "codebreaker");
 
     gameApis
@@ -20,7 +18,7 @@ if (dataStore == "SqlServer")
 }
 else if (dataStore == "Cosmos")
 {
-    // When using the connection string from the next line, install the Azure Cosmos emulator on your system, and create a Codebreaker database in this emulator (see readme)
+    // When using Cosmos with the following connection string, you need to start the Azure Cosmos emulator on your system, and create a Codebreaker database in this emulator (see readme)
     var cosmos = builder.AddConnectionString("codebreakercosmos");
 
     // Comment  the previous line and uncomment the next three lines to use the Azure Cosmos emulator in a Docker container (if this is running and doesn't have certificate / timing / HTTPS issues (see readme)
