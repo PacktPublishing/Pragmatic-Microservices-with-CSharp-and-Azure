@@ -1,9 +1,9 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
-string sqlPassword = builder.Configuration["SqlPassword"] ?? throw new InvalidOperationException("could not read password");
+var sqlPassword = builder.AddParameter("SqlPassword", secret: true);
 
-var sqlServer = builder.AddSqlServerContainer("sql", sqlPassword)
-    .WithVolumeMount("volume.codebreaker.sql", "/var/opt/mssql", VolumeMountType.Named)
+var sqlServer = builder.AddSqlServer("sql", sqlPassword)
+    .WithDataVolume("codebreaker-sql-data", isReadOnly: false)
     .AddDatabase("CodebreakerSql");
 
 var gameAPIs = builder.AddProject<Projects.Codebreaker_GameAPIs>("gameapis")

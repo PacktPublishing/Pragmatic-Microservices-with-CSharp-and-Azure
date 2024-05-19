@@ -1,6 +1,5 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
-
 // TODO 1: get the SQL Server password from user secrets
 
 // TODO 2: configure a SQL Server container with a named volume
