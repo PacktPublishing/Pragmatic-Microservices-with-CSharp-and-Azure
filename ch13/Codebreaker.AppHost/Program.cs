@@ -65,8 +65,7 @@ else
         .WithReference(appInsights)
         .WithReference(live)
         .WithEnvironment("DataStore", dataStore)
-        .WithEnvironment("StartupMode", startupMode)
-        .WithReplicas(2);
+        .WithEnvironment("StartupMode", startupMode);
 
     builder.AddProject<Projects.CodeBreaker_Bot>("bot")
         .WithExternalHttpEndpoints()
