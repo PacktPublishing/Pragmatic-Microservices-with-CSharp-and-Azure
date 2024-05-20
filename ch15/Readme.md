@@ -18,6 +18,29 @@ The important projects part of this chapters repository folder are
 
 Working through the code with this chapter, you can start using the service, bot, and live projects from the previous chapter.
 
+## Ranking Azure Cosmos database
+
+The EF Core context method GetGameSummariesByDayAsync needs a composite index with the query.
+
+Currently it cannot be configured using EF Core: https://github.com/dotnet/efcore/issues/17303
+
+This index needs to be specified with the Cosmos database (add this using the Azure portal):
+
+```json
+"compositeIndexes": [
+  [
+    {
+      "path": "/NumberMoves",
+      "order": "ascending"
+    },
+    {
+      "path": "/Duration",
+      "order": "ascending"
+    }
+  ]
+]
+```
+
 ## Create an Azure Container App Job
 
 To create an Azure Container App job, use:
