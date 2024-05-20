@@ -23,9 +23,9 @@ Other than a development environment, you need Microsoft SQL Server and Azure Co
 
 See [Installation of SQL Server, Azure Cosmos DB](../installation.md)
 
-## Running the application
+## Running the application in the development environment
 
-To run the application from this chapter, you can storing games in-memory, using SQL Server, or using Azure Cosmos DB.
+See [Running the application with the development environment](../RunDevEnvironment.md) how to use Azure Cosmos DB and SQL Server
 
 ### In-Memory
 

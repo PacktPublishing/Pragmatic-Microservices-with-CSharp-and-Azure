@@ -52,6 +52,10 @@ resource containerAppEnvironment 'Microsoft.App/managedEnvironments@2023-05-01' 
   name: 'cae-${resourceToken}'
   location: location
   properties: {
+    workloadProfiles: [{
+      workloadProfileType: 'Consumption'
+      name: 'consumption'
+    }]
     appLogsConfiguration: {
       destination: 'log-analytics'
       logAnalyticsConfiguration: {
@@ -63,8 +67,8 @@ resource containerAppEnvironment 'Microsoft.App/managedEnvironments@2023-05-01' 
   tags: tags
 }
 
-resource cbcosmoskv 'Microsoft.KeyVault/vaults@2023-07-01' = {
-  name: replace('cbcosmoskv-${resourceToken}', '-', '')
+resource kv4f8c9974 'Microsoft.KeyVault/vaults@2023-07-01' = {
+  name: replace('kv4f8c9974-${resourceToken}', '-', '')
   location: location
   properties: {
     sku: {
@@ -76,9 +80,9 @@ resource cbcosmoskv 'Microsoft.KeyVault/vaults@2023-07-01' = {
   }
 }
 
-resource cbcosmoskvRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
-  name: guid(cbcosmoskv.id, managedIdentity.id, subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '00482a5a-887f-4fb3-b363-3b7fe8e74483'))
-  scope: cbcosmoskv
+resource kv4f8c9974RoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: guid(kv4f8c9974.id, managedIdentity.id, subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '00482a5a-887f-4fb3-b363-3b7fe8e74483'))
+  scope: kv4f8c9974
   properties: {
     principalId: managedIdentity.properties.principalId
     principalType: 'ServicePrincipal'
@@ -86,12 +90,11 @@ resource cbcosmoskvRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-
   }
 }
 
-resource cbcosmoskvUserReadRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
-  name: guid(cbcosmoskv.id, principalId, subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '4633458b-17de-408a-b874-0445c86b69e6'))
-  scope: cbcosmoskv
+resource kv4f8c9974UserReadRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: guid(kv4f8c9974.id, principalId, subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '4633458b-17de-408a-b874-0445c86b69e6'))
+  scope: kv4f8c9974
   properties: {
     principalId: principalId
-    principalType: 'User'
     roleDefinitionId:  subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '4633458b-17de-408a-b874-0445c86b69e6')
   }
 }
@@ -105,5 +108,5 @@ output AZURE_CONTAINER_REGISTRY_ENDPOINT string = containerRegistry.properties.l
 output AZURE_CONTAINER_REGISTRY_MANAGED_IDENTITY_ID string = managedIdentity.id
 output AZURE_CONTAINER_APPS_ENVIRONMENT_ID string = containerAppEnvironment.id
 output AZURE_CONTAINER_APPS_ENVIRONMENT_DEFAULT_DOMAIN string = containerAppEnvironment.properties.defaultDomain
-output SERVICE_BINDING_CBCOSMOSKV_ENDPOINT string = cbcosmoskv.properties.vaultUri
-output SERVICE_BINDING_CBCOSMOSKV_NAME string = cbcosmoskv.name
+output SERVICE_BINDING_KV4F8C9974_ENDPOINT string = kv4f8c9974.properties.vaultUri
+output SERVICE_BINDING_KV4F8C9974_NAME string = kv4f8c9974.name

@@ -11,11 +11,11 @@ resource keyVault_IeF8jZvXV 'Microsoft.KeyVault/vaults@2022-07-01' existing = {
   name: keyVaultName
 }
 
-resource cosmosDBAccount_PhmSbd5Pp 'Microsoft.DocumentDB/databaseAccounts@2023-04-15' = {
-  name: toLower(take(concat('cbcosmos', uniqueString(resourceGroup().id)), 24))
+resource cosmosDBAccount_3PK5KyY96 'Microsoft.DocumentDB/databaseAccounts@2023-04-15' = {
+  name: toLower(take('codebreakercosmos${uniqueString(resourceGroup().id)}', 24))
   location: location
   tags: {
-    'aspire-resource-name': 'cbcosmos'
+    'aspire-resource-name': 'codebreakercosmos'
   }
   kind: 'GlobalDocumentDB'
   properties: {
@@ -32,8 +32,8 @@ resource cosmosDBAccount_PhmSbd5Pp 'Microsoft.DocumentDB/databaseAccounts@2023-0
   }
 }
 
-resource cosmosDBSqlDatabase_JeKOjZq4t 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases@2023-04-15' = {
-  parent: cosmosDBAccount_PhmSbd5Pp
+resource cosmosDBSqlDatabase_Sa75U8Y0K 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases@2023-04-15' = {
+  parent: cosmosDBAccount_3PK5KyY96
   name: 'codebreaker'
   location: location
   properties: {
@@ -48,6 +48,6 @@ resource keyVaultSecret_Ddsc3HjrA 'Microsoft.KeyVault/vaults/secrets@2022-07-01'
   name: 'connectionString'
   location: location
   properties: {
-    value: 'AccountEndpoint=${cosmosDBAccount_PhmSbd5Pp.properties.documentEndpoint};AccountKey=${cosmosDBAccount_PhmSbd5Pp.listkeys(cosmosDBAccount_PhmSbd5Pp.apiVersion).primaryMasterKey}'
+    value: 'AccountEndpoint=${cosmosDBAccount_3PK5KyY96.properties.documentEndpoint};AccountKey=${cosmosDBAccount_3PK5KyY96.listkeys(cosmosDBAccount_3PK5KyY96.apiVersion).primaryMasterKey}'
   }
 }

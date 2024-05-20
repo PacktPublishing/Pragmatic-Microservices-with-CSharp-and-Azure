@@ -33,12 +33,12 @@ module resources 'resources.bicep' = {
   }
 }
 
-module cbcosmos 'cbcosmos/cbcosmos.module.bicep' = {
-  name: 'cbcosmos'
+module codebreakercosmos 'codebreakercosmos/codebreakercosmos.module.bicep' = {
+  name: 'codebreakercosmos'
   scope: rg
   params: {
+    keyVaultName: resources.outputs.SERVICE_BINDING_KV4F8C9974_NAME
     location: location
-    keyVaultName: resources.outputs.SERVICE_BINDING_CBCOSMOSKV_NAME
   }
 }
 output MANAGED_IDENTITY_CLIENT_ID string = resources.outputs.MANAGED_IDENTITY_CLIENT_ID
@@ -48,4 +48,4 @@ output AZURE_CONTAINER_REGISTRY_ENDPOINT string = resources.outputs.AZURE_CONTAI
 output AZURE_CONTAINER_REGISTRY_MANAGED_IDENTITY_ID string = resources.outputs.AZURE_CONTAINER_REGISTRY_MANAGED_IDENTITY_ID
 output AZURE_CONTAINER_APPS_ENVIRONMENT_ID string = resources.outputs.AZURE_CONTAINER_APPS_ENVIRONMENT_ID
 output AZURE_CONTAINER_APPS_ENVIRONMENT_DEFAULT_DOMAIN string = resources.outputs.AZURE_CONTAINER_APPS_ENVIRONMENT_DEFAULT_DOMAIN
-output SERVICE_BINDING_CBCOSMOSKV_ENDPOINT string = resources.outputs.SERVICE_BINDING_CBCOSMOSKV_ENDPOINT
+output SERVICE_BINDING_KV4F8C9974_ENDPOINT string = resources.outputs.SERVICE_BINDING_KV4F8C9974_ENDPOINT

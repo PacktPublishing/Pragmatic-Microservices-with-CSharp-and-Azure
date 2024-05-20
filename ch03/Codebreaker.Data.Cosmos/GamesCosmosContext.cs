@@ -83,13 +83,19 @@ public class GamesCosmosContext(DbContextOptions<GamesCosmosContext> options) : 
             query = query.Where(g => g.StartTime < end && g.StartTime > begin);
         }
         if (gamesQuery.PlayerName != null)
+        {
             query = query.Where(g => g.PlayerName == gamesQuery.PlayerName);
+        }
         if (gamesQuery.GameType != null)
+        {
             query = query.Where(g => g.GameType == gamesQuery.GameType);
+        }
         if (gamesQuery.RunningOnly)
+        {
             query = query.Where(g => g.EndTime == null);
+        }
 
-        if (gamesQuery.Ended == true)
+        if (gamesQuery.Ended)
         {
             query = query.Where(g => g.EndTime != null)
                 .OrderBy(g => g.Duration);

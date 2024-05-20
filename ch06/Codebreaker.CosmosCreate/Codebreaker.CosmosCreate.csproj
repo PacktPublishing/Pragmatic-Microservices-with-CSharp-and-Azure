@@ -6,11 +6,16 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 	</PropertyGroup>
+	
+	<PropertyGroup>
+		<IsPublishable>true</IsPublishable>
+		<EnableSdkContainerSupport>true</EnableSdkContainerSupport>
+	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Aspire.Microsoft.EntityFrameworkCore.Cosmos" Version="8.0.0-preview.5.24165.2" />
+		<PackageReference Include="Aspire.Microsoft.EntityFrameworkCore.Cosmos" Version="8.0.0-preview.7.24251.11" />
 		<PackageReference Include="CNinnovation.Codebreaker.Cosmos" Version="3.6.0-beta.19" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.3">
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.5">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>

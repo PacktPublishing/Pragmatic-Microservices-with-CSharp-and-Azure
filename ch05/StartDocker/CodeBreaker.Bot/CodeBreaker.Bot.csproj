@@ -18,9 +18,9 @@
 
   <ItemGroup>
     <!--<PackageReference Include="CNinnovation.Codebreaker.GamesClient" Version="3.6.0-beta.19" />-->
-    <PackageReference Include="CNinnovation.Codebreaker.GamesClient" Version="3.6.0-beta.23" />
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.2" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+    <PackageReference Include="CNinnovation.Codebreaker.GamesClient" Version="3.6.0-beta.24" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.5" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.1" />
   </ItemGroup>
 
 </Project>
