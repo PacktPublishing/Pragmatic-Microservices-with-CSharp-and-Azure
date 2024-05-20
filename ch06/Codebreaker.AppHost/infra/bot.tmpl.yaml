@@ -9,10 +9,10 @@ properties:
   configuration:
     activeRevisionsMode: single
     ingress:
-      external: false
+      external: true
       targetPort: {{ targetPortOrDefault 8080 }}
       transport: http
-      allowInsecure: true
+      allowInsecure: false
     registries:
       - server: {{ .Env.AZURE_CONTAINER_REGISTRY_ENDPOINT }}
         identity: {{ .Env.AZURE_CONTAINER_REGISTRY_MANAGED_IDENTITY_ID }}
@@ -32,9 +32,9 @@ properties:
           - name: OTEL_DOTNET_EXPERIMENTAL_OTLP_RETRY
             value: in_memory
           - name: services__gameapis__http__0
-            value: http://gameapis.internal.{{ .Env.AZURE_CONTAINER_APPS_ENVIRONMENT_DEFAULT_DOMAIN }}
+            value: http://gameapis.{{ .Env.AZURE_CONTAINER_APPS_ENVIRONMENT_DEFAULT_DOMAIN }}
           - name: services__gameapis__https__0
-            value: https://gameapis.internal.{{ .Env.AZURE_CONTAINER_APPS_ENVIRONMENT_DEFAULT_DOMAIN }}
+            value: https://gameapis.{{ .Env.AZURE_CONTAINER_APPS_ENVIRONMENT_DEFAULT_DOMAIN }}
     scale:
       minReplicas: 1
 tags:
