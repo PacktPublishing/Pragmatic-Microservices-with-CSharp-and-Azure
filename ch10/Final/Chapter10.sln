@@ -26,7 +26,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Bot", "Bot", "{BB6F4D53-23B
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GameAPIs", "GameAPIs", "{B0731BE9-1455-4173-BE83-4E0839441E8C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Codebreaker.IntegrationTests", "Codebreaker.IntegrationTests\Codebreaker.IntegrationTests.csproj", "{FBB187D6-867E-4231-9BF0-F0D2C2847BA3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Codebreaker.IntegrationTests", "Codebreaker.IntegrationTests\Codebreaker.IntegrationTests.csproj", "{FBB187D6-867E-4231-9BF0-F0D2C2847BA3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
