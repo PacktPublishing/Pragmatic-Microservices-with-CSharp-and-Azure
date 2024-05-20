@@ -49,6 +49,7 @@ public class GamesService(IGamesRepository dataRepository, IDistributedCache dis
         Move? move;
         try
         {
+            // For comparing with or without caches, change the noCache parameter to true or false
             game = await GetGameFromCacheOrDataStoreAsync(id, noCache: false, cancellationToken: cancellationToken);
 
             CodebreakerException.ThrowIfNull(game);
@@ -134,6 +135,7 @@ public class GamesService(IGamesRepository dataRepository, IDistributedCache dis
 
     private async Task<Game?> GetGameFromCacheOrDataStoreAsync(Guid id, bool noCache = false, CancellationToken cancellationToken = default)
     {
+        // The optional cache parameter is just for testing performance differences between the cache and the data repository
         if (noCache)
         {
             return await dataRepository.GetGameAsync(id, cancellationToken);
