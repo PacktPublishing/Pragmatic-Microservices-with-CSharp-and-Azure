@@ -139,7 +139,7 @@ public static class Extensions
             builder.Services.AddOpenTelemetry()
                .UseAzureMonitor(options =>
                {
-                   options.ConnectionString = builder.Configuration["ApplicationInsightsConnectionString"];
+                   options.ConnectionString = builder.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"];
                });
         }
         return builder;
