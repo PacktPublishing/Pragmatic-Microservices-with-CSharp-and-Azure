@@ -42,7 +42,7 @@ public class GamesApiTests : PlaywrightTest
     }
 
     [Test]
-    [Repeat(5)]
+    [Repeat(20)]
     public async Task PlayTheGameToWinAsync()
     {
         if (_requestContext is null)
