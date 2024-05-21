@@ -1,5 +1,3 @@
-using Microsoft.Extensions.Azure;
-
 var builder = DistributedApplication.CreateBuilder(args);
 
 string dataStore = builder.Configuration["DataStore"] ?? "InMemory";

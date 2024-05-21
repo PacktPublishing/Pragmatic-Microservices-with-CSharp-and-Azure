@@ -6,7 +6,8 @@ CancellationTokenSource cts = new();
 
 var builder = Host.CreateApplicationBuilder(args);
 builder.Services.AddSingleton<StreamingLiveClient>();
-builder.Services.Configure<LiveClientOptions>(builder.Configuration.GetSection("Codebreaker.Live"));
+builder.Services.Configure<LiveClientOptions>(
+    builder.Configuration.GetSection("Codebreaker.Live"));
 using var host = builder.Build();
 
 var client = host.Services.GetRequiredService<StreamingLiveClient>();

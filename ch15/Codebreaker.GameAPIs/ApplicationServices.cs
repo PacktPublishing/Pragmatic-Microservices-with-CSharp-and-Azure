@@ -130,10 +130,7 @@ public static class ApplicationServices
             try
             {
                 using var scope = app.Services.CreateScope();
-                var repo = scope.ServiceProvider.GetRequiredService<GamesSqlServerContext>();
-
-                // TODO: update with .NET Aspire Preview 4
-                // var repo = scope.ServiceProvider.GetRequiredService<IGamesRepository>();
+                var repo = scope.ServiceProvider.GetRequiredService<IGamesRepository>();
                 if (repo is GamesSqlServerContext context)
                 {
                     await context.Database.MigrateAsync();
@@ -155,9 +152,8 @@ public static class ApplicationServices
             try
             {
                 using var scope = app.Services.CreateScope();
-                // TODO: update with .NET Aspire Preview 4
-                var repo = scope.ServiceProvider.GetRequiredService<GamesCosmosContext>();
-                //                var repo = scope.ServiceProvider.GetRequiredService<IGamesRepository>();
+
+                var repo = scope.ServiceProvider.GetRequiredService<IGamesRepository>();
                 if (repo is GamesCosmosContext context)
                 {
                     bool created = await context.Database.EnsureCreatedAsync();

@@ -6,24 +6,12 @@ internal static class ApplicationServices
 {
     public static void AddApplicationServices(this IHostApplicationBuilder builder)
     {
+        // when using gRPC to communicate with the game API, uncomment this section, and comment the AddHttpClient section
         //builder.Services.AddSingleton<IGamesClient, GrpcGamesClient>()
         //    .AddGrpcClient<GrpcGame.GrpcGameClient>(
         //        client =>
         //        {
-        //            //var resolver = sp.GetRequiredService<ServiceEndpointResolver>();
-
-        //            //var endpointSource = await resolver.GetEndpointsAsync("https+http://gameapis", CancellationToken.None);
-
-        //            //var endpoint = endpointSource.Endpoints
-        //            //    .Select(e => e.EndPoint).First();
-
-        //            //client.Address = new Uri(endpoint.ToString() ?? throw new InvalidOperationException());
-
-        //            var endpoint = builder.Configuration["services:gameapis:https:0"] ?? throw new InvalidOperationException();
-        //            client.Address = new Uri(endpoint);
-
-        //            // TODO: change to with a later version:
-        //            // client.Address = new Uri("https://gameapis");
+        //            client.Address = new Uri("https://gameapis");
         //        });
 
         builder.Services.AddHttpClient<IGamesClient, GamesClient>(client =>

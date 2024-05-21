@@ -1,7 +1,6 @@
 ﻿
 namespace Codebreaker.Live.Endpoints;
 
-// public class LiveHub(LiveGamesEventProcessor eventProcessor, LiveHubClientsCount clientsCounter, ILogger<LiveHub> logger) : Hub
 public class LiveHub(LiveHubClientsCount clientsCounter, ILogger<LiveHub> logger) : Hub
 {
     public override Task OnConnectedAsync()
