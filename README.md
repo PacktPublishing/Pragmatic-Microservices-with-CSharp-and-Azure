@@ -10,7 +10,7 @@ Welcome to this repository with the source code for the book!
 
 ## Questions?
 
-In case you've issues building or running the Codebreaker application, please use [GitHub Discussions](/discussions)!
+In case you've issues building or running the Codebreaker application, please use [GitHub Discussions](https://github.com/PacktPublishing/Pragmatic-Microservices-with-CSharp-and-Azure/discussions)!
 
 ## Chapters
 
