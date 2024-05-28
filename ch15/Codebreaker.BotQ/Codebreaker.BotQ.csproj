@@ -15,10 +15,10 @@
 	<PackageReference Include="Aspire.Hosting.Kafka" Version="8.0.1" />
 	<PackageReference Include="Aspire.StackExchange.Redis.DistributedCaching" Version="8.0.1" />
 	<PackageReference Include="Azure.Identity" Version="1.11.3" />
-	<PackageReference Include="CNinnovation.Codebreaker.GamesClient" Version="3.6.0-beta.24" />
-	<PackageReference Include="Google.Protobuf" Version="3.26.1" />
-	<PackageReference Include="Grpc.Net.ClientFactory" Version="2.62.0" />
-	<PackageReference Include="Grpc.Tools" Version="2.63.0">
+	<PackageReference Include="CNinnovation.Codebreaker.GamesClient" Version="3.7.0" />
+	<PackageReference Include="Google.Protobuf" Version="3.27.0" />
+	<PackageReference Include="Grpc.Net.ClientFactory" Version="2.63.0" />
+	<PackageReference Include="Grpc.Tools" Version="2.64.0">
 	  <PrivateAssets>all</PrivateAssets>
 	  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 	</PackageReference>
