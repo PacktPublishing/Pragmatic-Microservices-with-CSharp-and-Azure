@@ -14,7 +14,7 @@
 	<PackageReference Include="Aspire.Hosting.Azure.AppConfiguration" Version="8.0.1" />
 	<PackageReference Include="Aspire.Hosting.Kafka" Version="8.0.1" />
 	<PackageReference Include="Aspire.StackExchange.Redis.DistributedCaching" Version="8.0.1" />
-	<PackageReference Include="Azure.Identity" Version="1.11.3" />
+	<PackageReference Include="Azure.Identity" Version="1.11.4" />
 	<PackageReference Include="CNinnovation.Codebreaker.GamesClient" Version="3.7.0" />
 	<PackageReference Include="Google.Protobuf" Version="3.27.0" />
 	<PackageReference Include="Grpc.Net.ClientFactory" Version="2.63.0" />
