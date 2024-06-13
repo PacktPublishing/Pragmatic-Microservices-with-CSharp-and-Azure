@@ -86,6 +86,7 @@ See the different options to create the context at design time: [Design-time DbC
 I added the `GamesSqlServerContextFactory` class to the SQL Server library which can be used this way to create a new migration:
 
 ```bash
+cd Codebreaker.Data.SqlServer
 dotnet ef migrations add <Name> -- "server=(localdb)\mssqllocaldb;database=Test;trusted_connection=true"
 ```
 
