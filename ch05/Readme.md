@@ -1,4 +1,4 @@
-# Chapter 5
+# Chapter 5 - Containerization of Microservices
 
 ## Technical requirements
 
@@ -26,6 +26,58 @@ In the subfolders of the ch05 folder, you’ll see these projects:
 * Codebreaker.AppHost – this project is enhanced to orchestrate the different services.
 * Codebreaker.ServiceDefaults – this project is unchanged in this chapter.
 * Codebreaker.GameAPIs.NativeAOT – a new project which offers the same games API with some changes to support native AOT with .NET 8
+
+## Running the application locally with a SQL Server Docker container
+
+See [Running in the Dev Environment](../RunDevEnvironment.md)
+
+Using SQL Server, you can define the app-model without using a password:
+
+```csharp
+var sqlServer = builder.AddSqlServer("sql") //, sqlPassword)
+    .WithDataVolume("codebreaker-sql-data", isReadOnly: false)
+    .AddDatabase("CodebreakerSql");
+```
+
+Because of the `WithDataVolume` method, a data volumn will be created and mapped, and a random password is generated - if you don't specify a password. Running the application once, this is running fine. Starting it again, a new random password is generated which is not the same as with the stored volume, thus errors will be shown from the game APIs when accessing SQL Server.
+
+To specify a default password, create this configuration best with user secrets:
+
+```json
+  "Parameters:sql-password": "Password123!"
+```
+
+User secrets can be specified using Visual Studio (*Manage User Secrets*), or with the .NET CLI:
+
+`bash
+dotnet user-secrets set Parameters:sql-password "Password123!"
+`
+
+`sql-password` needs to match the name passed with `AddSqlServer`, and `-password` suffixed. Remember to delete the `codebreaker-sql-data` volume if this exists with the previous password.
+
+Another option is to retrieve the password as paramter, and assign it to `AddSqlServer` (as done in this chapter in the book):
+
+```csharp
+var sqlPassword = builder.AddParameter("SqlPassword", secret: true);
+
+var sqlServer = builder.AddSqlServer("sql", sqlPassword)
+    .WithDataVolume("codebreaker-sql-data", isReadOnly: false)
+    .AddDatabase("CodebreakerSql");
+```
+
+This overwrites the default password and retrieves it from parameters with the specified name:
+
+```json
+  "Parameters:SqlPassword", "Another123!"
+```
+
+The command to specify this parameter with user secrets:
+
+```bash
+dotnet user-secrets set Parameters:SqlPassword "AnotherPassw0rd123!"
+```
+
+Verify if this is successful, using the Aspire dashboard, and checking *Details* of the sql container, environment variable `MSSQL_SA_PASSWORD', and the connection string retrieved from the *gameapis* project `ConnectionStrings__Codebreaker_Sql`. The password will be visialbe as well. Also verify if the correct 
 
 ## Codebreaker diagrams
 
