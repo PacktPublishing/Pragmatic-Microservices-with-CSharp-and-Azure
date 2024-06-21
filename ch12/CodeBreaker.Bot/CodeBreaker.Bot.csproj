@@ -13,7 +13,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Azure.Identity" Version="1.11.3" />
+		<PackageReference Include="Azure.Identity" Version="1.11.4" />
 		<PackageReference Include="CNinnovation.Codebreaker.GamesClient" Version="3.7.0" />
 		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.5" />
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
