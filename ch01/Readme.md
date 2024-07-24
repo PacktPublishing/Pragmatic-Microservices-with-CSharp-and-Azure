@@ -12,3 +12,5 @@ In the ch01 folder, you’ll see the projects with the result of this chapter. Y
 - Azure – this folder contains the same four projects from the previous folder, enhanced by using an Azure resource.
 
 See [Installation](../installation.md) on how to install Visual Studio, Docker Desktop...
+
+See [Run in local dev environment](../RunDevEnvironment.md) to run the solution locally deploying Azure resources.
