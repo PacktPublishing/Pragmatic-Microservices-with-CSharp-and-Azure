@@ -6,7 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <IsAspireHost>true</IsAspireHost>
-    <UserSecretsId>7cf61398-76c2-4e7b-b373-431d051d45cc</UserSecretsId>
+    <UserSecretsId>089335f7-9ebc-474a-8fd8-b4bcaffe347d</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -15,8 +15,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Aspire.Hosting.AppHost" Version="8.0.1" />
-    <PackageReference Include="Aspire.Hosting.Azure.KeyVault" Version="8.0.1" />
+    <PackageReference Include="Aspire.Hosting.AppHost" Version="8.1.0" />
+    <PackageReference Include="Aspire.Hosting.Azure.KeyVault" Version="8.1.0" />
   </ItemGroup>
 
 </Project>
