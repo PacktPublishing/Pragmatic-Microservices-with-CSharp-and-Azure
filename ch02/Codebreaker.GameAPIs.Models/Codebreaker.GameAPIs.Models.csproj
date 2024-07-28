@@ -2,9 +2,10 @@
 
   <PropertyGroup>
     <PackageId>CNinnovation.Codebreaker.BackendModels</PackageId>
-    <TargetFrameworks>net8.0</TargetFrameworks>
+    <TargetFrameworks>net8.0;net7.0</TargetFrameworks>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <LangVersion>12.0</LangVersion>
     <PackageTags>
       Codebreaker;CNinnovation;GameModels;
     </PackageTags>
@@ -18,12 +19,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CNinnovation.Codebreaker.Analyzers" Version="3.7.0" />
+    <None Include="docs/readme.md" Pack="true" PackagePath="\" />
+    <None Include="Images/codebreaker.jpeg" Pack="true" PackagePath="\" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="docs/readme.md" Pack="true" PackagePath="\" />
-    <None Include="Images/codebreaker.jpeg" Pack="true" PackagePath="\" />
+    <ProjectReference Include="..\Codebreaker.GameAPIs.Analyzers\Codebreaker.Analyzers.csproj" />
   </ItemGroup>
 
 </Project>
