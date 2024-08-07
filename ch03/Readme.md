@@ -48,8 +48,9 @@ set a password for the SQL Server Docker container using:
 ```bash
 cd Codebreaker.AppHost
 dotnet user-secrets set Parameters:sql-password Passw0rd!Passw0rd
+```
 
-Database migration happens when starting the application, thus the database is created on first use with the `SqlServer` setting.
+Database migration happens when starting the application, thus the database is created on first use with the `SqlServer` setting (see the `ApplicationServices` class, in the method `CreateOrUpdateDatabaseAsync`).
 
 ### Azure Cosmos DB
 
@@ -71,6 +72,8 @@ Running the application with Azure Cosmos DB, set the `DataStore` with `appsetti
 ```
 
 Make sure the app model in the App Host has the correct configuration - either using the local running emulator, or the Docker container if the container is running.
+
+The database is created on startup of the application (see the `ApplicationServices` class, in the method `CreateOrUpdateDatabaseAsync`).
 
 ## Codebreaker diagrams
 
