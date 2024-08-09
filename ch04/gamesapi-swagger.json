@@ -67,7 +67,6 @@
             "name": "gameType",
             "in": "query",
             "description": "The game type to filter by",
-            "style": "form",
             "schema": {
               "type": "string"
             }
@@ -76,7 +75,6 @@
             "name": "playerName",
             "in": "query",
             "description": "The player name to filter by",
-            "style": "form",
             "schema": {
               "type": "string"
             }
@@ -85,7 +83,6 @@
             "name": "date",
             "in": "query",
             "description": "The date to filter by",
-            "style": "form",
             "schema": {
               "type": "string",
               "format": "date"
@@ -95,7 +92,6 @@
             "name": "ended",
             "in": "query",
             "description": "Whether to filter by ended games",
-            "style": "form",
             "schema": {
               "type": "boolean",
               "default": false
@@ -132,7 +128,6 @@
             "in": "path",
             "description": "The id of the game to set a move",
             "required": true,
-            "style": "simple",
             "schema": {
               "type": "string",
               "format": "uuid"
@@ -188,7 +183,6 @@
             "in": "path",
             "description": "The id of the game to get",
             "required": true,
-            "style": "simple",
             "schema": {
               "type": "string",
               "format": "uuid"
@@ -224,7 +218,6 @@
             "in": "path",
             "description": "The id of the game to delete or cancel",
             "required": true,
-            "style": "simple",
             "schema": {
               "type": "string",
               "format": "uuid"
@@ -255,6 +248,9 @@
         "additionalProperties": false
       },
       "CreateGameResponse": {
+        "required": [
+          "fieldValues"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -292,16 +288,7 @@
       "Game": {
         "required": [
           "codes",
-          "fieldValues",
-          "gameType",
-          "id",
-          "isVictory",
-          "lastMoveNumber",
-          "maxMoves",
-          "moves",
-          "numberCodes",
-          "playerName",
-          "startTime"
+          "fieldValues"
         ],
         "type": "object",
         "properties": {
@@ -310,13 +297,12 @@
             "format": "uuid"
           },
           "gameType": {
-            "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "playerName": {
-            "maxLength": 25,
-            "minLength": 4,
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "playerIsAuthenticated": {
             "type": "boolean"
@@ -331,7 +317,9 @@
             "nullable": true
           },
           "duration": {
-            "$ref": "#/components/schemas/TimeSpan"
+            "type": "string",
+            "format": "date-span",
+            "nullable": true
           },
           "lastMoveNumber": {
             "type": "integer",
@@ -355,19 +343,22 @@
               "items": {
                 "type": "string"
               }
-            }
+            },
+            "nullable": true
           },
           "codes": {
             "type": "array",
             "items": {
               "type": "string"
-            }
+            },
+            "nullable": true
           },
           "moves": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/Move"
             },
+            "nullable": true,
             "readOnly": true
           }
         },
@@ -410,9 +401,7 @@
       "Move": {
         "required": [
           "guessPegs",
-          "id",
-          "keyPegs",
-          "moveNumber"
+          "keyPegs"
         ],
         "type": "object",
         "properties": {
@@ -428,93 +417,15 @@
             "type": "array",
             "items": {
               "type": "string"
-            }
+            },
+            "nullable": true
           },
           "keyPegs": {
             "type": "array",
             "items": {
               "type": "string"
-            }
-          }
-        },
-        "additionalProperties": false
-      },
-      "TimeSpan": {
-        "type": "object",
-        "properties": {
-          "ticks": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "days": {
-            "type": "integer",
-            "format": "int32",
-            "readOnly": true
-          },
-          "hours": {
-            "type": "integer",
-            "format": "int32",
-            "readOnly": true
-          },
-          "milliseconds": {
-            "type": "integer",
-            "format": "int32",
-            "readOnly": true
-          },
-          "microseconds": {
-            "type": "integer",
-            "format": "int32",
-            "readOnly": true
-          },
-          "nanoseconds": {
-            "type": "integer",
-            "format": "int32",
-            "readOnly": true
-          },
-          "minutes": {
-            "type": "integer",
-            "format": "int32",
-            "readOnly": true
-          },
-          "seconds": {
-            "type": "integer",
-            "format": "int32",
-            "readOnly": true
-          },
-          "totalDays": {
-            "type": "number",
-            "format": "double",
-            "readOnly": true
-          },
-          "totalHours": {
-            "type": "number",
-            "format": "double",
-            "readOnly": true
-          },
-          "totalMilliseconds": {
-            "type": "number",
-            "format": "double",
-            "readOnly": true
-          },
-          "totalMicroseconds": {
-            "type": "number",
-            "format": "double",
-            "readOnly": true
-          },
-          "totalNanoseconds": {
-            "type": "number",
-            "format": "double",
-            "readOnly": true
-          },
-          "totalMinutes": {
-            "type": "number",
-            "format": "double",
-            "readOnly": true
-          },
-          "totalSeconds": {
-            "type": "number",
-            "format": "double",
-            "readOnly": true
+            },
+            "nullable": true
           }
         },
         "additionalProperties": false
