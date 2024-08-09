@@ -13,7 +13,3 @@ The new code is in the client folder. Here you find these projects:
 * Codebreaker.Client.Console – a new console application which references the client library and can be used to play the game.
 * Codebreaker.GamesApis.Kiota – this is a client library which can be used as an alternative to Codebreaker.GameApis.Client with generated code.
 * Codebreaker.Kiota.Console – a console application which uses the Kiota client library.
-
-## Changes after first draft
-
-These changes will be reflected in the next version of the book chapter:
