@@ -3,10 +3,11 @@
   "isRoot": true,
   "tools": {
     "microsoft.openapi.kiota": {
-      "version": "1.12.0",
+      "version": "1.16.0",
       "commands": [
         "kiota"
-      ]
+      ],
+      "rollForward": false
     }
   }
 }

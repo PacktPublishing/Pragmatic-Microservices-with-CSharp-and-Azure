@@ -8,23 +8,27 @@ using Microsoft.Kiota.Serialization.Multipart;
 using Microsoft.Kiota.Serialization.Text;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using System;
-namespace Codebreaker.Client {
+namespace Codebreaker.Client
+{
     /// <summary>
     /// The main entry point of the SDK, exposes the configuration and the fluent API.
     /// </summary>
-    public class GamesAPIClient : BaseRequestBuilder {
+    [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.16.0")]
+    public partial class GamesAPIClient : BaseRequestBuilder
+    {
         /// <summary>The games property</summary>
-        public GamesRequestBuilder Games { get =>
-            new GamesRequestBuilder(PathParameters, RequestAdapter);
+        public global::Codebreaker.Client.Games.GamesRequestBuilder Games
+        {
+            get => new global::Codebreaker.Client.Games.GamesRequestBuilder(PathParameters, RequestAdapter);
         }
         /// <summary>
-        /// Instantiates a new <see cref="GamesAPIClient"/> and sets the default values.
+        /// Instantiates a new <see cref="global::Codebreaker.Client.GamesAPIClient"/> and sets the default values.
         /// </summary>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
-        public GamesAPIClient(IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}", new Dictionary<string, object>()) {
+        public GamesAPIClient(IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}", new Dictionary<string, object>())
+        {
             ApiClientBuilder.RegisterDefaultSerializer<JsonSerializationWriterFactory>();
             ApiClientBuilder.RegisterDefaultSerializer<TextSerializationWriterFactory>();
             ApiClientBuilder.RegisterDefaultSerializer<FormSerializationWriterFactory>();

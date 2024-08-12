@@ -1,4 +1,6 @@
-﻿namespace Codebreaker.Client;
+﻿using Microsoft.Kiota.Abstractions.Serialization;
+
+namespace Codebreaker.Client;
 
 internal class RunnerOptions
 {
@@ -100,22 +102,14 @@ internal class Runner
         GameType gameType = Inputs.GetGameType();
         string playerName = Inputs.GetPlayername();
 
-        static string[] ToStringArray(object o)
-        {
-            List<string> values = [];
-            if (o is JsonElement je)
+        // with the recent updates of Swashbuckle (the OpenAPI document returned differs) or Kiota, the returned value with the *field values* is an UntypedArray instead of a JsonElement
+        static string[] ToStringArray(object o) =>
+            o switch
             {
-                foreach (var s in je.EnumerateArray())
-                {
-                    values.Add(s.GetString() ?? string.Empty);
-                }
-                return [.. values];
-            }
-            else
-            {
-                throw new InvalidOperationException();
-            }
-        }
+                JsonElement je => je.EnumerateArray().Select(s => s.GetString() ?? string.Empty).ToArray(),
+                UntypedArray ua => ua.GetValue().Select(s => KiotaJsonSerializer.SerializeAsStringAsync(s).Result.Trim('"', '\\')  ?? string.Empty).ToArray(),
+                _ => throw new InvalidOperationException()
+            };
 
         (Guid gameId, int numberCodes, int maxMoves, IDictionary<string, string[]>? fields) = await AnsiConsole.Status().StartAsync<(Guid, int, int, IDictionary<string, string[]>)>("Starting game...", async _ =>
         {
