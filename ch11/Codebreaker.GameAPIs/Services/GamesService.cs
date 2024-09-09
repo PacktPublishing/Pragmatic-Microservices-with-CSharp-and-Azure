@@ -58,7 +58,7 @@ public class GamesService(IGamesRepository dataRepository, ILogger<GamesService>
             // Update the game in the game-service database
             await dataRepository.AddMoveAsync(game, move, cancellationToken);
             metrics.MoveSet(game.Id, DateTime.UtcNow, game.GameType);
-            if (game.Ended())
+            if (game.HasEnded())
             {
                 logger.GameEnded(game);
                 metrics.GameEnded(game);
