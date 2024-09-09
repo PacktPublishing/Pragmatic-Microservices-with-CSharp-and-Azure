@@ -15,21 +15,21 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Aspire.StackExchange.Redis.DistributedCaching" Version="8.0.1" />
-		<PackageReference Include="Aspire.Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.1" />
-		<PackageReference Include="Aspire.Microsoft.EntityFrameworkCore.Cosmos" Version="8.0.1" />
+		<PackageReference Include="Aspire.StackExchange.Redis.DistributedCaching" Version="8.2.0" />
+		<PackageReference Include="Aspire.Microsoft.EntityFrameworkCore.SqlServer" Version="8.2.0" />
+		<PackageReference Include="Aspire.Microsoft.EntityFrameworkCore.Cosmos" Version="8.2.0" />
 	</ItemGroup>
 
 
 	<ItemGroup>
 		<PackageReference Include="CNinnovation.Codebreaker.BackendModels" Version="3.7.0" />
-		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.5" />
-		<PackageReference Include="Microsoft.Extensions.ApiDescription.Server" Version="8.0.5">
+		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.8" />
+		<PackageReference Include="Microsoft.Extensions.ApiDescription.Server" Version="8.0.8">
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
-		<PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.6.2" />
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.7.3" />
+		<PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.7.3" />
 		<PackageReference Include="CNinnovation.Codebreaker.SqlServer" Version="3.7.0" />
 		<PackageReference Include="CNinnovation.Codebreaker.Cosmos" Version="3.7.0" />
 	</ItemGroup>
