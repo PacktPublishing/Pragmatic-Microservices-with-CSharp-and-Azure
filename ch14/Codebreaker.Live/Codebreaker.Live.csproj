@@ -14,11 +14,11 @@
 
   <ItemGroup>
     <PackageReference Include="CNinnovation.Codebreaker.BackendModels" Version="3.7.0" />
-    <PackageReference Include="Grpc.AspNetCore" Version="2.63.0" />
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.5" />
-    <PackageReference Include="Microsoft.AspNetCore.SignalR.Protocols.MessagePack" Version="8.0.5" />
-    <PackageReference Include="Microsoft.Azure.SignalR" Version="1.25.2" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+    <PackageReference Include="Grpc.AspNetCore" Version="2.65.0" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.8" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Protocols.MessagePack" Version="8.0.8" />
+    <PackageReference Include="Microsoft.Azure.SignalR" Version="1.27.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.7.3" />
   </ItemGroup>
 
   <ItemGroup>
