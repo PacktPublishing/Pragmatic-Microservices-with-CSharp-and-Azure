@@ -54,12 +54,12 @@ public partial class GamesMemoryRepository(ILogger<GamesMemoryRepository> logger
 
         if (gamesQuery.RunningOnly)
         {
-            filteredGames = filteredGames.Where(g => !g.Ended());
+            filteredGames = filteredGames.Where(g => !g.HasEnded());
         }
 
         if (gamesQuery.Ended)
         {
-            filteredGames = filteredGames.Where(g => g.Ended());
+            filteredGames = filteredGames.Where(g => g.HasEnded());
         }
 
         return Task.FromResult(filteredGames);
