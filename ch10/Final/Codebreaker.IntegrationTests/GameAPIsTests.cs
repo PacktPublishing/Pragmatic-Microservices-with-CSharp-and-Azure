@@ -1,3 +1,5 @@
+using Aspire.Hosting;
+
 using Codebreaker.GameAPIs.Models;
 
 using System.Net;
@@ -139,7 +141,6 @@ public class GameAPIsTests : IAsyncLifetime
         response = await _client.DeleteAsync(uri);
         Assert.True(response.IsSuccessStatusCode);
     }
-
 
     [Fact]
     public async Task CreateGame_Should_ReturnCreated()
