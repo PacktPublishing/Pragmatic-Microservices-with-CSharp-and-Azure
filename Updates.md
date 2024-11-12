@@ -2,6 +2,9 @@
 
 What's changed with the new versions of .NET Aspire?
 
+With all the chapters (with the exception of chapter 1) we now use **NuGet Central Package Management (CPM)** with package versions specified in the file *Directory.Packages.props'. This makes it faster to update all chapters.
+In case you copy the content of just a single chapter, also copy the file *Directory.Packages.props* from the root folder to get all the projects compiled.
+
 ## Chapter 1, Introdution to .NET Aspire and Microservices
 
 ### Page 4, Starting with .NET Aspire:

@@ -2,10 +2,10 @@
 
   <PropertyGroup>
     <PackageId>CNinnovation.Codebreaker.BackendModels</PackageId>
-    <TargetFrameworks>net8.0;net7.0</TargetFrameworks>
+    <TargetFrameworks>net9.0;net8.0</TargetFrameworks>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <LangVersion>12.0</LangVersion>
+    <LangVersion>latest</LangVersion>
     <PackageTags>
       Codebreaker;CNinnovation;GameModels;
     </PackageTags>

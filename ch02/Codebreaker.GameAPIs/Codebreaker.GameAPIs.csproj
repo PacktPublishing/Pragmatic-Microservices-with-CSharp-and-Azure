@@ -1,31 +1,25 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
-
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net9.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <InvariantGlobalization>true</InvariantGlobalization>
   </PropertyGroup>
-
   <ItemGroup>
     <Compile Remove="Endpoints\GameEndpoints1.cs" />
     <None Include="Endpoints\GameEndpoints1.cs" />
   </ItemGroup>
-
   <ItemGroup>
     <Compile Remove="Endpoints\GameEndpoints2.cs" />
     <None Include="Endpoints\GameEndpoints2.cs" />
   </ItemGroup>
-
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.8" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.7.3" />
-    <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.7.3" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
+    <PackageReference Include="Swashbuckle.AspNetCore" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Annotations" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\Codebreaker.ServiceDefaults\Codebreaker.ServiceDefaults.csproj" />
     <ProjectReference Include="..\Codebreaker.GameAPIs.Models\Codebreaker.GameAPIs.Models.csproj" />
   </ItemGroup>
-
 </Project>
