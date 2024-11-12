@@ -1,3 +1,5 @@
+using Azure.Monitor.OpenTelemetry.AspNetCore;
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.DependencyInjection;
@@ -77,16 +79,16 @@ public static class Extensions
         {
             builder.Services.AddOpenTelemetry().UseOtlpExporter();
         }
-        //if (Environment.GetEnvironmentVariable("STARTUP") == "Prometheus")
-        //{
-        //    builder.Services.AddOpenTelemetry()
-        //       .WithMetrics(metrics => metrics.AddPrometheusExporter());
-        //}
-        //else
-        //{
-        //    builder.Services.AddOpenTelemetry()
-        //        .UseAzureMonitor();
-        //}
+        if (Environment.GetEnvironmentVariable("STARTUP") == "Prometheus")
+        {
+            builder.Services.AddOpenTelemetry()
+               .WithMetrics(metrics => metrics.AddPrometheusExporter());
+        }
+        else
+        {
+            builder.Services.AddOpenTelemetry()
+                .UseAzureMonitor();
+        }
         return builder;
     }
 

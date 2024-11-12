@@ -1,27 +1,27 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net9.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>c51559a1-d7fb-4ce2-9052-8b1828419b89</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Aspire.Azure.Storage.Queues" Version="8.2.0" />
-    <PackageReference Include="Aspire.Hosting.AppHost" Version="8.2.0" />
-    <PackageReference Include="Aspire.Hosting.Azure" Version="8.2.0" />
-    <PackageReference Include="Aspire.Hosting.Azure.AppConfiguration" Version="8.2.0" />
-    <PackageReference Include="Aspire.Hosting.Kafka" Version="8.2.0" />
-    <PackageReference Include="Aspire.Microsoft.EntityFrameworkCore.Cosmos" Version="8.2.0" />
-    <PackageReference Include="Aspire.StackExchange.Redis.DistributedCaching" Version="8.2.0" />
+    <PackageReference Include="Aspire.Azure.Storage.Queues" Version="9.0.0-rc.1.24511.1" />
+    <PackageReference Include="Aspire.Hosting.AppHost" Version="9.0.0-rc.1.24511.1" />
+    <PackageReference Include="Aspire.Hosting.Azure" Version="9.0.0-rc.1.24511.1" />
+    <PackageReference Include="Aspire.Hosting.Azure.AppConfiguration" Version="9.0.0-rc.1.24511.1" />
+    <PackageReference Include="Aspire.Hosting.Kafka" Version="9.0.0-rc.1.24511.1" />
+    <PackageReference Include="Aspire.Microsoft.EntityFrameworkCore.Cosmos" Version="9.0.0-rc.1.24511.1" />
+    <PackageReference Include="Aspire.StackExchange.Redis.DistributedCaching" Version="9.0.0-rc.1.24511.1" />
     <PackageReference Include="CNinnovation.Codebreaker.BackendModels" Version="3.7.0" />
     <PackageReference Include="CNinnovation.Codebreaker.Cosmos" Version="3.7.0" />
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.8" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.7.3" />
-    <PackageReference Include="Aspire.Azure.Messaging.EventHubs" Version="8.2.0" />
-   	<PackageReference Include="Aspire.Confluent.Kafka" Version="8.2.0" />
-    <PackageReference Include="Aspire.Azure.Storage.Blobs" Version="8.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.0-rc.2.24474.3" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.9.0" />
+    <PackageReference Include="Aspire.Azure.Messaging.EventHubs" Version="9.0.0-rc.1.24511.1" />
+   	<PackageReference Include="Aspire.Confluent.Kafka" Version="9.0.0-rc.1.24511.1" />
+    <PackageReference Include="Aspire.Azure.Storage.Blobs" Version="9.0.0-rc.1.24511.1" />
   </ItemGroup>
 
   <ItemGroup>
