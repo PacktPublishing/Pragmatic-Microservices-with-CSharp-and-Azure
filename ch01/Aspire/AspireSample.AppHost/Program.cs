@@ -5,6 +5,7 @@ var apiService = builder.AddProject<Projects.AspireSample_ApiService>("apiservic
 
 builder.AddProject<Projects.AspireSample_Web>("webfrontend")
     .WithExternalHttpEndpoints()
-    .WithReference(apiService);
+    .WithReference(apiService)
+    .WaitFor(apiService);
 
 builder.Build().Run();
