@@ -14,7 +14,7 @@ Content-Type: application/json
 
 ### Set a move
 
-@id = f0209808-7946-43aa-80ad-bef44b02eca3
+@id = 23329c1c-5f7a-4d5f-adaa-40e35fe502d7
 
 PATCH {{HostAddress}}/games/{{id}}
 Content-Type: {{contenttype}}
@@ -83,8 +83,6 @@ Content-Type: {{ContentType}}
     "Rectangle;Purple"
   ]
 }
-
-
 
 ### Get game information
 

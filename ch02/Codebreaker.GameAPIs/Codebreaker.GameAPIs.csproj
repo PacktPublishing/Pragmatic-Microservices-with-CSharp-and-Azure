@@ -5,6 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <InvariantGlobalization>true</InvariantGlobalization>
   </PropertyGroup>
+
   <ItemGroup>
     <Compile Remove="Endpoints\GameEndpoints1.cs" />
     <None Include="Endpoints\GameEndpoints1.cs" />
@@ -13,11 +14,13 @@
     <Compile Remove="Endpoints\GameEndpoints2.cs" />
     <None Include="Endpoints\GameEndpoints2.cs" />
   </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
     <PackageReference Include="Swashbuckle.AspNetCore" />
     <PackageReference Include="Swashbuckle.AspNetCore.Annotations" />
   </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\Codebreaker.ServiceDefaults\Codebreaker.ServiceDefaults.csproj" />
     <ProjectReference Include="..\Codebreaker.GameAPIs.Models\Codebreaker.GameAPIs.Models.csproj" />
