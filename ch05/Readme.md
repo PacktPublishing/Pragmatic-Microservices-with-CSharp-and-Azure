@@ -25,7 +25,7 @@ In the subfolders of the ch05 folder, you’ll see these projects:
 * Codebreaker.Bot - this is the new project that implements a REST API and calls the games API to automatically play games with random game moves. This project makes use of the client-library we created in Chapter 4 – it has a reference to the NuGet package CNinnovation.Codebreaker.Client to call the games API.
 * Codebreaker.AppHost – this project is enhanced to orchestrate the different services.
 * Codebreaker.ServiceDefaults – this project is unchanged in this chapter.
-* Codebreaker.GameAPIs.NativeAOT – a new project which offers the same games API with some changes to support native AOT with .NET 8
+* Codebreaker.GameAPIs.NativeAOT – a new project which offers the same games API with some changes to support native AOT with .NET 9
 
 ## Running the application locally with a SQL Server Docker container
 
@@ -39,7 +39,7 @@ var sqlServer = builder.AddSqlServer("sql") //, sqlPassword)
     .AddDatabase("CodebreakerSql");
 ```
 
-Because of the `WithDataVolume` method, a data volumn will be created and mapped, and a random password is generated - if you don't specify a password. Running the application once, this is running fine. Starting it again, a new random password is generated which is not the same as with the stored volume, thus errors will be shown from the game APIs when accessing SQL Server.
+Because of the `WithDataVolume` method, a data volume will be created and mapped, and a random password is generated. This password is stored with user secrets.
 
 To specify a default password, create this configuration best with user secrets:
 
@@ -55,7 +55,7 @@ dotnet user-secrets set Parameters:sql-password "Password123!"
 
 `sql-password` needs to match the name passed with `AddSqlServer`, and `-password` suffixed. Remember to delete the `codebreaker-sql-data` volume if this exists with the previous password.
 
-Another option is to retrieve the password as paramter, and assign it to `AddSqlServer` (as done in this chapter in the book):
+Another option is to retrieve the password as parameter, and assign it to `AddSqlServer`:
 
 ```csharp
 var sqlPassword = builder.AddParameter("SqlPassword", secret: true);
@@ -77,7 +77,7 @@ The command to specify this parameter with user secrets:
 dotnet user-secrets set Parameters:SqlPassword "AnotherPassw0rd123!"
 ```
 
-Verify if this is successful, using the Aspire dashboard, and checking *Details* of the sql container, environment variable `MSSQL_SA_PASSWORD', and the connection string retrieved from the *gameapis* project `ConnectionStrings__Codebreaker_Sql`. The password will be visialbe as well. Also verify if the correct 
+Verify if this is successful, using the Aspire dashboard, and checking *Details* of the sql container, environment variable `MSSQL_SA_PASSWORD', and the connection string retrieved from the *gameapis* project `ConnectionStrings__Codebreaker_Sql`. The password will be visible as well.
 
 ## Codebreaker diagrams
 
