@@ -10,7 +10,7 @@ POST {{Codebreaker.Bot_HostAddress}}/bot/bots?count=30&delay=2&thinkTime=1
 
 ### Get information on the bot request
 
-@id = b41e8b9b-5378-4ff4-aad9-6f0f2af89304
+@id = 8b2e0e77-6d00-4f87-81a4-cd24b9556179
 
 GET {{Codebreaker.Bot_HostAddress}}/bot/bots/{{id}}
 
