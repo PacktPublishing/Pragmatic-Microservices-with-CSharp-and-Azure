@@ -1,4 +1,4 @@
-﻿@Codebreaker.GameAPIs_HostAddress = http://localhost:9400
+﻿@Codebreaker.GameAPIs_HostAddress = http://localhost:8080
 @ContentType = application/json
 
 ### Create a game
