@@ -29,7 +29,7 @@ internal class ApiDbInitializer(
         }
         catch (Exception ex)
         {
-            activity?.RecordException(ex);
+            activity?.AddException(ex);
             throw;
         }
 
