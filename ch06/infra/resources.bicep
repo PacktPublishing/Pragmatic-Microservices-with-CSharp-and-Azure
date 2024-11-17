@@ -21,9 +21,6 @@ resource containerRegistry 'Microsoft.ContainerRegistry/registries@2023-07-01' =
   sku: {
     name: 'Basic'
   }
-  properties: {
-    adminUserEnabled: true
-  }
   tags: tags
 }
 
@@ -48,7 +45,7 @@ resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2022-10
   tags: tags
 }
 
-resource containerAppEnvironment 'Microsoft.App/managedEnvironments@2023-05-01' = {
+resource containerAppEnvironment 'Microsoft.App/managedEnvironments@2024-02-02-preview' = {
   name: 'cae-${resourceToken}'
   location: location
   properties: {
@@ -65,6 +62,23 @@ resource containerAppEnvironment 'Microsoft.App/managedEnvironments@2023-05-01' 
     }
   }
   tags: tags
+
+  resource aspireDashboard 'dotNetComponents' = {
+    name: 'aspire-dashboard'
+    properties: {
+      componentType: 'AspireDashboard'
+    }
+  }
+
+}
+
+resource explicitContributorUserRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: guid(containerAppEnvironment.id, principalId, subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'b24988ac-6180-42a0-ab88-20f7382dd24c'))
+  scope: containerAppEnvironment
+  properties: {
+    principalId: principalId
+    roleDefinitionId:  subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'b24988ac-6180-42a0-ab88-20f7382dd24c')
+  }
 }
 
 resource kv4f8c9974 'Microsoft.KeyVault/vaults@2023-07-01' = {
@@ -106,6 +120,8 @@ output AZURE_LOG_ANALYTICS_WORKSPACE_NAME string = logAnalyticsWorkspace.name
 output AZURE_LOG_ANALYTICS_WORKSPACE_ID string = logAnalyticsWorkspace.id
 output AZURE_CONTAINER_REGISTRY_ENDPOINT string = containerRegistry.properties.loginServer
 output AZURE_CONTAINER_REGISTRY_MANAGED_IDENTITY_ID string = managedIdentity.id
+output AZURE_CONTAINER_REGISTRY_NAME string = containerRegistry.name
+output AZURE_CONTAINER_APPS_ENVIRONMENT_NAME string = containerAppEnvironment.name
 output AZURE_CONTAINER_APPS_ENVIRONMENT_ID string = containerAppEnvironment.id
 output AZURE_CONTAINER_APPS_ENVIRONMENT_DEFAULT_DOMAIN string = containerAppEnvironment.properties.defaultDomain
 output SERVICE_BINDING_KV4F8C9974_ENDPOINT string = kv4f8c9974.properties.vaultUri
