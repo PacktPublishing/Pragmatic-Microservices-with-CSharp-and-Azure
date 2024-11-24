@@ -18,6 +18,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{281ADBDF-78AF-4CDB-9E25-EBF2A6A6F4CF}"
 	ProjectSection(SolutionItems) = preProject
 		grafana\config\provisioning\dashboards\default.yaml = grafana\config\provisioning\dashboards\default.yaml
+		..\Directory.Packages.props = ..\Directory.Packages.props
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Codebreaker.GameAPIs.Tests", "Codebreaker.GameAPIs.Tests\Codebreaker.GameAPIs.Tests.csproj", "{3F67AC70-DBD4-46FC-91D3-671CFB6C51F9}"
