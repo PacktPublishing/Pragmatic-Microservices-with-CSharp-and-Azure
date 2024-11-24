@@ -70,7 +70,9 @@
     <PackageVersion Include="Microsoft.Azure.Cosmos" Version="3.45.1" />
     <PackageVersion Include="Microsoft.Azure.SignalR" Version="1.28.0" />
     <PackageVersion Include="Microsoft.Extensions.Azure" Version="1.8.0" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration" Version="9.0.0"/>
     <PackageVersion Include="Microsoft.Extensions.Configuration.AzureAppConfiguration" Version="8.0.0" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration.Json" Version="9.0.0"/>
   </ItemGroup>
   <!-- Aspire Integration Packages -->
   <ItemGroup>
@@ -103,10 +105,16 @@
   </ItemGroup>
   <!-- Testing -->
   <ItemGroup>
+    <PackageVersion Include="Aspire.Hosting.Testing" Version="9.0.0" />
     <PackageVersion Include="coverlet.collector" Version="6.0.2" />
     <PackageVersion Include="Microsoft.Extensions.Diagnostics.Testing" Version="9.0.0" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
+    <PackageVersion Include="Microsoft.Playwright" Version="1.49.0"/>
+    <PackageVersion Include="Microsoft.Playwright.NUnit" Version="1.49.0"/>
     <PackageVersion Include="Moq" Version="4.20.72" />
+    <PackageVersion Include="NUnit" Version="4.2.2"/>
+    <PackageVersion Include="NUnit.Analyzers" Version="4.4.0"/>
+    <PackageVersion Include="NUnit3TestAdapter" Version="4.6.0"/>
     <PackageVersion Include="xunit" Version="2.9.2" />
     <PackageVersion Include="xunit.runner.visualstudio" Version="2.8.2" />
   </ItemGroup>

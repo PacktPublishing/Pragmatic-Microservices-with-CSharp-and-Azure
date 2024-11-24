@@ -8,18 +8,18 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.0-rc.2.24473.5" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.0-rc.2.24473.5" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
-    <PackageReference Include="Microsoft.Playwright" Version="1.48.0" />
-    <PackageReference Include="NUnit" Version="4.2.2" />
-    <PackageReference Include="NUnit3TestAdapter" Version="4.6.0" />
-    <PackageReference Include="NUnit.Analyzers" Version="4.3.0">
+    <PackageReference Include="Microsoft.Extensions.Configuration"/>
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json"/>
+    <PackageReference Include="Microsoft.NET.Test.Sdk"/>
+    <PackageReference Include="Microsoft.Playwright"/>
+    <PackageReference Include="NUnit"/>
+    <PackageReference Include="NUnit3TestAdapter"/>
+    <PackageReference Include="NUnit.Analyzers">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.Playwright.NUnit" Version="1.48.0" />
-    <PackageReference Include="coverlet.collector" Version="6.0.2">
+    <PackageReference Include="Microsoft.Playwright.NUnit"/>
+    <PackageReference Include="coverlet.collector">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
