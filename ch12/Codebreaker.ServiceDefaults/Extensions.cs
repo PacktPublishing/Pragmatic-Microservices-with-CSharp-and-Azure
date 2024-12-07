@@ -68,9 +68,6 @@ public static class Extensions
 
     private static IHostApplicationBuilder AddOpenTelemetryExporters(this IHostApplicationBuilder builder)
     {
-        // TODO: what's the strategy using the OLTP exporter?
-        // note here: not supported https://learn.microsoft.com/en-us/azure/azure-monitor/app/opentelemetry-configuration?tabs=aspnetcore
-        // but it's configured by default with .NET Aspire
         bool useOtlpExporter = !string.IsNullOrWhiteSpace(builder.Configuration["OTEL_EXPORTER_OTLP_ENDPOINT"]);
 
         if (useOtlpExporter)
