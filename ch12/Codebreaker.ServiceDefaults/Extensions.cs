@@ -1,5 +1,4 @@
 using Azure.Monitor.OpenTelemetry.AspNetCore;
-using Codebreaker.ServiceDefaults;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,7 +12,7 @@ namespace Microsoft.Extensions.Hosting;
 
 public static class Extensions
 {
-     public static IHostApplicationBuilder AddServiceDefaults(this IHostApplicationBuilder builder)
+    public static IHostApplicationBuilder AddServiceDefaults(this IHostApplicationBuilder builder)
     {
         builder.ConfigureOpenTelemetry();
 
@@ -80,7 +79,7 @@ public static class Extensions
             builder.Services.ConfigureOpenTelemetryMeterProvider(metrics => metrics.AddOtlpExporter());
             builder.Services.ConfigureOpenTelemetryTracerProvider(tracing => tracing.AddOtlpExporter());
         }
-        if (builder.Environment.IsPrometheus())
+        if (Environment.GetEnvironmentVariable("StartupMode") == "OnPremises")
         {
             builder.Services.AddOpenTelemetry()
                .WithMetrics(metrics => metrics.AddPrometheusExporter());
@@ -107,7 +106,7 @@ public static class Extensions
 
     public static WebApplication MapDefaultEndpoints(this WebApplication app)
     {
-        if (app.Environment.IsPrometheus())
+        if (Environment.GetEnvironmentVariable("StartupMode") == "OnPremises")
         { 
             app.MapPrometheusScrapingEndpoint();
         }
