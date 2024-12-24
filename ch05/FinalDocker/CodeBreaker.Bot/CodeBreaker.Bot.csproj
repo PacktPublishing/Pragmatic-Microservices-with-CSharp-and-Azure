@@ -13,10 +13,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ContainerPort Include="8080" Type="tcp" />    
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="CNinnovation.Codebreaker.GamesClient" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
     <PackageReference Include="Swashbuckle.AspNetCore" />
