@@ -7,7 +7,7 @@
     <Nullable>enable</Nullable>
     <LangVersion>latest</LangVersion>
     <PackageTags>
-      Codebreaker;CNinnovation;GameModels;
+      Codebreaker;CNinnovation;GameModels
     </PackageTags>
     <Description>
       This library contains models for the Codebreaker backend services. Reference this library when creating a Codebreaker backend service, or to create data access libraries.

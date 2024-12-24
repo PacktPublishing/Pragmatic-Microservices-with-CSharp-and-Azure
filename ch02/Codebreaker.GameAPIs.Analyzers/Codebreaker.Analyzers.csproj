@@ -7,7 +7,7 @@
     <Nullable>enable</Nullable>
     <LangVersion>latest</LangVersion>
     <PackageTags>
-      Codebreaker;CNinnovation;GameAnalyzers;
+      Codebreaker;CNinnovation;GameAnalyzers
     </PackageTags>
     <Description>
       This library contains game analyzers for the Codebreaker app. Reference this library when creating a Codebreaker service.
