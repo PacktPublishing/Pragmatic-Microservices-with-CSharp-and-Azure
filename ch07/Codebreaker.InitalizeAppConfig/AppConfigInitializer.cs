@@ -4,7 +4,7 @@ namespace Codebreaker.InitalizeAppConfig;
 
 public class AppConfigInitializer(ConfigurationClient configurationClient, IHostApplicationLifetime hostApplicationLifetime, ILogger<AppConfigInitializer> logger) : BackgroundService
 {
-    private Dictionary<string, string> s_6x4Colors = new()
+    private readonly Dictionary<string, string> s_6x4Colors = new()
     {
         { "color1", "Red" },
         { "color2", "Green" },
@@ -19,7 +19,7 @@ public class AppConfigInitializer(ConfigurationClient configurationClient, IHost
         foreach ((string key, string color) in s_6x4Colors)
         {
             ConfigurationSetting setting = new($"GameAPIs.Game6x4.{key}", color);
-            await configurationClient.AddConfigurationSettingAsync(setting);
+            await configurationClient.AddConfigurationSettingAsync(setting, stoppingToken);
             logger.LogInformation("added setting for key {key}", key);
         }
         hostApplicationLifetime.StopApplication();

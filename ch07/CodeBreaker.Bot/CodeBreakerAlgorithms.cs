@@ -54,14 +54,26 @@ public static class CodeBreakerAlgorithms
             int n4 = selection & C1000;
             int matches = 0;
             bool match1 = (value & n1) == n1;
-            if (match1) 
+            if (match1)
+            {
                 matches++;
-            if ((value & n2) == n2) 
+            }
+
+            if ((value & n2) == n2)
+            {
                 matches++;
-            if ((value & n3) == n3) 
+            }
+
+            if ((value & n3) == n3)
+            {
                 matches++;
-            if ((value & n4) == n4) 
+            }
+
+            if ((value & n4) == n4)
+            {
                 matches++;
+            }
+
             return (matches == blackhits);
         }
 
@@ -83,7 +95,7 @@ public static class CodeBreakerAlgorithms
     /// <param name="values">The possible values</param>
     /// <param name="whiteHits">The number of white hits with the selection</param>
     /// <param name="selection">The selected pegs</param>
-    /// <returns>The remaining possbile values</returns>
+    /// <returns>The remaining possible values</returns>
     public static List<int> HandleWhiteMatches(this IList<int> values, int whiteHits, int selection)
     {
         List<int> newValues = new(values.Count);
@@ -130,7 +142,7 @@ public static class CodeBreakerAlgorithms
     /// </summary>
     /// <param name="values">The possible values</param>
     /// <param name="selection">The selected pegs</param>
-    /// <returns>The remaining possbile values</returns>
+    /// <returns>The remaining possible values</returns>
     public static List<int> HandleNoMatches(this IList<int> values, int selection)
     {
         static bool Contains(int[] selections, int value)
@@ -146,9 +158,7 @@ public static class CodeBreakerAlgorithms
         }
 
         List<int> newValues = new(values.Count);
-        int[] selections = Enumerable.Range(0, 4)
-            .Select(i => selection.SelectPeg(i))
-            .ToArray();
+        int[] selections = [.. Enumerable.Range(0, 4).Select(i => selection.SelectPeg(i))];
 
         foreach (int value in values)
         {
@@ -161,7 +171,7 @@ public static class CodeBreakerAlgorithms
     }
 
     /// <summary>
-    /// Get the int representation of one peg from the int representaiton of four pegs
+    /// Get the int representation of one peg from the int representation of four pegs
     /// </summary>
     /// <param name="code">The int value representing four pegs</param>
     /// <param name="pegNumber">The peg number to retrieve from the int representation</param>
