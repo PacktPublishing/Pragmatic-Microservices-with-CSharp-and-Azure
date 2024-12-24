@@ -18,19 +18,27 @@ Install Docker Desktop on Windows: `winget install Docker.DockerDesktop`
 
 ## Aspire
 
-Install .NET Aspire (.NET CLI):
+With .NET Aspire 9, installing the .NET Aspire workload is no longer required. Instead, the Aspire SDK is referenced from the AppHost project file:
 
-- dotnet workload update
-- dotnet workload install aspire
-
-You can install .NET Aspire via Visual Studio 2022 Preview as well.
+```xml
+  <Sdk Name="Aspire.AppHost.Sdk" Version="9.0.0" />
+```
 
 See details:
-https://learn.microsoft.com/en-us/dotnet/aspire/fundamentals/setup-tooling?tabs=dotnet-cli
+https://learn.microsoft.com/en-us/dotnet/aspire/fundamentals/setup-tooling
+
+Visual Studio 2022 17.9 includes the .NET Aspire SDK by default.
+
+To install the .NET Aspire templates, use 
+
+`dotnet new install Aspire.ProjectTemplates`
+
+See details:
+https://learn.microsoft.com/en-us/dotnet/aspire/fundamentals/aspire-sdk-templates
 
 ## Azure Developer CLI
 
-Install the Azure Developer CLI at least with version **azd version 1.9.100**:
+Install the Azure Developer CLI at least with version **azd version 1.11.0**:
 
 winget install Microsoft.Azd
 
@@ -43,6 +51,8 @@ SQL Server comes installed together with Visual Studio.
 You can also download the SQL Server Developer edition via winget:
 
 `winget install Microsoft.SQLServer.2022.Developer`
+
+> SQL Server does not run on Windows ARM64 devices such as **Surface Laptop 7 (Copilot)**. See [Developing with Visual Studio on ARM: SQL Server Challenges](https://csharp.christiannagel.com/2024/10/29/surfacewitharm/).
 
 ### Installation of SQL Server via MSIX
 
