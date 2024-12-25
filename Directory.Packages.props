@@ -30,8 +30,10 @@
     <PackageVersion Include="Grpc.Tools" Version="2.67.0" />
     <PackageVersion Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="9.0.0" />
     <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.0" />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.Web" Version="9.0.0" />
     <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly" Version="9.0.0" />
     <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="9.0.0" />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="9.0.0" />
     <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="9.0.0" />
     <PackageVersion Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="9.0.0" />
     <PackageVersion Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.0" />
@@ -128,5 +130,12 @@
     <PackageVersion Include="Microsoft.Identity.Web.UI" Version="3.5.0" />
     <PackageVersion Include="Microsoft.Identity.Web" Version="3.5.0" />
     <PackageVersion Include="Microsoft.Identity.Web.DownstreamApi" Version="3.5.0" />
+  </ItemGroup>
+  <!-- Blazor Client -->
+  <ItemGroup>
+    <PackageVersion Include="BlazorApplicationInsights" Version="3.1.0" />
+    <PackageVersion Include="Microsoft.Authentication.WebAssembly.Msal" Version="9.0.0" />
+    <PackageVersion Include="Microsoft.Extensions.Localization" Version="9.0.0" />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.QuickGrid" Version="9.0.0" />
   </ItemGroup>
 </Project>
