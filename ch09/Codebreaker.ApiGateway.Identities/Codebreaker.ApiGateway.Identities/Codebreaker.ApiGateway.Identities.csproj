@@ -14,14 +14,9 @@
   <ItemGroup>
     <PackageReference Include="Aspire.Pomelo.EntityFrameworkCore.MySql" />
     <PackageReference Include="Microsoft.Extensions.ServiceDiscovery.Yarp" />
-    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" />
     <PackageReference Include="Swashbuckle.AspNetCore" />
     <PackageReference Include="Yarp.ReverseProxy" />
     <PackageReference Include="Microsoft.Identity.Web" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational"/>
   </ItemGroup>
 
   <ItemGroup>
