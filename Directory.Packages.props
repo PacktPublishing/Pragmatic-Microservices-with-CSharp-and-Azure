@@ -4,11 +4,6 @@
     <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
     <NoWarn>$(NoWarn);NU1507</NoWarn>
   </PropertyGroup>
-  <!-- Bump transitent packages for MySQL dependeencies in Aspire MySql -->
-  <ItemGroup>
-    <PackageVersion Include="Pomelo.EntityFrameworkCore.MySql" Version="9.0.0-preview.1" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.Relational" Version="9.0.0" />
-  </ItemGroup>
   <!--Codebreaker Packages -->
   <ItemGroup>
     <PackageVersion Include="CNinnovation.Codebreaker.Analyzers" Version="3.8.0" />
