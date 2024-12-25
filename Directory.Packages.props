@@ -130,8 +130,8 @@
   </ItemGroup>
   <!-- Client Identity -->
   <ItemGroup>
-    <PackageVersion Include="Microsoft.Identity.Web.UI" Version="3.4.0" />
-    <PackageVersion Include="Microsoft.Identity.Web" Version="3.4.0" />
-    <PackageVersion Include="Microsoft.Identity.Web.DownstreamApi" Version="3.4.0" />
+    <PackageVersion Include="Microsoft.Identity.Web.UI" Version="3.5.0" />
+    <PackageVersion Include="Microsoft.Identity.Web" Version="3.5.0" />
+    <PackageVersion Include="Microsoft.Identity.Web.DownstreamApi" Version="3.5.0" />
   </ItemGroup>
 </Project>
