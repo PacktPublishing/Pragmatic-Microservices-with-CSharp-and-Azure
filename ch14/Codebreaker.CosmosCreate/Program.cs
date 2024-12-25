@@ -1,5 +1,5 @@
 ﻿using Codebreaker.Data.Cosmos;
-using Codebreaker.SqlServerMigration;
+using Codebreaker.CosmosCreate;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 

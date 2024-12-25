@@ -8,7 +8,7 @@ using Microsoft.Extensions.Hosting;
 
 using System.Diagnostics;
 
-namespace Codebreaker.SqlServerMigration;
+namespace Codebreaker.CosmosCreate;
 
 internal class ApiDbInitializer(
     IServiceProvider serviceProvider,
