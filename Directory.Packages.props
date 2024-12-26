@@ -25,8 +25,8 @@
   <!-- .NET, Extensions, and ASP.NET Core Packages -->
   <ItemGroup>
     <PackageVersion Include="Google.Protobuf" Version="3.28.3" />
-    <PackageVersion Include="Grpc.AspNetCore" Version="2.67.0-pre1" />
-    <PackageVersion Include="Grpc.Net.ClientFactory" Version="2.67.0-pre1" />
+    <PackageVersion Include="Grpc.AspNetCore" Version="2.67.0" />
+    <PackageVersion Include="Grpc.Net.ClientFactory" Version="2.67.0" />
     <PackageVersion Include="Grpc.Tools" Version="2.67.0" />
     <PackageVersion Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="9.0.0" />
     <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.0" />
