@@ -2,7 +2,7 @@
 
 What's changed with the new versions of .NET Aspire?
 
-With all the chapters (with the exception of chapter 1) we now use **NuGet Central Package Management (CPM)** with package versions specified in the file *Directory.Packages.props'. This makes it faster to update all chapters.
+With all the chapters (with the exception of chapter 1) we now use **NuGet Central Package Management (CPM)** with package versions specified in the file *Directory.Packages.props'. This makes it easier to update all chapters.
 In case you copy the content of just a single chapter, also copy the file *Directory.Packages.props* from the root folder to get all the projects compiled.
 
 ## Chapter 1, Introdution to .NET Aspire and Microservices
@@ -29,3 +29,7 @@ The WaitFor method is new with .NET Aspire 9 which allows waiting with the start
 ### Page 13, .NET Aspire integrations
 
 *.NET Aspire components* have been renamed to *.NET Aspire integrations*
+
+## Chapter 11, Logging and Monitoring
+
+With the `Activity` class, recording exceptions has been renamed from `RecordException` to `AddException`.
