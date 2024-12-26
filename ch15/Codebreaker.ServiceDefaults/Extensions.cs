@@ -77,10 +77,11 @@ public static class Extensions
 
         if (useOtlpExporter)
         {
-            builder.Services.AddOpenTelemetry().UseOtlpExporter();
+            builder.Services.AddOpenTelemetry()
+                .UseOtlpExporter();
         }
         if (Environment.GetEnvironmentVariable("STARTUP") == "Prometheus")
-        {
+        { 
             builder.Services.AddOpenTelemetry()
                .WithMetrics(metrics => metrics.AddPrometheusExporter());
         }
