@@ -8,23 +8,22 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.0-rc.2.24474.1">
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" >
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="CNinnovation.Codebreaker.SqlServer" Version="3.7.0" />
+		<PackageReference Include="CNinnovation.Codebreaker.SqlServer" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Aspire.Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.0-rc.1.24511.1" />
+		<PackageReference Include="Aspire.Microsoft.EntityFrameworkCore.SqlServer" />
 	</ItemGroup>
 
 	<ItemGroup>
 	  <ProjectReference Include="..\Codebreaker.ServiceDefaults\Codebreaker.ServiceDefaults.csproj" />
 	</ItemGroup>
-
 
 </Project>

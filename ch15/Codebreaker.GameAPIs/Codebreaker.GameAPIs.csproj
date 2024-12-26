@@ -21,32 +21,31 @@
 	</ItemGroup>
 
     <ItemGroup>
-		<PackageReference Include="Aspire.Azure.Messaging.EventHubs" Version="9.0.0-rc.1.24511.1" />
-		<PackageReference Include="Aspire.Azure.Storage.Blobs" Version="9.0.0-rc.1.24511.1" />
-		<PackageReference Include="Aspire.Azure.Storage.Queues" Version="9.0.0-rc.1.24511.1" />
-		<PackageReference Include="Aspire.Confluent.Kafka" Version="9.0.0-rc.1.24511.1" />
-		<PackageReference Include="Aspire.Hosting.AppHost" Version="9.0.0-rc.1.24511.1" />
-		<PackageReference Include="Aspire.Hosting.Azure" Version="9.0.0-rc.1.24511.1" />
-		<PackageReference Include="Aspire.Hosting.Azure.AppConfiguration" Version="9.0.0-rc.1.24511.1" />
-		<PackageReference Include="Aspire.Hosting.Kafka" Version="9.0.0-rc.1.24511.1" />
-		<PackageReference Include="Aspire.StackExchange.Redis.DistributedCaching" Version="9.0.0-rc.1.24511.1" />
-		<PackageReference Include="Aspire.Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.0-rc.1.24511.1" />
-		<PackageReference Include="Aspire.Microsoft.EntityFrameworkCore.Cosmos" Version="9.0.0-rc.1.24511.1" />
+		<PackageReference Include="Aspire.Azure.Messaging.EventHubs" />
+		<PackageReference Include="Aspire.Azure.Storage.Blobs" />
+		<PackageReference Include="Aspire.Azure.Storage.Queues" />
+		<PackageReference Include="Aspire.Confluent.Kafka" />
+		<PackageReference Include="Aspire.Hosting.AppHost" />
+		<PackageReference Include="Aspire.Hosting.Azure" />
+		<PackageReference Include="Aspire.Hosting.Azure.AppConfiguration" />
+		<PackageReference Include="Aspire.Hosting.Kafka" />
+		<PackageReference Include="Aspire.StackExchange.Redis.DistributedCaching" />
+		<PackageReference Include="Aspire.Microsoft.EntityFrameworkCore.SqlServer" />
+		<PackageReference Include="Aspire.Microsoft.EntityFrameworkCore.Cosmos" />
 	</ItemGroup>
 
-
 	<ItemGroup>
-		<PackageReference Include="CNinnovation.Codebreaker.BackendModels" Version="3.7.0" />
-		<PackageReference Include="Grpc.AspNetCore" Version="2.67.0-pre1" />
-		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.0-rc.2.24474.3" />
-		<PackageReference Include="Microsoft.Extensions.ApiDescription.Server" Version="9.0.0-rc.2.24474.3">
+		<PackageReference Include="CNinnovation.Codebreaker.BackendModels"  />
+		<PackageReference Include="Grpc.AspNetCore" />
+		<PackageReference Include="Microsoft.AspNetCore.OpenApi" />
+		<PackageReference Include="Microsoft.Extensions.ApiDescription.Server" >
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.9.0" />
-		<PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.9.0" />
-		<PackageReference Include="CNinnovation.Codebreaker.SqlServer" Version="3.7.0" />
-		<PackageReference Include="CNinnovation.Codebreaker.Cosmos" Version="3.7.0" />
+		<PackageReference Include="Swashbuckle.AspNetCore" />
+		<PackageReference Include="Swashbuckle.AspNetCore.Annotations" />
+		<PackageReference Include="CNinnovation.Codebreaker.SqlServer" />
+		<PackageReference Include="CNinnovation.Codebreaker.Cosmos" />
 	</ItemGroup>
 
 	<ItemGroup>

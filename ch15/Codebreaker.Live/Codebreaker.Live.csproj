@@ -13,21 +13,21 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Aspire.Azure.Messaging.EventHubs" Version="9.0.0-rc.1.24511.1" />
-    <PackageReference Include="Aspire.Azure.Storage.Queues" Version="9.0.0-rc.1.24511.1" />
-	<PackageReference Include="Aspire.Confluent.Kafka" Version="9.0.0-rc.1.24511.1" />
-    <PackageReference Include="Aspire.Azure.Storage.Blobs" Version="9.0.0-rc.1.24511.1" />
-    <PackageReference Include="Aspire.Hosting.AppHost" Version="9.0.0-rc.1.24511.1" />
-    <PackageReference Include="Aspire.Hosting.Azure" Version="9.0.0-rc.1.24511.1" />
-    <PackageReference Include="Aspire.Hosting.Azure.AppConfiguration" Version="9.0.0-rc.1.24511.1" />
-    <PackageReference Include="Aspire.Hosting.Kafka" Version="9.0.0-rc.1.24511.1" />
-    <PackageReference Include="Aspire.StackExchange.Redis.DistributedCaching" Version="9.0.0-rc.1.24511.1" />
-    <PackageReference Include="CNinnovation.Codebreaker.BackendModels" Version="3.7.0" />
-    <PackageReference Include="Grpc.AspNetCore" Version="2.67.0-pre1" />
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.0-rc.2.24474.3" />
-    <PackageReference Include="Microsoft.AspNetCore.SignalR.Protocols.MessagePack" Version="9.0.0-rc.2.24474.3" />
-    <PackageReference Include="Microsoft.Azure.SignalR" Version="1.28.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.9.0" />
+    <PackageReference Include="Aspire.Azure.Messaging.EventHubs" />
+    <PackageReference Include="Aspire.Azure.Storage.Queues" />
+	<PackageReference Include="Aspire.Confluent.Kafka" />
+    <PackageReference Include="Aspire.Azure.Storage.Blobs" />
+    <PackageReference Include="Aspire.Hosting.AppHost" />
+    <PackageReference Include="Aspire.Hosting.Azure" />
+    <PackageReference Include="Aspire.Hosting.Azure.AppConfiguration" />
+    <PackageReference Include="Aspire.Hosting.Kafka" />
+    <PackageReference Include="Aspire.StackExchange.Redis.DistributedCaching" />
+    <PackageReference Include="CNinnovation.Codebreaker.BackendModels" />
+    <PackageReference Include="Grpc.AspNetCore" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Protocols.MessagePack" />
+    <PackageReference Include="Microsoft.Azure.SignalR" />
+    <PackageReference Include="Swashbuckle.AspNetCore" />
   </ItemGroup>
 
   <ItemGroup>
