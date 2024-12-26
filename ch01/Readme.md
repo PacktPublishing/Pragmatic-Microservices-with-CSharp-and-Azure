@@ -2,7 +2,10 @@
 
 ## Technical Requirements
 
-In this chapter you need .NET 8 with the .NET Aspire workload, either Visual Studio or Visual Studio Code, Docker Desktop, and a Microsoft Azure subscription. Information about the installation is explained in this chapter, and in the readme file of the source code repository.
+With Aspire 9, installing the `dotnet workload` for .NET Aspire is no longer required. Instead, the AppHost project needs to have the SDK referenced.
+
+To use .NET Aspire 9, either .NET 8 or .NET 9 is required. You can use Visual Studio, Visual Studio Code, or Jet Brains Rider,
+as well as Docker Desktop and a Microsoft Azure subscription. Information about the installation is explained in this chapter.
 
 The code for this chapter can be found in this GitHub repository: https://github.com/PacktPublishing/Pragmatic-Microservices-With-CSharp-and-Azure.
 

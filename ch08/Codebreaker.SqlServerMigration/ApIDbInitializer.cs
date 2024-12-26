@@ -1,10 +1,11 @@
 ﻿using Codebreaker.Data.SqlServer;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using OpenTelemetry.Trace;
+
 using System.Diagnostics;
 
 namespace Codebreaker.SqlServerMigration;
@@ -30,7 +31,7 @@ internal class ApiDbInitializer(
         }
         catch (Exception ex)
         {
-            activity?.RecordException(ex);
+            activity?.AddException(ex);
             throw;
         }
 

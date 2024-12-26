@@ -1,27 +1,27 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net9.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>c51559a1-d7fb-4ce2-9052-8b1828419b89</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Aspire.Azure.Storage.Queues" Version="8.0.1" />
-    <PackageReference Include="Aspire.Hosting.AppHost" Version="8.0.1" />
-    <PackageReference Include="Aspire.Hosting.Azure" Version="8.0.1" />
-    <PackageReference Include="Aspire.Hosting.Azure.AppConfiguration" Version="8.0.1" />
-    <PackageReference Include="Aspire.Hosting.Kafka" Version="8.0.1" />
-    <PackageReference Include="Aspire.Microsoft.EntityFrameworkCore.Cosmos" Version="8.0.1" />
-    <PackageReference Include="Aspire.StackExchange.Redis.DistributedCaching" Version="8.0.1" />
-    <PackageReference Include="CNinnovation.Codebreaker.BackendModels" Version="3.7.0" />
-    <PackageReference Include="CNinnovation.Codebreaker.Cosmos" Version="3.7.0" />
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.5" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
-    <PackageReference Include="Aspire.Azure.Messaging.EventHubs" Version="8.0.0-preview.7.24251.11" />
-   	<PackageReference Include="Aspire.Confluent.Kafka" Version="8.0.1" />
-    <PackageReference Include="Aspire.Azure.Storage.Blobs" Version="8.0.1" />
+    <PackageReference Include="Aspire.Azure.Storage.Queues" />
+    <PackageReference Include="Aspire.Hosting.AppHost" />
+    <PackageReference Include="Aspire.Hosting.Azure" />
+    <PackageReference Include="Aspire.Hosting.Azure.AppConfiguration" />
+    <PackageReference Include="Aspire.Hosting.Kafka" />
+    <PackageReference Include="Aspire.Microsoft.EntityFrameworkCore.Cosmos" />
+    <PackageReference Include="Aspire.StackExchange.Redis.DistributedCaching" />
+    <PackageReference Include="CNinnovation.Codebreaker.BackendModels" />
+    <PackageReference Include="CNinnovation.Codebreaker.Cosmos" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
+    <PackageReference Include="Swashbuckle.AspNetCore" />
+    <PackageReference Include="Aspire.Azure.Messaging.EventHubs" />
+   	<PackageReference Include="Aspire.Confluent.Kafka" />
+    <PackageReference Include="Aspire.Azure.Storage.Blobs" />
   </ItemGroup>
 
   <ItemGroup>

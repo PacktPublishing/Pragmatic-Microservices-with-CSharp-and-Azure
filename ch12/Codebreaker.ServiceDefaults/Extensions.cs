@@ -1,5 +1,4 @@
 using Azure.Monitor.OpenTelemetry.AspNetCore;
-using Codebreaker.ServiceDefaults;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,7 +12,7 @@ namespace Microsoft.Extensions.Hosting;
 
 public static class Extensions
 {
-     public static IHostApplicationBuilder AddServiceDefaults(this IHostApplicationBuilder builder)
+    public static IHostApplicationBuilder AddServiceDefaults(this IHostApplicationBuilder builder)
     {
         builder.ConfigureOpenTelemetry();
 
@@ -69,9 +68,6 @@ public static class Extensions
 
     private static IHostApplicationBuilder AddOpenTelemetryExporters(this IHostApplicationBuilder builder)
     {
-        // TODO: what's the strategy using the OLTP exporter?
-        // note here: not supported https://learn.microsoft.com/en-us/azure/azure-monitor/app/opentelemetry-configuration?tabs=aspnetcore
-        // but it's configured by default with .NET Aspire
         bool useOtlpExporter = !string.IsNullOrWhiteSpace(builder.Configuration["OTEL_EXPORTER_OTLP_ENDPOINT"]);
 
         if (useOtlpExporter)
@@ -80,7 +76,7 @@ public static class Extensions
             builder.Services.ConfigureOpenTelemetryMeterProvider(metrics => metrics.AddOtlpExporter());
             builder.Services.ConfigureOpenTelemetryTracerProvider(tracing => tracing.AddOtlpExporter());
         }
-        if (builder.Environment.IsPrometheus())
+        if (Environment.GetEnvironmentVariable("StartupMode") == "OnPremises")
         {
             builder.Services.AddOpenTelemetry()
                .WithMetrics(metrics => metrics.AddPrometheusExporter());
@@ -107,7 +103,7 @@ public static class Extensions
 
     public static WebApplication MapDefaultEndpoints(this WebApplication app)
     {
-        if (app.Environment.IsPrometheus())
+        if (Environment.GetEnvironmentVariable("StartupMode") == "OnPremises")
         { 
             app.MapPrometheusScrapingEndpoint();
         }

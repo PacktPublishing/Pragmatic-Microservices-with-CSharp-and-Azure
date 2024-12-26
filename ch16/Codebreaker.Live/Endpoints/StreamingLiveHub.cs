@@ -12,7 +12,7 @@ public class StreamingLiveHub(EventHubConsumerClient consumerClient, ILogger<Str
     {
         await foreach (PartitionEvent ev in consumerClient.ReadEventsAsync(cancellationToken))
         {
-            GameSummary gameSummary;
+            GameSummary? gameSummary;
             try
             {
                 logger.ProcessingGameCompletionEvent();
@@ -24,7 +24,7 @@ public class StreamingLiveHub(EventHubConsumerClient consumerClient, ILogger<Str
                 continue;
             }
 
-            if (gameSummary.GameType == gameType)
+            if (gameSummary?.GameType == gameType)
             {
                 yield return gameSummary;
             }

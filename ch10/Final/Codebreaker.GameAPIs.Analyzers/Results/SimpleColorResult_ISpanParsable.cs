@@ -36,7 +36,7 @@ public readonly partial struct SimpleColorResult : ISpanParsable<SimpleColorResu
             values[i] = (ResultValue)(s[j] - '0');
         }
         result = new SimpleColorResult(values);
-        return s != default;
+        return !s.IsEmpty;
     }
 
     public static bool TryParse([NotNullWhen(true)] string? s, IFormatProvider? provider, [MaybeNullWhen(false)] out SimpleColorResult result) =>

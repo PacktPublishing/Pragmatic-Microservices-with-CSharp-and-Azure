@@ -18,7 +18,7 @@ internal class ApiDbInitializer(
 
     protected override async Task ExecuteAsync(CancellationToken cancellationToken)
     {
-        using var activity = s_activitySource.StartActivity("Migrating database", ActivityKind.Client);
+        using var activity = s_activitySource.StartActivity("Creating database", ActivityKind.Client);
 
         try
         {
@@ -29,7 +29,7 @@ internal class ApiDbInitializer(
         }
         catch (Exception ex)
         {
-            activity?.RecordException(ex);
+            activity?.AddException(ex);
             throw;
         }
 

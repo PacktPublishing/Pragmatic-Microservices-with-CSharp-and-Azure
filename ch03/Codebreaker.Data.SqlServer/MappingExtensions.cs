@@ -5,9 +5,7 @@ public static class MappingExtensions
     public static ICollection<T> ToFieldCollection<T>(this string fields)
         where T : IParsable<T>
     {
-        return fields.Split('#')
-            .Select(field => T.Parse(field, default))
-            .ToList();
+        return [.. fields.Split('#').Select(field => T.Parse(field, default))];
     }
 
     public static string ToFieldString<T>(this IEnumerable<T> fields)
@@ -25,9 +23,7 @@ public static class MappingExtensions
     public static T[] ToFieldArray<T>(this string fields)
         where T : IParsable<T>
     {
-        return fields.Split('#')
-            .Select(field => T.Parse(field, default))
-            .ToArray();
+        return [.. fields.Split('#').Select(field => T.Parse(field, default))];
     }
 
     public static string ToFieldsString(this IDictionary<string, IEnumerable<string>> fields)

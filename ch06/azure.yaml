@@ -4,5 +4,5 @@ name: ch06
 services:  
   app:
     language: dotnet
-    project: .\Codebreaker.AppHost\Codebreaker.AppHost.csproj
+    project: ./Codebreaker.AppHost/Codebreaker.AppHost.csproj
     host: containerapp

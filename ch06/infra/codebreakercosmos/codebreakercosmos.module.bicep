@@ -1,39 +1,34 @@
-targetScope = 'resourceGroup'
-
-@description('')
+@description('The location for the resource(s) to be deployed.')
 param location string = resourceGroup().location
 
-@description('')
 param keyVaultName string
 
-
-resource keyVault_IeF8jZvXV 'Microsoft.KeyVault/vaults@2022-07-01' existing = {
+resource keyVault 'Microsoft.KeyVault/vaults@2023-07-01' existing = {
   name: keyVaultName
 }
 
-resource cosmosDBAccount_3PK5KyY96 'Microsoft.DocumentDB/databaseAccounts@2023-04-15' = {
-  name: toLower(take('codebreakercosmos${uniqueString(resourceGroup().id)}', 24))
+resource codebreakercosmos 'Microsoft.DocumentDB/databaseAccounts@2024-08-15' = {
+  name: take('codebreakercosmos-${uniqueString(resourceGroup().id)}', 44)
   location: location
-  tags: {
-    'aspire-resource-name': 'codebreakercosmos'
-  }
-  kind: 'GlobalDocumentDB'
   properties: {
-    databaseAccountOfferType: 'Standard'
-    consistencyPolicy: {
-      defaultConsistencyLevel: 'Session'
-    }
     locations: [
       {
         locationName: location
         failoverPriority: 0
       }
     ]
+    consistencyPolicy: {
+      defaultConsistencyLevel: 'Session'
+    }
+    databaseAccountOfferType: 'Standard'
+  }
+  kind: 'GlobalDocumentDB'
+  tags: {
+    'aspire-resource-name': 'codebreakercosmos'
   }
 }
 
-resource cosmosDBSqlDatabase_Sa75U8Y0K 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases@2023-04-15' = {
-  parent: cosmosDBAccount_3PK5KyY96
+resource codebreaker 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases@2024-08-15' = {
   name: 'codebreaker'
   location: location
   properties: {
@@ -41,13 +36,13 @@ resource cosmosDBSqlDatabase_Sa75U8Y0K 'Microsoft.DocumentDB/databaseAccounts/sq
       id: 'codebreaker'
     }
   }
+  parent: codebreakercosmos
 }
 
-resource keyVaultSecret_Ddsc3HjrA 'Microsoft.KeyVault/vaults/secrets@2022-07-01' = {
-  parent: keyVault_IeF8jZvXV
+resource connectionString 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
   name: 'connectionString'
-  location: location
   properties: {
-    value: 'AccountEndpoint=${cosmosDBAccount_3PK5KyY96.properties.documentEndpoint};AccountKey=${cosmosDBAccount_3PK5KyY96.listkeys(cosmosDBAccount_3PK5KyY96.apiVersion).primaryMasterKey}'
+    value: 'AccountEndpoint=${codebreakercosmos.properties.documentEndpoint};AccountKey=${codebreakercosmos.listKeys().primaryMasterKey}'
   }
+  parent: keyVault
 }

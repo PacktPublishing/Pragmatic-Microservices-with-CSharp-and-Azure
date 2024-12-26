@@ -12,5 +12,4 @@ internal static class ApplicationServices
         builder.Services.AddScoped<CodeBreakerTimer>();
         builder.Services.AddScoped<CodeBreakerGameRunner>();
     }
-
 }

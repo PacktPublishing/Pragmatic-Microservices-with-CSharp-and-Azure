@@ -13,6 +13,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Codebreaker.ServiceDefaults
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Codebreaker.Analyzers", "Codebreaker.GameAPIs.Analyzers\Codebreaker.Analyzers.csproj", "{9E7B9775-CDF4-4598-89F8-EE06F6C16E31}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}"
+	ProjectSection(SolutionItems) = preProject
+		CreateAGame.md = CreateAGame.md
+		..\Directory.Packages.props = ..\Directory.Packages.props
+		Readme.md = Readme.md
+		SetMove.md = SetMove.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

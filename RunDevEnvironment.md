@@ -1,8 +1,8 @@
 # Running the application with the development environment
 
-Version May-2024
+Version Nov-2024
 
-To run the application from your local developer system, you need to specify some settings. This file describes all the thinkgs that need to be configud to run the applciation:
+To run the application from your local developer system, you need to specify some settings. This file describes all the thinks that need to be configured to run the application:
 
 - Using Azure Cosmos DB (starting with chapter 3)
 - Using SQL Server (starting with chapter 3)
@@ -12,7 +12,7 @@ To run the application from your local developer system, you need to specify som
 
 Starting with chapter 3, we use Azure Cosmos DB.
 
-To use Azure Cosmos DB, it's best to use the local Azure Cosmos DB emulator (as of now), or running this service with Microsoft Azure (starting with chapter 6).
+To use Azure Cosmos DB, it's best to use the local Azure Cosmos DB emulator (because of an issue with the Linux Docker container for Azure Cosmos DB, see below), or running this service with Microsoft Azure (starting with chapter 6).
 
 ### Using the Azure Cosmos DB Emulator on Windows
 
@@ -38,7 +38,7 @@ Config
 ### Azure Cosmos DB emulator running with Docker    
 
 The Docker emulator currently has some issues that are in progress to be fixed:
-https://github.com/dotnet/aspire/discussions/2535^
+https://github.com/dotnet/aspire/discussions/2535
 https://github.com/Azure/azure-cosmos-dotnet-v3/issues/4315#issuecomment-1986522226
 
 ## Using SQL Server
@@ -47,18 +47,18 @@ Starting with chapter 3, we use SQL Server.
 
 ### Using the Docker container to run SQL Server:
 
-Codebreaker.AppHost/Programc.cs
+Codebreaker.AppHost/Program.cs
 ```csharp
     var sqlServer = builder.AddSqlServer("sql")
         .WithDataVolume()
         .AddDatabase("CodebreakerSql", "codebreaker");
 ```
 
-Running locally, this creates a Docker container with a volume that's persisted, so all your games are stored between invocations. You need to configure the password `Parameters:sql-password' with the user secrets, otherwise a random password is generated which is not the same between invocations, and login fails!
+Running locally, this creates a Docker container with a volume that's persisted, so all your games are stored between invocations. When you run this, a password is created and configured with the key `Parameters:sql-password'. You can check this from the user secrets.
 
-Configure this use-secrets:
+Show user-secrets:
 
-`dotnet user-secrets set "Parameters:sql-password" "Passw0rd1!"`
+`dotnet user-secrets list`
 
 Running the application, check the environment variables with the .NET Aspire dashboard to see the password with SQL and the game APIs service, and if they match. Check the log of SQL Server if the login of sa fails. If this is the case, delete the Docker volume (the previous stored games will be lost) and restart again.
 

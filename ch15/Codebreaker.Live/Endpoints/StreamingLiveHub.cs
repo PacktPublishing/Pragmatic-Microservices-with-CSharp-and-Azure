@@ -12,11 +12,16 @@ public class StreamingLiveHub(EventHubConsumerClient consumerClient, ILogger<Str
     {
         await foreach (PartitionEvent ev in consumerClient.ReadEventsAsync(cancellationToken))
         {
-            GameSummary gameSummary;
+            GameSummary? gameSummary;
             try
             {
                 logger.ProcessingGameCompletionEvent();
                 gameSummary = ev.Data.EventBody.ToObjectFromJson<GameSummary>();
+                if (gameSummary is null)
+                {
+                    logger.LogError("Failed to deserialize game summary from event body.");
+                    continue;
+                }
             }
             catch (Exception ex)
             {

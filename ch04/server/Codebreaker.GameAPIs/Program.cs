@@ -34,9 +34,6 @@ builder.Services.AddScoped<IGamesService, GamesService>();
 
 var app = builder.Build();
 
-// TODO: temporary workaround - wait for Cosmos emulator to be available
-// await app.WaitForEmulatorToBeRadyAsync();
-
 app.MapDefaultEndpoints();
 
 app.UseSwagger();

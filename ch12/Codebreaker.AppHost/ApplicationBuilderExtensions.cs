@@ -1,5 +1,4 @@
-﻿using Codebreaker.ServiceDefaults;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using System.Reflection;
 
 namespace Codebreaker.AppHost;
@@ -8,7 +7,7 @@ internal static class ApplicationBuilderExtensions
 {
     public static void AddUserSecretsForPrometheusEnvironment(this IDistributedApplicationBuilder applicationBuilder)
     {
-        if (applicationBuilder.Environment.IsPrometheus())
+        if (Environment.GetEnvironmentVariable("StartupMode") == "OnPremises")
         {
             string appName = applicationBuilder.Environment.ApplicationName;
             if (!string.IsNullOrEmpty(appName))

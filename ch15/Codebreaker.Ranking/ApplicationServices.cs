@@ -48,11 +48,7 @@ public static class ApplicationServices
         return app;
     }
 
-    private static bool s_IsDatabaseUpdateComplete = false;
-    internal static bool IsDatabaseUpdateComplete
-    {
-        get => s_IsDatabaseUpdateComplete;
-    }
+    internal static bool IsDatabaseUpdateComplete { get; private set; } = false;
 
     public static async Task CreateOrUpdateDatabaseAsync(this WebApplication app)
     {
@@ -73,6 +69,6 @@ public static class ApplicationServices
             throw;
         }
 
-        s_IsDatabaseUpdateComplete = true;
+        IsDatabaseUpdateComplete = true;
     }
 }

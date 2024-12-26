@@ -16,10 +16,8 @@ public readonly partial struct SimpleColorResult : ISpanParsable<SimpleColorResu
         }
     }
 
-    public static SimpleColorResult Parse(string s, IFormatProvider? provider = default)
-    {
-        return Parse(s.AsSpan(), provider);
-    }
+    public static SimpleColorResult Parse(string s, IFormatProvider? provider = default) => 
+        Parse(s.AsSpan(), provider);
 
     public static bool TryParse(ReadOnlySpan<char> s, IFormatProvider? provider, [MaybeNullWhen(false)] out SimpleColorResult result)
     {
@@ -32,11 +30,10 @@ public readonly partial struct SimpleColorResult : ISpanParsable<SimpleColorResu
         var values = new  ResultValue[4];
         for (int i = 0, j = 0; i < 4; i++, j += 2)
         {
-
             values[i] = (ResultValue)(s[j] - '0');
         }
         result = new SimpleColorResult(values);
-        return s != default;
+        return !s.IsEmpty;
     }
 
     public static bool TryParse([NotNullWhen(true)] string? s, IFormatProvider? provider, [MaybeNullWhen(false)] out SimpleColorResult result) =>

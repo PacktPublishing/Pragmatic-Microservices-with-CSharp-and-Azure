@@ -43,11 +43,24 @@ Set the `DataStore` and the `GamesSqlServerConnection with `appsettings.Developm
   "DataStore": "SqlServer"
 ```
 
-set a password for the SQL Server Docker container using:
+When you start the application with SQL Server running in a Docker container, the password will be automatically set. You can check the password reading *user secrets*. To read these from the command line, use:
+
+```bash
+cd Codebreaker.AppHost
+dotnet user-secrets list
+```
+
+You can also configure the password using:
 
 ```bash
 cd Codebreaker.AppHost
 dotnet user-secrets set Parameters:sql-password Passw0rd!Passw0rd
+```
+
+Be aware that once you set the password, it's configured with the Docker volume named *Codebreaker.AppHost-sql-data*. To delete the volume, and start fresh, you can use:
+
+```bash
+docker volume rm Codebreaker.AppHost-sql-data
 ```
 
 Database migration happens when starting the application, thus the database is created on first use with the `SqlServer` setting (see the `ApplicationServices` class, in the method `CreateOrUpdateDatabaseAsync`).

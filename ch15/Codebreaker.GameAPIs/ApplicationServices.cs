@@ -117,11 +117,7 @@ public static class ApplicationServices
         builder.AddRedisDistributedCache("redis");
     }
 
-    private static bool s_IsDatabaseUpdateComplete = false;
-    internal static bool IsDatabaseUpdateComplete
-    {
-        get => s_IsDatabaseUpdateComplete;
-    }
+    internal static bool IsDatabaseUpdateComplete { get; private set; } = false;
 
     public static async Task CreateOrUpdateDatabaseAsync(this WebApplication app)
     {
@@ -130,10 +126,8 @@ public static class ApplicationServices
             try
             {
                 using var scope = app.Services.CreateScope();
-                var repo = scope.ServiceProvider.GetRequiredService<GamesSqlServerContext>();
 
-                // TODO: update with .NET Aspire Preview 4
-                // var repo = scope.ServiceProvider.GetRequiredService<IGamesRepository>();
+                var repo = scope.ServiceProvider.GetRequiredService<IGamesRepository>();
                 if (repo is GamesSqlServerContext context)
                 {
                     await context.Database.MigrateAsync();
@@ -171,6 +165,6 @@ public static class ApplicationServices
             }
         }
 
-        s_IsDatabaseUpdateComplete = true;
+        IsDatabaseUpdateComplete = true;
     }
 }

@@ -8,6 +8,8 @@ Welcome to this repository with the source code for the book!
 
 [Tools needed to build and run the application](installation.md)
 
+> Check this information about [Updates with .NET Aspire 9](Updates.md) 
+
 ## Questions?
 
 In case you've issues building or running the Codebreaker application, please use [GitHub Discussions](https://github.com/PacktPublishing/Pragmatic-Microservices-with-CSharp-and-Azure/discussions)!

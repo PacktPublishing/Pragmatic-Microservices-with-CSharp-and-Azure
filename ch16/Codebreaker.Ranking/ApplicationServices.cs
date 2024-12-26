@@ -48,18 +48,13 @@ public static class ApplicationServices
         return app;
     }
 
-    private static bool s_IsDatabaseUpdateComplete = false;
-    internal static bool IsDatabaseUpdateComplete
-    {
-        get => s_IsDatabaseUpdateComplete;
-    }
+    internal static bool IsDatabaseUpdateComplete { get; set; } = false;
 
     public static async Task CreateOrUpdateDatabaseAsync(this WebApplication app)
     {
         try
         {
             using var scope = app.Services.CreateScope();
-            // TODO: update with .NET Aspire Preview 4
             var factory = scope.ServiceProvider.GetRequiredService<IDbContextFactory<RankingsContext>>();
             using var context = await factory.CreateDbContextAsync();
 
@@ -73,6 +68,6 @@ public static class ApplicationServices
             throw;
         }
 
-        s_IsDatabaseUpdateComplete = true;
+        IsDatabaseUpdateComplete = true;
     }
 }
