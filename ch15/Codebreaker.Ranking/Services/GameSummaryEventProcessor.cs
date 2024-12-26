@@ -15,8 +15,13 @@ public class GameSummaryEventProcessor(EventProcessorClient client, IDbContextFa
         {
             logger.LogInformation("Processing event");
 
-            GameSummary summary = args.Data.EventBody.ToObjectFromJson<GameSummary>();
+            GameSummary? summary = args.Data.EventBody.ToObjectFromJson<GameSummary>();
 
+            if (summary is null)
+            {
+                logger.LogWarning("Failed to deserialize game summary from event body");
+                return;
+            }
             logger.LogInformation("Received game completion event for game {gameId}", summary.Id);
             using var context = await factory.CreateDbContextAsync(cancellationToken);
 
