@@ -128,11 +128,7 @@ public static class ApplicationServices
         builder.AddRedisDistributedCache("redis");
     }
 
-    private static bool s_IsDatabaseUpdateComplete = false;
-    internal static bool IsDatabaseUpdateComplete
-    {
-        get => s_IsDatabaseUpdateComplete;
-    }
+    internal static bool IsDatabaseUpdateComplete { get; set; } = false;
 
     public static async Task CreateOrUpdateDatabaseAsync(this WebApplication app)
     {
@@ -178,6 +174,6 @@ public static class ApplicationServices
             }
         }
 
-        s_IsDatabaseUpdateComplete = true;
+        IsDatabaseUpdateComplete = true;
     }
 }
