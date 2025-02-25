@@ -3,7 +3,7 @@ var builder = DistributedApplication.CreateBuilder(args);
 var dataStoreConfig = builder.Configuration["DataStore"] ?? "InMemory";
 
 var cosmos = builder.AddAzureCosmosDB("codebreakercosmos")
-    .AddDatabase("codebreaker");
+    .AddCosmosDatabase("codebreaker");
 
 var gameAPIs = builder.AddProject<Projects.Codebreaker_GameAPIs>("gameapis")
     .WithReference(cosmos)

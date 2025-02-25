@@ -6,7 +6,7 @@ string startupMode = Environment.GetEnvironmentVariable("STARTUP_MODE") ?? "Azur
 bool useAzureADB2C = startupMode == "Azure";
 
 var cosmos = builder.AddAzureCosmosDB("codebreakercosmos")
-    .AddDatabase("codebreaker");
+    .AddCosmosDatabase("codebreaker");
 
 var gameAPIs = builder.AddProject<Projects.Codebreaker_GameAPIs>("gameapis")
   .WithReference(cosmos)

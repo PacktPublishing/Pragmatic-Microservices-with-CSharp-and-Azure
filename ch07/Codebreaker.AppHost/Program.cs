@@ -29,7 +29,7 @@ builder.AddProject<Projects.CodeBreaker_Bot>("bot")
 if (dataStore == "Cosmos")
 {
     var cosmos = builder.AddAzureCosmosDB("codebreakercosmos")
-        .AddDatabase("codebreaker");
+        .AddCosmosDatabase("codebreaker");
 
     var createCosmos = builder.AddProject<Projects.Codebreaker_CosmosCreate>("createcosmos")
         .WithReference(cosmos)

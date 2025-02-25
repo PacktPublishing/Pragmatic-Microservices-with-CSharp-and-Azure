@@ -1,8 +1,12 @@
 # Pragmatic Microservices with CSharp and Azure
 
-Pragmatic Microservices with CSharp and Azure, published by Packt
+[Pragmatic Microservices with CSharp and Azure](https://www.packtpub.com/en-us/product/pragmatic-microservices-with-c-and-azure-9781835088296)
 
 Welcome to this repository with the source code for the book!
+
+## .NET Aspire Updates
+
+[See updates](Updates.md)
 
 ## Installation requirements
 

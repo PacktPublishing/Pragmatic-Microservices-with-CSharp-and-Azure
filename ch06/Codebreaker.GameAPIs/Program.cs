@@ -31,11 +31,23 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(builder =>
+     {
+         builder.AllowAnyOrigin()
+             .AllowAnyHeader()
+             .AllowAnyMethod();
+     });
+});
+
 // Application Services
 
 builder.AddApplicationServices();
 
 var app = builder.Build();
+
+app.UseCors();
 
 app.MapDefaultEndpoints();
 
