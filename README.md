@@ -4,6 +4,10 @@ Pragmatic Microservices with CSharp and Azure, published by Packt
 
 Welcome to this repository with the source code for the book!
 
+## .NET Aspire Updates
+
+[See updates](Updates.md)
+
 ## Installation requirements
 
 [Tools needed to build and run the application](installation.md)
