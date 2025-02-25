@@ -50,7 +50,7 @@ else
     var signalR = builder.AddAzureSignalR("signalr");
 
     var cosmos = builder.AddAzureCosmosDB("codebreakercosmos")
-        .AddDatabase("codebreaker");
+        .AddCosmosDatabase("codebreaker");
 
     var live = builder.AddProject<Projects.Codebreaker_Live>("live")
         .WithExternalHttpEndpoints()

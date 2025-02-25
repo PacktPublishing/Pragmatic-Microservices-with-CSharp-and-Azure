@@ -11,7 +11,7 @@ var initAppConfig = builder.AddProject<Projects.Codebreaker_InitalizeAppConfig>(
     .WaitFor(appConfig);
 
 var cosmos = builder.AddAzureCosmosDB("codebreakercosmos")
-    .AddDatabase("codebreaker");
+    .AddCosmosDatabase("codebreaker");
 
 var createCosmos = builder.AddProject<Projects.Codebreaker_CosmosCreate>("createcosmos")
     .WithReference(cosmos)

@@ -20,7 +20,7 @@ if (startupMode == "OnPremises")
         .AddDatabase("CodebreakerSql");
 
     var cosmos = builder.AddAzureCosmosDB("codebreakercosmos")
-        .AddDatabase("codebreaker");
+        .AddCosmosDatabase("codebreaker");
 
     var gameAPIs = builder.AddProject<Projects.Codebreaker_GameAPIs>("gameapis")
         .WithExternalHttpEndpoints()
@@ -58,10 +58,10 @@ else
     var blob = storage.AddBlobs("checkpoints");
 
     var eventHub = builder.AddAzureEventHubs("codebreakerevents")
-        .AddEventHub("games");
+        .AddHub("games");
 
     var cosmos = builder.AddAzureCosmosDB("codebreakercosmos")
-        .AddDatabase("codebreaker");
+        .AddCosmosDatabase("codebreaker");
 
     var gameAPIs = builder.AddProject<Projects.Codebreaker_GameAPIs>("gameapis")
         .WithExternalHttpEndpoints()

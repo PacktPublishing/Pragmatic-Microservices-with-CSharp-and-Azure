@@ -16,7 +16,7 @@ var redis = builder.AddRedis("redis")
     .PublishAsContainer();
 
 var cosmos = builder.AddAzureCosmosDB("codebreakercosmos")
-    .AddDatabase("codebreaker");
+    .AddCosmosDatabase("codebreaker");
 
 var live = builder.AddProject<Projects.Codebreaker_Live>("live", "https")
     .WithExternalHttpEndpoints()

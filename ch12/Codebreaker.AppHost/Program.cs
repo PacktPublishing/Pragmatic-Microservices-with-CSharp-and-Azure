@@ -45,7 +45,7 @@ else
     var appInsights = builder.AddAzureApplicationInsights("insights", logs);
 
     var cosmos = builder.AddAzureCosmosDB("codebreakercosmos")
-        .AddDatabase("codebreaker");
+        .AddCosmosDatabase("codebreaker");
 
     var gameAPIs = builder.AddProject<Projects.Codebreaker_GameAPIs>("gameapis")
         .WithReference(cosmos)
