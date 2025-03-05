@@ -1,4 +1,8 @@
-﻿namespace Codebreaker.GameAPIs;
+﻿using Codebreaker.Data.PostgreSQL;
+
+using Npgsql;
+
+namespace Codebreaker.GameAPIs;
 
 public static class ApplicationServices
 {
@@ -13,6 +17,23 @@ public static class ApplicationServices
                 options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
             });
             builder.EnrichSqlServerDbContext<GamesSqlServerContext>();
+        }
+
+        static void ConfigurePostgres(IHostApplicationBuilder builder)
+        {
+            var connectionString = builder.Configuration.GetConnectionString("CodebreakerPostgres") ?? throw new InvalidOperationException("Could not read SQL Server connection string");
+
+            builder.Services.AddNpgsqlDataSource(connectionString, dataSourceBuilder =>
+            {
+                dataSourceBuilder.EnableDynamicJson(); 
+            });
+
+            builder.Services.AddDbContextPool<IGamesRepository, GamesPostgreSQLContext>(options =>
+            {
+                options.UseNpgsql(connectionString);
+                options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+            });
+            builder.EnrichNpgsqlDbContext<GamesPostgreSQLContext>();
         }
 
         static void ConfigureCosmos(IHostApplicationBuilder builder)
@@ -46,6 +67,9 @@ public static class ApplicationServices
             case "SqlServer":
                 ConfigureSqlServer(builder);
                 break;
+            case "Postgres":
+                ConfigurePostgres(builder);
+                break;
             default:
                 ConfigureInMemory(builder);
                 break;
@@ -68,6 +92,26 @@ public static class ApplicationServices
                 {
                     await context.Database.MigrateAsync();
                     app.Logger.LogInformation("SQL Server database updated");
+                }
+            }
+            catch (Exception ex)
+            {
+                app.Logger.LogError(ex, "Error updating database");
+                throw;
+            }
+        }
+        else if (dataStore == "Postgres")
+        {
+            try
+            {
+                using var scope = app.Services.CreateScope();
+                var repo = scope.ServiceProvider.GetRequiredService<IGamesRepository>();
+                if (repo is GamesPostgreSQLContext context)
+                {
+                    // TODO: migrations might be done in another step
+                    // for now, just ensure the database is created
+                    await context.Database.EnsureCreatedAsync();
+                    app.Logger.LogInformation("PostgreSQL database created");
                 }
             }
             catch (Exception ex)

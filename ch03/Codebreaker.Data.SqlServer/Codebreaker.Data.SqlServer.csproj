@@ -18,6 +18,7 @@
     <ProjectReference Include="..\Codebreaker.GameAPIs.Models\Codebreaker.GameAPIs.Models.csproj" />
   </ItemGroup>
 
+	<!-- Use GamesSqlServerContextFactory only for migrations in debug mode -->
   <ItemGroup>
     <Compile Remove="GamesSqlServerContextFactory.cs" />
   </ItemGroup>
