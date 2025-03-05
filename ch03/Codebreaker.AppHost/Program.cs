@@ -31,5 +31,14 @@ else if (dataStore == "Cosmos")
     gameApis
         .WithReference(cosmosDB);
 }
+else if (dataStore == "Postgres")
+{
+    var postgres = builder.AddPostgres("postgres")
+        .WithPgAdmin()
+        .AddDatabase("CodebreakerPostgres");
+
+    gameApis
+        .WithReference(postgres);
+}
 
 builder.Build().Run();
