@@ -1,4 +1,4 @@
-# Aspire updates
+# .NET Aspire updates
 
 What's changed with the new versions of .NET Aspire?
 
@@ -41,6 +41,32 @@ The WaitFor method is new with .NET Aspire 9 which allows waiting with the start
 #### Page 13, .NET Aspire integrations
 
 *.NET Aspire components* have been renamed to *.NET Aspire integrations*
+
+### Chapter 5, Containerization of Microservices
+
+Because of the change to use *Central Package Management (CPM)*, the Dockerfile changed to copy the file *Directory.PAckages.props* for a build.
+
+#### Page 132, Codebreaker.GameAPIs/Dockerfile
+
+```Dockerfile
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
+ARG BUILD_CONFIGURATION=Release
+WORKDIR /src
+COPY ["Directory.Packages.props", "."]
+COPY ["ch05/FinalDocker/Codebreaker.GameAPIs/Codebreaker.GameAPIs.csproj", "ch05/FinalDocker/Codebreaker.GameAPIs/"]
+RUN dotnet restore "./ch05/FinalDocker/Codebreaker.GameAPIs/Codebreaker.GameAPIs.csproj"
+COPY . .
+WORKDIR "/src/ch05/FinalDocker/Codebreaker.GameAPIs"
+RUN dotnet build "./Codebreaker.GameAPIs.csproj" -c $BUILD_CONFIGURATION -o /app/build
+```
+
+### Page 134, Building a Docker Image
+
+The build command needs to use the context of the root directory where the file `Directory.Packages.props` is located:
+
+```bash
+docker build ../.. -f Codebreaker.GameAPIs/Dockerfile -t codebreaker/gamesapi:3.5.4 -t codebreaker/gamesapi.latest
+```
 
 ### Chapter 11, Logging and Monitoring
 
