@@ -6,7 +6,7 @@ Welcome to this repository with the source code for the book!
 
 ## .NET Aspire Updates
 
-[See updates](Updates.md)
+[See updates](Updates.md) with all the chapters based on new .NET Aspire features, as well as other .NET updates.
 
 ## Installation requirements
 
