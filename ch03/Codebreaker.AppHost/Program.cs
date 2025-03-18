@@ -1,7 +1,8 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
-// change the DataStore setting in Properties/launchSettings.json to either Cosmos or SqlServer
+// open appsettings.json and appsettings.Development.json to set the DataStore value
 string dataStore = builder.Configuration["DataStore"] ?? "InMemory";
+string useEmulator = builder.Configuration["UseEmulator"] ?? "PreferDocker";  // options: PreferDocker, PreferLocal, UseAzure
 
 var gameApis = builder.AddProject<Projects.Codebreaker_GameAPIs>("gameapis")
     .WithExternalHttpEndpoints()
@@ -20,16 +21,62 @@ if (dataStore == "SqlServer")
 }
 else if (dataStore == "Cosmos")
 {
-    // When using Cosmos with the following connection string, you need to start the Azure Cosmos emulator on your system, and create a Codebreaker database in this emulator (see information in the readme file)
-    var cosmosDB = builder.AddConnectionString("codebreakercosmos");
+    IResourceBuilder<AzureCosmosDBResource>? cosmos = null;
 
-    //// Comment the previous line and uncomment the next three lines to use the Azure Cosmos emulator in a Docker container (if this is running and doesn't have certificate / timing / HTTPS issues (see the readme file)
-    //var cosmos = builder.AddAzureCosmosDB("codebreakercosmos");
-    //var cosmosDB = cosmos
-    //    .AddDatabase("codebreaker");
+    if (useEmulator == "PreferLocal")
+    {
+        // this requires to start the Azure Cosmos DB emulator running on your system
+        // running the emulator, create a database named `codebreaker`, a container named `GamesV3` with a partition key `/PartitionKey`!
+        // with the other options, this is created automatically with the app-model.
 
-    gameApis
-        .WithReference(cosmosDB);
+        var cosmosdb = builder.AddConnectionString("codebreakercosmos");
+
+        gameApis
+            .WithReference(cosmosdb)
+            .WaitFor(cosmosdb);
+    }
+    else if (useEmulator == "PreferDocker")
+    {
+        // Cosmos emulator running in a container
+        // https://learn.microsoft.com/en-us/azure/cosmos-db/emulator-linux
+        cosmos = builder.AddAzureCosmosDB("codebreakercosmos")
+            .RunAsPreviewEmulator(p =>
+                p.WithDataExplorer()
+                .WithDataVolume("codebreaker-cosmos-data")
+                .WithLifetime(ContainerLifetime.Session));
+    }
+    else
+    {
+        // Azure Cosmos DB
+        cosmos = builder.AddAzureCosmosDB("codebreakercosmos")
+            .WithAccessKeyAuthentication();
+    }
+
+    if (useEmulator is not "PreferLocal")
+    {
+        if (cosmos is null) throw new InvalidOperationException("cosmos is null");
+
+        var cosmosDB = cosmos
+            .AddCosmosDatabase("codebreaker")
+            .AddContainer("GamesV3", "/PartitionKey");
+
+        gameApis
+            .WithReference(cosmos)
+            .WaitFor(cosmos)
+            .WithEnvironment(context =>
+            {
+                if (cosmos.Resource.IsEmulator || cosmos.Resource.UseAccessKeyAuthentication)
+                {
+                    context.EnvironmentVariables["Aspire__Microsoft__EntityFrameworkCore__Cosmos__CodebreakerCosmos__ConnectionString"] = cosmos.Resource.ConnectionStringExpression;
+                }
+                else
+                {
+                    context.EnvironmentVariables["Aspire__Microsoft__EntityFrameworkCore__Cosmos__CodebreakerCosmos__AccountEndpoint"] = cosmos.Resource.ConnectionStringExpression;
+                }
+            });
+        // environment temporary workaround until 9.2  https://github.com/dotnet/aspire/issues/7785#issuecomment-2686122073
+    }
+
 }
 else if (dataStore == "Postgres")
 {
@@ -38,7 +85,18 @@ else if (dataStore == "Postgres")
         .AddDatabase("CodebreakerPostgres");
 
     gameApis
-        .WithReference(postgres);
+        .WithReference(postgres)
+        .WaitFor(postgres);
+}
+else if (dataStore == "Mongo")
+{
+    var mongo = builder.AddMongoDB("mongo")
+        .WithMongoExpress()
+        .AddDatabase("CodebreakerMongo");
+
+    gameApis
+        .WithReference(mongo)
+        .WaitFor(mongo);
 }
 
 builder.Build().Run();
