@@ -42,6 +42,44 @@ The WaitFor method is new with .NET Aspire 9 which allows waiting with the start
 
 *.NET Aspire components* have been renamed to *.NET Aspire integrations*
 
+### Chapter 3, Writing Data to Relational and NoSQL Databases
+
+Start Docker Desktop (or Podman) to use different databases not installed on the local system. The chapter has been enhanced to include *PostgreSQL*, and *Azure Cosmos DB with a Docker preview image*. This preview image requires to use the 
+
+#### Page 78, Codebreaker.AppHost/Program.cs
+
+You no longer need to reference the SQL Server password. You can use this code:
+
+```csharp
+    var sqlDB = builder.AddSqlServer("sql")
+        .WithDataVolume("codebreaker-sql-data")
+        .AddDatabase("CodebreakerSql", "codebreaker");
+```
+
+With this, the password is stored in the user secrets. Check the user secrets to read it.
+
+#### Page 93
+
+```csharp
+// Codebreaker.AppHost/Program.cs
+        cosmos = builder.AddAzureCosmosDB("codebreakercosmos")
+            .RunAsPreviewEmulator(p =>
+                p.WithDataExplorer()
+                .WithDataVolume("codebreaker-cosmos-data")
+                .WithLifetime(ContainerLifetime.Session));
+```
+
+A Docker image is used here to run Azure Cosmos DB locally. The Docker volume `codebreaker-cosmos-data` keeps the data available between runs.
+
+```csharp
+// Codebreaker.AppHost/Program.cs
+        var cosmosDB = cosmos
+            .AddCosmosDatabase("codebreaker")
+            .AddContainer("GamesV3", "/PartitionKey");
+```
+
+Aspire .NET 9.1 allows creating the Cosmos container - using `AddCosmosDatabase` and `AddContainer` instead of `AddDatabase`.
+
 ### Chapter 5, Containerization of Microservices
 
 Because of the change to use *Central Package Management (CPM)*, the Dockerfile changed to copy the file *Directory.PAckages.props* for a build.
