@@ -10,14 +10,13 @@ var gameApis = builder.AddProject<Projects.Codebreaker_GameAPIs>("gameapis")
 
 if (dataStore == "SqlServer")
 {
-    var sqlServer = builder.AddSqlServer("sql")
-        .WithDataVolume();
-    var sqlDB = sqlServer
+    var sqlDB = builder.AddSqlServer("sql")
+        .WithDataVolume("codebreaker-sql-data")
         .AddDatabase("CodebreakerSql", "codebreaker");
 
     gameApis
         .WithReference(sqlDB)
-        .WaitFor(sqlServer);
+        .WaitFor(sqlDB);
 }
 else if (dataStore == "Cosmos")
 {
@@ -37,7 +36,7 @@ else if (dataStore == "Cosmos")
     }
     else if (useEmulator == "PreferDocker")
     {
-        // Cosmos emulator running in a container
+        // Cosmos emulator running in a Docker container
         // https://learn.microsoft.com/en-us/azure/cosmos-db/emulator-linux
         cosmos = builder.AddAzureCosmosDB("codebreakercosmos")
             .RunAsPreviewEmulator(p =>
@@ -54,33 +53,25 @@ else if (dataStore == "Cosmos")
 
     if (useEmulator is not "PreferLocal")
     {
-        if (cosmos is null) throw new InvalidOperationException("cosmos is null");
+        if (cosmos is null)
+        {
+            throw new InvalidOperationException("cosmos is null");
+        }
 
         var cosmosDB = cosmos
             .AddCosmosDatabase("codebreaker")
             .AddContainer("GamesV3", "/PartitionKey");
 
         gameApis
-            .WithReference(cosmos)
-            .WaitFor(cosmos)
-            .WithEnvironment(context =>
-            {
-                if (cosmos.Resource.IsEmulator || cosmos.Resource.UseAccessKeyAuthentication)
-                {
-                    context.EnvironmentVariables["Aspire__Microsoft__EntityFrameworkCore__Cosmos__CodebreakerCosmos__ConnectionString"] = cosmos.Resource.ConnectionStringExpression;
-                }
-                else
-                {
-                    context.EnvironmentVariables["Aspire__Microsoft__EntityFrameworkCore__Cosmos__CodebreakerCosmos__AccountEndpoint"] = cosmos.Resource.ConnectionStringExpression;
-                }
-            });
-        // environment temporary workaround until 9.2  https://github.com/dotnet/aspire/issues/7785#issuecomment-2686122073
+            .WithReference(cosmosDB)
+            .WaitFor(cosmosDB);
     }
 
 }
 else if (dataStore == "Postgres")
 {
     var postgres = builder.AddPostgres("postgres")
+        .WithDataVolume("codebreaker-postgres-data")
         .WithPgAdmin()
         .AddDatabase("CodebreakerPostgres");
 
