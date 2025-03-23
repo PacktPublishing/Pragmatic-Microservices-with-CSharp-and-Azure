@@ -1,5 +1,3 @@
-using Xunit;
-
 namespace CodeBreaker.Bot.Tests;
 
 public class CodeBreakerAlgorithmsTests
@@ -116,5 +114,4 @@ public class CodeBreakerAlgorithmsTests
         List<int> actual = CodeBreakerAlgorithms.HandleNoMatches(toMatch, selection);
         Assert.Single(actual);
     }
-
 }

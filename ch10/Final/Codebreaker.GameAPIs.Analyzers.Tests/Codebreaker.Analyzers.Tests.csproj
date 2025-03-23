@@ -20,7 +20,7 @@
 		<Using Include="Xunit" />
 	</ItemGroup>
 
-  <ItemGroup>
+	<ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk"/>
     <PackageReference Include="Moq"/>
     <PackageReference Include="xunit.v3"/>

@@ -132,13 +132,13 @@ public class ShapeGame5x5x4AnalyzerTests
             IsVictory = false,
             FieldValues = new Dictionary<string, IEnumerable<string>>()
             {
-                [FieldCategories.Colors] = TestData5x5x4.Colors5.ToList(),
-                [FieldCategories.Shapes] = TestData5x5x4.Shapes5.ToList()
+                [FieldCategories.Colors] = [.. TestData5x5x4.Colors5],
+                [FieldCategories.Shapes] = [.. TestData5x5x4.Shapes5]
             },
             Codes = codes
         };
 
-        ShapeGameGuessAnalyzer analyzer = new(game, guesses.ToPegs<ShapeAndColorField>().ToArray(), 1);
+        ShapeGameGuessAnalyzer analyzer = new(game, [.. guesses.ToPegs<ShapeAndColorField>()], 1);
         return analyzer.GetResult();
     }
 }
