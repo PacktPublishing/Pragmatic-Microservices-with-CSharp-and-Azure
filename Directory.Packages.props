@@ -116,6 +116,7 @@
     <PackageVersion Include="Swashbuckle.AspNetCore" Version="8.0.0" />
     <PackageVersion Include="Swashbuckle.AspNetCore.Annotations" Version="8.0.0" />
     <PackageVersion Include="xunit" Version="2.9.3" />
+		<PackageVersion Include="xunit.v3" Version="2.0.0" />
     <PackageVersion Include="xunit.runner.visualstudio" Version="3.0.2" />
     <PackageVersion Include="Yarp.ReverseProxy" Version="2.3.0" />
     <!-- Pomelo transitive package for Aspire.Pomelo.EntityFrameworkCore.MySql to use EF Core 9 instead of 8 -->
