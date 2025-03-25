@@ -30,8 +30,6 @@ builder.Services.AddSwaggerGen(options =>
 
 builder.AddApplicationServices();
 
-builder.Services.AddScoped<IGamesService, GamesService>();
-
 var app = builder.Build();
 
 app.MapDefaultEndpoints();
