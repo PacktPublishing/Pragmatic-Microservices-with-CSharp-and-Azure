@@ -4,9 +4,16 @@ using System.Text.Json;
 
 namespace Codebreaker.GameAPIs.Services;
 
-public class KafkaGameReportProducer(IProducer<string, string> producerClient, ILogger<KafkaGameReportProducer> logger) 
-    : IGameReport
+public sealed class KafkaGameReportProducer(
+    IProducer<string, string> producerClient, 
+    ILogger<KafkaGameReportProducer> logger) 
+    : IGameReport, IDisposable
 {
+    public void Dispose()
+    {
+        producerClient.Flush(TimeSpan.FromSeconds(5));
+    }
+
     public Task ReportGameEndedAsync(GameSummary game, CancellationToken cancellationToken = default)
     {
         Message<string, string> message = new()
@@ -20,8 +27,6 @@ public class KafkaGameReportProducer(IProducer<string, string> producerClient, I
         {
             _ = producerClient.ProduceAsync(topic, message, cancellationToken);
         }
-
-        producerClient.Flush(TimeSpan.FromSeconds(5));
 
         logger.GameCompletionSent(game.Id, "Kafka");
         return Task.CompletedTask;

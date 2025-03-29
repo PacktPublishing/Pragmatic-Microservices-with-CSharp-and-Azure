@@ -9,7 +9,8 @@ using System.Text.Json;
 
 namespace Codebreaker.Ranking.Services;
 
-public class GameSummaryKafkaConsumer(IConsumer<string, string> kafkaClient, IDbContextFactory<RankingsContext> factory, ILogger<GameSummaryEventProcessor> logger) : IGameSummaryProcessor
+// public class GameSummaryKafkaConsumer(IConsumer<string, string> kafkaClient, IDbContextFactory<RankingsContext> factory, ILogger<GameSummaryEventProcessor> logger) : IGameSummaryProcessor
+public class GameSummaryKafkaConsumer(IConsumer<string, string> kafkaClient, IServiceScopeFactory serviceScopeFactory, ILogger<GameSummaryEventProcessor> logger) : IGameSummaryProcessor
 {
     public async Task StartProcessingAsync(CancellationToken cancellationToken = default)
     {
@@ -32,13 +33,15 @@ public class GameSummaryKafkaConsumer(IConsumer<string, string> kafkaClient, IDb
                         continue;
                     }
 
-                    using var context = await factory.CreateDbContextAsync(cancellationToken);
+                    // using var context = await factory.CreateDbContextAsync(cancellationToken);
+                    using var scope = serviceScopeFactory.CreateScope();
+                    using var context = scope.ServiceProvider.GetRequiredService<RankingsContext>();
                     await context.AddGameSummaryAsync(summary, cancellationToken);
                 }
                 catch (ConsumeException ex) when (ex.HResult == -2146233088)
                 {
                     logger.LogWarning("Consume exception {Message}", ex.Message);
-                    await Task.Delay(TimeSpan.FromSeconds(10));
+                    await Task.Delay(TimeSpan.FromSeconds(10), cancellationToken);
                 }
             }
         }

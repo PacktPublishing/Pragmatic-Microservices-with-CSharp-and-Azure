@@ -1,31 +1,25 @@
-using Microsoft.Extensions.Azure;
+using Codebreaker.AppHost;
 
 var builder = DistributedApplication.CreateBuilder(args);
 
+// open appsettings.json and appsettings.Development.json to set the settings
 string dataStore = builder.Configuration["DataStore"] ?? "InMemory";
+string useEmulator = builder.Configuration["UseEmulator"] ?? "PreferDocker";  // options: PreferDocker, PreferLocal, UseAzure
 string startupMode = builder.Configuration["STARTUP_MODE"] ?? "Azure";
+string cache = builder.Configuration["Cache"] ?? "Redis";
+
 string botLoop = builder.Configuration.GetSection("Bot")["Loop"] ?? "false";
 string botDelay = builder.Configuration.GetSection("Bot")["Delay"] ?? "1000";
 
-var redis = builder.AddRedis("redis")
-    .WithRedisCommander()
-    .PublishAsContainer();
+IResourceBuilder<ProjectResource> gameAPIs;
+IResourceBuilder<ProjectResource> ranking;
 
 if (startupMode == "OnPremises")
 {
     var kafka = builder.AddKafka("kafkamessaging");
 
-    var sqlServer = builder.AddSqlServer("sql")
-        .WithDataVolume()
-        .AddDatabase("CodebreakerSql");
-
-    var cosmos = builder.AddAzureCosmosDB("codebreakercosmos")
-        .AddCosmosDatabase("codebreaker");
-
-    var gameAPIs = builder.AddProject<Projects.Codebreaker_GameAPIs>("gameapis")
+    gameAPIs = builder.AddProject<Projects.Codebreaker_GameAPIs>("gameapis")
         .WithExternalHttpEndpoints()
-        .WithReference(sqlServer)
-        .WithReference(redis)
         .WithReference(kafka)
         .WithEnvironment("DataStore", dataStore)
         .WithEnvironment("StartupMode", startupMode);
@@ -41,9 +35,8 @@ if (startupMode == "OnPremises")
         .WithReference(kafka)
         .WithEnvironment("StartupMode", startupMode);
 
-    builder.AddProject<Projects.Codebreaker_Ranking>("ranking")
+    ranking = builder.AddProject<Projects.Codebreaker_Ranking>("ranking")
         .WithExternalHttpEndpoints()
-        .WithReference(cosmos)
         .WithReference(kafka)
         .WithEnvironment("StartupMode", startupMode);
 }
@@ -52,45 +45,85 @@ else
     var logs = builder.AddAzureLogAnalyticsWorkspace("logs");
     var insights = builder.AddAzureApplicationInsights("insights", logs);
     var signalR = builder.AddAzureSignalR("signalr");
-    var storage = builder.AddAzureStorage("storage");
 
-    var botQueue = storage.AddQueues("botqueue");
-    var blob = storage.AddBlobs("checkpoints");
+    var storage = builder.AddCodebreakerStorage(useEmulator == "PreferDocker");
+ 
+    var eventHub = builder.AddCodebreakerEventHub(useEmulator: true);
 
-    var eventHub = builder.AddAzureEventHubs("codebreakerevents")
-        .AddHub("games");
-
-    var cosmos = builder.AddAzureCosmosDB("codebreakercosmos")
-        .AddCosmosDatabase("codebreaker");
-
-    var gameAPIs = builder.AddProject<Projects.Codebreaker_GameAPIs>("gameapis")
+    gameAPIs = builder.AddProject<Projects.Codebreaker_GameAPIs>("gameapis")
         .WithExternalHttpEndpoints()
-        .WithReference(cosmos)
-        .WithReference(redis)
         .WithReference(insights)
         .WithReference(eventHub)
         .WithEnvironment("DataStore", dataStore)
-        .WithEnvironment("StartupMode", startupMode);
+        .WithEnvironment("StartupMode", startupMode)
+        .WaitFor(insights)
+        .WaitFor(eventHub);
 
     builder.AddProject<Projects.Codebreaker_BotQ>("bot")
         .WithReference(insights)
-        .WithReference(botQueue)
+        .WithReference(storage.BotQueue)
         .WithReference(gameAPIs)
         .WithEnvironment("Bot__Loop", botLoop)
-        .WithEnvironment("Bot__Delay", botDelay);
+        .WithEnvironment("Bot__Delay", botDelay)
+        .WaitFor(gameAPIs);
 
     var live = builder.AddProject<Projects.Codebreaker_Live>("live")
         .WithExternalHttpEndpoints()
         .WithReference(insights)
         .WithReference(eventHub)
-        .WithReference(signalR);
+        .WithReference(signalR)
+        .WaitFor(gameAPIs);
 
-    builder.AddProject<Projects.Codebreaker_Ranking>("ranking")
+    ranking = builder.AddProject<Projects.Codebreaker_Ranking>("ranking")
         .WithExternalHttpEndpoints()
-        .WithReference(cosmos)
         .WithReference(insights)
         .WithReference(eventHub)
-        .WithReference(blob);
+        .WithReference(storage.Blob)
+        .WaitFor(storage.Blob)
+        .WaitFor(eventHub);
+}
+
+if (dataStore == "Cosmos")
+{
+    var cosmos = builder.AddCodebreakerCosmos(useEmulator == "PreferDocker");
+
+    gameAPIs.WithReference(cosmos.GamesContainer)
+        .WaitFor(cosmos.GamesContainer);
+
+    ranking.WithReference(cosmos.RankingContainer)
+        .WaitFor(cosmos.RankingContainer);
+
+}
+else if (dataStore == "SqlServer")
+{
+    var sqlServer = builder.AddCodebreakerSqlServer(useEmulator == "PreferDocker");
+
+    gameAPIs.WithReference(sqlServer)
+        .WaitFor(sqlServer);
+
+}
+else if (dataStore == "Postgres")
+{
+
+}
+else
+{
+    // in-memory, no integration is needed
+}
+
+if (cache == "Redis")
+{
+    var redis = builder.AddCodebreakerRedis();
+
+    gameAPIs.WithReference(redis)
+        .WaitFor(redis);
+}
+else
+{
+    var garnet = builder.AddCodebreakerGarnet();
+
+    gameAPIs.WithReference(garnet)
+        .WaitFor(garnet);
 }
 
 builder.Build().Run();

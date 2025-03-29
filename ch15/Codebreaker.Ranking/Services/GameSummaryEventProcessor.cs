@@ -3,11 +3,13 @@
 using Codebreaker.GameAPIs.Models;
 using Codebreaker.Ranking.Data;
 
-using Microsoft.EntityFrameworkCore;
-
 namespace Codebreaker.Ranking.Services;
 
-public class GameSummaryEventProcessor(EventProcessorClient client, IDbContextFactory<RankingsContext> factory, ILogger<GameSummaryEventProcessor> logger) : IGameSummaryProcessor
+// public class GameSummaryEventProcessor(EventProcessorClient client, IDbContextFactory<RankingsContext> factory, ILogger<GameSummaryEventProcessor> logger) : IGameSummaryProcessor
+public class GameSummaryEventProcessor(
+    EventProcessorClient client, 
+    IServiceScopeFactory serviceScopeFactory, 
+    ILogger<GameSummaryEventProcessor> logger) : IGameSummaryProcessor
 {
     public async Task StartProcessingAsync(CancellationToken cancellationToken = default)
     {
@@ -23,7 +25,9 @@ public class GameSummaryEventProcessor(EventProcessorClient client, IDbContextFa
                 return;
             }
             logger.LogInformation("Received game completion event for game {gameId}", summary.Id);
-            using var context = await factory.CreateDbContextAsync(cancellationToken);
+            // using var context = await factory.CreateDbContextAsync(cancellationToken);
+            using var scope = serviceScopeFactory.CreateScope();
+            using var context = scope.ServiceProvider.GetRequiredService<RankingsContext>();
 
             await context.AddGameSummaryAsync(summary, cancellationToken);
             await args.UpdateCheckpointAsync(cancellationToken);
