@@ -42,6 +42,42 @@ The WaitFor method is new with .NET Aspire 9 which allows waiting with the start
 
 *.NET Aspire components* have been renamed to *.NET Aspire integrations*
 
+### Chapter 2, Minimal APIs - Creating REST Services
+
+#### Page 54, Testing the service
+
+HTTP Files support setting variables to access the result from an invocation, and use it with a next request, e.g.
+
+```json
+### Create a game
+# @name create
+POST {{Codebreaker.GameAPIs_HostAddress}}/games/
+Content-Type: {{ContentType}}
+
+{
+  "gameType": "Game6x4",
+  "playerName": "test"
+}
+
+### Set a move
+PATCH {{Codebreaker.GameAPIs_HostAddress}}/games/{{create.response.body.$.id}}
+Content-Type: {{ContentType}}
+
+{
+  "gameType": "Game6x4",
+  "playerName": "test",
+  "moveNumber": 1,
+  "guessPegs": [
+    "Red",
+    "Green",
+    "Blue",
+    "Yellow"
+  ]
+}
+```
+
+Using `@name create` specifies the `create` variable, and the result is accessed using `{{create.response.body.$.id}}`.
+
 ### Chapter 3, Writing Data to Relational and NoSQL Databases
 
 Start Docker Desktop (or Podman) to use different databases not installed on the local system. The chapter has been enhanced to include *PostgreSQL*, and *Azure Cosmos DB with a Docker preview image*. This preview image requires to use the 
