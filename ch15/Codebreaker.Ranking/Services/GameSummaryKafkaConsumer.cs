@@ -9,9 +9,15 @@ using System.Text.Json;
 
 namespace Codebreaker.Ranking.Services;
 
+// use this again after fixing Enrich
 // public class GameSummaryKafkaConsumer(IConsumer<string, string> kafkaClient, IDbContextFactory<RankingsContext> factory, ILogger<GameSummaryEventProcessor> logger) : IGameSummaryProcessor
 public class GameSummaryKafkaConsumer(IConsumer<string, string> kafkaClient, IServiceScopeFactory serviceScopeFactory, ILogger<GameSummaryEventProcessor> logger) : IGameSummaryProcessor
 {
+    /// <summary>
+    /// Starts processing messages from a Kafka topic and saves game summaries to a database.
+    /// </summary>
+    /// <param name="cancellationToken">Allows the operation to be cancelled, providing a way to stop processing if needed.</param>
+    /// <returns>Completes when the processing is finished or cancelled.</returns>
     public async Task StartProcessingAsync(CancellationToken cancellationToken = default)
     {
 
@@ -56,6 +62,11 @@ public class GameSummaryKafkaConsumer(IConsumer<string, string> kafkaClient, ISe
         }
     }
 
+    /// <summary>
+    /// Stops the processing of messages.
+    /// </summary>
+    /// <param name="cancellationToken">Used to signal cancellation of the operation if needed.</param>
+    /// <returns>Returns a completed task indicating the operation has finished.</returns>
     public Task StopProcessingAsync(CancellationToken cancellationToken = default)
     {
         kafkaClient.Unsubscribe();

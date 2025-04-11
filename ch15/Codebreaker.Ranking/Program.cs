@@ -18,9 +18,9 @@ app.UseSwaggerUI();
 
 app.MapApplicationEndpoints();
 
-var eventProcessor = app.Services.GetRequiredService<IGameSummaryProcessor>();
-await eventProcessor.StartProcessingAsync();
+//var eventProcessor = app.Services.GetRequiredService<IGameSummaryProcessor>();
+//await eventProcessor.StartProcessingAsync();
 
 app.Run();
 
-await eventProcessor.StopProcessingAsync();
+//await eventProcessor.StopProcessingAsync();

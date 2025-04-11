@@ -18,14 +18,15 @@ public static class ApplicationServices
 
             builder.Services.AddSingleton<IGameSummaryProcessor, GameSummaryKafkaConsumer>();
         }
-        else
+        else  // Azure
         {
-            builder.AddKeyedAzureBlobClient("checkpoints");
+            builder.AddKeyedAzureBlobClient("checkpoints-ranking");
 
-            builder.AddAzureEventProcessorClient("games", settings =>
+            builder.AddAzureEventProcessorClient("events", settings =>
             {
-                settings.EventHubName = "games";
-                settings.BlobClientServiceKey = "checkpoints";
+                settings.EventHubName = "completedgames";
+                settings.ConsumerGroup = "ranking";
+                settings.BlobClientServiceKey = "checkpoints-ranking";
             });
 
             builder.Services.AddSingleton<IGameSummaryProcessor, GameSummaryEventProcessor>();
