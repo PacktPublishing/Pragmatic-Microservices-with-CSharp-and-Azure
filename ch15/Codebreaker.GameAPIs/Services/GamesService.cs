@@ -3,7 +3,22 @@ using System.Diagnostics;
 
 namespace Codebreaker.GameAPIs.Services;
 
-public class GamesService(IGamesRepository dataRepository, IDistributedCache distributedCache, IGameReport liveClient, ILogger<GamesService> logger, GamesMetrics metrics, [FromKeyedServices("Codebreaker.GameAPIs")] ActivitySource activitySource) : IGamesService
+/// <summary>
+/// Handles game operations such as starting, setting moves, retrieving, deleting, and ending games asynchronously.
+/// </summary>
+/// <param name="dataRepository">Used for storing and retrieving game data from a persistent storage.</param>
+/// <param name="distributedCache">Facilitates caching game data to improve retrieval performance.</param>
+/// <param name="liveClient">Responsible for reporting game status updates to an external service.</param>
+/// <param name="logger">Logs various events and errors occurring during game operations.</param>
+/// <param name="metrics">Tracks and records metrics related to game activities and performance.</param>
+/// <param name="activitySource">Creates and manages activity tracing for monitoring operations.</param>
+public class GamesService(
+    IGamesRepository dataRepository, 
+    IDistributedCache distributedCache, 
+    IGameReport liveClient, 
+    ILogger<GamesService> logger, 
+    GamesMetrics metrics, 
+    [FromKeyedServices("Codebreaker.GameAPIs")] ActivitySource activitySource) : IGamesService
 {
     private const string GameTypeTagName = "codebreaker.gameType";
     private const string GameIdTagName = "codebreaker.gameId";

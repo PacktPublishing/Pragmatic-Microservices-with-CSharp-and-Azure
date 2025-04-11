@@ -1,5 +1,4 @@
-﻿using Codebreaker.GameAPIs.Services;
-using Codebreaker.Grpc;
+﻿using Codebreaker.Grpc;
 
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 
@@ -110,7 +109,7 @@ public static class ApplicationServices
         {
             builder.Services.AddScoped<IGameReport, EventHubReportProducer>();
 
-            builder.AddAzureEventHubProducerClient("codebreakerevents", settings =>
+            builder.AddAzureEventHubProducerClient("games", settings =>
             {
                 settings.EventHubName = "games";
             });

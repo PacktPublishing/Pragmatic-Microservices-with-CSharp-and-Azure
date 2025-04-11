@@ -3,7 +3,8 @@
 namespace Codebreaker.GameAPIs.Services;
 
 /// <summary>
-/// A factory class for creating instances of the <see cref="Game"/> class.
+/// Creates a new game based on the specified type and player name, returning a configured game instance.
+/// Throws an exception for invalid game types.
 /// </summary>
 public static class GamesFactory
 {
@@ -12,12 +13,14 @@ public static class GamesFactory
     private static readonly string[] s_colors5 = [Colors.Red, Colors.Green, Colors.Blue, Colors.Yellow, Colors.Purple];
     private static readonly string[] s_shapes5 = [Shapes.Circle, Shapes.Square, Shapes.Triangle, Shapes.Star, Shapes.Rectangle];
 
+
     /// <summary>
-    /// Creates a game object with specified gameType and playerName.
+    /// Creates a new game based on the specified type and player name.
     /// </summary>
-    /// <param name="gameType">The type of game to be created.</param>
-    /// <param name="playerName">The name of the player.</param>
-    /// <returns>The created game object.</returns>
+    /// <param name="gameType">Specifies the type of game to be created, determining its rules and structure.</param>
+    /// <param name="playerName">Indicates the name of the player participating in the game.</param>
+    /// <returns>Returns a new game instance configured according to the specified type.</returns>
+    /// <exception cref="CodebreakerException">Thrown when an invalid game type is provided.</exception>
     public static Game CreateGame(string gameType, string playerName)
     {
         Game Create6x4SimpleGame() =>
@@ -58,10 +61,9 @@ public static class GamesFactory
                     { FieldCategories.Colors, s_colors5 },
                     { FieldCategories.Shapes, s_shapes5 }
                 },
-                Codes = Random.Shared.GetItems(s_shapes5, 4)
+                Codes = [.. Random.Shared.GetItems(s_shapes5, 4)
                     .Zip(Random.Shared.GetItems(s_colors5, 4), (shape, color) => (Shape: shape, Color: color))
-                    .Select(item => string.Join(';', item.Shape, item.Color))
-                    .ToArray()
+                    .Select(item => string.Join(';', item.Shape, item.Color))]
             };
         
         return gameType switch
@@ -75,13 +77,13 @@ public static class GamesFactory
     }
 
     /// <summary>
-    /// Applies a player's move to a game and returns a <see cref="Move"/> object that encapsulates the player's guess and the result of the guess.
-    /// Returns the Move and updates the Game
+    /// Applies a move to the game based on the provided guesses and move number, returning the created move object.
     /// </summary>
-    /// <param name="game">The game to apply the move to.</param>
-    /// <param name="guesses">The player's guesses.</param>
-    /// <param name="moveNumber">The move number.</param>
-    /// <returns>A <see cref="Move"/> object that encapsulates the player's guess and the result of the guess.</returns>
+    /// <param name="game">Represents the current game instance to which the move is being applied.</param>
+    /// <param name="guesses">Contains the player's guesses that will be evaluated against the game's rules.</param>
+    /// <param name="moveNumber">Indicates the sequence number of the move being applied in the game.</param>
+    /// <returns>Returns the newly created move object that includes the guesses and the results of the analysis.</returns>
+    /// <exception cref="CodebreakerException">Thrown when the game type is invalid and does not match any predefined types.</exception>
     public static Move ApplyMove(this Game game, string[] guesses, int moveNumber)
     {
         static TField[] GetGuesses<TField>(IEnumerable<string> guesses)
