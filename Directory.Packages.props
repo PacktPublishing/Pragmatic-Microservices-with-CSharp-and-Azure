@@ -44,6 +44,7 @@
     <PackageVersion Include="CNinnovation.Codebreaker.BackendModels" Version="3.8.0" />
     <PackageVersion Include="CNinnovation.Codebreaker.Cosmos" Version="3.8.0" />
     <PackageVersion Include="CNinnovation.Codebreaker.GamesClient" Version="3.8.0" />
+    <PackageVersion Include="CNinnovation.Codebreaker.Postgres" Version="3.8.0-preview.1.13" />
     <PackageVersion Include="CNinnovation.Codebreaker.SqlServer" Version="3.8.0" />
     <PackageVersion Include="coverlet.collector" Version="6.0.4" />
     <PackageVersion Include="Grpc.AspNetCore" Version="2.70.0" />
