@@ -6,7 +6,7 @@ var builder = DistributedApplication.CreateBuilder(args);
 string dataStore = builder.Configuration["DataStore"] ?? "InMemory";
 string useEmulator = builder.Configuration["UseEmulator"] ?? "PreferDocker";  // options: PreferDocker, PreferLocal, UseAzure
 string startupMode = builder.Configuration["STARTUP_MODE"] ?? "Azure";
-string cache = builder.Configuration["Cache"] ?? "Redis";
+string cache = builder.Configuration["Cache"] ?? "Redis";  // options: Redis, Garnet, None
 
 string botLoop = builder.Configuration.GetSection("Bot")["Loop"] ?? "false";
 string botDelay = builder.Configuration.GetSection("Bot")["Delay"] ?? "1000";
@@ -40,15 +40,19 @@ if (startupMode == "OnPremises")
         .WithReference(kafka)
         .WithEnvironment("StartupMode", startupMode);
 }
-else
+else // Azure
 {
+#pragma warning disable ASPIREAZURE001 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
+    builder.AddAzurePublisher();
+#pragma warning restore ASPIREAZURE001 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
+
     var logs = builder.AddAzureLogAnalyticsWorkspace("logs");
     var insights = builder.AddAzureApplicationInsights("insights", logs);
     var signalR = builder.AddAzureSignalR("signalr");
 
     var storage = builder.AddCodebreakerStorage(useEmulator == "PreferDocker");
  
-    var eventHub = builder.AddCodebreakerEventHub(useEmulator: true);
+    var eventHub = builder.AddCodebreakerEventHub(useEmulator != "UseAzure");
 
     gameAPIs = builder.AddProject<Projects.Codebreaker_GameAPIs>("gameapis")
         .WithExternalHttpEndpoints()
@@ -56,6 +60,7 @@ else
         .WithReference(eventHub)
         .WithEnvironment("DataStore", dataStore)
         .WithEnvironment("StartupMode", startupMode)
+        .WithEnvironment("Cache", cache)
         .WaitFor(insights)
         .WaitFor(eventHub);
 
@@ -81,6 +86,12 @@ else
         .WithReference(storage.Blob)
         .WaitFor(storage.Blob)
         .WaitFor(eventHub);
+
+    var liveClient = builder.AddProject<Projects.Codebreaker_Live_Blazor>("liveclient")
+        .WithExternalHttpEndpoints()
+        .WithReference(insights)
+        .WithReference(live)
+        .WaitFor(live);
 }
 
 if (dataStore == "Cosmos")
@@ -118,7 +129,7 @@ if (cache == "Redis")
     gameAPIs.WithReference(redis)
         .WaitFor(redis);
 }
-else
+else if (cache == "Garnet")
 {
     var garnet = builder.AddCodebreakerGarnet();
 

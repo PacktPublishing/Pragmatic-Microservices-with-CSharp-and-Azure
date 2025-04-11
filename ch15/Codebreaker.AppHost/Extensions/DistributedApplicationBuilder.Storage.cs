@@ -14,7 +14,7 @@ internal static partial class DistributedApplicationBuilderExtensions
         }
 
         var botQueue = storage.AddQueues("botqueue");
-        var blob = storage.AddBlobs("checkpoints");
+        var blob = storage.AddBlobs("checkpoints-ranking");
 
         return new AzureStorageReturn(storage, botQueue, blob);
     }

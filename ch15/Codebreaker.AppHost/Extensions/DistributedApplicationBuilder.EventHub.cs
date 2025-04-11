@@ -8,7 +8,7 @@ internal static partial class DistributedApplicationBuilderExtensions
 {
     public static IResourceBuilder<AzureEventHubResource> AddCodebreakerEventHub(this IDistributedApplicationBuilder builder, bool useEmulator)
     {
-        var eventHubs = builder.AddAzureEventHubs("codebreakerevents")
+        var eventHubs = builder.AddAzureEventHubs("events")
              .ConfigureInfrastructure(infra =>
              {
                  var eventHubs = infra.GetProvisionableResources()
@@ -17,20 +17,20 @@ internal static partial class DistributedApplicationBuilderExtensions
 
                  eventHubs.Sku = new EventHubsSku()
                  {
-                     Name = EventHubsSkuName.Basic,
-                     Tier = EventHubsSkuTier.Basic,
+                     Name = EventHubsSkuName.Standard,
+                     Tier = EventHubsSkuTier.Standard,
                      Capacity = 1,
-                 };
+                 };                 
                  eventHubs.PublicNetworkAccess = EventHubsPublicNetworkAccess.Enabled;
-                 eventHubs.Tags.Add("Solution", "Codebreaker");
+                 eventHubs.Tags.Add("solution", "codebreaker");
              });
 
         if (useEmulator)
         {
             eventHubs.RunAsEmulator();
         }
-        var eventHub = eventHubs.AddHub("games");
-
+        var eventHub = eventHubs.AddHub("completedgames");
+        
         return eventHub;        
     }
 }
