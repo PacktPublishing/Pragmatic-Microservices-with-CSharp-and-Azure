@@ -13,6 +13,22 @@ https://github.com/dotnet/docs-aspire/blob/main/docs/whats-new/dotnet-aspire-9.2
 
 ### Chapter 1, Introdution to .NET Aspire and Microservices
 
+#### Page 6, The .NET Aspire app model
+
+Health checks are added to the app model:
+
+```csharp
+var apiService = builder.AddProject<Projects.AspireSample_ApiService>("apiservice")
+    .WithHttpsHealthCheck("/health");
+
+builder.AddProject<Projects.AspireSample_Web>("webfrontend")
+    .WithExternalHttpEndpoints()
+    .WithHttpsHealthCheck("/health")
+    .WithReference(apiService)
+    .WaitFor(apiService);
+```
+
+
 ## .NET Aspire 9.1 Updates
 
 Azure Cosmos DB:
