@@ -5,6 +5,14 @@ What's changed with the new versions of .NET Aspire?
 With all the chapters (with the exception of chapter 1) we now use **NuGet Central Package Management (CPM)** with package versions specified in the file *Directory.Packages.props'. This makes it easier to update all chapters.
 In case you copy the content of just a single chapter, also copy the file *Directory.Packages.props* from the root folder to get all the projects compiled.
 
+## .NET Aspire 9.2 Updates
+
+The `IsAspireHost` property is no longer required in the project file. This property was moved to `Aspire.AppHost.Sdk`.
+
+https://github.com/dotnet/docs-aspire/blob/main/docs/whats-new/dotnet-aspire-9.2.md#-project-file-changes
+
+### Chapter 1, Introdution to .NET Aspire and Microservices
+
 ## .NET Aspire 9.1 Updates
 
 Azure Cosmos DB:
@@ -37,6 +45,29 @@ builder.AddProject<Projects.AspireSample_Web>("webfrontend")
 ```
 
 The WaitFor method is new with .NET Aspire 9 which allows waiting with the start of the webfrontend until the apiService has been started.
+
+#### Page 8, The shared project for common configuration
+
+The signature for the extension methods in the generated **ServiceDefaults** library changed the signature.
+
+This is the original version:
+
+```csharp
+public static IHostApplicationBuilder AddServiceDefaults(this IHostApplicationBBuilder builder)
+{
+}
+```
+
+This method is now generic:
+
+```csharp
+public static TBuilder AddServiceDefaults<TBuilder>(this TBuilder builder) where TBuilder : IHostApplicationBuilder
+{
+}
+```
+
+With this update, also the methods `ConfigureOpenTelemetry`, `AddOpenTelemetryExporters` and `AddDefaultHealthChecks` are now generic. Changing these methods to their generic version does not break the existing calling code. This just gives more flexibility with other builder types. 
+See also https://github.com/PacktPublishing/Pragmatic-Microservices-with-CSharp-and-Azure/discussions/234.
 
 #### Page 13, .NET Aspire integrations
 
