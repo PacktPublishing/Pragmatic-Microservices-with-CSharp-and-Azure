@@ -5,13 +5,21 @@ What's changed with the new versions of .NET Aspire?
 With all the chapters (with the exception of chapter 1) we now use **NuGet Central Package Management (CPM)** with package versions specified in the file *Directory.Packages.props'. This makes it easier to update all chapters.
 In case you copy the content of just a single chapter, also copy the file *Directory.Packages.props* from the root folder to get all the projects compiled.
 
-## .NET Aspire 9.2 Updates
+## .NET Aspire 9.0 - 9.2 Updates
+
+### Chapter 1, Introdution to .NET Aspire and Microservices
+
+#### Page 4, Starting with .NET Aspire:
+
+The *Aspire workload* is no longer required with Aspire 9. Instead, the Aspire SDK is specified with the AppHost project file:
+
+```xml
+ <Sdk Name="Aspire.AppHost.Sdk" Version="9.0.0" />
+```
 
 The `IsAspireHost` property is no longer required in the project file. This property was moved to `Aspire.AppHost.Sdk`.
 
 https://github.com/dotnet/docs-aspire/blob/main/docs/whats-new/dotnet-aspire-9.2.md#-project-file-changes
-
-### Chapter 1, Introdution to .NET Aspire and Microservices
 
 #### Page 6, The .NET Aspire app model
 
@@ -28,29 +36,6 @@ builder.AddProject<Projects.AspireSample_Web>("webfrontend")
     .WaitFor(apiService);
 ```
 
-
-## .NET Aspire 9.1 Updates
-
-Azure Cosmos DB:
-
-App-Model: `AddDatabase` --> `AddCosmosDatabase`
-
-Azure Event Hub
-
-App-Model: `AddEventHub` --> `AddHub`
-
-## .NET Aspire 9.0 Updates
-
-### Chapter 1, Introdution to .NET Aspire and Microservices
-
-#### Page 4, Starting with .NET Aspire:
-
-The *Aspire workload* is no longer required with Aspire 9. Instead, the Aspire SDK is specified with the AppHost project file:
-
-```xml
- <Sdk Name="Aspire.AppHost.Sdk" Version="9.0.0" />
-```
-
 #### Page 7, The app model with the generated code:
 
 ```csharp
@@ -60,7 +45,7 @@ builder.AddProject<Projects.AspireSample_Web>("webfrontend")
     .WaitFor(apiService);
 ```
 
-The WaitFor method is new with .NET Aspire 9 which allows waiting with the start of the webfrontend until the apiService has been started.
+The `WaitFor` method is new with .NET Aspire 9 which allows waiting with the start of the webfrontend until the `apiService` has been started and is healthy.
 
 #### Page 8, The shared project for common configuration
 
@@ -89,6 +74,18 @@ See also https://github.com/PacktPublishing/Pragmatic-Microservices-with-CSharp-
 
 *.NET Aspire components* have been renamed to *.NET Aspire integrations*
 
+### Chapter 2, Minimal APIs - Creating REST Services
+
+#### Page 57, Exploring the ServiceDefaults library
+
+The method `AddServiceDefaults` is now generic:
+
+```csharp
+public static TBuilder AddServiceDefaults<TBuilder>(this TBuilder builder) where TBuilder : IHostApplicationBuilder
+{
+}
+```
+
 ### Chapter 3, Writing Data to Relational and NoSQL Databases
 
 Start Docker Desktop (or Podman) to use different databases not installed on the local system. The chapter has been enhanced to include *PostgreSQL*, and *Azure Cosmos DB with a Docker preview image*. This preview image requires to use the 
@@ -107,16 +104,18 @@ With this, the password is stored in the user secrets. Check the user secrets to
 
 #### Page 93
 
+A Docker image is used here to run Azure Cosmos DB locally. The Docker volume `codebreaker-cosmos-data` keeps the data available between runs.
+
 ```csharp
 // Codebreaker.AppHost/Program.cs
-        cosmos = builder.AddAzureCosmosDB("codebreakercosmos")
-            .RunAsPreviewEmulator(p =>
-                p.WithDataExplorer()
-                .WithDataVolume("codebreaker-cosmos-data")
-                .WithLifetime(ContainerLifetime.Session));
+cosmos = builder.AddAzureCosmosDB("codebreakercosmos")
+  .RunAsPreviewEmulator(p =>
+    p.WithDataExplorer()
+    .WithDataVolume("codebreaker-cosmos-data")
+    .WithLifetime(ContainerLifetime.Session));
 ```
 
-A Docker image is used here to run Azure Cosmos DB locally. The Docker volume `codebreaker-cosmos-data` keeps the data available between runs.
+Aspire .NET 9.1 allows creating the Cosmos container - using `AddCosmosDatabase` and `AddContainer` instead of `AddDatabase`.
 
 ```csharp
 // Codebreaker.AppHost/Program.cs
@@ -125,7 +124,25 @@ A Docker image is used here to run Azure Cosmos DB locally. The Docker volume `c
             .AddContainer("GamesV3", "/PartitionKey");
 ```
 
-Aspire .NET 9.1 allows creating the Cosmos container - using `AddCosmosDatabase` and `AddContainer` instead of `AddDatabase`.
+#### New feature: PostgreSQL
+
+Another database provider is offered. You can use PostgreSQL to store games and moves.
+
+```csharp
+var postgres = builder.AddPostgres("postgres")
+  .WithDataVolume("codebreaker-postgres-data")
+  .WithPgAdmin(r =>
+  {
+    r.WithImageTag("latest");
+    r.WithImagePullPolicy(ImagePullPolicy.Always);
+    r.WithUrlForEndpoint("http", u => u.DisplayText = "PG Admin");
+  })
+  .AddDatabase("CodebreakerPostgres");
+
+gameApis
+  .WithReference(postgres)
+  .WaitFor(postgres);
+```
 
 ### Chapter 5, Containerization of Microservices
 
