@@ -1,0 +1,57 @@
+﻿@page "/monitor"
+@implements IAsyncDisposable
+@using Codebreaker.GameAPIs.Models
+@using Microsoft.AspNetCore.SignalR.Client
+@inject NavigationManager Navigation
+<h3>Monitor</h3>
+
+@if (_messages is {Count: 0})
+{
+    <p><em>No games completed yet...</em></p>
+}
+else
+{
+    <ul>
+        @foreach (var message in _messages)
+        {
+            <li>@message</li>
+        }
+    </ul>
+}
+
+@code {
+
+    private CancellationTokenSource cts = new CancellationTokenSource();
+    private HubConnection? _hubConnection;
+    private List<string> _messages = [];
+
+    public async ValueTask DisposeAsync()
+    {
+        if (_hubConnection is not null)
+        {
+            await _hubConnection.StopAsync();
+        }
+        // await cts.CancelAsync();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        // .WithUrl(Navigation.BaseUri + "/signalr/streaminglivesubscribe")
+
+        _hubConnection = new HubConnectionBuilder()
+            .WithUrl("https://localhost:5131/streaminglivesubscribe")
+            // .WithUrl(Navigation.BaseUri + "/signalr/streaminglivesubscribe")
+            .Build();
+
+        await _hubConnection.StartAsync(cts.Token);
+
+        string gameType = "Game6x4";
+        await foreach (GameSummary summary in _hubConnection.StreamAsync<GameSummary>("SubscribeToGameCompletions", gameType, cts.Token))
+        {
+            string status = summary.IsVictory ? "won" : "lost";
+
+            _messages.Add($"Game {summary.Id} {status} by {summary.PlayerName} after {summary.Duration:g} with {summary.NumberMoves} moves");
+            StateHasChanged();
+        }
+    }
+}

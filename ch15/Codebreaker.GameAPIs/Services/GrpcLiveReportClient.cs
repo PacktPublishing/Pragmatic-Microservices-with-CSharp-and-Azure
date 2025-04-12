@@ -6,6 +6,11 @@ using System.Net.Sockets;
 
 namespace Codebreaker.GameAPIs.Services;
 
+/// <summary>
+/// Handles reporting the end of a game asynchronously while managing exceptions.
+/// </summary>
+/// <param name="client">Used to send the completed game report to the server.</param>
+/// <param name="logger">Facilitates logging errors that occur during the reporting process.</param>
 public class GrpcLiveReportClient(ReportGame.ReportGameClient client, ILogger<LiveReportClient> logger) : IGameReport
 {
     public async Task ReportGameEndedAsync(GameSummary gameSummary, CancellationToken cancellationToken = default)

@@ -1,9 +1,8 @@
 ﻿
-namespace Codebreaker.Ranking.Services
+namespace Codebreaker.Ranking.Services;
+
+public interface IGameSummaryProcessor
 {
-    public interface IGameSummaryProcessor
-    {
-        Task StartProcessingAsync(CancellationToken cancellationToken = default);
-        Task StopProcessingAsync(CancellationToken cancellationToken = default);
-    }
+    Task StartProcessingAsync(CancellationToken cancellationToken = default);
+    Task StopProcessingAsync(CancellationToken cancellationToken = default);
 }

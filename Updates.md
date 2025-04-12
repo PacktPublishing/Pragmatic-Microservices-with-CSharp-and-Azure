@@ -76,6 +76,40 @@ See also https://github.com/PacktPublishing/Pragmatic-Microservices-with-CSharp-
 
 ### Chapter 2, Minimal APIs - Creating REST Services
 
+#### Page 54, Testing the service
+
+HTTP Files support setting variables to access the result from an invocation, and use it with a next request, e.g.
+
+```json
+### Create a game
+# @name create
+POST {{Codebreaker.GameAPIs_HostAddress}}/games/
+Content-Type: {{ContentType}}
+
+{
+  "gameType": "Game6x4",
+  "playerName": "test"
+}
+
+### Set a move
+PATCH {{Codebreaker.GameAPIs_HostAddress}}/games/{{create.response.body.$.id}}
+Content-Type: {{ContentType}}
+
+{
+  "gameType": "Game6x4",
+  "playerName": "test",
+  "moveNumber": 1,
+  "guessPegs": [
+    "Red",
+    "Green",
+    "Blue",
+    "Yellow"
+  ]
+}
+```
+
+Using `@name create` specifies the `create` variable, and the result is accessed using `{{create.response.body.$.id}}`.
+
 #### Page 57, Exploring the ServiceDefaults library
 
 The method `AddServiceDefaults` is now generic:
