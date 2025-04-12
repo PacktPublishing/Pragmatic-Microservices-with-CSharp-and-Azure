@@ -6,7 +6,6 @@ USER $APP_UID
 WORKDIR /app
 EXPOSE 8080
 
-
 # This stage is used to build the service project
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 ARG BUILD_CONFIGURATION=Release
@@ -14,8 +13,8 @@ WORKDIR /src
 COPY ["Directory.Packages.props", "."]
 COPY ["ch05/FinalDocker/Codebreaker.GameAPIs/Codebreaker.GameAPIs.csproj", "ch05/FinalDocker/Codebreaker.GameAPIs/"]
 RUN dotnet restore "./ch05/FinalDocker/Codebreaker.GameAPIs/Codebreaker.GameAPIs.csproj"
-COPY . .
 WORKDIR "/src/ch05/FinalDocker/Codebreaker.GameAPIs"
+COPY ["ch05/FinalDocker/Codebreaker.GameAPIs/", "."]
 RUN dotnet build "./Codebreaker.GameAPIs.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # This stage is used to publish the service project to be copied to the final stage

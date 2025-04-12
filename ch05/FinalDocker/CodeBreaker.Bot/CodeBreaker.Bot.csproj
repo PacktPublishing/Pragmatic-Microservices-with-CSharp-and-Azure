@@ -10,6 +10,8 @@
   <PropertyGroup>
     <ContainerRepository>codebreaker/bot</ContainerRepository>
     <ContainerImageTags>3.7.3;latest</ContainerImageTags>
+    <EnableSdkContainerDebugging>True</EnableSdkContainerDebugging>
+    <ContainerBaseImage>mcr.microsoft.com/dotnet/aspnet:9.0</ContainerBaseImage>
   </PropertyGroup>
 
   <ItemGroup>
