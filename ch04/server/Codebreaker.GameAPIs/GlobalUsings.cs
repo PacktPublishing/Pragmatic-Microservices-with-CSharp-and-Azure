@@ -1,4 +1,5 @@
 ﻿global using Codebreaker.Data.Cosmos;
+global using Codebreaker.Data.Postgres;
 global using Codebreaker.Data.SqlServer;
 global using Codebreaker.GameAPIs;
 global using Codebreaker.GameAPIs.Data;

@@ -5,8 +5,9 @@ string dataStore = builder.Configuration["DataStore"] ?? "InMemory";
 string useEmulator = builder.Configuration["UseEmulator"] ?? "PreferDocker";  // options: PreferDocker, PreferLocal, UseAzure
 
 var gameApis = builder.AddProject<Projects.Codebreaker_GameAPIs>("gameapis")
-    .WithExternalHttpEndpoints()
-    .WithEnvironment("DataStore", dataStore);
+    .WithHttpsHealthCheck("/health")
+    .WithEnvironment("DataStore", dataStore)
+    .WithExternalHttpEndpoints();
 
 if (dataStore == "SqlServer")
 {
@@ -47,8 +48,7 @@ else if (dataStore == "Cosmos")
     else
     {
         // Azure Cosmos DB
-        cosmos = builder.AddAzureCosmosDB("codebreakercosmos")
-            .WithAccessKeyAuthentication();
+        cosmos = builder.AddAzureCosmosDB("codebreakercosmos");
     }
 
     if (useEmulator is not "PreferLocal")
@@ -72,22 +72,17 @@ else if (dataStore == "Postgres")
 {
     var postgres = builder.AddPostgres("postgres")
         .WithDataVolume("codebreaker-postgres-data")
-        .WithPgAdmin()
+        .WithPgAdmin(r =>
+        {
+            r.WithImageTag("latest");
+            r.WithImagePullPolicy(ImagePullPolicy.Always);
+            r.WithUrlForEndpoint("http", u => u.DisplayText = "PG Admin");
+        })
         .AddDatabase("CodebreakerPostgres");
 
     gameApis
         .WithReference(postgres)
         .WaitFor(postgres);
-}
-else if (dataStore == "Mongo")
-{
-    var mongo = builder.AddMongoDB("mongo")
-        .WithMongoExpress()
-        .AddDatabase("CodebreakerMongo");
-
-    gameApis
-        .WithReference(mongo)
-        .WaitFor(mongo);
 }
 
 builder.Build().Run();
