@@ -77,42 +77,37 @@ public class ColorGame8x5AnalyzerTests
     }
 }
 
-public class TestData8x5 : IEnumerable<object[]>
+public class TestData8x5 : IEnumerable<TheoryDataRow<string[], string[], ColorResult>>
 {
     public static readonly string[] Colors8 = [Red, Blue, Green, Yellow, Black, White, Purple, Orange];
 
-    public IEnumerator<object[]> GetEnumerator()
+    public IEnumerator<TheoryDataRow<string[], string[], ColorResult>> GetEnumerator()
     {
-        yield return new object[]
-        {
-            new string[] { Green, Blue,  Green, Yellow, Orange }, // code
-            new string[] { Green, Green, Black, White, Black },  // inputdata
+        yield return new TheoryDataRow<string[], string[], ColorResult>(
+            [Green, Blue,  Green, Yellow, Orange], // code
+            [Green, Green, Black, White, Black],  // inputdata
             new ColorResult(1, 1) // expected
-        };
-        yield return new object[]
-        {
-            new string[] { Red, Blue, Black, White, Orange },
-            new string[] { Black, Black, Red, Yellow, Yellow },
+        );
+        yield return new TheoryDataRow<string[], string[], ColorResult>(
+            [Red, Blue, Black, White, Orange],
+            [Black, Black, Red, Yellow, Yellow],
             new ColorResult(0, 2)
-        };
-        yield return new object[]
-        {
-            new string[] { Yellow, Black, Yellow, Green, Orange },
-            new string[] { Black,  Black, Black,  Black, Black },
+        );
+        yield return new TheoryDataRow<string[], string[], ColorResult>(
+            [Yellow, Black, Yellow, Green, Orange],
+            [Black,  Black, Black,  Black, Black],
             new ColorResult(1, 0)
-        };
-        yield return new object[]
-        {
-            new string[] { Yellow, Yellow, White, Red, Orange },
-            new string[] { Green,  Yellow, White, Red, Green },
+        );
+        yield return new TheoryDataRow<string[], string[], ColorResult>(
+            [Yellow, Yellow, White, Red, Orange],
+            [Green,  Yellow, White, Red, Green],
             new ColorResult(3, 0)
-        };
-        yield return new object[]
-        {
-            new string[] { White, Black, Yellow, Black, Orange },
-            new string[] { Black, Blue,  Black,  White, White },
+        );
+        yield return new TheoryDataRow<string[], string[], ColorResult>(
+            [White, Black, Yellow, Black, Orange],
+            [Black, Blue,  Black,  White, White],
             new ColorResult(0, 3)
-        };
+        );
     }
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();

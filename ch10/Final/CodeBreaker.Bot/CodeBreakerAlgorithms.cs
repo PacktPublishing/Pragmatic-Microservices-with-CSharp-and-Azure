@@ -83,7 +83,7 @@ public static class CodeBreakerAlgorithms
     /// <param name="values">The possible values</param>
     /// <param name="whiteHits">The number of white hits with the selection</param>
     /// <param name="selection">The selected pegs</param>
-    /// <returns>The remaining possbile values</returns>
+    /// <returns>The remaining possible values</returns>
     public static List<int> HandleWhiteMatches(this IList<int> values, int whiteHits, int selection)
     {
         List<int> newValues = new(values.Count);
@@ -130,7 +130,7 @@ public static class CodeBreakerAlgorithms
     /// </summary>
     /// <param name="values">The possible values</param>
     /// <param name="selection">The selected pegs</param>
-    /// <returns>The remaining possbile values</returns>
+    /// <returns>The remaining possible values</returns>
     public static List<int> HandleNoMatches(this IList<int> values, int selection)
     {
         static bool Contains(int[] selections, int value)
@@ -160,7 +160,7 @@ public static class CodeBreakerAlgorithms
     }
 
     /// <summary>
-    /// Get the int representation of one peg from the int representaiton of four pegs
+    /// Get the int representation of one peg from the int representation of four pegs
     /// </summary>
     /// <param name="code">The int value representing four pegs</param>
     /// <param name="pegNumber">The peg number to retrieve from the int representation</param>
@@ -180,7 +180,5 @@ public static class CodeBreakerAlgorithms
 [InlineArray(4)]
 internal struct KeyPegArray
 {
-#pragma warning disable IDE0051 // Remove unused private members
     private KeyPegWithFlag _keyPegWithFlag;
-#pragma warning restore IDE0051 // Remove unused private members
 }
