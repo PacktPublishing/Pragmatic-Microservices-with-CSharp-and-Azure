@@ -59,7 +59,7 @@ public sealed partial class GamePage : IDisposable
             _loadingGame = true;
             _gameStatus = GameMode.NotRunning;
             (Guid gameId, int numberCodes, int maxMoves, IDictionary<string, string[]> fieldValues) = await Client.StartGameAsync(_selectedGameType, _name);
-            _game = new(gameId, _selectedGameType.ToString(), _name, DateTime.Now, numberCodes, maxMoves)
+            _game = new(gameId, _selectedGameType.ToString(), _name, DateTime.UtcNow, numberCodes, maxMoves)
             {
                 FieldValues = fieldValues.ToDictionary(x => x.Key, x => x.Value.AsEnumerable()),
                 Codes = []

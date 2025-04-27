@@ -84,7 +84,7 @@ public partial class GamesMemoryRepository(ILogger<GamesMemoryRepository> logger
 
     private Task CleanupOldGamesAsync()
     {
-        if (_lastCleanupRun > DateTime.Now.AddHours(-1))
+        if (_lastCleanupRun > DateTime.UtcNow.AddHours(-1))
         {
             return Task.CompletedTask;
         }
@@ -98,10 +98,10 @@ public partial class GamesMemoryRepository(ILogger<GamesMemoryRepository> logger
         }
         return Task.Run(() =>
         {
-            _lastCleanupRun = DateTime.Now;
+            _lastCleanupRun = DateTime.UtcNow;
 
             logger.StartCleanupGames();
-            var currentTime = DateTime.Now;
+            var currentTime = DateTime.UtcNow;
             var gamesToRemove = _games.Values.Where(g => g.StartTime <= currentTime.AddHours(-3)).ToList();
             int gamesRemoved = 0;
             foreach (var game in gamesToRemove)
