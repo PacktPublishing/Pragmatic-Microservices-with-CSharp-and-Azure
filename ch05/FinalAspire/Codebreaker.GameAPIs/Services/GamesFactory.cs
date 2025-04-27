@@ -21,7 +21,7 @@ public static class GamesFactory
     public static Game CreateGame(string gameType, string playerName)
     {
         Game Create6x4SimpleGame() =>
-            new(Guid.NewGuid(), gameType, playerName,  DateTime.Now, 4, 12)
+            new(Guid.NewGuid(), gameType, playerName,  DateTime.UtcNow, 4, 12)
             {
                 FieldValues = new Dictionary<string, IEnumerable<string>>()
                 {
@@ -31,7 +31,7 @@ public static class GamesFactory
             };
 
         Game Create6x4Game() =>
-            new(Guid.NewGuid(), gameType, playerName, DateTime.Now, 4, 12)
+            new(Guid.NewGuid(), gameType, playerName, DateTime.UtcNow, 4, 12)
             {
                 FieldValues = new Dictionary<string, IEnumerable<string>>()
                 {
@@ -41,7 +41,7 @@ public static class GamesFactory
             };
 
         Game Create8x5Game() =>
-            new(Guid.NewGuid(), gameType, playerName, DateTime.Now, 5, 12)
+            new(Guid.NewGuid(), gameType, playerName, DateTime.UtcNow, 5, 12)
             {
                 FieldValues = new Dictionary<string, IEnumerable<string>>()
                 {
@@ -51,17 +51,16 @@ public static class GamesFactory
             };
 
         Game Create5x5x4Game() =>
-            new(Guid.NewGuid(), gameType, playerName, DateTime.Now, 4, 14)
+            new(Guid.NewGuid(), gameType, playerName, DateTime.UtcNow, 4, 14)
             {
                 FieldValues = new Dictionary<string, IEnumerable<string>>()
                 {
                     { FieldCategories.Colors, s_colors5 },
                     { FieldCategories.Shapes, s_shapes5 }
                 },
-                Codes = Random.Shared.GetItems(s_shapes5, 4)
+                Codes = [.. Random.Shared.GetItems(s_shapes5, 4)
                     .Zip(Random.Shared.GetItems(s_colors5, 4), (shape, color) => (Shape: shape, Color: color))
-                    .Select(item => string.Join(';', item.Shape, item.Color))
-                    .ToArray()
+                    .Select(item => string.Join(';', item.Shape, item.Color))]
             };
         
         return gameType switch

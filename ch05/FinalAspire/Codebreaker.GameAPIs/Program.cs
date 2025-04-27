@@ -42,6 +42,6 @@ app.UseSwaggerUI(options =>
 
 await app.CreateOrUpdateDatabaseAsync();
 
-app.MapGameEndpoints();
+app.MapGameEndpoints(app.Logger);
 
 app.Run();
