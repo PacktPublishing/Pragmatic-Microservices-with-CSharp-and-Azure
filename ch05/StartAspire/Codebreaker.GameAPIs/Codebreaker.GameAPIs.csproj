@@ -1,25 +1,35 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <InvariantGlobalization>false</InvariantGlobalization>
-    <UserSecretsId>603964e6-08bc-40f9-8505-074b9466a41f</UserSecretsId>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net9.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<InvariantGlobalization>false</InvariantGlobalization>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Aspire.Microsoft.EntityFrameworkCore.Cosmos" />
-    <PackageReference Include="Aspire.Microsoft.EntityFrameworkCore.SqlServer" />
-    <PackageReference Include="CNinnovation.Codebreaker.Cosmos" />
-    <PackageReference Include="CNinnovation.Codebreaker.SqlServer" />
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
-    <PackageReference Include="Swashbuckle.AspNetCore" />
-    <PackageReference Include="Swashbuckle.AspNetCore.Annotations" />
-  </ItemGroup>
+	<ItemGroup>
+		<InternalsVisibleTo Include="Codebreaker.APIs.Tests" />
+	</ItemGroup>
+	
+	<ItemGroup>
+		<PackageReference Include="Aspire.Microsoft.EntityFrameworkCore.Cosmos" />
+		<PackageReference Include="Aspire.Microsoft.EntityFrameworkCore.SqlServer" />
+		<PackageReference Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" />
+		<PackageReference Include="CNinnovation.Codebreaker.Cosmos" />
+		<PackageReference Include="CNinnovation.Codebreaker.Postgres" />
+		<PackageReference Include="CNinnovation.Codebreaker.SqlServer" />
+		<PackageReference Include="Microsoft.AspNetCore.OpenApi" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Design">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Npgsql.Json.NET" />
+		<PackageReference Include="Swashbuckle.AspNetCore" />
+		<PackageReference Include="Swashbuckle.AspNetCore.Annotations" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Codebreaker.ServiceDefaults\Codebreaker.ServiceDefaults.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\Codebreaker.ServiceDefaults\Codebreaker.ServiceDefaults.csproj" />
+	</ItemGroup>
 
 </Project>

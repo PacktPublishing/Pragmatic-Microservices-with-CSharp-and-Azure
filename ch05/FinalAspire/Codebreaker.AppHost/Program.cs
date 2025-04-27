@@ -3,15 +3,17 @@ var builder = DistributedApplication.CreateBuilder(args);
 // the parameter with the name sql-password is automatically retrieved from secrets if no password is supplied with the AddSqlServer method
 // var sqlPassword = builder.AddParameter("sql-password", secret: true);
 
+// step 1 done: configure a SQL Server container with a named volume
 var sqlServer = builder.AddSqlServer("sql")
     .WithDataVolume("codebreaker-sql-data", isReadOnly: false)
     .AddDatabase("CodebreakerSql");
-   
 
+// step 2 done: configure the Game APIs project using the SQL Server container
 var gameAPIs = builder.AddProject<Projects.Codebreaker_GameAPIs>("gameapis")
     .WithReference(sqlServer)
     .WaitFor(sqlServer);
 
+// step 4 done: configure the Bot project using the Game APIs project
 builder.AddProject<Projects.CodeBreaker_Bot>("bot")
     .WithReference(gameAPIs)
     .WaitFor(gameAPIs);
