@@ -20,17 +20,17 @@ public class GamesServiceTests
 
     public GamesServiceTests()
     {
-        _endedGame = new(_endedGameId, "Game6x4", "Test", DateTime.Now, 4, 12)
+        _endedGame = new(_endedGameId, "Game6x4", "Test", DateTime.UtcNow, 4, 12)
         {
             Codes = ["Red", "Green", "Blue", "Yellow"],
             FieldValues = new Dictionary<string, IEnumerable<string>>()
             {
                 { FieldCategories.Colors, ["Red", "Green", "Blue", "Yellow", "Purple", "Orange"] }
             },
-            EndTime = DateTime.Now.AddMinutes(3)
+            EndTime = DateTime.UtcNow.AddMinutes(3)
         };
 
-        _running6x4Game = new(_running6x4GameId, "Game6x4", "Test", DateTime.Now, 4, 12)
+        _running6x4Game = new(_running6x4GameId, "Game6x4", "Test", DateTime.UtcNow, 4, 12)
         {
             Codes = ["Red", "Green", "Blue", "Yellow"],
             FieldValues = new Dictionary<string, IEnumerable<string>>()
