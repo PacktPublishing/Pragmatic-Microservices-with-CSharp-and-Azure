@@ -8,7 +8,7 @@ public class GRPCLiveGameService(IHubContext<LiveHub> hubContext, ILogger<GRPCLi
 {
     async public override Task<Empty> ReportGameCompleted(ReportGameCompletedRequest request, ServerCallContext context)
     {
-        logger.LogInformation("Received game ended {type} {gameid}", request.GameType, request.Id);
+        logger.LogInformation("Received game ended {Type} {GameId}", request.GameType, request.Id);
         await hubContext.Clients.Group(request.GameType).SendAsync("GameCompleted", request.ToGameSummary());
         return new Empty();
     }

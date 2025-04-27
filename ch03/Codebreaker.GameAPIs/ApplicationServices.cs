@@ -40,21 +40,17 @@ public static class ApplicationServices
 
             builder.Services.AddScoped<IGamesRepository, DataContextProxy<GamesCosmosContext>>();
 
-            // removed the Enrich API, and added back the DataContextProxy
-            // because of an issue with the Cosmos DB preview emulator: 
-            // https://github.com/dotnet/aspire/issues/8177
+            // TODO: removed the Enrich API, and added back the DataContextProxy
             //builder.Services.AddDbContext<IGamesRepository, GamesCosmosContext>(options =>
             //{
-            //    var connectionString = builder.Configuration.GetConnectionString("GamesV3") ?? throw new InvalidOperationException("Could not read Cosmos connection string");
-            //    options.UseCosmos(connectionString, "gamesv3", cosmosOptions =>
+            //    var connectionString = builder.Configuration.GetConnectionString("codebreakercosmos") ?? throw new InvalidOperationException("Could not read Cosmos connection string");
+            //    options.UseCosmos(connectionString, "GamesV3", cosmosOptions =>
             //    {
             //    });
             //    options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
             //});
 
-            // builder.EnrichCosmosDbContext<GamesCosmosContext>(settings =>
-            //{
-            //});
+            // builder.EnrichCosmosDbContext<GamesCosmosContext>();
         }
 
         static void ConfigureInMemory(IHostApplicationBuilder builder)

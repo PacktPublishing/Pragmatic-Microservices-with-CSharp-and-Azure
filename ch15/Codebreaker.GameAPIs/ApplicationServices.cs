@@ -1,5 +1,4 @@
-﻿using Codebreaker.GameAPIs.Services;
-using Codebreaker.Grpc;
+﻿using Codebreaker.Grpc;
 
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 
@@ -46,16 +45,25 @@ public static class ApplicationServices
 
         static void ConfigureCosmos(IHostApplicationBuilder builder)
         {
-            builder.Services.AddDbContext<IGamesRepository, GamesCosmosContext>(options =>
-            {
-                string connectionString = builder.Configuration.GetConnectionString("codebreakercosmos") ?? throw new InvalidOperationException("Could not read the Cosmos connection-string");
-                options.UseCosmos(connectionString, "codebreaker");
+            builder.AddCosmosDbContext<GamesCosmosContext>("GamesV3", "codebreaker");
 
-                options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
-            });
-            builder.EnrichCosmosDbContext<GamesCosmosContext>(settings =>
-            {
-            });
+            builder.Services.AddScoped<IGamesRepository, DataContextProxy<GamesCosmosContext>>();
+
+            // removed the Enrich API, and added back the DataContextProxy
+            // because of an issue with the Cosmos DB preview emulator: 
+            // https://github.com/dotnet/aspire/issues/8177
+            //builder.Services.AddDbContext<IGamesRepository, GamesCosmosContext>(options =>
+            //{
+            //    var connectionString = builder.Configuration.GetConnectionString("GamesV3") ?? throw new InvalidOperationException("Could not read Cosmos connection string");
+            //    options.UseCosmos(connectionString, "gamesv3", cosmosOptions =>
+            //    {
+            //    });
+            //    options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+            //});
+
+            // builder.EnrichCosmosDbContext<GamesCosmosContext>(settings =>
+            //{
+            //});
         }
 
         static void ConfigureInMemory(IHostApplicationBuilder builder)
@@ -101,7 +109,7 @@ public static class ApplicationServices
         {
             builder.Services.AddScoped<IGameReport, EventHubReportProducer>();
 
-            builder.AddAzureEventHubProducerClient("codebreakerevents", settings =>
+            builder.AddAzureEventHubProducerClient("games", settings =>
             {
                 settings.EventHubName = "games";
             });
@@ -134,7 +142,7 @@ public static class ApplicationServices
                     app.Logger.LogInformation("Database updated");
                 }
 
-                // add a delay to try out /health checks
+                // add a delay to show /health checks
                 await Task.Delay(TimeSpan.FromSeconds(25));
             }
             catch (Exception ex)
@@ -146,23 +154,7 @@ public static class ApplicationServices
         // The database is created from the AppHost AddDatabase method. The Cosmos container is created here - if it doesn't exist yet.
         if (app.Configuration["DataStore"] == "Cosmos")
         {
-            try
-            {
-                using var scope = app.Services.CreateScope();
-                // TODO: update with .NET Aspire Preview 4
-                var repo = scope.ServiceProvider.GetRequiredService<GamesCosmosContext>();
-                //                var repo = scope.ServiceProvider.GetRequiredService<IGamesRepository>();
-                if (repo is GamesCosmosContext context)
-                {
-                    bool created = await context.Database.EnsureCreatedAsync();
-                    app.Logger.LogInformation("Database created: {created}", created);
-                }
-            }
-            catch (Exception ex)
-            {
-                app.Logger.LogError(ex, "Error updating database");
-                throw;
-            }
+            // Creating the database and the container is now done with the AppHost
         }
 
         IsDatabaseUpdateComplete = true;

@@ -15,21 +15,40 @@ public static class ApplicationServices
             builder.EnrichSqlServerDbContext<GamesSqlServerContext>();
         }
 
-        static void ConfigureCosmos(IHostApplicationBuilder builder)
+        static void ConfigurePostgres(IHostApplicationBuilder builder)
         {
-            builder.Services.AddDbContext<IGamesRepository, GamesCosmosContext>(options =>
+            var connectionString = builder.Configuration.GetConnectionString("CodebreakerPostgres") ?? throw new InvalidOperationException("Could not read SQL Server connection string");
+
+            builder.Services.AddNpgsqlDataSource(connectionString, dataSourceBuilder =>
             {
-                var connectionString = builder.Configuration.GetConnectionString("codebreakercosmos") ?? throw new InvalidOperationException("Could not read Cosmos connection string");
-                options.UseCosmos(connectionString, "codebreaker", cosmosOptions =>
-                {
-                });
-                options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+                dataSourceBuilder.EnableDynamicJson(); 
             });
 
-            builder.EnrichCosmosDbContext<GamesCosmosContext>(settings =>
+            builder.Services.AddDbContextPool<IGamesRepository, GamesPostgresContext>(options =>
             {
-               
+                options.UseNpgsql(connectionString);
+                options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
             });
+            builder.EnrichNpgsqlDbContext<GamesPostgresContext>();
+        }
+
+        static void ConfigureCosmos(IHostApplicationBuilder builder)
+        {
+            builder.AddCosmosDbContext<GamesCosmosContext>("GamesV3", "codebreaker");
+
+            builder.Services.AddScoped<IGamesRepository, DataContextProxy<GamesCosmosContext>>();
+
+            // TODO: removed the Enrich API, and added back the DataContextProxy
+            //builder.Services.AddDbContext<IGamesRepository, GamesCosmosContext>(options =>
+            //{
+            //    var connectionString = builder.Configuration.GetConnectionString("codebreakercosmos") ?? throw new InvalidOperationException("Could not read Cosmos connection string");
+            //    options.UseCosmos(connectionString, "GamesV3", cosmosOptions =>
+            //    {
+            //    });
+            //    options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+            //});
+
+            // builder.EnrichCosmosDbContext<GamesCosmosContext>();
         }
 
         static void ConfigureInMemory(IHostApplicationBuilder builder)
@@ -45,6 +64,9 @@ public static class ApplicationServices
                 break;
             case "SqlServer":
                 ConfigureSqlServer(builder);
+                break;
+            case "Postgres":
+                ConfigurePostgres(builder);
                 break;
             default:
                 ConfigureInMemory(builder);
@@ -76,16 +98,18 @@ public static class ApplicationServices
                 throw;
             }
         }
-        else if (dataStore == "Cosmos")
+        else if (dataStore == "Postgres")
         {
             try
             {
                 using var scope = app.Services.CreateScope();
                 var repo = scope.ServiceProvider.GetRequiredService<IGamesRepository>();
-                if (repo is GamesCosmosContext context)
+                if (repo is GamesPostgresContext context)
                 {
-                    bool created = await context.Database.EnsureCreatedAsync();
-                    app.Logger.LogInformation("Cosmos database created: {created}", created);
+                    // TODO: migrations might be done in another sprint
+                    // for now, just ensure the database is created
+                    await context.Database.EnsureCreatedAsync();
+                    app.Logger.LogInformation("PostgreSQL database created");
                 }
             }
             catch (Exception ex)
@@ -93,6 +117,27 @@ public static class ApplicationServices
                 app.Logger.LogError(ex, "Error updating database");
                 throw;
             }
+        }
+        else if (dataStore == "Cosmos")
+        {
+            // with .NET Aspire 9.1 APIs, the container can be created with the app-model!
+            // This code is only needed if the local installed Cosmos DB emulator is used
+            // Instead of enabling this code, the database and container can be created using the Cosmos DB Emulator Data Explorer
+            //try
+            //{
+            //    using var scope = app.Services.CreateScope();
+            //    var repo = scope.ServiceProvider.GetRequiredService<IGamesRepository>();
+            //    if (repo is GamesCosmosContext context)
+            //    {
+            //        bool created = await context.Database.EnsureCreatedAsync();
+            //        app.Logger.LogInformation("Cosmos database created: {created}", created);
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    app.Logger.LogError(ex, "Error updating database");
+            //    throw;
+            //}
         }
     }
 }
