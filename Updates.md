@@ -7,7 +7,7 @@ In case you copy the content of just a single chapter, also copy the file *Direc
 
 ## .NET Aspire 9.0 - 9.2 Updates
 
-### Chapter 1, Introdution to .NET Aspire and Microservices
+### Chapter 1, Introduction to .NET Aspire and Microservices
 
 #### Page 4, Starting with .NET Aspire:
 
@@ -77,7 +77,6 @@ See also https://github.com/PacktPublishing/Pragmatic-Microservices-with-CSharp-
 ### Chapter 2, Minimal APIs - Creating REST Services
 
 #### Page 54, Testing the service
-
 HTTP Files support setting variables to access the result from an invocation, and use it with a next request, e.g.
 
 ```json
@@ -180,7 +179,7 @@ gameApis
 
 ### Chapter 5, Containerization of Microservices
 
-Because of the change to use *Central Package Management (CPM)*, the Dockerfile changed to copy the file *Directory.PAckages.props* for a build.
+Because of the change to use *Central Package Management (CPM)*, the `Dockerfile` changed to copy the file `Directory.Packages.props` for a build.
 
 #### Page 132, Codebreaker.GameAPIs/Dockerfile
 
@@ -191,8 +190,8 @@ WORKDIR /src
 COPY ["Directory.Packages.props", "."]
 COPY ["ch05/FinalDocker/Codebreaker.GameAPIs/Codebreaker.GameAPIs.csproj", "ch05/FinalDocker/Codebreaker.GameAPIs/"]
 RUN dotnet restore "./ch05/FinalDocker/Codebreaker.GameAPIs/Codebreaker.GameAPIs.csproj"
-COPY . .
 WORKDIR "/src/ch05/FinalDocker/Codebreaker.GameAPIs"
+COPY ["ch05/FinalDocker/Codebreaker.GameAPIs/", "."]
 RUN dotnet build "./Codebreaker.GameAPIs.csproj" -c $BUILD_CONFIGURATION -o /app/build
 ```
 
@@ -202,6 +201,15 @@ The build command needs to use the context of the root directory where the file 
 
 ```bash
 docker build ../.. -f Codebreaker.GameAPIs/Dockerfile -t codebreaker/gamesapi:3.5.4 -t codebreaker/gamesapi.latest
+```
+
+Page 139, Configuring a Docker container for SQL Server
+
+It's no longer required (you still can do it) to configure a password for the SQL Server Docker container. If you don't configure one, it's created and filled automatically with user secrets. Thus, this code can be used:
+
+```csharp
+// Codebreaker.AppHost/Program.cs
+var builder = 
 ```
 
 ### Chapter 11, Logging and Monitoring
