@@ -1,6 +1,6 @@
 ﻿namespace LiveTestClient;
 
-internal class StreamingLiveClient(IOptions<LiveClientOptions> options, ILogger<LiveClient> logger)
+internal class StreamingLiveClient(IOptions<LiveClientOptions> options, ILogger<StreamingLiveClient> logger)
 {
     private HubConnection? _hubConnection;
 
@@ -23,12 +23,12 @@ internal class StreamingLiveClient(IOptions<LiveClientOptions> options, ILogger<
         }
         catch (HttpRequestException ex)
         {
-            logger.LogError(ex, ex.Message);
+            logger.LogError(ex, "Error: {Error}", ex.Message);
             throw;
         }
-        catch (OperationCanceledException ex)
+        catch (OperationCanceledException)
         {
-            logger.LogWarning(message: ex.Message);
+            logger.LogWarning("Operation canceled");
         }
     }
 
@@ -38,6 +38,12 @@ internal class StreamingLiveClient(IOptions<LiveClientOptions> options, ILogger<
 
         try
         {
+            if (_hubConnection.State != HubConnectionState.Connected)
+            {
+                logger.LogError("SignalR connection not active");
+                return;
+            }
+
             await foreach (GameSummary summary in _hubConnection.StreamAsync<GameSummary>("SubscribeToGameCompletions", gameType, cancellationToken))
             {
                 string status = summary.IsVictory ? "won" : "lost";
@@ -47,12 +53,12 @@ internal class StreamingLiveClient(IOptions<LiveClientOptions> options, ILogger<
         }
         catch (HubException ex)
         {
-            logger.LogError(ex, ex.Message);
+            logger.LogError(ex, "Error: {Error}", ex.Message);
             throw;
         }
-        catch (OperationCanceledException ex)
+        catch (OperationCanceledException)
         {
-            logger.LogWarning(ex.Message);
+            logger.LogWarning("Operation canceled");
         }
     }
 

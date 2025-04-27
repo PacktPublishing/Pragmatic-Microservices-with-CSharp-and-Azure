@@ -1,6 +1,4 @@
-﻿using Azure.Identity;
-
-namespace Codebreaker.Live;
+﻿namespace Codebreaker.Live;
 
 public static class ApplicationServices
 {
@@ -9,16 +7,17 @@ public static class ApplicationServices
         var signalRBuilder = builder.Services.AddSignalR()
             .AddMessagePackProtocol();
 
-        if (builder.Configuration["StartupMode"] is not "OnPremises")
+        if (builder.Configuration["StartupMode"] is not "OnPremises")  // Azure
         {
             signalRBuilder.AddNamedAzureSignalR("signalr");
         }
 
-        builder.AddAzureEventHubConsumerClient("codebreakerevents",
+        builder.AddAzureEventHubConsumerClient("events",
             settings =>
             {
-                // settings.Credential = new AzureCliCredential();
-                settings.EventHubName = "games";
+                settings.EventHubName = "completedgames";
+
+                settings.ConsumerGroup = "live";
             });
 
         builder.Services.AddSingleton<LiveHubClientsCount>();

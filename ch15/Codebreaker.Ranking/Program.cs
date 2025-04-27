@@ -3,8 +3,6 @@ using Codebreaker.Ranking.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.AddServiceDefaults();
 builder.AddApplicationServices();
 
@@ -20,10 +18,9 @@ app.UseSwaggerUI();
 
 app.MapApplicationEndpoints();
 
-
-var eventProcessor = app.Services.GetRequiredService<IGameSummaryProcessor>();
-await eventProcessor.StartProcessingAsync();
+//var eventProcessor = app.Services.GetRequiredService<IGameSummaryProcessor>();
+//await eventProcessor.StartProcessingAsync();
 
 app.Run();
 
-await eventProcessor.StopProcessingAsync();
+//await eventProcessor.StopProcessingAsync();
