@@ -1,7 +1,3 @@
-using System.Collections;
-
-using Xunit;
-
 namespace CodeBreaker.Bot.Tests;
 
 public class CodeBreakerAlgorithmsTests
@@ -117,75 +113,5 @@ public class CodeBreakerAlgorithmsTests
         int selection = 0b_000100_010000_000001_100000;
         List<int> actual = CodeBreakerAlgorithms.HandleNoMatches(toMatch, selection);
         Assert.Single(actual);
-    }
-
-    //private IEnumerable<string> _values;
-    //public MMAlgorithmsTests()
-    //{
-    //    _values = new List<string>()
-    //    {
-    //        "0123", "4512", "5555", "4444", "3423"
-    //    };
-    //}
-
-    //[Theory]
-    //[InlineData("0123", "black", "white", "red", "green")]
-    //[InlineData("4501", "blue", "yellow", "black", "white")]
-    //public void TestColorNamesStringToColor(string input, params string[] colors)
-    //{
-    //    (var colorNames, var chars) = MMAlgorithms.StringToColors(input);
-    //    Assert.Equal(colors, colorNames);
-    //}
-
-    //[Theory]
-    //[InlineData("0123", '0', '1', '2', '3')]
-    //[InlineData("4501", '4', '5', '0', '1')]
-    //public void TestColorNamesStringToNumbers(string input, params char[] charsexpected)
-    //{
-    //    (var colorNames, var chars) = MMAlgorithms.StringToColors(input);
-    //    Assert.Equal(charsexpected, chars);
-    //}
-
-    //[Theory]
-    //[InlineData(1, 1, '0', '0', '0', '0')]
-    //[InlineData(1, 2, '4', '4', '4', '4')]
-    //[InlineData(2, 1, '2', '3', '2', '3')]
-    //public void TestReducePossibleValues(int hits, int expectedCount, params char[] chars)
-    //{
-    //    List<string> results = MMAlgorithms.ReducePossibleValues(_values, hits, chars);
-    //    Assert.Equal(expectedCount, results.Count);
-    //}
-
-    //[Theory]
-    //[ClassData(typeof(TestReduceData))]
-    //public void TestReducePossibleValuesReturnsHit(string code, int hits, char[] chars)
-    //{
-    //    List<string> values = new() { code };
-    //    var actual = MMAlgorithms.ReducePossibleValues(values, hits, chars);
-    //    Assert.True(actual.Count() == 1);
-    //}
-}
-
-public class TestReduceData : IEnumerable<object[]>
-{
-    public IEnumerator<object[]> GetEnumerator()
-    {
-        yield return new object[]
-        {
-            "4245",
-            3,
-            new char[] { '4', '5', '4', '1' }
-        };
-        yield return new object[]
-        {
-            "2454",
-            1,
-            new char[] { '1', '4', '3', '1' }
-        };
-    }
-
-    IEnumerator IEnumerable.GetEnumerator()
-    {
-        return GetEnumerator();
     }
 }
