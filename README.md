@@ -8,6 +8,10 @@ Welcome to this repository with the source code for the book!
 
 [See updates](Updates.md) with all the chapters based on new .NET Aspire features, as well as other .NET updates.
 
+Also check these articles on updates and new features:
+
+- [Key Features of .NET Aspire 9.2: Enhance Your Microservices Part 1](https://csharp.christiannagel.com/2025/04/12/pragmaticmicroervices-part1-aspire92/)
+
 ## Installation requirements
 
 [Tools needed to build and run the application](installation.md)
