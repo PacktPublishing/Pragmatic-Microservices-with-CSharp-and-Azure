@@ -1,6 +1,6 @@
 # Running the application with the development environment
 
-Version Nov-2024
+Version May-2025
 
 To run the application from your local developer system, you need to specify some settings. This file describes all the thinks that need to be configured to run the application:
 
@@ -12,7 +12,11 @@ To run the application from your local developer system, you need to specify som
 
 Starting with chapter 3, we use Azure Cosmos DB.
 
-To use Azure Cosmos DB, it's best to use the local Azure Cosmos DB emulator (because of an issue with the Linux Docker container for Azure Cosmos DB, see below), or running this service with Microsoft Azure (starting with chapter 6).
+To use Azure Cosmos DB, you can use
+
+- the local Azure Cosmos DB emulator (Windows only, see below)
+- the Docker container for Azure Cosmos DB (using a Linux container with Docker Desktop, see below)
+- Microsoft Azure (starting with chapter 6)
 
 ### Using the Azure Cosmos DB Emulator on Windows
 
@@ -37,9 +41,11 @@ Config
 
 ### Azure Cosmos DB emulator running with Docker    
 
-The Docker emulator currently has some issues that are in progress to be fixed:
+The released Docker emulator currently has some issues:
 https://github.com/dotnet/aspire/discussions/2535
 https://github.com/Azure/azure-cosmos-dotnet-v3/issues/4315#issuecomment-1986522226
+
+A preview image is now available which runs great. 
 
 ## Using SQL Server
 
@@ -80,8 +86,7 @@ To list available regions:
 
 `az account list-locations --query "[].{Region:name}" -o table`
 
-Depending on your configuration, setting the credentials might not be required. By default, `DefaultAzureCredential` is used which uses EnvironmentCredential, WorkloadIdentityCredential, ManagedIdentityCredential, SharedTokenCacheCredential, VisualStudioCredential, VisualStudioCodeCredential, AzureCliCredential, AzurePowerShellCredential, AzureDeveloperCliCredential, and InteractiveBrowserCredential, There might be a wrong account or wrong subscription be scuccessull with a login. If you set the credential configuration to AzureCli, the credentials you are loggged into with the Azure CLI are used.
-
+Depending on your configuration, setting the credentials might not be required. By default, `DefaultAzureCredential` is used which uses `EnvironmentCredential`, `WorkloadIdentityCredential`, `ManagedIdentityCredential`, `SharedTokenCacheCredential`, `VisualStudioCredential`, `VisualStudioCodeCredential`, `AzureCliCredential`, `AzurePowerShellCredential`, `AzureDeveloperCliCredential`, and `InteractiveBrowserCredential`, There might be a wrong account or wrong subscription be successful with a login. If you set the credential configuration to `AzureCli`, the credentials you are logged into with the Azure CLI are used.
 
 > Because every chapter uses the same user secrets id with the AppHost project, the configuration needs to be done only once for all chapters.
  

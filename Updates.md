@@ -7,7 +7,7 @@ In case you copy the content of just a single chapter, also copy the file *Direc
 
 ## .NET Aspire 9.0 - 9.2 Updates
 
-### Chapter 1, Introdution to .NET Aspire and Microservices
+### Chapter 1, Introduction to .NET Aspire and Microservices
 
 #### Page 4, Starting with .NET Aspire:
 
@@ -201,7 +201,31 @@ RUN dotnet build "./Codebreaker.GameAPIs.csproj" -c $BUILD_CONFIGURATION -o /app
 The build command needs to use the context of the root directory where the file `Directory.Packages.props` is located:
 
 ```bash
+cd ch05/FinalDocker
 docker build ../.. -f Codebreaker.GameAPIs/Dockerfile -t codebreaker/gamesapi:3.5.4 -t codebreaker/gamesapi.latest
+```
+
+### Extension - Using Docker Compose with .NET Aspire
+
+This is a new feature (currently in preview with .NET Aspire 9.2) to use Docker Compose with .NET Aspire:
+
+This is in the additional Todo in the `StarterAspire` folder (`Codebreaker.AppHost\Program.cs`):
+
+```csharp
+  // TODO 6: see updates.md file to publish as Docker Compose
+```
+
+And this needs to be done (see the `FinalAspire` folder - `Codebreaker.AppHost\Program.cs`):
+
+```csharp
+builder.AddDockerComposePublisher();
+```
+
+Now use the .NET Aspire CLI to create the Docker Compose file:
+```bash
+cd Codebreaker.AppHost
+aspire publish
+docker compose up -d
 ```
 
 ### Chapter 11, Logging and Monitoring

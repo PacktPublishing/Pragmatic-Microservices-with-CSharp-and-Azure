@@ -5,6 +5,7 @@
     <NoWarn>$(NoWarn);NU1507</NoWarn>
   </PropertyGroup>
   <ItemGroup>
+    <PackageVersion Include="Aspire.Hosting.Docker" Version="9.2.1-preview.1.25222.1" />
     <PackageVersion Include="Aspire.Hosting.Garnet" Version="9.2.0" />
     <PackageVersion Include="Aspire.Hosting.Keycloak" Version="9.2.1-preview.1.25222.1" />
     <PackageVersion Include="Aspire.Hosting.PostgreSQL" Version="9.2.1" />
@@ -120,7 +121,7 @@
     <PackageVersion Include="Swashbuckle.AspNetCore" Version="8.1.1" />
     <PackageVersion Include="Swashbuckle.AspNetCore.Annotations" Version="8.1.1" />
     <PackageVersion Include="xunit" Version="2.9.3" />
-	<PackageVersion Include="xunit.v3" Version="2.0.0" />
+    <PackageVersion Include="xunit.v3" Version="2.0.0" />
     <PackageVersion Include="xunit.runner.visualstudio" Version="3.0.2" />
     <PackageVersion Include="Yarp.ReverseProxy" Version="2.3.0" />
     <!-- Pomelo transitive package for Aspire.Pomelo.EntityFrameworkCore.MySql to use EF Core 9 instead of 8 -->
