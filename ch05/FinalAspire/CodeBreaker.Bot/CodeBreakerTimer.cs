@@ -72,7 +72,7 @@ public class CodeBreakerTimer(CodeBreakerGameRunner runner, ILogger<CodeBreakerT
 
     public static void Stop(Guid id)
     {
-        if (id == default)
+        if (id == default) 
             throw new ArgumentException("Invalid argument value {id}", nameof(id));
 
         if (_bots.TryGetValue(id, out CodeBreakerTimer? timer))
