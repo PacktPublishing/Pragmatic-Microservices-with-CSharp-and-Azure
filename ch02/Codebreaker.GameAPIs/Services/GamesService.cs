@@ -41,7 +41,7 @@ public class GamesService(IGamesRepository dataRepository) : IGamesService
         Game? game = await dataRepository.GetGameAsync(id, cancellationToken);
         CodebreakerException.ThrowIfNull(game);
        
-        game.EndTime = DateTime.Now;
+        game.EndTime = DateTime.UtcNow;
         game.Duration = game.EndTime - game.StartTime;
         game = await dataRepository.UpdateGameAsync(game, cancellationToken);
         return game;

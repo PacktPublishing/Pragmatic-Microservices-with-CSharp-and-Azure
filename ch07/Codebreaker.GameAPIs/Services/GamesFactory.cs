@@ -21,7 +21,7 @@ public static class GamesFactory
     public static Game CreateGame(string gameType, string playerName)
     {
         Game Create6x4SimpleGame() =>
-            new(Guid.NewGuid(), gameType, playerName,  DateTime.UtcNow, 4, 12)
+            new(Guid.NewGuid(), gameType, playerName, DateTime.UtcNow, 4, 12)
             {
                 FieldValues = new Dictionary<string, IEnumerable<string>>()
                 {
