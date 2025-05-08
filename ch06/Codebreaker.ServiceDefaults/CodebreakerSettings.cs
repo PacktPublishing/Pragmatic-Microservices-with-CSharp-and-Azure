@@ -1,4 +1,6 @@
-﻿namespace Codebreaker.ServiceDefaults;
+﻿using Microsoft.Extensions.Configuration;
+
+namespace Codebreaker.ServiceDefaults;
 
 public enum DataStoreType
 {
@@ -6,7 +8,7 @@ public enum DataStoreType
     SqlServer,
     Cosmos,
     Postgres,
-    MongoDb,
+    MongoDb
 }
 
 public enum EmulatorOption
@@ -18,7 +20,29 @@ public enum EmulatorOption
 
 public class CodebreakerSettings
 {
-    // public string DataStore { get; set; } = "InMemory";
-    public DataStoreType DataStore { get; set; } = DataStoreType.InMemory; // options: InMemory, SqlServer, CosmosDb, MongoDb, Redis
-    public EmulatorOption UseEmulator { get; set; } = EmulatorOption.PreferDocker;  // options: PreferDocker, PreferLocal, UseAzure
+    public DataStoreType DataStore { get; set; } = DataStoreType.InMemory;
+
+    public EmulatorOption UseEmulator { get; set; } = EmulatorOption.PreferDocker;
+}
+
+public static class ConfigurationExtensions
+{
+    /// <summary>
+    /// Retrieves the data store type specified in the configuration.
+    /// </summary>
+    /// <param name="configuration">The configuration instance to retrieve the data store type from.</param>
+    /// <returns>The <see cref="DataStoreType"/> value parsed from the configuration.  If the configuration value is not set or
+    /// cannot be parsed, returns <see cref="DataStoreType.InMemory"/>.</returns>
+    public static DataStoreType GetDataStoreType(this IConfiguration configuration)
+    {         
+        string? dataStore = configuration.GetValue<string>(EnvVarNames.DataStore);
+        if (Enum.TryParse<DataStoreType>(dataStore, out var dataStoreType))
+        {
+             return dataStoreType;
+        }
+        else
+        {
+            return DataStoreType.InMemory;
+        }
+    }
 }

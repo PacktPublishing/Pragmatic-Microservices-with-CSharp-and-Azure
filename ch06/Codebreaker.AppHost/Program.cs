@@ -32,12 +32,9 @@ if (builder.ExecutionContext.PublisherName == "kubernetes" ||
 CodebreakerSettings settings = new();
 builder.Configuration.GetSection("CodebreakerSettings").Bind(settings);
 
-//string dataStore = builder.Configuration["DataStore"] ?? "InMemory";
-//string useEmulator = builder.Configuration["UseEmulator"] ?? "PreferDocker";  // options: PreferDocker, PreferLocal, UseAzure
-
 var gameApis = builder.AddProject<Projects.Codebreaker_GameAPIs>(GamesAPIs)
     .WithHttpsHealthCheck("/health")
-    .WithEnvironment("DataStore", settings.DataStore.ToString())
+    .WithEnvironment(EnvVarNames.DataStore, settings.DataStore.ToString())
     .WithExternalHttpEndpoints();
 
 builder.AddProject<Projects.CodeBreaker_Bot>(Bot)
@@ -46,9 +43,9 @@ builder.AddProject<Projects.CodeBreaker_Bot>(Bot)
     .WaitFor(gameApis);
 
 var ConfigureSqlServer = () => {
-    var sqlDB = builder.AddSqlServer("sql")
-    .WithDataVolume("codebreaker-sql-data")
-    .AddDatabase("CodebreakerSql", "codebreaker");
+    var sqlDB = builder.AddSqlServer(SqlResourceName)
+    .WithDataVolume(SqlDataVolume)
+    .AddDatabase(SqlDatabaseResourceName, SqlDatabaseName);
 
     gameApis
         .WithReference(sqlDB)
@@ -65,7 +62,7 @@ var ConfigureCosmos = () =>
         // running the emulator, create a database named `codebreaker`, a container named `GamesV3` with a partition key `/PartitionKey`!
         // with the other options, this is created automatically with the app-model.
 
-        var cosmosdb = builder.AddConnectionString("codebreakercosmos");
+        var cosmosdb = builder.AddConnectionString(CosmosResourceName);
 
         gameApis
             .WithReference(cosmosdb)
@@ -75,16 +72,16 @@ var ConfigureCosmos = () =>
     {
         // Cosmos emulator running in a Docker container
         // https://learn.microsoft.com/en-us/azure/cosmos-db/emulator-linux
-        cosmos = builder.AddAzureCosmosDB("codebreakercosmos")
+        cosmos = builder.AddAzureCosmosDB(CosmosResourceName)
             .RunAsPreviewEmulator(p =>
                 p.WithDataExplorer()
-                .WithDataVolume("codebreaker-cosmos-data")
+                .WithDataVolume(CosmosDataVolume)
                 .WithLifetime(ContainerLifetime.Session));
     }
     else
     {
         // Azure Cosmos DB
-        cosmos = builder.AddAzureCosmosDB("codebreakercosmos");
+        cosmos = builder.AddAzureCosmosDB(CosmosResourceName);
     }
 
     if (settings.UseEmulator is not EmulatorOption.PreferLocal)
@@ -95,8 +92,8 @@ var ConfigureCosmos = () =>
         }
 
         var cosmosDB = cosmos
-            .AddCosmosDatabase("codebreaker")
-            .AddContainer("GamesV3", "/PartitionKey");
+            .AddCosmosDatabase(CosmosDatabaseName)
+            .AddContainer(CosmosContainerName, CosmosPartitionKey);
 
         gameApis
             .WithReference(cosmosDB)
@@ -104,17 +101,17 @@ var ConfigureCosmos = () =>
     }
 };
 
-var ConfigurePostres = () =>
+var ConfigurePostgres = () =>
 {
-    var postgres = builder.AddPostgres("postgres")
-    .WithDataVolume("codebreaker-postgres-data")
+    var postgres = builder.AddPostgres(PostgresResourceName)
+    .WithDataVolume(PostgresDataVolume)
     .WithPgAdmin(r =>
     {
         r.WithImageTag("latest");
         r.WithImagePullPolicy(ImagePullPolicy.Always);
         r.WithUrlForEndpoint("http", u => u.DisplayText = "PG Admin");
     })
-    .AddDatabase("CodebreakerPostgres");
+    .AddDatabase(PostgresDatabaseName);
 
     gameApis
         .WithReference(postgres)
@@ -133,11 +130,10 @@ switch (settings.DataStore)
         ConfigureCosmos();
         break;
     case DataStoreType.Postgres:
-        ConfigurePostres();
+        ConfigurePostgres();
         break;
     default:
         throw new NotSupportedException($"DataStore {settings.DataStore} is not supported.");
-
 }
 
 builder.Build().Run();

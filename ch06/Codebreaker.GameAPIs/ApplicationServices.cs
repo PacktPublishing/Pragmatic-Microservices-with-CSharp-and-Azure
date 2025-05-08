@@ -1,4 +1,8 @@
-﻿namespace Codebreaker.GameAPIs;
+﻿using Codebreaker.ServiceDefaults;
+
+using static Codebreaker.ServiceDefaults.ServiceNames;
+
+namespace Codebreaker.GameAPIs;
 
 public static class ApplicationServices
 {
@@ -17,9 +21,26 @@ public static class ApplicationServices
             builder.EnrichSqlServerDbContext<GamesSqlServerContext>();
         }
 
+        static void ConfigurePostgres(IHostApplicationBuilder builder)
+        {
+            var connectionString = builder.Configuration.GetConnectionString(PostgresDatabaseName) ?? throw new InvalidOperationException("Could not read Postgres string");
+
+            builder.Services.AddNpgsqlDataSource(connectionString, dataSourceBuilder =>
+            {
+                dataSourceBuilder.EnableDynamicJson();
+            });
+
+            builder.Services.AddDbContextPool<IGamesRepository, GamesPostgresContext>(options =>
+            {
+                options.UseNpgsql(connectionString);
+                options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+            });
+            builder.EnrichNpgsqlDbContext<GamesPostgresContext>();
+        }
+
         static void ConfigureCosmos(IHostApplicationBuilder builder)
         {
-            builder.AddCosmosDbContext<GamesCosmosContext>("GamesV3", "codebreaker");
+            builder.AddCosmosDbContext<GamesCosmosContext>(CosmosContainerName, CosmosDatabaseName);
 
             builder.Services.AddScoped<IGamesRepository, DataContextProxy<GamesCosmosContext>>();
 
@@ -41,14 +62,18 @@ public static class ApplicationServices
             builder.Services.AddSingleton<IGamesRepository, GamesMemoryRepository>();
         }
 
-        string? dataStore = builder.Configuration.GetValue<string>("DataStore");
+        var dataStore = builder.Configuration.GetDataStoreType();
+       
         switch (dataStore)
         {
-            case "Cosmos":
+            case DataStoreType.Cosmos:
                 ConfigureCosmos(builder);
                 break;
-            case "SqlServer":
+            case DataStoreType.SqlServer:
                 ConfigureSqlServer(builder);
+                break;
+            case DataStoreType.Postgres:
+                ConfigurePostgres(builder);
                 break;
             default:
                 ConfigureInMemory(builder);
@@ -60,11 +85,10 @@ public static class ApplicationServices
 
     public static async Task CreateOrUpdateDatabaseAsync(this WebApplication app)
     {
-        var dataStore = app.Configuration["DataStore"] ?? "InMemory";
+        var dataStore = app.Configuration.GetDataStoreType();
 
-        if (dataStore == "SqlServer")
+        if (dataStore == DataStoreType.SqlServer)
         {
-
             try
             {
                 using var scope = app.Services.CreateScope();
@@ -84,7 +108,7 @@ public static class ApplicationServices
                 throw;
             }
         }
-        else if (dataStore == "Postgres")
+        else if (dataStore == DataStoreType.Postgres)
         {
             try
             {
@@ -107,7 +131,7 @@ public static class ApplicationServices
 
         // The database is created from the AppHost AddDatabase method. The Cosmos container is created here - if it doesn't exist yet.
         // The Cosmos database and container are now created using the app-model!
-        else if (dataStore == "Cosmos")
+        else if (dataStore == DataStoreType.Cosmos)
         {
             //try
             //{
