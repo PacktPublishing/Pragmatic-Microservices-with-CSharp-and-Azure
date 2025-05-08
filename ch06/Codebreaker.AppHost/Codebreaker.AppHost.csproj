@@ -24,6 +24,7 @@
     <ProjectReference Include="..\CodeBreaker.Bot\CodeBreaker.Bot.csproj" />
     <ProjectReference Include="..\Codebreaker.GameAPIs\Codebreaker.GameAPIs.csproj" />
     <ProjectReference Include="..\Codebreaker.SqlServerMigration\Codebreaker.SqlServerMigration.csproj" />
+    <ProjectReference Include="..\Codebreaker.ServiceDefaults\Codebreaker.ServiceDefaults.csproj" IsAspireProjectResource="False" />
   </ItemGroup>
   
 </Project>

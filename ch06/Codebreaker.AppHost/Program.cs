@@ -1,3 +1,8 @@
+using Codebreaker.ServiceDefaults;
+using static Codebreaker.ServiceDefaults.ServiceNames;
+
+using Microsoft.Extensions.Configuration;
+
 var builder = DistributedApplication.CreateBuilder(args);
 
 #pragma warning disable ASPIREAZURE001
@@ -23,34 +28,38 @@ if (builder.ExecutionContext.PublisherName == "kubernetes" ||
 }
 
 // open appsettings.json and appsettings.Development.json to set the DataStore value
-string dataStore = builder.Configuration["DataStore"] ?? "InMemory";
-string useEmulator = builder.Configuration["UseEmulator"] ?? "PreferDocker";  // options: PreferDocker, PreferLocal, UseAzure
 
-var gameApis = builder.AddProject<Projects.Codebreaker_GameAPIs>("gameapis")
+CodebreakerSettings settings = new();
+builder.Configuration.GetSection("CodebreakerSettings").Bind(settings);
+
+//string dataStore = builder.Configuration["DataStore"] ?? "InMemory";
+//string useEmulator = builder.Configuration["UseEmulator"] ?? "PreferDocker";  // options: PreferDocker, PreferLocal, UseAzure
+
+var gameApis = builder.AddProject<Projects.Codebreaker_GameAPIs>(GamesAPIs)
     .WithHttpsHealthCheck("/health")
-    .WithEnvironment("DataStore", dataStore)
+    .WithEnvironment("DataStore", settings.DataStore.ToString())
     .WithExternalHttpEndpoints();
 
-builder.AddProject<Projects.CodeBreaker_Bot>("bot")
+builder.AddProject<Projects.CodeBreaker_Bot>(Bot)
     .WithExternalHttpEndpoints()
     .WithReference(gameApis)
     .WaitFor(gameApis);
 
-if (dataStore == "SqlServer")
-{
+var ConfigureSqlServer = () => {
     var sqlDB = builder.AddSqlServer("sql")
-        .WithDataVolume("codebreaker-sql-data")
-        .AddDatabase("CodebreakerSql", "codebreaker");
+    .WithDataVolume("codebreaker-sql-data")
+    .AddDatabase("CodebreakerSql", "codebreaker");
 
     gameApis
         .WithReference(sqlDB)
         .WaitFor(sqlDB);
-}
-else if (dataStore == "Cosmos")
+};
+
+var ConfigureCosmos = () =>
 {
     IResourceBuilder<AzureCosmosDBResource>? cosmos = null;
 
-    if (useEmulator == "PreferLocal")
+    if (settings.UseEmulator == EmulatorOption.PreferLocal)
     {
         // this requires to start the Azure Cosmos DB emulator running on your system
         // running the emulator, create a database named `codebreaker`, a container named `GamesV3` with a partition key `/PartitionKey`!
@@ -62,7 +71,7 @@ else if (dataStore == "Cosmos")
             .WithReference(cosmosdb)
             .WaitFor(cosmosdb);
     }
-    else if (useEmulator == "PreferDocker")
+    else if (settings.UseEmulator == EmulatorOption.PreferDocker)
     {
         // Cosmos emulator running in a Docker container
         // https://learn.microsoft.com/en-us/azure/cosmos-db/emulator-linux
@@ -78,7 +87,7 @@ else if (dataStore == "Cosmos")
         cosmos = builder.AddAzureCosmosDB("codebreakercosmos");
     }
 
-    if (useEmulator is not "PreferLocal")
+    if (settings.UseEmulator is not EmulatorOption.PreferLocal)
     {
         if (cosmos is null)
         {
@@ -93,26 +102,43 @@ else if (dataStore == "Cosmos")
             .WithReference(cosmosDB)
             .WaitFor(cosmosDB);
     }
+};
 
-}
-else if (dataStore == "Postgres")
+var ConfigurePostres = () =>
 {
     var postgres = builder.AddPostgres("postgres")
-        .WithDataVolume("codebreaker-postgres-data")
-        .WithPgAdmin(r =>
-        {
-            r.WithImageTag("latest");
-            r.WithImagePullPolicy(ImagePullPolicy.Always);
-            r.WithUrlForEndpoint("http", u => u.DisplayText = "PG Admin");
-        })
-        .AddDatabase("CodebreakerPostgres");
+    .WithDataVolume("codebreaker-postgres-data")
+    .WithPgAdmin(r =>
+    {
+        r.WithImageTag("latest");
+        r.WithImagePullPolicy(ImagePullPolicy.Always);
+        r.WithUrlForEndpoint("http", u => u.DisplayText = "PG Admin");
+    })
+    .AddDatabase("CodebreakerPostgres");
 
     gameApis
         .WithReference(postgres)
         .WaitFor(postgres);
+};
+
+switch (settings.DataStore)
+{
+    case DataStoreType.InMemory:
+        // no action needed, in-memory is default
+        break;
+    case DataStoreType.SqlServer:
+        ConfigureSqlServer();
+        break;
+    case DataStoreType.Cosmos:
+        ConfigureCosmos();
+        break;
+    case DataStoreType.Postgres:
+        ConfigurePostres();
+        break;
+    default:
+        throw new NotSupportedException($"DataStore {settings.DataStore} is not supported.");
+
 }
-
-
 
 builder.Build().Run();
 
