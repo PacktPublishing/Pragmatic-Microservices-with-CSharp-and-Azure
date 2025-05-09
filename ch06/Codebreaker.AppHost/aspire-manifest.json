@@ -3,21 +3,12 @@
   "resources": {
     "codebreakercosmos": {
       "type": "azure.bicep.v0",
-      "connectionString": "{codebreakercosmos.secretOutputs.connectionString}",
-      "path": "codebreakercosmos.module.bicep",
-      "params": {
-        "keyVaultName": ""
-      }
+      "connectionString": "{codebreakercosmos.outputs.connectionString}",
+      "path": "codebreakercosmos.module.bicep"
     },
-    "createcosmos": {
-      "type": "project.v0",
-      "path": "../Codebreaker.CosmosCreate/Codebreaker.CosmosCreate.csproj",
-      "env": {
-        "OTEL_DOTNET_EXPERIMENTAL_OTLP_EMIT_EXCEPTION_LOG_ATTRIBUTES": "true",
-        "OTEL_DOTNET_EXPERIMENTAL_OTLP_EMIT_EVENT_LOG_ATTRIBUTES": "true",
-        "OTEL_DOTNET_EXPERIMENTAL_OTLP_RETRY": "in_memory",
-        "ConnectionStrings__codebreakercosmos": "{codebreakercosmos.connectionString}"
-      }
+    "codebreaker": {
+      "type": "value.v0",
+      "connectionString": "AccountEndpoint={codebreakercosmos.outputs.connectionString};Database=codebreaker"
     },
     "gameapis": {
       "type": "project.v0",
@@ -28,7 +19,7 @@
         "OTEL_DOTNET_EXPERIMENTAL_OTLP_RETRY": "in_memory",
         "ASPNETCORE_FORWARDEDHEADERS_ENABLED": "true",
         "HTTP_PORTS": "{gameapis.bindings.http.targetPort}",
-        "ConnectionStrings__codebreakercosmos": "{codebreakercosmos.connectionString}",
+        "ConnectionStrings__codebreaker": "{codebreaker.connectionString}",
         "DataStore": "Cosmos"
       },
       "bindings": {
@@ -71,6 +62,14 @@
           "transport": "http",
           "external": true
         }
+      }
+    },
+    "codebreakercosmos-roles": {
+      "type": "azure.bicep.v0",
+      "path": "codebreakercosmos-roles.module.bicep",
+      "params": {
+        "codebreakercosmos_outputs_name": "{codebreakercosmos.outputs.name}",
+        "principalId": ""
       }
     }
   }

@@ -1,7 +1,8 @@
-﻿@Codebreaker.GameAPIs_HostAddress = http://localhost:9400
+﻿@Codebreaker.GameAPIs_HostAddress = https://localhost:9401
 @ContentType = application/json
 
 ### Create a game
+# @name create
 POST {{Codebreaker.GameAPIs_HostAddress}}/games/
 Content-Type: {{ContentType}}
 
@@ -11,10 +12,7 @@ Content-Type: {{ContentType}}
 }
 
 ### Set a move
-
-@id = 77822526-76eb-4a8f-8186-461226168170
-
-PATCH {{Codebreaker.GameAPIs_HostAddress}}/games/{{id}}
+PATCH {{Codebreaker.GameAPIs_HostAddress}}/games/{{create.response.body.$.id}}
 Content-Type: {{ContentType}}
 
 {
@@ -30,6 +28,7 @@ Content-Type: {{ContentType}}
 }
 
 ### Create a 8x5 game
+# @name create
 POST {{Codebreaker.GameAPIs_HostAddress}}/games/
 Content-Type: {{ContentType}}
 
@@ -42,7 +41,7 @@ Content-Type: {{ContentType}}
 
 @id8x5 = 47b7f614-e0f8-4b5e-9673-0746aed98371
 
-PATCH {{Codebreaker.GameAPIs_HostAddress}}/games/{{id8x5}}
+PATCH {{Codebreaker.GameAPIs_HostAddress}}/games/{{create.response.body.$.id}}
 Content-Type: {{ContentType}}
 
 {
@@ -59,6 +58,7 @@ Content-Type: {{ContentType}}
 }
 
 ### Create a 5x5x4 game
+# @name create
 POST {{Codebreaker.GameAPIs_HostAddress}}/games/
 Content-Type: {{ContentType}}
 
@@ -71,7 +71,7 @@ Content-Type: {{ContentType}}
 
 @id5x5x4 = 74f4270b-8eba-4440-893c-a749ea857536
 
-PATCH {{Codebreaker.GameAPIs_HostAddress}}/games/{{id5x5x4}}
+PATCH {{Codebreaker.GameAPIs_HostAddress}}/games/{{create.response.body.$.id}}
 Content-Type: {{ContentType}}
 
 {
@@ -88,11 +88,11 @@ Content-Type: {{ContentType}}
 
 ### Get game information
 
-GET {{Codebreaker.GameAPIs_HostAddress}}/games/{{id}}
+GET {{Codebreaker.GameAPIs_HostAddress}}/games/{{create.response.body.$.id}}
 
 ### Get games by date
 
-GET {{Codebreaker.GameAPIs_HostAddress}}/games/?date=2024-07-14
+GET {{Codebreaker.GameAPIs_HostAddress}}/games/?date=2025-04-02
 
 ### Get games by player
 
@@ -108,7 +108,7 @@ GET {{Codebreaker.GameAPIs_HostAddress}}/games/?playerName=test
 
 ### Stop a game
 
-PATCH {{Codebreaker.GameAPIs_HostAddress}}/games/{{id}}
+PATCH {{Codebreaker.GameAPIs_HostAddress}}/games/{{create.response.body.$.id}}
 Content-Type: {{ContentType}}
 
 {

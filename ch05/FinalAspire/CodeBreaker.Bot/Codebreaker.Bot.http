@@ -2,20 +2,17 @@
 @ContentType = application/json
 
 ### Start default games to play
+# @name start1
 POST {{Codebreaker.Bot_HostAddress}}/bot/bots
 
+### Get information on the first games playing
+
+GET {{Codebreaker.Bot_HostAddress}}/bot/bots/{{start1.response.body.$.*}}
 
 ### Start 30 games with different parameter settings
+# @name start2
 POST {{Codebreaker.Bot_HostAddress}}/bot/bots?count=30&delay=2&thinkTime=1
 
-### Get information on the bot request
+### Get information on the second games playing
 
-@id = 8b2e0e77-6d00-4f87-81a4-cd24b9556179
-
-GET {{Codebreaker.Bot_HostAddress}}/bot/bots/{{id}}
-
-### Get information on the bot request
-
-@id2 = d6396156-8dc3-4946-8e6a-69f19cba3492
-
-GET {{Codebreaker.Bot_HostAddress}}/bot/bots/{{id2}}
+GET {{Codebreaker.Bot_HostAddress}}/bot/bots/{{start2.response.body.$.*}}
