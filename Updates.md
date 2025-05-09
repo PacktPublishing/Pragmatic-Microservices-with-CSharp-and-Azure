@@ -195,7 +195,7 @@ COPY ["ch05/FinalDocker/Codebreaker.GameAPIs/", "."]
 RUN dotnet build "./Codebreaker.GameAPIs.csproj" -c $BUILD_CONFIGURATION -o /app/build
 ```
 
-### Page 134, Building a Docker Image
+#### Page 134, Building a Docker Image
 
 The build command needs to use the context of the root directory where the file `Directory.Packages.props` is located:
 
@@ -204,7 +204,7 @@ cd ch05/FinalDocker
 docker build ../.. -f Codebreaker.GameAPIs/Dockerfile -t codebreaker/gamesapi:3.5.4 -t codebreaker/gamesapi.latest
 ```
 
-### Page 139, Configuring a Docker container for SQL Server
+#### Page 139, Configuring a Docker container for SQL Server
 
 It's no longer required (you still can do it) to configure a password for the SQL Server Docker container. If you don't configure one, it's created and filled automatically with user secrets. Thus, this code can be used:
 
@@ -215,7 +215,7 @@ var sqlDB = builder.AddSqlServer(SqlResourceName)
   .AddDatabase(SqlDatabaseResourceName, SqlDatabaseName);
 ```
 
-### Extension - Using Docker Compose with .NET Aspire
+#### Extension - Using Docker Compose with .NET Aspire
 
 This is a new feature (currently in preview with .NET Aspire 9.2) to use Docker Compose with .NET Aspire!
 
@@ -238,6 +238,12 @@ cd Codebreaker.AppHost
 aspire publish
 docker compose up -d
 ```
+
+### Chapter 8 - CI/CD - Publishing with GitHub Actions
+
+#### Page 212, Preparing the solution using the Azure Developer CLI
+
+azd version 1.15.1 detects the **.NET (Aspire)** instead of **Azure Container Apps**.
 
 ### Chapter 11, Logging and Monitoring
 
