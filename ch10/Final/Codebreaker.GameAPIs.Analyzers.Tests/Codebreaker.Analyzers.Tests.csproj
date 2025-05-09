@@ -4,13 +4,12 @@
     <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-		<OutputType>Exe</OutputType>	
-
+	<OutputType>Exe</OutputType>	
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
-		<TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
-		<UseMicrosoftTestingPlatformRunner>true</UseMicrosoftTestingPlatformRunner>
-	</PropertyGroup>
+    <TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
+	<UseMicrosoftTestingPlatformRunner>true</UseMicrosoftTestingPlatformRunner>
+  </PropertyGroup>
 
 	<ItemGroup>
 		<Content Include="xunit.runner.json" CopyToOutputDirectory="PreserveNewest" />
@@ -21,10 +20,13 @@
 	</ItemGroup>
 
 	<ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk"/>
-    <PackageReference Include="Moq"/>
-    <PackageReference Include="xunit.v3"/>
-		<PackageReference Include="xunit.runner.visualstudio" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="Moq" />
+    <PackageReference Include="xunit.v3" />
+	<PackageReference Include="xunit.runner.visualstudio">
+	  <PrivateAssets>all</PrivateAssets>
+	  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+	</PackageReference>
     <PackageReference Include="coverlet.collector">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
