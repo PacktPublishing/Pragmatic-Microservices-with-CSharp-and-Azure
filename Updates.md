@@ -77,7 +77,6 @@ See also https://github.com/PacktPublishing/Pragmatic-Microservices-with-CSharp-
 ### Chapter 2, Minimal APIs - Creating REST Services
 
 #### Page 54, Testing the service
-
 HTTP Files support setting variables to access the result from an invocation, and use it with a next request, e.g.
 
 ```json
@@ -180,7 +179,7 @@ gameApis
 
 ### Chapter 5, Containerization of Microservices
 
-Because of the change to use *Central Package Management (CPM)*, the Dockerfile changed to copy the file *Directory.PAckages.props* for a build.
+Because of the change to use *Central Package Management (CPM)*, the `Dockerfile` changed to copy the file `Directory.Packages.props` for a build.
 
 #### Page 132, Codebreaker.GameAPIs/Dockerfile
 
@@ -191,8 +190,8 @@ WORKDIR /src
 COPY ["Directory.Packages.props", "."]
 COPY ["ch05/FinalDocker/Codebreaker.GameAPIs/Codebreaker.GameAPIs.csproj", "ch05/FinalDocker/Codebreaker.GameAPIs/"]
 RUN dotnet restore "./ch05/FinalDocker/Codebreaker.GameAPIs/Codebreaker.GameAPIs.csproj"
-COPY . .
 WORKDIR "/src/ch05/FinalDocker/Codebreaker.GameAPIs"
+COPY ["ch05/FinalDocker/Codebreaker.GameAPIs/", "."]
 RUN dotnet build "./Codebreaker.GameAPIs.csproj" -c $BUILD_CONFIGURATION -o /app/build
 ```
 
@@ -205,14 +204,25 @@ cd ch05/FinalDocker
 docker build ../.. -f Codebreaker.GameAPIs/Dockerfile -t codebreaker/gamesapi:3.5.4 -t codebreaker/gamesapi.latest
 ```
 
-### Extension - Using Docker Compose with .NET Aspire
+### Page 139, Configuring a Docker container for SQL Server
 
-This is a new feature (currently in preview with .NET Aspire 9.2) to use Docker Compose with .NET Aspire:
-
-This is in the additional Todo in the `StarterAspire` folder (`Codebreaker.AppHost\Program.cs`):
+It's no longer required (you still can do it) to configure a password for the SQL Server Docker container. If you don't configure one, it's created and filled automatically with user secrets. Thus, this code can be used:
 
 ```csharp
-  // TODO 6: see updates.md file to publish as Docker Compose
+// Codebreaker.AppHost/Program.cs
+var sqlDB = builder.AddSqlServer(SqlResourceName)
+  .WithDataVolume(SqlDataVolume)
+  .AddDatabase(SqlDatabaseResourceName, SqlDatabaseName);
+```
+
+### Extension - Using Docker Compose with .NET Aspire
+
+This is a new feature (currently in preview with .NET Aspire 9.2) to use Docker Compose with .NET Aspire!
+
+This is in the additional TODO in the `StarterAspire` folder (`Codebreaker.AppHost\Program.cs`):
+
+```csharp
+// TODO 6: see updates.md file to publish as Docker Compose
 ```
 
 And this needs to be done (see the `FinalAspire` folder - `Codebreaker.AppHost\Program.cs`):
@@ -222,6 +232,7 @@ builder.AddDockerComposePublisher();
 ```
 
 Now use the .NET Aspire CLI to create the Docker Compose file:
+
 ```bash
 cd Codebreaker.AppHost
 aspire publish
