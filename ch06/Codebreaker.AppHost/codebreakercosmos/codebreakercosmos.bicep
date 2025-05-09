@@ -34,6 +34,22 @@ resource codebreaker 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases@2024-08
   parent: codebreakercosmos
 }
 
+resource GamesV3 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers@2024-08-15' = {
+  name: 'GamesV3'
+  location: location
+  properties: {
+    resource: {
+      id: 'GamesV3'
+      partitionKey: {
+        paths: [
+          '/PartitionKey'
+        ]
+      }
+    }
+  }
+  parent: codebreaker
+}
+
 output connectionString string = codebreakercosmos.properties.documentEndpoint
 
 output name string = codebreakercosmos.name
