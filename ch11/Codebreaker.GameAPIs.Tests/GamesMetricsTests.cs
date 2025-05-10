@@ -8,9 +8,9 @@ namespace Codebreaker.GameAPIs.Tests;
 public class GamesMetricsTests
 {
     private Guid _gameId = Guid.Parse("DBDF4DD9-3A02-4B2A-87F6-FFE4BA1DCE52");
-    private DateTime _gameStartTime = new DateTime(2024, 1, 1, 12, 10, 5);
-    private DateTime _gameMove1Time = new DateTime(2024, 1, 1, 12, 10, 15);
-    private DateTime _gameMove2Time = new DateTime(2024, 1, 1, 12, 10, 30);
+    private readonly DateTime _gameStartTime = new (2024, 1, 1, 12, 10, 5);
+    private readonly DateTime _gameMove1Time = new (2024, 1, 1, 12, 10, 15);
+    private readonly DateTime _gameMove2Time = new (2024, 1, 1, 12, 10, 30);
 
     [Fact]
     public void GameStarted_Should_IncrementActiveGamesCounter()
