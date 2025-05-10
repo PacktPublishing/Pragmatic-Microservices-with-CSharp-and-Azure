@@ -1,5 +1,7 @@
 using Azure.Monitor.OpenTelemetry.AspNetCore;
 
+using Codebreaker.ServiceDefaults;
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.DependencyInjection;
@@ -86,7 +88,7 @@ public static class Extensions
             builder.Services.AddOpenTelemetry().UseOtlpExporter();
         }
 
-        if (builder.Configuration["TelemetryMode"] == "GrafanaAndPrometheus")
+        if (builder.Configuration[EnvVarNames.TelemetryMode] == nameof(TelemetryType.GrafanaAndPrometheus))
         {
             builder.Services.AddOpenTelemetry()
                 .WithMetrics(metrics => metrics.AddPrometheusExporter());

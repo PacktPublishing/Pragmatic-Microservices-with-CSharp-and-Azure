@@ -1,6 +1,9 @@
 ﻿using Codebreaker.GameAPIs.Infrastructure;
+using Codebreaker.ServiceDefaults;
 
 using System.Diagnostics;
+
+using static Codebreaker.ServiceDefaults.ServiceNames;
 
 namespace Codebreaker.GameAPIs;
 
@@ -10,7 +13,8 @@ public static class ApplicationServices
     {
         builder.Services.AddMetrics();
 
-        builder.Services.AddOpenTelemetry().WithMetrics(m => m.AddMeter(GamesMetrics.MeterName));
+        builder.Services.AddOpenTelemetry()
+            .WithMetrics(m => m.AddMeter(GamesMetrics.MeterName));
 
         builder.Services.AddSingleton<GamesMetrics>();
 
@@ -28,7 +32,7 @@ public static class ApplicationServices
         {
             builder.Services.AddDbContextPool<IGamesRepository, GamesSqlServerContext>(options =>
             {
-                var connectionString = builder.Configuration.GetConnectionString("CodebreakerSql") ?? throw new InvalidOperationException("Could not read SQL Server connection string");
+                var connectionString = builder.Configuration.GetConnectionString(SqlDatabaseName) ?? throw new InvalidOperationException("Could not read SQL Server connection string");
                 options.UseSqlServer(connectionString);
                 options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
             });
@@ -37,7 +41,7 @@ public static class ApplicationServices
 
         static void ConfigurePostgres(IHostApplicationBuilder builder)
         {
-            var connectionString = builder.Configuration.GetConnectionString("CodebreakerPostgres") ?? throw new InvalidOperationException("Could not read SQL Server connection string");
+            var connectionString = builder.Configuration.GetConnectionString(PostgresDatabaseName) ?? throw new InvalidOperationException("Could not read SQL Server connection string");
 
             builder.Services.AddNpgsqlDataSource(connectionString, dataSourceBuilder =>
             {
@@ -54,7 +58,7 @@ public static class ApplicationServices
 
         static void ConfigureCosmos(IHostApplicationBuilder builder)
         {
-            builder.AddCosmosDbContext<GamesCosmosContext>("GamesV3", "codebreaker");
+            builder.AddCosmosDbContext<GamesCosmosContext>(CosmosContainerName, CosmosPartitionKey);
 
             builder.Services.AddScoped<IGamesRepository, DataContextProxy<GamesCosmosContext>>();
 
@@ -76,16 +80,16 @@ public static class ApplicationServices
             builder.Services.AddSingleton<IGamesRepository, GamesMemoryRepository>();
         }
 
-        string? dataStore = builder.Configuration.GetValue<string>("DataStore");
+        DataStoreType dataStore = builder.Configuration.GetDataStore();
         switch (dataStore)
         {
-            case "Cosmos":
+            case DataStoreType.Cosmos:
                 ConfigureCosmos(builder);
                 break;
-            case "SqlServer":
+            case DataStoreType.SqlServer:
                 ConfigureSqlServer(builder);
                 break;
-            case "Postgres":
+            case DataStoreType.Postgres:
                 ConfigurePostgres(builder);
                 break;
             default:
@@ -99,8 +103,8 @@ public static class ApplicationServices
 
     public static async Task CreateOrUpdateDatabaseAsync(this WebApplication app)
     {
-        var dataStore = app.Configuration["DataStore"] ?? "InMemory";
-        if (dataStore == "SqlServer")
+        var dataStore = app.Configuration.GetDataStore();
+        if (dataStore == DataStoreType.SqlServer)
         {
             try
             {
@@ -119,7 +123,7 @@ public static class ApplicationServices
                 throw;
             }
         }
-        else if (dataStore == "Postgres")
+        else if (dataStore == DataStoreType.Postgres)
         {
             try
             {
@@ -139,7 +143,7 @@ public static class ApplicationServices
                 throw;
             }
         }
-        else if (dataStore == "Cosmos")
+        else if (dataStore == DataStoreType.Cosmos)
         {
             // with .NET Aspire 9.1 APIs, the container can be created with the app-model!
             // This code is only needed if the local installed Cosmos DB emulator is used

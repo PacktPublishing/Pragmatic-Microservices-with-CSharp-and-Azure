@@ -1,4 +1,6 @@
-﻿namespace Codebreaker.ServiceDefaults;
+﻿using Microsoft.Extensions.Configuration;
+
+namespace Codebreaker.ServiceDefaults;
 
 public enum DataStoreType
 {
@@ -30,4 +32,13 @@ public class CodebreakerSettings
     public EmulatorOption UseEmulator { get; set; } = EmulatorOption.PreferDocker;
 
     public TelemetryType Telemetry { get; set; } = TelemetryType.None;
+}
+
+public static class ConfigurationExtensions
+{
+    public static DataStoreType GetDataStore(this IConfiguration configuration)
+    {
+        string? dataStore = configuration.GetValue<string>(EnvVarNames.DataStore);
+        return Enum.TryParse(dataStore, out DataStoreType result) ? result : DataStoreType.InMemory;
+    }
 }
