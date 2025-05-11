@@ -8,7 +8,7 @@ public class ServiceNames
     public const string CosmosResourceName = "codebreakercosmos";
     public const string CosmosDataVolume = "codebreaker-cosmos-data";
     public const string CosmosDatabaseName = "codebreaker";
-    public const string CosmosContainerName = "GamesV3b";
+    public const string CosmosContainerName = "GamesV3";
     public const string CosmosPartitionKey = @"/PartitionKey";
 
     public const string SqlResourceName = "sql";
