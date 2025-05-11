@@ -124,8 +124,9 @@ public class GamesServiceTests
 
     private GamesService GetGamesService()
     {
+        // TODO: add test for GamesServiceWithCaching using _distributedCacheMock.Object
         IMeterFactory meterFactory = new TestMeterFactory();
         GamesMetrics metrics = new(meterFactory);
-        return new GamesService(_gamesRepositoryMock.Object, _distributedCacheMock.Object, NullLogger<GamesService>.Instance, metrics, new ActivitySource("TestSource"));
+        return new GamesService(_gamesRepositoryMock.Object, NullLogger<GamesService>.Instance, metrics, new ActivitySource("TestSource"));
     }
 }
