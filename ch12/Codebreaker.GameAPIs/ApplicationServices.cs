@@ -58,7 +58,7 @@ public static class ApplicationServices
 
         static void ConfigureCosmos(IHostApplicationBuilder builder)
         {
-            builder.AddCosmosDbContext<GamesCosmosContext>(CosmosContainerName, CosmosPartitionKey);
+            builder.AddCosmosDbContext<GamesCosmosContext>(CosmosContainerName, CosmosDatabaseName);
 
             builder.Services.AddScoped<IGamesRepository, DataContextProxy<GamesCosmosContext>>();
 
@@ -115,7 +115,7 @@ public static class ApplicationServices
             //case CachingType.Garnet:
             //    builder.AddRedisDistributedCache("garnet");
             //    builder.Services.AddScoped<IGamesService, GamesServiceWithCaching>();
-                break;
+            //    break;
             case CachingType.None:
                 builder.Services.AddScoped<IGamesService, GamesService>();
                 break;
