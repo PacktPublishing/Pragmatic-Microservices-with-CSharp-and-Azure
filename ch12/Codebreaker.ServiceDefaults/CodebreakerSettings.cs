@@ -30,6 +30,7 @@ public enum CachingType
 {
     None,
     Redis,
+    Valkey
     // Garnet // Garnet currently is not a replacement for Redis: This instance has Lua scripting support disabled, does not work with IDistributedMemory as used from the games API
 }
 

@@ -116,6 +116,10 @@ public static class ApplicationServices
             //    builder.AddRedisDistributedCache("garnet");
             //    builder.Services.AddScoped<IGamesService, GamesServiceWithCaching>();
             //    break;
+            case CachingType.Valkey:
+                builder.AddRedisDistributedCache("valkeycache");
+                builder.Services.AddScoped<IGamesService, GamesServiceWithCaching>();
+                break;
             case CachingType.None:
                 builder.Services.AddScoped<IGamesService, GamesService>();
                 break;

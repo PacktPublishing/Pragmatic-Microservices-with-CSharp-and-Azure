@@ -21,6 +21,7 @@
     <PackageReference Include="Aspire.Hosting.Garnet" />
     <PackageReference Include="Aspire.Hosting.PostgreSQL" />
     <PackageReference Include="Aspire.Hosting.Redis" />
+    <PackageReference Include="Aspire.Hosting.Valkey" />
   </ItemGroup>
   
   <ItemGroup>

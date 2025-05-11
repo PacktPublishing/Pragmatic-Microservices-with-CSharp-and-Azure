@@ -4,6 +4,7 @@ using static Codebreaker.ServiceDefaults.ServiceNames;
 
 using Microsoft.Extensions.Configuration;
 using MetricsApp.AppHost.OpenTelemetryCollector;
+using Microsoft.AspNetCore.DataProtection.KeyManagement.Internal;
 
 var builder = DistributedApplication.CreateBuilder(args);
 
@@ -81,9 +82,14 @@ switch (settings.Caching)
         break;
     case CachingType.Redis:
         var redis = builder.AddRedis("redis")
-            .WithRedisCommander();
+            .WithRedisInsight();
         gameApis.WithReference(redis)
             .WaitFor(redis);
+        break;
+    case CachingType.Valkey:
+        var valkey = builder.AddValkey("valkeycache");
+        gameApis.WithReference(valkey)
+            .WaitFor(valkey);
         break;
     //case CachingType.Garnet:
     //    var garnet = builder.AddGarnet("garnet");
