@@ -1,12 +1,8 @@
+using Codebreaker.GameAPIs;
+
 using Microsoft.OpenApi.Models;
-using System.Diagnostics;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddMetrics();
-
-builder.Services.AddSingleton<GamesMetrics>();
-
-builder.Services.AddKeyedSingleton("Codebreaker.GameAPIs", (services, _) => new ActivitySource("Codebreaker.GameAPIs", "1.0.0"));  
 
 builder.AddServiceDefaults();
 
@@ -47,8 +43,8 @@ app.UseSwaggerUI(options =>
     options.SwaggerEndpoint("/swagger/v3/swagger.json", "v3");
 });
 
-await app.CreateOrUpdateDatabaseAsync();
-
 app.MapGameEndpoints();
+
+await app.CreateOrUpdateDatabaseAsync();
 
 app.Run();

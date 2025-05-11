@@ -1,8 +1,4 @@
-﻿using Azure.Identity;
-
-using Microsoft.Extensions.Configuration.AzureAppConfiguration;
-
-namespace CodeBreaker.Bot;
+﻿namespace CodeBreaker.Bot;
 
 internal static class ApplicationServices
 {
@@ -16,5 +12,4 @@ internal static class ApplicationServices
         builder.Services.AddScoped<CodeBreakerTimer>();
         builder.Services.AddScoped<CodeBreakerGameRunner>();
     }
-
 }

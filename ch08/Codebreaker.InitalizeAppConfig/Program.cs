@@ -1,4 +1,5 @@
-using Codebreaker.InitalizeAppConfig;
+using Codebreaker.InitializeAppConfig;
+
 using Microsoft.Extensions.Azure;
 
 var builder = Host.CreateApplicationBuilder(args);
