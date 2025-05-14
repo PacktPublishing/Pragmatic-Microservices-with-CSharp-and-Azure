@@ -34,9 +34,7 @@ public class CodeBreakerTimer(CodeBreakerGameRunner runner, ILogger<CodeBreakerT
 
         _timer = new PeriodicTimer(TimeSpan.FromSeconds(delaySecondsBetweenGames));
     
-        Task _ = Task.Factory.StartNew(
-            () => RunBotLoopAsync(id, numberGames, thinkSeconds).GetAwaiter().GetResult(),
-            TaskCreationOptions.LongRunning);
+        Task _ = RunBotLoopAsync(id, numberGames, thinkSeconds); // fire-and-forget async
 
         return id;
     }
@@ -68,6 +66,8 @@ public class CodeBreakerTimer(CodeBreakerGameRunner runner, ILogger<CodeBreakerT
                 }
 
             } while (_loop < numberGames);
+
+            _timer.Dispose();
         }
         catch (HttpRequestException ex)
         {
