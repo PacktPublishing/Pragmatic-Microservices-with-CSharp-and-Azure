@@ -33,41 +33,47 @@ public class CodeBreakerTimer(CodeBreakerGameRunner runner, ILogger<CodeBreakerT
         _bots.TryAdd(id, this);
 
         _timer = new PeriodicTimer(TimeSpan.FromSeconds(delaySecondsBetweenGames));
-     
-        Task _ = Task.Factory.StartNew(async () =>
-        {
-            try
-            {
-                do
-                {
-                    using var activity = activitySource.StartActivity("BotPlayGame", ActivityKind.Client);
-                    activity?
-                        .AddTag(GameTypeTagName, "Game6x4")
-                        .AddTag(GameSessionIdTagName, id)
-                        .AddTag(GameLoopNumber, _loop.ToString())
-                        .Start();
-
-                    _logger.WaitingForNextTick(_loop);
-
-                    if (await _timer.WaitForNextTickAsync(_cancellationTokenSource.Token)) // simulate some waiting time
-                    {
-                        _logger.TimerTickFired(_loop);
-                        await _gameRunner.StartGameAsync(_cancellationTokenSource.Token);  // start the game
-                        await _gameRunner.RunAsync(thinkSeconds, _cancellationTokenSource.Token); // play the game until finished
-                        _loop++;
-                    }
-
-                } while (_loop < numberGames);
-            }
-            catch (HttpRequestException ex)
-            {
-                _statusMessage = ex.Message;
-                _logger.Error(ex, ex.Message);
-            }
-
-        }, TaskCreationOptions.LongRunning);
+    
+        Task _ = Task.Factory.StartNew(
+            () => RunBotLoopAsync(id, numberGames, thinkSeconds).GetAwaiter().GetResult(),
+            TaskCreationOptions.LongRunning);
 
         return id;
+    }
+
+    private async Task RunBotLoopAsync(Guid id, int numberGames, int thinkSeconds)
+    {
+        if (_timer == null)
+            throw new InvalidOperationException("Timer not initialized, invoke the Start method before!");
+
+        try
+        {
+            do
+            {
+                using var activity = activitySource.StartActivity("BotPlayGame", ActivityKind.Client);
+                activity?
+                    .AddTag(GameTypeTagName, "Game6x4")
+                    .AddTag(GameSessionIdTagName, id)
+                    .AddTag(GameLoopNumber, _loop.ToString())
+                    .Start();
+
+                _logger.WaitingForNextTick(_loop);
+
+                if (await _timer.WaitForNextTickAsync(_cancellationTokenSource.Token)) // simulate some waiting time
+                {
+                    _logger.TimerTickFired(_loop);
+                    await _gameRunner.StartGameAsync(_cancellationTokenSource.Token);  // start the game
+                    await _gameRunner.RunAsync(thinkSeconds, _cancellationTokenSource.Token); // play the game until finished
+                    _loop++;
+                }
+
+            } while (_loop < numberGames);
+        }
+        catch (HttpRequestException ex)
+        {
+            _statusMessage = ex.Message;
+            _logger.Error(ex, ex.Message);
+        }
     }
 
     public void Stop()
