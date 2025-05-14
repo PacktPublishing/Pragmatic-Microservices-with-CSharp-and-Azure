@@ -2,7 +2,7 @@
 
 namespace CodeBreaker.Bot;
 
-public class CodeBreakerTimer(CodeBreakerGameRunner runner, ILogger<CodeBreakerTimer> logger, [FromKeyedServices("Codebreaker.Bot")] ActivitySource activitySource)
+public class CodeBreakerTimer(CodeBreakerGameRunner runner, ILogger<CodeBreakerTimer> logger, [FromKeyedServices("Codebreaker.Bot")] ActivitySource activitySource) : IDisposable
 {
     private const string GameTypeTagName = "codebreaker.gameType";
     private const string GameSessionIdTagName = "codebreaker.gameSessionId";
@@ -20,6 +20,8 @@ public class CodeBreakerTimer(CodeBreakerGameRunner runner, ILogger<CodeBreakerT
     private string _statusMessage = "running";
 
     private readonly CancellationTokenSource _cancellationTokenSource = new();
+
+    private bool _disposed;
 
     public Guid Start(int delaySecondsBetweenGames, int numberGames, int thinkSeconds)
     {
@@ -66,20 +68,35 @@ public class CodeBreakerTimer(CodeBreakerGameRunner runner, ILogger<CodeBreakerT
                 }
 
             } while (_loop < numberGames);
-
-            _timer.Dispose();
         }
         catch (HttpRequestException ex)
         {
             _statusMessage = ex.Message;
             _logger.Error(ex, ex.Message);
         }
+        finally
+        {
+            Dispose();
+        }
     }
 
     public void Stop()
     {
+        if (_disposed) return;
         _statusMessage = "stopped";
         _timer?.Dispose();
+        _cancellationTokenSource.Cancel();
+        _cancellationTokenSource.Dispose();
+        _disposed = true;
+    }
+
+    public void Dispose()
+    {
+        if (_disposed) return;
+        _timer?.Dispose();
+        _cancellationTokenSource.Cancel();
+        _cancellationTokenSource.Dispose();
+        _disposed = true;
     }
 
     public StatusInfo GetStatus()
@@ -92,10 +109,10 @@ public class CodeBreakerTimer(CodeBreakerGameRunner runner, ILogger<CodeBreakerT
         if (id == default)
             throw new ArgumentException("Invalid argument value {id}", nameof(id));
 
-        if (_bots.TryGetValue(id, out CodeBreakerTimer? timer))
+        if (_bots.TryRemove(id, out CodeBreakerTimer? timer))
         {
             timer.Stop();
-            _bots.TryRemove(id, out _);
+            return;
         }
 
         throw new BotNotFoundException();
