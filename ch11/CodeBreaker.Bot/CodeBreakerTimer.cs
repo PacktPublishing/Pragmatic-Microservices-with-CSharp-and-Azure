@@ -2,7 +2,7 @@
 
 namespace CodeBreaker.Bot;
 
-public class CodeBreakerTimer(CodeBreakerGameRunner runner, ILogger<CodeBreakerTimer> logger, [FromKeyedServices("Codebreaker.Bot")] ActivitySource activitySource)
+public class CodeBreakerTimer(CodeBreakerGameRunner runner, ILogger<CodeBreakerTimer> logger, [FromKeyedServices("Codebreaker.Bot")] ActivitySource activitySource) : IDisposable
 {
     private const string GameTypeTagName = "codebreaker.gameType";
     private const string GameSessionIdTagName = "codebreaker.gameSessionId";
@@ -21,6 +21,8 @@ public class CodeBreakerTimer(CodeBreakerGameRunner runner, ILogger<CodeBreakerT
 
     private readonly CancellationTokenSource _cancellationTokenSource = new();
 
+    private bool _disposed;
+
     public Guid Start(int delaySecondsBetweenGames, int numberGames, int thinkSeconds)
     {
         ArgumentOutOfRangeException.ThrowIfNegative(delaySecondsBetweenGames);
@@ -33,47 +35,68 @@ public class CodeBreakerTimer(CodeBreakerGameRunner runner, ILogger<CodeBreakerT
         _bots.TryAdd(id, this);
 
         _timer = new PeriodicTimer(TimeSpan.FromSeconds(delaySecondsBetweenGames));
-     
-        Task _ = Task.Factory.StartNew(async () =>
-        {
-            try
-            {
-                do
-                {
-                    using var activity = activitySource.StartActivity("BotPlayGame", ActivityKind.Client);
-                    activity?
-                        .AddTag(GameTypeTagName, "Game6x4")
-                        .AddTag(GameSessionIdTagName, id)
-                        .AddTag(GameLoopNumber, _loop.ToString())
-                        .Start();
-
-                    _logger.WaitingForNextTick(_loop);
-
-                    if (await _timer.WaitForNextTickAsync(_cancellationTokenSource.Token)) // simulate some waiting time
-                    {
-                        _logger.TimerTickFired(_loop);
-                        await _gameRunner.StartGameAsync(_cancellationTokenSource.Token);  // start the game
-                        await _gameRunner.RunAsync(thinkSeconds, _cancellationTokenSource.Token); // play the game until finished
-                        _loop++;
-                    }
-
-                } while (_loop < numberGames);
-            }
-            catch (HttpRequestException ex)
-            {
-                _statusMessage = ex.Message;
-                _logger.Error(ex, ex.Message);
-            }
-
-        }, TaskCreationOptions.LongRunning);
+    
+        Task _ = RunBotLoopAsync(id, numberGames, thinkSeconds); // fire-and-forget async
 
         return id;
     }
 
+    private async Task RunBotLoopAsync(Guid id, int numberGames, int thinkSeconds)
+    {
+        if (_timer == null)
+            throw new InvalidOperationException("Timer not initialized, invoke the Start method before!");
+
+        try
+        {
+            do
+            {
+                using var activity = activitySource.StartActivity("BotPlayGame", ActivityKind.Client);
+                activity?
+                    .AddTag(GameTypeTagName, "Game6x4")
+                    .AddTag(GameSessionIdTagName, id)
+                    .AddTag(GameLoopNumber, _loop.ToString())
+                    .Start();
+
+                _logger.WaitingForNextTick(_loop);
+
+                if (await _timer.WaitForNextTickAsync(_cancellationTokenSource.Token)) // simulate some waiting time
+                {
+                    _logger.TimerTickFired(_loop);
+                    await _gameRunner.StartGameAsync(_cancellationTokenSource.Token);  // start the game
+                    await _gameRunner.RunAsync(thinkSeconds, _cancellationTokenSource.Token); // play the game until finished
+                    _loop++;
+                }
+
+            } while (_loop < numberGames);
+        }
+        catch (HttpRequestException ex)
+        {
+            _statusMessage = ex.Message;
+            _logger.Error(ex, ex.Message);
+        }
+        finally
+        {
+            Dispose();
+        }
+    }
+
     public void Stop()
     {
+        if (_disposed) return;
         _statusMessage = "stopped";
         _timer?.Dispose();
+        _cancellationTokenSource.Cancel();
+        _cancellationTokenSource.Dispose();
+        _disposed = true;
+    }
+
+    public void Dispose()
+    {
+        if (_disposed) return;
+        _timer?.Dispose();
+        _cancellationTokenSource.Cancel();
+        _cancellationTokenSource.Dispose();
+        _disposed = true;
     }
 
     public StatusInfo GetStatus()
@@ -86,10 +109,10 @@ public class CodeBreakerTimer(CodeBreakerGameRunner runner, ILogger<CodeBreakerT
         if (id == default)
             throw new ArgumentException("Invalid argument value {id}", nameof(id));
 
-        if (_bots.TryGetValue(id, out CodeBreakerTimer? timer))
+        if (_bots.TryRemove(id, out CodeBreakerTimer? timer))
         {
             timer.Stop();
-            _bots.TryRemove(id, out _);
+            return;
         }
 
         throw new BotNotFoundException();
