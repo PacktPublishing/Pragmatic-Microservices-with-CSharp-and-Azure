@@ -1,10 +1,14 @@
 using Azure.Monitor.OpenTelemetry.AspNetCore;
+
+using Codebreaker.ServiceDefaults;
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;
-using OpenTelemetry.Logs;
+
+using OpenTelemetry;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
 
@@ -12,7 +16,10 @@ namespace Microsoft.Extensions.Hosting;
 
 public static class Extensions
 {
-    public static IHostApplicationBuilder AddServiceDefaults(this IHostApplicationBuilder builder)
+    private const string HealthEndpointPath = "/health";
+    private const string AlivenessEndpointPath = "/alive";
+
+    public static TBuilder AddServiceDefaults<TBuilder>(this TBuilder builder) where TBuilder : IHostApplicationBuilder
     {
         builder.ConfigureOpenTelemetry();
 
@@ -29,10 +36,16 @@ public static class Extensions
             http.AddServiceDiscovery();
         });
 
+        // Uncomment the following to restrict the allowed schemes for service discovery.
+        // builder.Services.Configure<ServiceDiscoveryOptions>(options =>
+        // {
+        //     options.AllowedSchemes = ["https"];
+        // });
+
         return builder;
     }
 
-    public static IHostApplicationBuilder ConfigureOpenTelemetry(this IHostApplicationBuilder builder)
+    public static TBuilder ConfigureOpenTelemetry<TBuilder>(this TBuilder builder) where TBuilder : IHostApplicationBuilder
     {
         builder.Logging.AddOpenTelemetry(logging =>
         {
@@ -43,22 +56,24 @@ public static class Extensions
         builder.Services.AddOpenTelemetry()
             .WithMetrics(metrics =>
             {
-                metrics.AddRuntimeInstrumentation()
-                       .AddBuiltInMeters();
+                metrics.AddAspNetCoreInstrumentation()
+                    .AddHttpClientInstrumentation()
+                    .AddRuntimeInstrumentation()
+                    .AddMeter("Microsoft.EntityFrameworkCore");                    
             })
             .WithTracing(tracing =>
             {
-                if (builder.Environment.IsDevelopment())
-                {
-                    // We want to view all traces in development
-                    tracing.SetSampler(new AlwaysOnSampler());
-                }
-
-                tracing.AddSource("Codebreaker.GameAPIs.Client", "Codebreaker.GameAPIs", 
-                    "OpenTelemetry.Instrumentation.EntityFrameworkCore", "Azure.Cosmos.Operation")
-                    .AddAspNetCoreInstrumentation()
-                    .AddGrpcClientInstrumentation()
+                tracing.AddSource(builder.Environment.ApplicationName)
+                    .AddAspNetCoreInstrumentation(tracing =>
+                        // Exclude health check requests from tracing
+                        tracing.Filter = context =>
+                            !context.Request.Path.StartsWithSegments(HealthEndpointPath)
+                            && !context.Request.Path.StartsWithSegments(AlivenessEndpointPath)
+                    )
+                    // Uncomment the following line to enable gRPC instrumentation (requires the OpenTelemetry.Instrumentation.GrpcNetClient package)
+                    //.AddGrpcClientInstrumentation()
                     .AddHttpClientInstrumentation();
+                    
             });
 
         builder.AddOpenTelemetryExporters();
@@ -66,64 +81,55 @@ public static class Extensions
         return builder;
     }
 
-    private static IHostApplicationBuilder AddOpenTelemetryExporters(this IHostApplicationBuilder builder)
+    private static TBuilder AddOpenTelemetryExporters<TBuilder>(this TBuilder builder) where TBuilder : IHostApplicationBuilder
     {
         bool useOtlpExporter = !string.IsNullOrWhiteSpace(builder.Configuration["OTEL_EXPORTER_OTLP_ENDPOINT"]);
 
         if (useOtlpExporter)
         {
-            builder.Services.Configure<OpenTelemetryLoggerOptions>(logging => logging.AddOtlpExporter());
-            builder.Services.ConfigureOpenTelemetryMeterProvider(metrics => metrics.AddOtlpExporter());
-            builder.Services.ConfigureOpenTelemetryTracerProvider(tracing => tracing.AddOtlpExporter());
+            builder.Services.AddOpenTelemetry().UseOtlpExporter();
         }
-        if (Environment.GetEnvironmentVariable("StartupMode") == "OnPremises")
+
+        if (builder.Configuration[EnvVarNames.TelemetryMode] == nameof(TelemetryType.GrafanaAndPrometheus))
         {
             builder.Services.AddOpenTelemetry()
-               .WithMetrics(metrics => metrics.AddPrometheusExporter());
+                .WithMetrics(metrics => metrics.AddPrometheusExporter());
         }
-        else
+
+        if (!string.IsNullOrEmpty(builder.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"]))
         {
-            if (!string.IsNullOrEmpty(builder.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"]))
-            {
-                builder.Services.AddOpenTelemetry()
-                   .UseAzureMonitor();
-            }
+            builder.Services.AddOpenTelemetry()
+               .UseAzureMonitor();
         }
+
         return builder;
     }
 
-    public static IHostApplicationBuilder AddDefaultHealthChecks(this IHostApplicationBuilder builder)
+    public static TBuilder AddDefaultHealthChecks<TBuilder>(this TBuilder builder) where TBuilder : IHostApplicationBuilder
     {
         builder.Services.AddHealthChecks()
             // Add a default liveness check to ensure app is responsive
-            .AddCheck("self", () => HealthCheckResult.Healthy(), tags: ["live"]);
+            .AddCheck("self", () => HealthCheckResult.Healthy(), ["live"]);
 
         return builder;
     }
 
     public static WebApplication MapDefaultEndpoints(this WebApplication app)
     {
-        if (Environment.GetEnvironmentVariable("StartupMode") == "OnPremises")
-        { 
-            app.MapPrometheusScrapingEndpoint();
-        }
-
-        // Only health checks tagged with the "live" tag must pass for app to be considered alive
-        app.MapHealthChecks("/alive", new HealthCheckOptions
+        // Adding health checks endpoints to applications in non-development environments has security implications.
+        // See https://aka.ms/dotnet/aspire/healthchecks for details before enabling these endpoints in non-development environments.
+        if (app.Environment.IsDevelopment())
         {
-            Predicate = r => r.Tags.Contains("live")
-        });
+            // All health checks must pass for app to be considered ready to accept traffic after starting
+            app.MapHealthChecks(HealthEndpointPath);
 
-        // All health checks must pass for app to be considered ready to accept traffic after starting
-        app.MapHealthChecks("/health");
+            // Only health checks tagged with the "live" tag must pass for app to be considered alive
+            app.MapHealthChecks(AlivenessEndpointPath, new HealthCheckOptions
+            {
+                Predicate = r => r.Tags.Contains("live")
+            });
+        }
 
         return app;
     }
-
-    private static MeterProviderBuilder AddBuiltInMeters(this MeterProviderBuilder meterProviderBuilder) =>
-        meterProviderBuilder.AddMeter(
-            "Microsoft.AspNetCore.Hosting",
-            "Microsoft.AspNetCore.Server.Kestrel",
-            "Microsoft.EntityFrameworkCore",
-            "System.Net.Http");
 }
