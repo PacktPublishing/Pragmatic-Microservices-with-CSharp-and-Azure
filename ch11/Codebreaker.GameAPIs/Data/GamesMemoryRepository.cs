@@ -74,6 +74,7 @@ public partial class GamesMemoryRepository(ILogger<GamesMemoryRepository> logger
         {
             return Task.FromResult(game);
         }
+        _logger.LogError("Game update failed with game id {gameId}", game.Id);
 
         throw new CodebreakerException($"Game update failed with game id {game.Id}") 
         { 

@@ -15,15 +15,20 @@ public class CodeBreakerGameRunner(GamesClient gamesClient, ILogger<CodeBreakerG
     private readonly ILogger _logger = logger;
     private readonly GamesClient _gamesClient = gamesClient;
 
+    // Constants for color encoding
+    private const int ColorBitWidth = 6;
+    private const int ColorMask = (1 << ColorBitWidth) - 1; // 0b111111
+    private const int PegCount = 4;
+
     // initialize a list of all the possible options using numbers for every color
     private static List<int> InitializePossibleValues()
     {
-        static List<int> Create8Colors(int shift)
+        static List<int> CreateColors(int shift)
         {
             List<int> pin = [];
             for (int i = 0; i < 6; i++)
             {
-                int x = 1 << i + shift;
+                int x = 1 << (i + shift);
                 pin.Add(x);
             }
             return pin;
@@ -43,12 +48,12 @@ public class CodeBreakerGameRunner(GamesClient gamesClient, ILogger<CodeBreakerG
             return result;
         }
 
-        var digits1 = Create8Colors(0);
-        var digits2 = Create8Colors(6);
+        var digits1 = CreateColors(0);
+        var digits2 = CreateColors(ColorBitWidth);
         var list2 = AddColorsToList(digits1, digits2);
-        var digits3 = Create8Colors(12);
+        var digits3 = CreateColors(ColorBitWidth * 2);
         var list3 = AddColorsToList(list2, digits3);
-        var digits4 = Create8Colors(18);
+        var digits4 = CreateColors(ColorBitWidth * 3);
         var list4 = AddColorsToList(list3, digits4);
         list4.Sort();
         return list4;
@@ -169,10 +174,10 @@ public class CodeBreakerGameRunner(GamesClient gamesClient, ILogger<CodeBreakerG
 
     private string[] IntToColors(int value) =>
     [
-        _colorNames?[value & 0b111111] ?? string.Empty,
-        _colorNames?[(value >> 6) & 0b111111] ?? string.Empty,
-        _colorNames?[(value >> 12) & 0b111111] ?? string.Empty,
-        _colorNames?[(value >> 18) & 0b111111] ?? string.Empty
+        _colorNames?[(value >> (ColorBitWidth * 0)) & ColorMask] ?? string.Empty,
+        _colorNames?[(value >> (ColorBitWidth * 1)) & ColorMask] ?? string.Empty,
+        _colorNames?[(value >> (ColorBitWidth * 2)) & ColorMask] ?? string.Empty,
+        _colorNames?[(value >> (ColorBitWidth * 3)) & ColorMask] ?? string.Empty
     ];
 }
 
