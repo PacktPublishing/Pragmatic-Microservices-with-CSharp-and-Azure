@@ -1,5 +1,6 @@
-using System.Runtime.CompilerServices;
 using CodeBreaker.Bot.Endpoints;
+
+using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("CodeBreaker.Bot.Tests")]
 
