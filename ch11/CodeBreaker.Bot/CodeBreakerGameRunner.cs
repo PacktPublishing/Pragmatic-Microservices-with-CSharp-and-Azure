@@ -76,23 +76,32 @@ public class CodeBreakerGameRunner(GamesClient gamesClient, ILogger<CodeBreakerG
             key <<= 1;
             return next;
         }
-        using var activity = activitySource.CreateActivity("StartGame", ActivityKind.Client);
 
-        // Initialize the possible values for the game
-        _possibleValues = InitializePossibleValues();
-        _moves.Clear();
-        _moveNumber = 0;
+        try
+        {
+            using var activity = activitySource.CreateActivity("StartGame", ActivityKind.Client);
 
-        // Start a new game and retrieve the game ID and color names
-        (_gameId, _, _, IDictionary<string, string[]> fieldValues) = await _gamesClient.StartGameAsync(GameType.Game6x4, "Bot", cancellationToken);
+            // Initialize the possible values for the game
+            _possibleValues = InitializePossibleValues();
+            _moves.Clear();
+            _moveNumber = 0;
 
-        activity?.AddTag(GameTypeTagName, GameType.Game6x4)
-            .AddTag(GameIdTagName, _gameId.ToString())
-            .Start();
+            // Start a new game and retrieve the game ID and color names
+            (_gameId, _, _, IDictionary<string, string[]> fieldValues) = await _gamesClient.StartGameAsync(GameType.Game6x4, "Bot", cancellationToken);
 
-        int key = 1;
-        _colorNames = fieldValues["colors"]
-            .ToDictionary(keySelector: c => NextKey(ref key), elementSelector: color => color);
+            activity?.AddTag(GameTypeTagName, GameType.Game6x4)
+                .AddTag(GameIdTagName, _gameId.ToString())
+                .Start();
+
+            int key = 1;
+            _colorNames = fieldValues["colors"]
+                .ToDictionary(keySelector: c => NextKey(ref key), elementSelector: color => color);
+        }
+        catch (Exception ex)
+        {
+            _logger.ErrorStartingGame(ex, _gameId ?? Guid.Empty);
+            throw;
+        }
     }
 
     /// <summary>
