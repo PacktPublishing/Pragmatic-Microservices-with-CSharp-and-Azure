@@ -1,4 +1,5 @@
 ﻿namespace Codebreaker.ServiceDefaults;
+
 public class ServiceNames
 {
     public const string GamesAPIs = "gameapis";
@@ -15,7 +16,7 @@ public class ServiceNames
     public const string SqlDatabaseResourceName = "codebreakersql";
     public const string SqlDatabaseName = "codebreaker";
 
-    public const string PostgresResourceName = "postgres";
+    public const string PostgresResourceName = "codebreakerpostgres";
     public const string PostgresDataVolume = "codebreaker-postgres-data";
     public const string PostgresDatabaseName = "codebreaker";
 }

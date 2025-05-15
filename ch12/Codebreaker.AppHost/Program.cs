@@ -1,64 +1,103 @@
-using Codebreaker.AppHost;
+using Codebreaker.ServiceDefaults;
+using Codebreaker.AppHost.Extensions;
+using static Codebreaker.ServiceDefaults.ServiceNames;
+
+using Microsoft.Extensions.Configuration;
+using MetricsApp.AppHost.OpenTelemetryCollector;
+using Microsoft.AspNetCore.DataProtection.KeyManagement.Internal;
 
 var builder = DistributedApplication.CreateBuilder(args);
 
-string dataStore = builder.Configuration["DataStore"] ?? "InMemory";
-string startupMode = builder.Configuration["STARTUP_MODE"] ?? "Azure";  // specified with environment variables in the launch profile
+CodebreakerSettings settings = new();
+builder.Configuration.GetSection("CodebreakerSettings").Bind(settings);
 
-var redis = builder.AddRedis("redis")
-    .WithRedisCommander()
-    .PublishAsContainer();
-    
+var gameApis = builder.AddProject<Projects.Codebreaker_GameAPIs>(GamesAPIs)
+    .WithHttpsHealthCheck("/health")
+    .WithEnvironment(EnvVarNames.DataStore, settings.DataStore.ToString())
+    .WithEnvironment(EnvVarNames.TelemetryMode, settings.Telemetry.ToString())
+    .WithEnvironment(EnvVarNames.Caching, settings.Caching.ToString())
+    .WithExternalHttpEndpoints();
 
-if (startupMode == "OnPremises")
+var bot = builder.AddProject<Projects.CodeBreaker_Bot>(Bot)
+    .WithExternalHttpEndpoints()
+    .WithReference(gameApis)
+    .WithEnvironment(EnvVarNames.TelemetryMode, settings.Telemetry.ToString())
+    .WaitFor(gameApis);
+
+switch (settings.DataStore)
 {
-    var sqlServer = builder.AddSqlServer("sql")
-        .WithDataVolume()
-        .PublishAsContainer()
-        .AddDatabase("CodebreakerSql");
-
-    var grafana = builder.AddContainer("grafana", "grafana/grafana")
-        .WithBindMount("../grafana/config", "/etc/grafana", isReadOnly: true)
-        .WithBindMount("../grafana/dashboards", "/var/lib/grafana/dashboards", isReadOnly: true)
-        .WithHttpEndpoint(targetPort: 3000, name: "grafana-http");
-
-    builder.AddUserSecretsForPrometheusEnvironment();
-
-    var prometheus = builder.AddContainer("prometheus", "prom/prometheus")
-       .WithBindMount("../prometheus", "/etc/prometheus", isReadOnly: true)
-       .WithHttpEndpoint(/* This port is fixed as it's referenced from the Grafana config */ port: 9090, targetPort: 9090);
-
-    var gameAPIs = builder.AddProject<Projects.Codebreaker_GameAPIs>("gameapis")
-        .WithReference(sqlServer)
-        .WithReference(redis)
-        .WithEnvironment("DataStore", dataStore)
-        .WithEnvironment("GRAFANA_URL", grafana.GetEndpoint("grafana-http"))
-        .WithEnvironment("StartupMode", startupMode);
-
-    builder.AddProject<Projects.CodeBreaker_Bot>("bot")
-        .WithReference(gameAPIs)
-        .WithEnvironment("StartupMode", startupMode);
+    case DataStoreType.InMemory:
+        // no action needed, in-memory is the default
+        break;
+    case DataStoreType.SqlServer:
+        builder.ConfigureSqlServer(gameApis);
+        break;
+    case DataStoreType.Cosmos:
+        builder.ConfigureCosmos(gameApis, settings.UseEmulator);
+        break;
+    case DataStoreType.Postgres:
+        builder.ConfigurePostgres(gameApis);
+        break;
+    default:
+        throw new NotSupportedException($"DataStore {settings.DataStore} is not supported.");
 }
-else
+
+switch (settings.Telemetry)
 {
-    var logs = builder.AddAzureLogAnalyticsWorkspace("logs");
-    var appInsights = builder.AddAzureApplicationInsights("insights", logs);
+    case TelemetryType.None:
+        // no action needed, just using .NET Aspire dashboard
+        break;
+    case TelemetryType.GrafanaAndPrometheus:
+        var prometheus = builder.AddPrometheus("prometheus");
 
-    var cosmos = builder.AddAzureCosmosDB("codebreakercosmos")
-        .AddCosmosDatabase("codebreaker");
+        var grafana = builder.AddGrafana("grafana")
+            .WithEnvironment("PROMETHEUS_ENDPOINT", prometheus.GetEndpoint("http"));
 
-    var gameAPIs = builder.AddProject<Projects.Codebreaker_GameAPIs>("gameapis")
-        .WithReference(cosmos)
-        .WithReference(redis)
-        .WithReference(appInsights)
-        .WithEnvironment("DataStore", dataStore)
-        .WithEnvironment("StartupMode", startupMode)
-        .WithReplicas(2);
+        builder.AddOpenTelemetryCollector("otelcollector", "../otelcollector/config.yaml")
+          .WithEnvironment("PROMETHEUS_ENDPOINT", $"{prometheus.GetEndpoint("http")}/api/v1/otlp");
 
-    builder.AddProject<Projects.CodeBreaker_Bot>("bot")
-        .WithReference(gameAPIs)
-        .WithReference(appInsights)
-        .WithEnvironment("StartupMode", startupMode);
+        gameApis.WithEnvironment("GRAFANA_URL", grafana.GetEndpoint("http"))
+            .WaitFor(grafana);
+        bot.WithEnvironment("GRAFANA_URL", grafana.GetEndpoint("http"))
+            .WaitFor(grafana);
+        break;
+    case TelemetryType.AzureMonitor:
+        // var logs = builder.AddAzureLogAnalyticsWorkspace("logs");
+        // var appInsights = builder.AddAzureApplicationInsights("insights", logs);
+        // gameApis.WithEnvironment("LOG_ANALYTICS_WORKSPACE_ID", $"{laws.WorkspaceId}");
+
+        // Log Analytics workspace is created automatically
+        var appInsights = builder.AddAzureApplicationInsights("insights");
+        gameApis.WithReference(appInsights)
+            .WaitFor(appInsights);
+        bot.WithReference(appInsights)
+            .WaitFor(appInsights);
+        break;
+}
+
+switch (settings.Caching)
+{
+    case CachingType.None:
+        // no action needed, in-memory is the default
+        break;
+    case CachingType.Redis:
+        var redis = builder.AddRedis("redis")
+            .WithRedisInsight();
+        gameApis.WithReference(redis)
+            .WaitFor(redis);
+        break;
+    case CachingType.Valkey:
+        var valkey = builder.AddValkey("valkeycache");
+        gameApis.WithReference(valkey)
+            .WaitFor(valkey);
+        break;
+    //case CachingType.Garnet:
+    //    var garnet = builder.AddGarnet("garnet");
+    //    gameApis.WithReference(garnet)
+    //        .WaitFor(garnet);
+    //    break;
+    default:
+        throw new NotSupportedException($"Caching {settings.Caching} is not supported.");
 }
 
 builder.Build().Run();
