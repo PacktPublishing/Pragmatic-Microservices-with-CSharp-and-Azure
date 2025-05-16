@@ -1,14 +1,28 @@
-﻿using Microsoft.Extensions.Caching.Distributed;
+﻿using Codebreaker.GameAPIs.Infrastructure;
+
 using System.Diagnostics;
 
 namespace Codebreaker.GameAPIs.Services;
 
-public class GamesService(IGamesRepository dataRepository, IDistributedCache distributedCache, ILogger<GamesService> logger, GamesMetrics metrics, [FromKeyedServices("Codebreaker.GameAPIs")] ActivitySource activitySource) : IGamesService
+public class GamesService(
+    IGamesRepository dataRepository, 
+    ILogger<GamesService> logger, 
+    GamesMetrics metrics, 
+    [FromKeyedServices("Codebreaker.GameAPIs")] ActivitySource activitySource) : IGamesService
 {
     private const string GameTypeTagName = "codebreaker.gameType";
     private const string GameIdTagName = "codebreaker.gameId";
 
-    public async Task<Game> StartGameAsync(string gameType, string playerName, CancellationToken cancellationToken = default)
+    /// <summary>
+    /// Starts a new game of the specified type with the given player name.
+    /// </summary>
+    /// <remarks>This method creates a new game instance, persists it to the data repository, and logs
+    /// relevant metrics and activity information.</remarks>
+    /// <param name="gameType">The type of game to start. This must be a valid game type supported by the system.</param>
+    /// <param name="playerName">The name of the player who will participate in the game.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>A <see cref="Game"/> object representing the newly created game.</returns>
+    public virtual async Task<Game> StartGameAsync(string gameType, string playerName, CancellationToken cancellationToken = default)
     {
         Game game;
         using var activity = activitySource.CreateActivity("StartGame", ActivityKind.Server);
@@ -19,9 +33,7 @@ public class GamesService(IGamesRepository dataRepository, IDistributedCache dis
                 .AddTag(GameIdTagName, game.Id.ToString())
                 .Start();
 
-            await Task.WhenAll(
-                dataRepository.AddGameAsync(game, cancellationToken), 
-                UpdateGameInCacheAsync(game, cancellationToken));
+            await dataRepository.AddGameAsync(game, cancellationToken);
 
             metrics.GameStarted(game);
             logger.GameStarted(game.Id);
@@ -42,15 +54,27 @@ public class GamesService(IGamesRepository dataRepository, IDistributedCache dis
         return game;
     }
 
-    public async Task<(Game Game, Move Move)> SetMoveAsync(Guid id, string gameType, string[] guesses, int moveNumber, CancellationToken cancellationToken = default)
+    /// <summary>
+    /// Processes a move for the specified game, validates the move, and updates the game state.
+    /// </summary>
+    /// <remarks>This method validates the game state and the provided move before applying it. If the game
+    /// has ended or the game type does not match, an exception is thrown. The move is then persisted to the data
+    /// repository, and metrics are updated accordingly.</remarks>
+    /// <param name="id">The unique identifier of the game.</param>
+    /// <param name="gameType">The type of the game, which must match the game's expected type.</param>
+    /// <param name="guesses">An array of guesses representing the player's move.</param>
+    /// <param name="moveNumber">The sequential number of the move being made.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>A tuple containing the updated <see cref="Game"/> object and the <see cref="Move"/> object representing the
+    /// processed move.</returns>
+    public virtual async Task<(Game Game, Move Move)> SetMoveAsync(Guid id, string gameType, string[] guesses, int moveNumber, CancellationToken cancellationToken = default)
     {
         Game? game = default;
         using var activity = activitySource.CreateActivity("SetMove", ActivityKind.Server);
         Move? move;
         try
         {
-            // For comparing with or without caches, change the noCache parameter to true or false
-            game = await GetGameFromCacheOrDataStoreAsync(id, noCache: false, cancellationToken: cancellationToken);
+            game = await GetGameAsync(id, cancellationToken: cancellationToken);
 
             CodebreakerException.ThrowIfNull(game);
             CodebreakerException.ThrowIfEnded(game);
@@ -63,9 +87,7 @@ public class GamesService(IGamesRepository dataRepository, IDistributedCache dis
             move = game.ApplyMove(guesses, moveNumber);
 
             // Update the game in the game-service database
-            await Task.WhenAll(
-                dataRepository.AddMoveAsync(game, move, cancellationToken), 
-                UpdateGameInCacheAsync(game, cancellationToken));
+            await dataRepository.AddMoveAsync(game, move, cancellationToken);
 
             metrics.MoveSet(game.Id, DateTime.UtcNow, game.GameType);
             if (game.HasEnded())
@@ -91,10 +113,9 @@ public class GamesService(IGamesRepository dataRepository, IDistributedCache dis
         return (game, move);
     }
 
-    // get the game from the cache or the data repository
-    public async ValueTask<Game?> GetGameAsync(Guid id, CancellationToken cancellationToken = default)
+    public virtual async ValueTask<Game?> GetGameAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        var game = await GetGameFromCacheOrDataStoreAsync(id, cancellationToken: cancellationToken);
+        var game = await dataRepository.GetGameAsync(id, cancellationToken);
         if (game is null)
         {
             logger.GameNotFound(id);
@@ -106,15 +127,14 @@ public class GamesService(IGamesRepository dataRepository, IDistributedCache dis
         return game;
     }
 
-    public async Task DeleteGameAsync(Guid id, CancellationToken cancellationToken = default)
+    public virtual async Task DeleteGameAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        _ = distributedCache.RemoveAsync(id.ToString(), cancellationToken);
         await dataRepository.DeleteGameAsync(id, cancellationToken);
     }
 
-    public async Task<Game> EndGameAsync(Guid id, CancellationToken cancellationToken = default)
+    public virtual async Task<Game> EndGameAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        Game? game = await GetGameFromCacheOrDataStoreAsync(id, cancellationToken: cancellationToken);
+        Game? game = await GetGameAsync(id, cancellationToken: cancellationToken);
         CodebreakerException.ThrowIfNull(game);
 
         game.EndTime = DateTime.UtcNow;
@@ -122,7 +142,6 @@ public class GamesService(IGamesRepository dataRepository, IDistributedCache dis
         game.Duration = duration;
         metrics.GameEnded(game);
         game = await dataRepository.UpdateGameAsync(game, cancellationToken);
-        await distributedCache.RemoveAsync(id.ToString(), cancellationToken);
         return game;
     }
 
@@ -131,31 +150,5 @@ public class GamesService(IGamesRepository dataRepository, IDistributedCache dis
         var games = await dataRepository.GetGamesAsync(gamesQuery, cancellationToken);
         logger.QueryGames(games, gamesQuery.ToString());
         return games;
-    }
-
-    private async Task<Game?> GetGameFromCacheOrDataStoreAsync(Guid id, bool noCache = false, CancellationToken cancellationToken = default)
-    {
-        // The optional cache parameter is just for testing performance differences between the cache and the data repository
-        if (noCache)
-        {
-            return await dataRepository.GetGameAsync(id, cancellationToken);
-        }
-        else
-        {
-            byte[]? bytesGame = await distributedCache.GetAsync(id.ToString(), cancellationToken);
-            if (bytesGame is null)
-            {
-                return await dataRepository.GetGameAsync(id, cancellationToken);
-            }
-            else
-            {
-                return bytesGame.ToGame();
-            }
-        }
-    }
-
-    private async Task UpdateGameInCacheAsync(Game game, CancellationToken cancellationToken = default)
-    {
-        await distributedCache.SetAsync(game.Id.ToString(), game.ToBytes(), cancellationToken);
     }
 }
