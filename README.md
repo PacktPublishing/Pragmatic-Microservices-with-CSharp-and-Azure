@@ -130,17 +130,6 @@ Using .NET Aspire in this environment can be a first step when thinking about a 
 
 > **Note:** Some Aspire features (like dynamic service discovery or container orchestration) are not fully leveraged in a pure IIS environment. However, Aspire can still streamline configuration and local development.
 
-
-### Can I host .NET Aspire applications with Internet Information Server (IIS)
-
-With this let's assume you are not yet using Docker and other services such as Redis with your environment, just a .NET Web application for an API, or maybe only a .NET Web application for a front-end. This way you're not using many of the .NET Aspire features. However, the .NET projects added to the .NET Aspire app-host are normal .NET applications. These can be deployed using traditional mechanisms you are used to. .NET Aspire offers service discovery, e.g. using a Web app project finding a reference to the API project by using .NET Service Discovery. This falls-back to configuration, thus this can be configured in the IIS.
-
-You can also configure existing connections to databases with the app-model. 
-
-The advantages of .NET Aspire here still would be to use the dashboard during development, and an easy integration with a database connection string.
-
-Thus, yes - this can be a first path on using .NET Aspire on your way to move into the services-based approach. Just have your .NET Framework applications already migrated to the new .NET.
-
 ### Can .NET Aspire be used with AWS?
 
 Yes! Check this blog article [Integrating AWS with .NET Aspire](https://aws.amazon.com/blogs/developer/integrating-aws-with-net-aspire/), and this GitHub Repo [Integrations on .NET Aspire for AWS GitHub Repo](https://github.com/aws/integrations-on-dotnet-aspire-for-aws).
