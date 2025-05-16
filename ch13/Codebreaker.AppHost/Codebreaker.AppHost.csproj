@@ -26,6 +26,7 @@
   </ItemGroup>
   
   <ItemGroup>
+    <ProjectReference Include="..\Codebreaker.Blazor.LiveClient\Codebreaker.Blazor.LiveClient.csproj" />
     <ProjectReference Include="..\CodeBreaker.Bot\CodeBreaker.Bot.csproj" />
     <ProjectReference Include="..\Codebreaker.GameAPIs\Codebreaker.GameAPIs.csproj" />
     <ProjectReference Include="..\Codebreaker.Live\Codebreaker.Live.csproj" />

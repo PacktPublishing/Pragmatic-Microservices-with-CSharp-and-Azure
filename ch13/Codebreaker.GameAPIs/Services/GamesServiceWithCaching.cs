@@ -11,8 +11,9 @@ public class GamesServiceWithCaching(
     IDistributedCache distributedCache, 
     ILogger<GamesService> logger, 
     GamesMetrics metrics, 
-    [FromKeyedServices("Codebreaker.GameAPIs")] ActivitySource activitySource) : 
-    GamesService(dataRepository, logger, metrics, activitySource)
+    [FromKeyedServices("Codebreaker.GameAPIs")] ActivitySource activitySource, 
+    ILiveReportClient? liveReportClient = default) : 
+    GamesService(dataRepository, logger, metrics, activitySource, liveReportClient)
 {
     public override async Task<Game> StartGameAsync(string gameType, string playerName, CancellationToken cancellationToken = default)
     {

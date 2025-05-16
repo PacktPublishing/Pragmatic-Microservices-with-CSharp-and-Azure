@@ -34,6 +34,10 @@ if (settings.LiveGameMonitoring == LiveGameMonitoringType.SignalR || settings.Li
         .WithEnvironment(EnvVarNames.LiveGameMonitoring, settings.LiveGameMonitoring.ToString())
         .WithEnvironment(EnvVarNames.TelemetryMode, settings.Telemetry.ToString());
 
+    var liveClient = builder.AddProject<Projects.Codebreaker_Blazor_LiveClient>("liveclient")
+        .WithReference(live)
+        .WaitFor(live);
+
     gameApis.WithReference(live)
         .WaitFor(live);
 
@@ -114,5 +118,7 @@ switch (settings.Caching)
             .WaitFor(valkey);
         break;
 }
+
+
 
 builder.Build().Run();

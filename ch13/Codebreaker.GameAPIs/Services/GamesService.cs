@@ -95,7 +95,7 @@ public class GamesService(
             {
                 TimeSpan duration = game.Duration ??= DateTime.UtcNow - game.StartTime;
                 GameSummary gameSummary = new(game.Id, game.GameType.ToString(), game.PlayerName, true, game.IsVictory, game.LastMoveNumber, game.StartTime, duration);
-                liveReportClient?.ReportGameEndedAsync(gameSummary, cancellationToken);
+                liveReportClient?.ReportGameEndedAsync(gameSummary, CancellationToken.None);
                 logger.GameEnded(game);
                 metrics.GameEnded(game);
             }
