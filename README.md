@@ -133,7 +133,7 @@ Using .NET Aspire in this environment can be a first step when thinking about a 
 
 ### Can I host .NET Aspire applications with Internet Information Server (IIS)
 
-With this let's assume you are not yet using Docker and other services such as Redis with your environment, just a .NET Web application for an API, or maybe only a .NET Web application for a front-end. This way you're not using many of the .NET Aspire features. However, the .NET projects added to the .NET Aspire app-host are normal .NET applications. These can be deployed using traditional mechanisms you are used to. .NET Aspire offers service discovery, e.g. using a Web app project finding a reference to the API project by using .NET Service Discovery. This falls-back to configuration, thust this can be configured in the IIS.
+With this let's assume you are not yet using Docker and other services such as Redis with your environment, just a .NET Web application for an API, or maybe only a .NET Web application for a front-end. This way you're not using many of the .NET Aspire features. However, the .NET projects added to the .NET Aspire app-host are normal .NET applications. These can be deployed using traditional mechanisms you are used to. .NET Aspire offers service discovery, e.g. using a Web app project finding a reference to the API project by using .NET Service Discovery. This falls-back to configuration, thus this can be configured in the IIS.
 
 You can also configure existing connections to databases with the app-model. 
 
