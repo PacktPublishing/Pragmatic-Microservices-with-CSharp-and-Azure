@@ -1,4 +1,6 @@
-﻿namespace Codebreaker.Live;
+﻿using Codebreaker.ServiceDefaults;
+
+namespace Codebreaker.Live;
 
 public static class ApplicationServices
 {
@@ -7,7 +9,7 @@ public static class ApplicationServices
         var signalRBuilder = builder.Services.AddSignalR()
             .AddMessagePackProtocol();
 
-        if (Environment.GetEnvironmentVariable("StartupMode") != "OnPremises")
+        if (Environment.GetEnvironmentVariable(EnvVarNames.LiveGameMonitoring) == LiveGameMonitoringType.SignalRWithAzure.ToString())
         { 
             signalRBuilder.AddNamedAzureSignalR("signalr");
         }

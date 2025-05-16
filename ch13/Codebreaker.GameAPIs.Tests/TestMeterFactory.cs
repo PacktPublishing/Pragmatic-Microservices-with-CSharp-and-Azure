@@ -8,7 +8,7 @@ internal sealed class TestMeterFactory : IMeterFactory
 
     public Meter Create(MeterOptions options)
     {
-        Meter meter = new(options.Name, options.Version, Array.Empty<KeyValuePair<string, object?>>(), scope: this);
+        Meter meter = new(options.Name, options.Version, [], scope: this);
         Meters.Add(meter);
         return meter;
     }

@@ -13,7 +13,8 @@ public class LiveReportClient(HttpClient httpClient, ILogger<LiveReportClient> l
     {
         try
         {
-            await httpClient.PostAsJsonAsync("/live/game", gameSummary, options: s_jsonOptions, cancellationToken: cancellationToken);
+            await httpClient.PostAsJsonAsync("/live/game", gameSummary, 
+                options: s_jsonOptions, cancellationToken: cancellationToken);
         }
         catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or JsonException)
         {

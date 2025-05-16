@@ -6,7 +6,7 @@ using System.Diagnostics.Metrics;
 
 namespace Codebreaker.GameAPIs.Tests;
 
-public class GamesServiceTests
+public class GamesServiceWithCachingTests
 {
     private readonly Mock<IGamesRepository> _gamesRepositoryMock = new();
     private readonly Guid _endedGameId = Guid.Parse("4786C27B-3F9A-4C47-9947-F983CF7053E6");
@@ -18,7 +18,7 @@ public class GamesServiceTests
     private readonly string[] _guessesMove1 = ["Red", "Green", "Blue", "Yellow"];
     private readonly Mock<IDistributedCache> _distributedCacheMock = new();
 
-    public GamesServiceTests()
+    public GamesServiceWithCachingTests()
     {
         _endedGame = new(_endedGameId, "Game6x4", "Test", DateTime.UtcNow, 4, 12)
         {
@@ -42,12 +42,18 @@ public class GamesServiceTests
         _gamesRepositoryMock.Setup(repo => repo.GetGameAsync(_endedGameId, CancellationToken.None)).ReturnsAsync(_endedGame);
         _gamesRepositoryMock.Setup(repo => repo.GetGameAsync(_running6x4GameId, CancellationToken.None)).ReturnsAsync(_running6x4Game);
         _gamesRepositoryMock.Setup(repo => repo.AddMoveAsync(_running6x4Game, It.IsAny<Move>(), CancellationToken.None));
+
+        // Not using the cache with this mock setup
+        _distributedCacheMock.Setup(cache => cache.GetAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync((byte[]?)null);
+
+        // TODO: add tests to add check for items added to the cache, and using items from the cache
     }
 
     [Fact]
     public async Task SetMoveAsync_Should_ThrowWithEndedGame()
     {
-        GamesService gamesService = GetGamesService();
+        GamesServiceWithCaching gamesService = GetGamesService();
         await Assert.ThrowsAsync<CodebreakerException>(async () =>
         {
             await gamesService.SetMoveAsync(_endedGameId, "Game6x4", ["Red", "Green", "Blue", "Yellow"], 1, CancellationToken.None);
@@ -59,7 +65,7 @@ public class GamesServiceTests
     [Fact]
     public async Task SetMoveAsync_Should_ThrowWithUnexpectedGameType()
     {
-        GamesService gamesService = GetGamesService();
+        GamesServiceWithCaching gamesService = GetGamesService();
         await Assert.ThrowsAsync<CodebreakerException>(async () =>
         {
             await gamesService.SetMoveAsync(_running6x4GameId, "Game8x5", ["Red", "Green", "Blue", "Yellow"], 1, CancellationToken.None);
@@ -71,7 +77,7 @@ public class GamesServiceTests
     [Fact]
     public async Task SetMoveAsync_Should_ThrowWithNotFoundGame()
     {
-        GamesService gamesService = GetGamesService();
+        GamesServiceWithCaching gamesService = GetGamesService();
         await Assert.ThrowsAsync<CodebreakerException>(async () =>
         {
             await gamesService.SetMoveAsync(_notFoundGameId, "Game6x4", ["Red", "Green", "Blue", "Yellow"], 1, CancellationToken.None);
@@ -84,7 +90,7 @@ public class GamesServiceTests
     public async Task GetGameAsync_Should_ReturnAGame()
     {
         // Arrange
-        GamesService gamesService = GetGamesService();
+        GamesServiceWithCaching gamesService = GetGamesService();
 
         // Act
         Game? game = await gamesService.GetGameAsync(_running6x4GameId, CancellationToken.None);
@@ -99,7 +105,7 @@ public class GamesServiceTests
     public async Task SetMoveAsync_Should_UpdateGameAndAddMove()
     {
         // Arrange
-        GamesService gamesService = GetGamesService();
+        GamesServiceWithCaching gamesService = GetGamesService();
 
         // Act
         var result = await gamesService.SetMoveAsync(_running6x4GameId, "Game6x4", ["Red", "Green", "Blue", "Yellow"], 1, CancellationToken.None);
@@ -112,10 +118,10 @@ public class GamesServiceTests
         _gamesRepositoryMock.Verify(repo => repo.AddMoveAsync(_running6x4Game, It.IsAny<Move>(), CancellationToken.None), Times.Once);
     }
 
-    private GamesService GetGamesService()
+    private GamesServiceWithCaching GetGamesService()
     {
         IMeterFactory meterFactory = new TestMeterFactory();
         GamesMetrics metrics = new(meterFactory);
-        return new GamesService(_gamesRepositoryMock.Object, NullLogger<GamesService>.Instance, metrics, new ActivitySource("TestSource"));
+        return new GamesServiceWithCaching(_gamesRepositoryMock.Object, _distributedCacheMock.Object, NullLogger<GamesService>.Instance, metrics, new ActivitySource("TestSource"));
     }
 }
