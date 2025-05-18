@@ -1,8 +1,7 @@
 ﻿@page "/"
+@using Codebreaker.Blazor.LiveClient.Services
 @using Codebreaker.GameAPIs.Models
-@using Microsoft.AspNetCore.SignalR.Client
-@using Microsoft.Extensions.ServiceDiscovery
-@inject ServiceEndpointResolver EndpointResolver
+@inject LiveClient LiveClient
 
 <PageTitle>Live Client</PageTitle>
 
@@ -15,7 +14,7 @@ Start listening to games!
 <button class="btn" @onclick="Cancel">Cancel</button>
 <button class="btn" @onclick="Clear" disabled="@IsClearDisabled">Clear</button>
 
-@if (gameSummaries == null || gameSummaries.Count == 0)
+@if (LiveClient.GameSummaries == null || LiveClient.GameSummaries.Count == 0)
 {
     <p><em>No games yet</em></p>
 }
@@ -31,7 +30,7 @@ else
             </tr>
         </thead>
         <tbody>
-            @foreach (var summary in gameSummaries)
+            @foreach (var summary in LiveClient.GameSummaries)
             {
                 <tr>
                     <td>@summary.Duration</td>
@@ -44,77 +43,17 @@ else
     </table>
 }
 
-
 @code {
-    private HubConnection? hubConnection;
-    private List<GameSummary> gameSummaries = [];
     private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 
-    private HubConnectionState ConnectionState => hubConnection?.State ?? HubConnectionState.Disconnected;
+    private bool IsStartDisabled => LiveClient.ConnectionState == Microsoft.AspNetCore.SignalR.Client.HubConnectionState.Connected;
+    private bool IsStopDisabled => LiveClient.ConnectionState != Microsoft.AspNetCore.SignalR.Client.HubConnectionState.Connected;
+    private bool IsClearDisabled => LiveClient.GameSummaries.Count == 0;
 
-    private bool IsStartDisabled => ConnectionState == HubConnectionState.Connected;
-    private bool IsStopDisabled => ConnectionState != HubConnectionState.Connected;
-    private bool IsClearDisabled => gameSummaries.Count == 0;
-
-    protected async override Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
-        if (RendererInfo.IsInteractive)
-        {
-            // // Resolve the service discovery URI
-            // var endpointSource = await EndpointResolver.GetEndpointsAsync("live", cancellationTokenSource.Token);
-            // if (endpointSource is null)
-            //     throw new InvalidOperationException("SignalR service endpoint not found.");
-
-            // var endpoints = endpointSource.Endpoints;
-            // var endpoint = endpoints.FirstOrDefault();
-            // var ep = endpoint.EndPoint;
-
-            string? url = Environment.GetEnvironmentVariable("services__live__https__0");
-            if (url is null) throw new InvalidOperationException("SignalR service URL not found.");
-            url += "/livesubscribe";
-
-            hubConnection = new HubConnectionBuilder()
-                .WithUrl(url)
-                .ConfigureLogging(logging =>
-                {
-                    logging.SetMinimumLevel(LogLevel.Debug);
-                    logging.AddConsole();
-                })
-                .Build();
-
-            hubConnection.Closed += async (error) =>
-            {
-                Console.Error.WriteLine($"SignalR connection closed: {error?.Message}");
-                if (error != null)
-                {
-                    Console.Error.WriteLine(error);
-                }
-                // Optionally, try to reconnect or notify the user
-
-                await InvokeAsync(StateHasChanged);
-            };
-
-            hubConnection.Reconnected += connectionId =>
-            {
-                InvokeAsync(StateHasChanged);
-                return Task.CompletedTask;
-            };
-
-            hubConnection.Reconnecting += error =>
-            {
-                InvokeAsync(StateHasChanged);
-                return Task.CompletedTask;
-            };
-
-            hubConnection.On<string>("OnError", (errorMessage) =>
-            {
-                Console.Error.WriteLine($"SignalR error: {errorMessage}");
-            });
-        }
-        else
-        {
-            await base.OnInitializedAsync();
-        }
+        await LiveClient.InitializeAsync(cancellationTokenSource.Token);
+        LiveClient.StateChanged += async () => await InvokeAsync(StateHasChanged);
     }
 
     private void Cancel()
@@ -124,38 +63,16 @@ else
 
     private async Task StartListenAsync()
     {
-        if (hubConnection is null)
-        {
-            throw new InvalidOperationException("Hub connection is not initialized.");
-        }
-        hubConnection.On<GameSummary>("GameCompleted", async (gameSummary) =>
-        {
-            gameSummaries.Add(gameSummary);
-            _ = InvokeAsync(() => StateHasChanged());
-        });
-
-        await hubConnection.StartAsync();
-
-        await hubConnection.InvokeAsync("SubscribeToGameCompletions", "Game6x4", cancellationTokenSource.Token);
+        await LiveClient.StartAsync(cancellationTokenSource.Token);
     }
 
     private async Task StopListeningAsync()
     {
-        if (hubConnection is null)
-        {
-            throw new InvalidOperationException("Hub connection is not initialized.");
-        }
-
-        await hubConnection.InvokeAsync("UnsubscribeFromGameCompletions", "Game6x4", cancellationTokenSource.Token);
-
-        await hubConnection.StopAsync();
-        await hubConnection.StartAsync();
-        _ = InvokeAsync(StateHasChanged);
+        await LiveClient.StopAsync(cancellationTokenSource.Token);
     }
 
     private void Clear()
     {
-        gameSummaries.Clear();
-        StateHasChanged();
+        LiveClient.Clear();
     }
 }

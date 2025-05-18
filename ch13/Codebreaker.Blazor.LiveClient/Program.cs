@@ -1,9 +1,13 @@
 using Codebreaker.Blazor.LiveClient.Components;
+using Codebreaker.Blazor.LiveClient.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
 builder.Services.AddServiceDiscovery();
+
+// Register LiveClient as scoped
+builder.Services.AddScoped<LiveClient>();
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
