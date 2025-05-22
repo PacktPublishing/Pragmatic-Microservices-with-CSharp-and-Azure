@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <Sdk Name="Aspire.AppHost.Sdk" Version="9.2.0" />
+  <Sdk Name="Aspire.AppHost.Sdk" Version="9.3.0" />
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -9,10 +9,6 @@
     <Nullable>enable</Nullable>
     <UserSecretsId>e5b2b032-a39b-47c9-a686-c8e69576dc7b</UserSecretsId>
   </PropertyGroup>
-
-	<PropertyGroup>
-		<NoWarn>$(NoWarn);ASPIRECOSMOSDB001</NoWarn>
-	</PropertyGroup>	
 
   <ItemGroup>
     <PackageReference Include="Aspire.Hosting.AppHost" />
@@ -24,5 +20,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Codebreaker.GameAPIs\Codebreaker.GameAPIs.csproj" />
+    <ProjectReference Include="..\Codebreaker.ServiceDefaults\Codebreaker.ServiceDefaults.csproj" IsAspireProjectResource="false" />
   </ItemGroup>
 </Project>

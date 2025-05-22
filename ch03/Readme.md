@@ -10,6 +10,7 @@ The source code folder ch03 contains the code samples for this chapter. You'll f
 
 * `Codebreaker.Data.SqlServer` - this is the new library to access Microsoft SQL Server.
 * `Codebreaker.Data.Cosmos` - this is the new library to access Azure Cosmos DB.
+* `Codebreaker.Data.Postgres` - this is a relational alternative to SQL Server (e.g. when you use an ARM CPU).
 * `Codebreaker.GamesAPIs` - this is the Web API project created in the previous chapter. In this chapter the dependency injection container to use the repository implementations 
 * These projects are used in this chapter but unchanged from the previous chapter: `Codebreaker.AppHost`, `Codebreaker.ServiceDefaults`, and `Codebreaker.GameAPIs.Models`.
 
@@ -19,7 +20,9 @@ The games analyzer library from the previous chapter is not included with this c
 
 ### Development tools used
 
-Other than a development environment, you need Microsoft SQL Server and Azure Cosmos DB. 
+Other than a development environment, you need Microsoft SQL Server and Azure Cosmos DB.
+
+You can use Docker Desktop to run Azure Cosmos DB, SQL Server, and PostreSQL in a Docker container.
 
 See [Installation of SQL Server, Azure Cosmos DB](../installation.md)
 
@@ -29,10 +32,14 @@ See [Running the application with the development environment](../RunDevEnvironm
 
 ### In-Memory
 
-Set this setting with `appsettings.Development.json` (project `Codebreaker.AppHost`):
+Set this setting with `appsettings.json` (project `Codebreaker.AppHost`):
 
 ```json
-  "DataStore": "InMemory"
+{
+  "CodebreakerSettings": {
+    "DataStore": "InMemory",
+  }
+}
 ```
 
 ### SQL Server
@@ -40,7 +47,11 @@ Set this setting with `appsettings.Development.json` (project `Codebreaker.AppHo
 Set the `DataStore` and the `GamesSqlServerConnection with `appsettings.Development.json`
 
 ```json
-  "DataStore": "SqlServer"
+{
+  "CodebreakerSettings": {
+    "DataStore": "SqlServer",
+  }
+}
 ```
 
 When you start the application with SQL Server running in a Docker container, the password will be automatically set. You can check the password reading *user secrets*. To read these from the command line, use:
@@ -57,7 +68,7 @@ cd Codebreaker.AppHost
 dotnet user-secrets set Parameters:sql-password Passw0rd!Passw0rd
 ```
 
-Be aware that once you set the password, it's configured with the Docker volume named *Codebreaker.AppHost-sql-data*. To delete the volume, and start fresh, you can use:
+Be aware that once you set the password, it's configured with the Docker volume named *Codebreaker.AppHost-sql-data*. To delete the volume, and start fresh, you can delete the volume:
 
 ```bash
 docker volume rm Codebreaker.AppHost-sql-data
@@ -67,7 +78,7 @@ Database migration happens when starting the application, thus the database is c
 
 ### Azure Cosmos DB
 
-> Currently there's an issue with the Cosmos Linux Docker container - see https://github.com/dotnet/aspire/discussions/2535 and https://github.com/Azure/azure-cosmos-dotnet-v3/issues/4315.
+> The preview version of the Docker image for Cosmos is a lot better than the released version. It's just not complete with its APIs yet, thus some of the queries are not working (yet).
 
 As an alternative, to test the application running Azure Cosmos DB, run the Azure Cosmos DB emulator locally:
 

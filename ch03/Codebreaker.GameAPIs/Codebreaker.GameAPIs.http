@@ -92,7 +92,7 @@ GET {{Codebreaker.GameAPIs_HostAddress}}/games/{{create.response.body.$.id}}
 
 ### Get games by date
 
-GET {{Codebreaker.GameAPIs_HostAddress}}/games/?date=2025-04-02
+GET {{Codebreaker.GameAPIs_HostAddress}}/games/?date=2025-05-03
 
 ### Get games by player
 

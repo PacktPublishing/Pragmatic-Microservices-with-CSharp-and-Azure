@@ -1,4 +1,4 @@
-﻿namespace Codebreaker.Data.PostgreSQL;
+﻿namespace Codebreaker.Data.Postgres;
 
 public static class MappingExtensions
 {

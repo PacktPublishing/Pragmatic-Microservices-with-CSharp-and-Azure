@@ -1,8 +1,8 @@
 ﻿using Codebreaker.GameAPIs.Data;
 
-namespace Codebreaker.Data.PostgreSQL;
+namespace Codebreaker.Data.Postgres;
 
-public class GamesPostgreSQLContext(DbContextOptions<GamesPostgreSQLContext> options) : DbContext(options), IGamesRepository
+public class GamesPostgresContext(DbContextOptions<GamesPostgresContext> options) : DbContext(options), IGamesRepository
 {
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

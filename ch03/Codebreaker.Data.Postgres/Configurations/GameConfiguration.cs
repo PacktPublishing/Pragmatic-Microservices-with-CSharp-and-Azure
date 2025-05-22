@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
 
-namespace Codebreaker.Data.PostgreSQL;
+namespace Codebreaker.Data.Postgres;
 
 internal class GameConfiguration : IEntityTypeConfiguration<Game>
 {

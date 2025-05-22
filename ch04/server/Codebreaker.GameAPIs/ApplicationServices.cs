@@ -1,4 +1,9 @@
-﻿namespace Codebreaker.GameAPIs;
+﻿using Codebreaker.Data.Postgres;
+using Codebreaker.ServiceDefaults;
+
+using static Codebreaker.ServiceDefaults.ServiceNames;
+
+namespace Codebreaker.GameAPIs;
 
 public static class ApplicationServices
 {
@@ -8,7 +13,7 @@ public static class ApplicationServices
         {
             builder.Services.AddDbContextPool<IGamesRepository, GamesSqlServerContext>(options =>
             {
-                var connectionString = builder.Configuration.GetConnectionString("CodebreakerSql") ?? throw new InvalidOperationException("Could not read SQL Server connection string");
+                var connectionString = builder.Configuration.GetConnectionString(SqlDatabaseResourceName) ?? throw new InvalidOperationException("Could not read SQL Server connection string");
                 options.UseSqlServer(connectionString);
                 options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
             });
@@ -17,11 +22,11 @@ public static class ApplicationServices
 
         static void ConfigurePostgres(IHostApplicationBuilder builder)
         {
-            var connectionString = builder.Configuration.GetConnectionString("CodebreakerPostgres") ?? throw new InvalidOperationException("Could not read SQL Server connection string");
+            var connectionString = builder.Configuration.GetConnectionString(PostgresDatabaseName) ?? throw new InvalidOperationException("Could not read SQL Server connection string");
 
             builder.Services.AddNpgsqlDataSource(connectionString, dataSourceBuilder =>
             {
-                dataSourceBuilder.EnableDynamicJson(); 
+                dataSourceBuilder.EnableDynamicJson();
             });
 
             builder.Services.AddDbContextPool<IGamesRepository, GamesPostgresContext>(options =>
@@ -34,7 +39,7 @@ public static class ApplicationServices
 
         static void ConfigureCosmos(IHostApplicationBuilder builder)
         {
-            builder.AddCosmosDbContext<GamesCosmosContext>("GamesV3", "codebreaker");
+            builder.AddCosmosDbContext<GamesCosmosContext>(CosmosContainerName, CosmosDatabaseName);
 
             builder.Services.AddScoped<IGamesRepository, DataContextProxy<GamesCosmosContext>>();
 
@@ -56,22 +61,23 @@ public static class ApplicationServices
             builder.Services.AddSingleton<IGamesRepository, GamesMemoryRepository>();
         }
 
-        string? dataStore = builder.Configuration.GetValue<string>("DataStore");
+        DataStoreType dataStore = builder.Configuration.GetDataStore();
         switch (dataStore)
         {
-            case "Cosmos":
+            case DataStoreType.Cosmos:
                 ConfigureCosmos(builder);
                 break;
-            case "SqlServer":
+            case DataStoreType.SqlServer:
                 ConfigureSqlServer(builder);
                 break;
-            case "Postgres":
+            case DataStoreType.Postgres:
                 ConfigurePostgres(builder);
                 break;
             default:
                 ConfigureInMemory(builder);
                 break;
         }
+
 
         builder.Services.AddScoped<IGamesService, GamesService>();
     }

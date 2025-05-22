@@ -2,11 +2,11 @@ var builder = DistributedApplication.CreateBuilder(args);
 
 var apiService = builder.AddProject<Projects.AspireSample_ApiService>("apiservice")
     .WithReplicas(3)
-    .WithHttpsHealthCheck("/health");
+    .WithHttpHealthCheck("/health");
 
 builder.AddProject<Projects.AspireSample_Web>("webfrontend")
     .WithExternalHttpEndpoints()
-    .WithHttpsHealthCheck("/health")
+    .WithHttpHealthCheck("/health")
     .WithReference(apiService)
     .WaitFor(apiService);
 

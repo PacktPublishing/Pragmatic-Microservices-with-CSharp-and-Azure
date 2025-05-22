@@ -1,11 +1,35 @@
-# .NET Aspire updates
+# .NET Aspire and book updates
 
-What's changed with the new versions of .NET Aspire?
+What's changed with the new versions of .NET Aspire? What else changed with the book?
+
+## Overall changes
+
+### Central Package Management (CPM)
 
 With all the chapters (with the exception of chapter 1) we now use **NuGet Central Package Management (CPM)** with package versions specified in the file *Directory.Packages.props'. This makes it easier to update all chapters.
 In case you copy the content of just a single chapter, also copy the file *Directory.Packages.props* from the root folder to get all the projects compiled.
 
-## .NET Aspire 9.0 - 9.2 Updates
+### Easier configuration
+
+The book sample allows to be deployed to Microsoft Azure, or On-premises, using different services as needed. I've changed the configuration to make this easier, to allow configuring this on a service by service base. For various names, I've changed the code to use constants for easier consistency.
+
+The ServiceDefaults project now contains these files:
+
+- `CodebreakerSettings.cs`: contains the enum values for the configuration settings, and the `CodebreakerSettings` class which is filled reading the configuration.
+- `EnvVarNames.cs` - environment variables that are passed to service projects
+- `ServiceNames.cs` - const values for service names 
+
+This project is already referenced by the service projects.
+To reference it from the AppHost project to use the configuration with the app-model, the project reference needs this setting:
+`IsAspireProjectResource="false"`.
+
+All other project references are triggered to create manifest code for strongly-typed references.
+
+```xml
+    <ProjectReference Include="..\Codebreaker.ServiceDefaults\Codebreaker.ServiceDefaults.csproj" IsAspireProjectResource="false" />
+```
+
+## .NET Aspire 9.0 - 9.3 Updates
 
 ### Chapter 1, Introdution to .NET Aspire and Microservices
 
@@ -69,6 +93,12 @@ public static TBuilder AddServiceDefaults<TBuilder>(this TBuilder builder) where
 
 With this update, also the methods `ConfigureOpenTelemetry`, `AddOpenTelemetryExporters` and `AddDefaultHealthChecks` are now generic. Changing these methods to their generic version does not break the existing calling code. This just gives more flexibility with other builder types. 
 See also https://github.com/PacktPublishing/Pragmatic-Microservices-with-CSharp-and-Azure/discussions/234.
+
+#### Page 11, Aspire/AspireSample.AppHost/Program.cs
+
+With the .NET Aspire 9.3 templates, the `Program.cs` file has been renamed to `AppHost.cs`.
+
+See https://github.com/dotnet/aspire/issues/8681
 
 #### Page 13, .NET Aspire integrations
 

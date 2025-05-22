@@ -27,7 +27,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\Codebreaker.Data.Cosmos\Codebreaker.Data.Cosmos.csproj" />
-		<ProjectReference Include="..\Codebreaker.Data.PostgreSQL\Codebreaker.Data.PostgreSQL.csproj" />
+		<ProjectReference Include="..\Codebreaker.Data.Postgres\Codebreaker.Data.Postgres.csproj" />
 		<ProjectReference Include="..\Codebreaker.Data.SqlServer\Codebreaker.Data.SqlServer.csproj" />
 		<ProjectReference Include="..\Codebreaker.ServiceDefaults\Codebreaker.ServiceDefaults.csproj" />
 		<ProjectReference Include="..\Codebreaker.GameAPIs.Models\Codebreaker.GameAPIs.Models.csproj" />
