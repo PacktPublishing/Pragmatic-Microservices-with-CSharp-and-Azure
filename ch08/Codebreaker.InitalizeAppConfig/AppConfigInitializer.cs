@@ -1,10 +1,11 @@
+using Azure;
 using Azure.Data.AppConfiguration;
 
-namespace Codebreaker.InitalizeAppConfig;
+namespace Codebreaker.InitializeAppConfig;
 
 public class AppConfigInitializer(ConfigurationClient configurationClient, IHostApplicationLifetime hostApplicationLifetime, ILogger<AppConfigInitializer> logger) : BackgroundService
 {
-    private Dictionary<string, string> s_6x4Colors = new()
+    private readonly Dictionary<string, string> s_6x4Colors = new()
     {
         { "color1", "Red" },
         { "color2", "Green" },
@@ -16,11 +17,27 @@ public class AppConfigInitializer(ConfigurationClient configurationClient, IHost
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        foreach ((string key, string color) in s_6x4Colors)
+        try
         {
-            ConfigurationSetting setting = new($"GameAPIs.Game6x4.{key}", color);
-            await configurationClient.AddConfigurationSettingAsync(setting);
-            logger.LogInformation("added setting for key {key}", key);
+            foreach ((string key, string color) in s_6x4Colors)
+            {
+                ConfigurationSetting setting = new($"GameAPIs.Game6x4.{key}", color);
+                await configurationClient.AddConfigurationSettingAsync(setting, stoppingToken);
+                logger.LogInformation("added setting for key {key}", key);
+            }
+        }
+        catch (RequestFailedException ex) when (ex.HResult == -2146233088)
+        {
+            logger.LogInformation("Setting was already present");
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Error adding settings to App Configuration: {message}", ex.Message);
+            throw;
+        }
+        finally
+        {
+            logger.LogInformation("Stopping application after adding settings to App Configuration.");
         }
         hostApplicationLifetime.StopApplication();
     }

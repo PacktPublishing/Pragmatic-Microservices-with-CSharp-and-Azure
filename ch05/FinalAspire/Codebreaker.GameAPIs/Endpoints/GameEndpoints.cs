@@ -7,7 +7,7 @@ namespace Codebreaker.GameAPIs.Endpoints;
 
 public static class GameEndpoints
 {
-    public static void MapGameEndpoints(this IEndpointRouteBuilder routes)
+    public static void MapGameEndpoints(this IEndpointRouteBuilder routes, ILogger logger)
     {
         var group = routes.MapGroup("/games")
             .WithTags("Games API");
@@ -87,6 +87,16 @@ public static class GameEndpoints
                     CodebreakerExceptionCodes.GameNotActive => TypedResults.BadRequest(new GameError(ErrorCodes.GameNotActive, "The game already ended", url)),
                     _ => TypedResults.BadRequest(new GameError("Unexpected", "Game error", url))
                 };
+            }
+            catch (OperationCanceledException)
+            {
+                logger.LogWarning("Operation cancelled");
+                return TypedResults.BadRequest(new GameError(ErrorCodes.OperationCancelled, "Operation cancelled", context.Request.GetDisplayUrl()));
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Error {Message}", ex.Message);
+                throw;
             }
         })
         .WithName("SetMove")

@@ -1,20 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <Sdk Name="Aspire.AppHost.Sdk" Version="9.1.0" />
+  <Sdk Name="Aspire.AppHost.Sdk" Version="9.2.1" />
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <IsAspireHost>true</IsAspireHost>
     <UserSecretsId>e5b2b032-a39b-47c9-a686-c8e69576dc7b</UserSecretsId>
-    <Configurations>Debug;Release</Configurations>
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Remove="appsettings.Prometheus.json" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Aspire.Hosting.AppHost" />
@@ -22,15 +16,22 @@
     <PackageReference Include="Aspire.Hosting.Azure.AppConfiguration" />
     <PackageReference Include="Aspire.Hosting.Azure.ApplicationInsights" />
     <PackageReference Include="Aspire.Hosting.Azure.CosmosDB" />
+    <PackageReference Include="Aspire.Hosting.Azure.KeyVault" />
     <PackageReference Include="Aspire.Hosting.Azure.SignalR" />
     <PackageReference Include="Aspire.Hosting.Azure.Sql" />
-    <PackageReference Include="Aspire.Hosting.Redis"  />
+    <PackageReference Include="Aspire.Hosting.Garnet" />
+    <PackageReference Include="Aspire.Hosting.PostgreSQL" />
+    <PackageReference Include="Aspire.Hosting.Redis" />
+    <PackageReference Include="Aspire.Hosting.Valkey" />
   </ItemGroup>
   
   <ItemGroup>
+    <ProjectReference Include="..\Codebreaker.Blazor.LiveClient\Codebreaker.Blazor.LiveClient.csproj" />
     <ProjectReference Include="..\CodeBreaker.Bot\CodeBreaker.Bot.csproj" />
     <ProjectReference Include="..\Codebreaker.GameAPIs\Codebreaker.GameAPIs.csproj" />
     <ProjectReference Include="..\Codebreaker.Live\Codebreaker.Live.csproj" />
+
+    <ProjectReference Include="..\Codebreaker.ServiceDefaults\Codebreaker.ServiceDefaults.csproj" IsAspireProjectResource="False" />  
   </ItemGroup>
 
 </Project>

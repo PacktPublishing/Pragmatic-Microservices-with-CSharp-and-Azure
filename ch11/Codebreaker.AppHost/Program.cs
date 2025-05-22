@@ -1,52 +1,76 @@
+using Codebreaker.ServiceDefaults;
+using Codebreaker.AppHost.Extensions;
+using static Codebreaker.ServiceDefaults.ServiceNames;
+
+using Microsoft.Extensions.Configuration;
+using MetricsApp.AppHost.OpenTelemetryCollector;
+
 var builder = DistributedApplication.CreateBuilder(args);
 
-string dataStore = builder.Configuration["DataStore"] ?? "InMemory";
-string startupMode = builder.Configuration["STARTUP_MODE"] ?? "Azure";  // specified with environment variables in the launch profile
+CodebreakerSettings settings = new();
+builder.Configuration.GetSection("CodebreakerSettings").Bind(settings);
 
-if (startupMode == "OnPremises")
+var gameApis = builder.AddProject<Projects.Codebreaker_GameAPIs>(GamesAPIs)
+    .WithHttpsHealthCheck("/health")
+    .WithEnvironment(EnvVarNames.DataStore, settings.DataStore.ToString())
+    .WithEnvironment(EnvVarNames.TelemetryMode, settings.Telemetry.ToString())
+    .WithExternalHttpEndpoints();
+
+var bot = builder.AddProject<Projects.CodeBreaker_Bot>(Bot)
+    .WithExternalHttpEndpoints()
+    .WithReference(gameApis)
+    .WithEnvironment(EnvVarNames.TelemetryMode, settings.Telemetry.ToString())
+    .WaitFor(gameApis);
+
+switch (settings.Telemetry)
 {
-    var sqlServer = builder.AddSqlServer("sql")
-        .WithDataVolume()
-        .PublishAsContainer()
-        .AddDatabase("CodebreakerSql");
+    case TelemetryType.None:
+        // no action needed, just using .NET Aspire dashboard
+        break;
+    case TelemetryType.GrafanaAndPrometheus:
+        var prometheus = builder.AddPrometheus("prometheus");
 
-    var grafana = builder.AddContainer("grafana", "grafana/grafana")
-        .WithBindMount("../grafana/config", "/etc/grafana", isReadOnly: true)
-        .WithBindMount("../grafana/dashboards", "/var/lib/grafana/dashboards", isReadOnly: true)
-        .WithHttpEndpoint(targetPort: 3000, name: "grafana-http");
+        var grafana = builder.AddGrafana("grafana")
+            .WithEnvironment("PROMETHEUS_ENDPOINT", prometheus.GetEndpoint("http"));
 
-    var prometheus = builder.AddContainer("prometheus", "prom/prometheus")
-       .WithBindMount("../prometheus", "/etc/prometheus", isReadOnly: true)
-       .WithHttpEndpoint(/* This port is fixed as it's referenced from the Grafana config */ port: 9090, targetPort: 9090);
+        builder.AddOpenTelemetryCollector("otelcollector", "../otelcollector/config.yaml")
+          .WithEnvironment("PROMETHEUS_ENDPOINT", $"{prometheus.GetEndpoint("http")}/api/v1/otlp");
 
-    var gameAPIs = builder.AddProject<Projects.Codebreaker_GameAPIs>("gameapis")
-        .WithReference(sqlServer)
-        .WithEnvironment("DataStore", dataStore)
-        .WithEnvironment("GRAFANA_URL", grafana.GetEndpoint("grafana-http"))
-        .WithEnvironment("StartupMode", startupMode);
+        gameApis.WithEnvironment("GRAFANA_URL", grafana.GetEndpoint("http"))
+            .WaitFor(grafana);
+        bot.WithEnvironment("GRAFANA_URL", grafana.GetEndpoint("http"))
+            .WaitFor(grafana);
+        break;
+    case TelemetryType.AzureMonitor:
+        // var logs = builder.AddAzureLogAnalyticsWorkspace("logs");
+        // var appInsights = builder.AddAzureApplicationInsights("insights", logs);
+        // gameApis.WithEnvironment("LOG_ANALYTICS_WORKSPACE_ID", $"{laws.WorkspaceId}");
 
-    builder.AddProject<Projects.CodeBreaker_Bot>("bot")
-        .WithReference(gameAPIs)
-        .WithEnvironment("StartupMode", startupMode);
+        // Log Analytics workspace is created automatically
+        var appInsights = builder.AddAzureApplicationInsights("insights");
+        gameApis.WithReference(appInsights)
+            .WaitFor(appInsights);
+        bot.WithReference(appInsights)
+            .WaitFor(appInsights);
+        break;
 }
-else
+
+switch (settings.DataStore)
 {
-    var logs = builder.AddAzureLogAnalyticsWorkspace("logs");
-    var appInsights = builder.AddAzureApplicationInsights("insights", logs);
-
-    var cosmos = builder.AddAzureCosmosDB("codebreakercosmos")
-        .AddCosmosDatabase("codebreaker");
-
-    var gameAPIs = builder.AddProject<Projects.Codebreaker_GameAPIs>("gameapis")
-        .WithReference(cosmos)
-        .WithReference(appInsights)
-        .WithEnvironment("DataStore", dataStore)
-        .WithEnvironment("StartupMode", startupMode);
-
-    builder.AddProject<Projects.CodeBreaker_Bot>("bot")
-        .WithReference(gameAPIs)
-        .WithReference(appInsights)
-        .WithEnvironment("StartupMode", startupMode);
+    case DataStoreType.InMemory:
+        // no action needed, in-memory is the default
+        break;
+    case DataStoreType.SqlServer:
+        builder.ConfigureSqlServer(gameApis);
+        break;
+    case DataStoreType.Cosmos:
+        builder.ConfigureCosmos(gameApis, settings.UseEmulator);
+        break;
+    case DataStoreType.Postgres:
+        builder.ConfigurePostgres(gameApis);
+        break;
+    default:
+        throw new NotSupportedException($"DataStore {settings.DataStore} is not supported.");
 }
 
 builder.Build().Run();

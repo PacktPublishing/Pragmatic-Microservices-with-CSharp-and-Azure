@@ -1,0 +1,78 @@
+﻿@page "/"
+@using Codebreaker.Blazor.LiveClient.Services
+@using Codebreaker.GameAPIs.Models
+@inject LiveClient LiveClient
+
+<PageTitle>Live Client</PageTitle>
+
+<h1>Games watcher</h1>
+
+Start listening to games!
+<br />
+<button class="btn btn-primary" @onclick="StartListenAsync" disabled="@IsStartDisabled">Start</button>
+<button class="btn" @onclick="StopListeningAsync" disabled="@IsStopDisabled">Stop</button>
+<button class="btn" @onclick="Cancel">Cancel</button>
+<button class="btn" @onclick="Clear" disabled="@IsClearDisabled">Clear</button>
+
+@if (LiveClient.GameSummaries == null || LiveClient.GameSummaries.Count == 0)
+{
+    <p><em>No games yet</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Duration</th>
+                <th>Player name</th>
+                <th>Game type</th>
+                <th>Number moves</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var summary in LiveClient.GameSummaries)
+            {
+                <tr>
+                    <td>@summary.Duration</td>
+                    <td>@summary.PlayerName</td>
+                    <td>@summary.GameType</td>
+                    <td>@summary.NumberMoves</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+
+    private bool IsStartDisabled => LiveClient.ConnectionState == Microsoft.AspNetCore.SignalR.Client.HubConnectionState.Connected;
+    private bool IsStopDisabled => LiveClient.ConnectionState != Microsoft.AspNetCore.SignalR.Client.HubConnectionState.Connected;
+    private bool IsClearDisabled => LiveClient.GameSummaries.Count == 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LiveClient.InitializeAsync(cancellationTokenSource.Token);
+        LiveClient.StateChanged += async () => await InvokeAsync(StateHasChanged);
+    }
+
+    private void Cancel()
+    {
+        cancellationTokenSource.Cancel();
+    }
+
+    private async Task StartListenAsync()
+    {
+        await LiveClient.StartAsync(cancellationTokenSource.Token);
+    }
+
+    private async Task StopListeningAsync()
+    {
+        await LiveClient.StopAsync(cancellationTokenSource.Token);
+    }
+
+    private void Clear()
+    {
+        LiveClient.Clear();
+    }
+}

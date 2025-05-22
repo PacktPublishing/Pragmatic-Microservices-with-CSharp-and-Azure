@@ -42,16 +42,6 @@ public class GamesServiceTests
         _gamesRepositoryMock.Setup(repo => repo.AddMoveAsync(_running6x4Game, It.IsAny<Move>(), CancellationToken.None));
     }
 
-    //[Fact]
-    //public async Task StartGame_Should_()
-    //{
-    //    GamesService gamesService = GetGamesService();
-    //    await Assert.ThrowsAsync<CodebreakerException>(async () =>
-    //    {
-    //        await gamesService.StartGameAsync("Game6x4", "Test", CancellationToken.None);
-    //    });
-    //}
-
     [Fact]
     public async Task SetMoveAsync_Should_ThrowWithEndedGame()
     {

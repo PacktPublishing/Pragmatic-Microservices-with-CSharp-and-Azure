@@ -31,7 +31,7 @@ All other project references are triggered to create manifest code for strongly-
 
 ## .NET Aspire 9.0 - 9.3 Updates
 
-### Chapter 1, Introdution to .NET Aspire and Microservices
+### Chapter 1, Introduction to .NET Aspire and Microservices
 
 #### Page 4, Starting with .NET Aspire:
 
@@ -107,7 +107,6 @@ See https://github.com/dotnet/aspire/issues/8681
 ### Chapter 2, Minimal APIs - Creating REST Services
 
 #### Page 54, Testing the service
-
 HTTP Files support setting variables to access the result from an invocation, and use it with a next request, e.g.
 
 ```json
@@ -210,7 +209,7 @@ gameApis
 
 ### Chapter 5, Containerization of Microservices
 
-Because of the change to use *Central Package Management (CPM)*, the Dockerfile changed to copy the file *Directory.PAckages.props* for a build.
+Because of the change to use *Central Package Management (CPM)*, the `Dockerfile` changed to copy the file `Directory.Packages.props` for a build.
 
 #### Page 132, Codebreaker.GameAPIs/Dockerfile
 
@@ -221,19 +220,152 @@ WORKDIR /src
 COPY ["Directory.Packages.props", "."]
 COPY ["ch05/FinalDocker/Codebreaker.GameAPIs/Codebreaker.GameAPIs.csproj", "ch05/FinalDocker/Codebreaker.GameAPIs/"]
 RUN dotnet restore "./ch05/FinalDocker/Codebreaker.GameAPIs/Codebreaker.GameAPIs.csproj"
-COPY . .
 WORKDIR "/src/ch05/FinalDocker/Codebreaker.GameAPIs"
+COPY ["ch05/FinalDocker/Codebreaker.GameAPIs/", "."]
 RUN dotnet build "./Codebreaker.GameAPIs.csproj" -c $BUILD_CONFIGURATION -o /app/build
 ```
 
-### Page 134, Building a Docker Image
+#### Page 134, Building a Docker Image
 
 The build command needs to use the context of the root directory where the file `Directory.Packages.props` is located:
 
 ```bash
+cd ch05/FinalDocker
 docker build ../.. -f Codebreaker.GameAPIs/Dockerfile -t codebreaker/gamesapi:3.5.4 -t codebreaker/gamesapi.latest
 ```
+
+#### Page 139, Configuring a Docker container for SQL Server
+
+It's no longer required (you still can do it) to configure a password for the SQL Server Docker container. If you don't configure one, it's created and filled automatically with user secrets. Thus, this code can be used:
+
+```csharp
+// Codebreaker.AppHost/Program.cs
+var sqlDB = builder.AddSqlServer(SqlResourceName)
+  .WithDataVolume(SqlDataVolume)
+  .AddDatabase(SqlDatabaseResourceName, SqlDatabaseName);
+```
+
+#### Extension - Using Docker Compose with .NET Aspire
+
+This is a new feature (currently in preview with .NET Aspire 9.2) to use Docker Compose with .NET Aspire!
+
+This is in the additional TODO in the `StarterAspire` folder (`Codebreaker.AppHost\Program.cs`):
+
+```csharp
+// TODO 6: see updates.md file to publish as Docker Compose
+```
+
+And this needs to be done (see the `FinalAspire` folder - `Codebreaker.AppHost\Program.cs`):
+
+```csharp
+builder.AddDockerComposePublisher();
+```
+
+Now use the .NET Aspire CLI to create the Docker Compose file:
+
+```bash
+cd Codebreaker.AppHost
+aspire publish
+docker compose up -d
+```
+
+### Chapter 8 - CI/CD - Publishing with GitHub Actions
+
+#### Page 212, Preparing the solution using the Azure Developer CLI
+
+`azd` version 1.15.1 detects the **.NET (Aspire)** instead of **Azure Container Apps**. Similar like before, Azure Container Apps are deployed.
+
+### Chapter 9 - Authentication and Authorization with Services and Clients
+
+#### Page 249, Creating an Azure AD B2C tenant
+
+At the time of the release of the book, Microsoft Entra didn't support allow users to create accounts with *Microsoft Entry External Identities*. This feature is now available.
+
+Thus, instead of using *Azure AD B2C*, now *Microsoft Entra External Identities* can be used.
+
+#### Keycloak
+
+The sample application offers a new way for authentication: Keycloak.
+
+
+### Chapter 10 - All about testing the solution
+
+#### Page 279, Exploring the games analyzer library
+
+This is an error in the book:
+
+The filename for the source code is not:
+
+`Codebreaker.GameAPIs.Analyzers.Tests/Analyzers/GameGuessAnalyzer.cs`
+
+This should be:
+
+`Codebreaker.GameAPIs.Analyzers/Analyzers/GameGuessAnalyzer.cs`
+
+#### Page 281, Creating a unit test project
+
+The book shows using xUnit. There are enhancements with the new **Microsoft Testing Platform**, supported by **xUnit.v3**!
+
+To use the new **Microsoft Testing Platform** with xUnit, install the new xUnit.v3 templates:
+
+```bash
+dotnet new install xunit.v3.templates
+```
+
+Then use these commands:
+
+```bash
+dotnet new xunit3 -o Codebreaker.Analyzers.Tests
+cd Codebreaker.Analyzers.Tests
+dotnet reference add ..\Codebreaker.Analyzers
+```
+
+With the project file, enable these settings with the project file within the `<PropertyGroup>` element:
+
+```xml
+	<TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
+	<UseMicrosoftTestingPlatformRunner>true</UseMicrosoftTestingPlatformRunner>
+```
+
+#### Page 284, Passing data to unit tests
+
+Instead of using `IEnumerable<object[]>`, xUnit.3 supports a strongly-typed version using `TheoryDataRow`. This is the strongly typed source code (the older version still compiles and runs):
+
+```csharp
+public class TestData6x4 : IEnumerable<TheoryDataRow<string[], string[], ColorResult>>
+{
+    public static readonly string[] Colors6 = [Red, Green, Blue, Yellow, Black, White];
+
+    public IEnumerator<TheoryDataRow<string[], string[], ColorResult>> GetEnumerator()
+    {
+        yield return new TheoryDataRow<string[], string[], ColorResult>(
+            [Green, Blue,  Green, Yellow], // code
+            [Green, Green, Black, White],  // input-data
+            new ColorResult(1, 1) // expected
+        );
+        yield return new TheoryDataRow<string[], string[], ColorResult>(
+            [Red,   Blue,  Black, White],
+            [Black, Black, Red,   Yellow],
+            new ColorResult(0, 2)
+        );
+// code remove for brevity
+    }
+
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+}
+```
+
+#### Page 289, Running unit tests
+
+The command `dotnet test` is still working, and the *Test Explorer* is working as well. 
+With the new **Microsoft Testing Platform**, you can also do a simple `dotnet run` to run the tests instead!
 
 ### Chapter 11, Logging and Monitoring
 
 With the `Activity` class, recording exceptions has been renamed from `RecordException` to `AddException`.
+
+Grafana config:
+
+provisioning/datasources/default.yaml
+
+url: $PROMETHEUS_ENDPOINT instead of using a fixed port

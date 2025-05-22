@@ -1,5 +1,6 @@
-using System.Runtime.CompilerServices;
 using CodeBreaker.Bot.Endpoints;
+
+using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("CodeBreaker.Bot.Tests")]
 
@@ -12,7 +13,6 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // HttpClient & Application Services
-// builder.AddAppConfiguration();
 builder.AddApplicationServices();
 
 var app = builder.Build();

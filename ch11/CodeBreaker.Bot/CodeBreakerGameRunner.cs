@@ -1,8 +1,10 @@
 ﻿using Codebreaker.GameAPIs.Client.Models;
 
+using System.Diagnostics;
+
 namespace CodeBreaker.Bot;
 
-public class CodeBreakerGameRunner(GamesClient gamesClient, ILogger<CodeBreakerGameRunner> logger)
+public class CodeBreakerGameRunner(GamesClient gamesClient, ILogger<CodeBreakerGameRunner> logger, [FromKeyedServices("Codebreaker.Bot")] ActivitySource activitySource)
 {
     private const string PlayerName = "Bot";
     private Guid? _gameId;
@@ -10,17 +12,23 @@ public class CodeBreakerGameRunner(GamesClient gamesClient, ILogger<CodeBreakerG
     private readonly List<Move> _moves = [];
     private List<int>? _possibleValues;
     private Dictionary<int, string>? _colorNames;
+    private readonly ILogger _logger = logger;
     private readonly GamesClient _gamesClient = gamesClient;
 
+    // Constants for color encoding
+    private const int ColorBitWidth = 6;
+    private const int ColorMask = (1 << ColorBitWidth) - 1; // 0b111111
+    private const int PegCount = 4;
+
     // initialize a list of all the possible options using numbers for every color
-    private List<int> InitializePossibleValues()
+    private static List<int> InitializePossibleValues()
     {
-        static List<int> Create8Colors(int shift)
+        static List<int> CreateColors(int shift)
         {
             List<int> pin = [];
             for (int i = 0; i < 6; i++)
             {
-                int x = 1 << i + shift;
+                int x = 1 << (i + shift);
                 pin.Add(x);
             }
             return pin;
@@ -40,19 +48,28 @@ public class CodeBreakerGameRunner(GamesClient gamesClient, ILogger<CodeBreakerG
             return result;
         }
 
-        var digits1 = Create8Colors(0);
-        var digits2 = Create8Colors(6);
+        var digits1 = CreateColors(0);
+        var digits2 = CreateColors(ColorBitWidth);
         var list2 = AddColorsToList(digits1, digits2);
-        var digits3 = Create8Colors(12);
+        var digits3 = CreateColors(ColorBitWidth * 2);
         var list3 = AddColorsToList(list2, digits3);
-        var digits4 = Create8Colors(18);
+        var digits4 = CreateColors(ColorBitWidth * 3);
         var list4 = AddColorsToList(list3, digits4);
         list4.Sort();
         return list4;
     }
 
+    private const string GameTypeTagName = "codebreaker.gameType";
+    private const string GameIdTagName = "codebreaker.gameId";
+
+    /// <summary>
+    /// Starts a new game asynchronously.
+    /// </summary>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
     public async Task StartGameAsync(CancellationToken cancellationToken = default)
     {
+        // Generate a unique key for each color
         static int NextKey(ref int key)
         {
             int next = key;
@@ -60,14 +77,31 @@ public class CodeBreakerGameRunner(GamesClient gamesClient, ILogger<CodeBreakerG
             return next;
         }
 
-        _possibleValues = InitializePossibleValues();
-        _moves.Clear();
-        _moveNumber = 0;
+        try
+        {
+            using var activity = activitySource.CreateActivity("StartGame", ActivityKind.Client);
 
-        (_gameId, _, _, IDictionary<string, string[]> fieldValues) = await _gamesClient.StartGameAsync(GameType.Game6x4, "Bot", cancellationToken);
-        int key = 1;
-        _colorNames = fieldValues["colors"]
-            .ToDictionary(keySelector: c => NextKey(ref key), elementSelector: color => color);
+            // Initialize the possible values for the game
+            _possibleValues = InitializePossibleValues();
+            _moves.Clear();
+            _moveNumber = 0;
+
+            // Start a new game and retrieve the game ID and color names
+            (_gameId, _, _, IDictionary<string, string[]> fieldValues) = await _gamesClient.StartGameAsync(GameType.Game6x4, "Bot", cancellationToken);
+
+            activity?.AddTag(GameTypeTagName, GameType.Game6x4)
+                .AddTag(GameIdTagName, _gameId.ToString())
+                .Start();
+
+            int key = 1;
+            _colorNames = fieldValues["colors"]
+                .ToDictionary(keySelector: c => NextKey(ref key), elementSelector: color => color);
+        }
+        catch (Exception ex)
+        {
+            _logger.ErrorStartingGame(ex, _gameId ?? Guid.Empty);
+            throw;
+        }
     }
 
     /// <summary>
@@ -90,13 +124,13 @@ public class CodeBreakerGameRunner(GamesClient gamesClient, ILogger<CodeBreakerG
         {
             _moveNumber++;
             (string[] guessPegs, int selection) = GetNextMoves();
-            logger.SendMove(string.Join(':', guessPegs), gameId);
+            _logger.SendMove(string.Join(':', guessPegs), gameId.ToString());
 
             (string[] results, ended, bool isVictory) = await _gamesClient.SetMoveAsync(gameId, PlayerName, GameType.Game6x4, _moveNumber, guessPegs, cancellationToken);
 
             if (isVictory)
             {
-                logger.Matched(_moveNumber, gameId);
+                _logger.Matched(_moveNumber, gameId.ToString());
                 break;
             }
 
@@ -112,23 +146,23 @@ public class CodeBreakerGameRunner(GamesClient gamesClient, ILogger<CodeBreakerG
             if (blackHits == 0 && whiteHits == 0)
             {
                 _possibleValues = _possibleValues.HandleNoMatches(selection);
-                logger.ReducedPossibleValues(_possibleValues.Count, "none", gameId);
+                _logger.ReducedPossibleValues(_possibleValues.Count, "none", gameId.ToString());
             }
             if (blackHits > 0)
             {
                 _possibleValues = _possibleValues.HandleBlackMatches(blackHits, selection);
-                logger.ReducedPossibleValues(_possibleValues.Count, "Black", gameId);
+                _logger.ReducedPossibleValues(_possibleValues.Count, "Black", gameId.ToString());
             }
             if (whiteHits > 0)
             {
                 _possibleValues = _possibleValues.HandleWhiteMatches(whiteHits + blackHits, selection);
-                logger.ReducedPossibleValues(_possibleValues.Count, "White", gameId);
+                _logger.ReducedPossibleValues(_possibleValues.Count, "White", gameId.ToString());
             }
 
             await Task.Delay(TimeSpan.FromSeconds(thinkSeconds), cancellationToken);  // thinking delay
         } while (!ended);
 
-        logger.FinishedRun(_moveNumber, gameId);
+        _logger.FinishedRun(_moveNumber, gameId.ToString());
     }
 
     /// <summary>
@@ -149,10 +183,10 @@ public class CodeBreakerGameRunner(GamesClient gamesClient, ILogger<CodeBreakerG
 
     private string[] IntToColors(int value) =>
     [
-        _colorNames?[value & 0b111111] ?? string.Empty,
-        _colorNames?[(value >> 6) & 0b111111] ?? string.Empty,
-        _colorNames?[(value >> 12) & 0b111111] ?? string.Empty,
-        _colorNames?[(value >> 18) & 0b111111] ?? string.Empty
+        _colorNames?[(value >> (ColorBitWidth * 0)) & ColorMask] ?? string.Empty,
+        _colorNames?[(value >> (ColorBitWidth * 1)) & ColorMask] ?? string.Empty,
+        _colorNames?[(value >> (ColorBitWidth * 2)) & ColorMask] ?? string.Empty,
+        _colorNames?[(value >> (ColorBitWidth * 3)) & ColorMask] ?? string.Empty
     ];
 }
 

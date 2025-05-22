@@ -1,12 +1,34 @@
-using Codebreaker.Data.SqlServer;
+using Azure.Identity;
 using Codebreaker.GameAPIs;
 
-using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
+
+//builder.Configuration.AddAzureAppConfiguration(appConfigOptions =>
+//{
+//#if DEBUG
+//    DefaultAzureCredential credential = new();
+//#else
+//    string managedIdentityClientId = builder.Configuration["AZURE_CLIENT_ID"] ?? string.Empty;
+//    DefaultAzureCredentialOptions credentialOptions = new()
+//    {
+//        ManagedIdentityClientId = managedIdentityClientId,
+//        ExcludeEnvironmentCredential = true,
+//        ExcludeWorkloadIdentityCredential = true
+//    };
+//    DefaultAzureCredential credential = new(credentialOptions);
+//#endif
+//    string appConfigUrl = builder.Configuration.GetConnectionString("codebreakerconfig") ?? throw new InvalidOperationException("could not read codebreakerconfig");
+//    appConfigOptions.Connect(new Uri(appConfigUrl), credential)
+//        .Select("gameapis")
+//        .ConfigureKeyVault(keyVaultOptions =>
+//        {
+//            keyVaultOptions.SetCredential(credential);
+//        });
+//});
 
 // Swagger/EndpointDocumentation
 builder.Services.AddEndpointsApiExplorer();
@@ -16,7 +38,7 @@ builder.Services.AddSwaggerGen(options =>
     {
         Version = "v3",
         Title = "Codebreaker Games API",
-        Description = "An ASP.NET Core minimal APIs to play Codebreaker games",
+        Description = "An ASP.NET Core minimal API to play Codebreaker games",
         TermsOfService = new Uri("https://www.cninnovation.com/terms"),
         Contact = new OpenApiContact
         {
@@ -45,8 +67,8 @@ app.UseSwaggerUI(options =>
     options.SwaggerEndpoint("/swagger/v3/swagger.json", "v3");
 });
 
-await app.CreateOrUpdateDatabaseAsync();
-
 app.MapGameEndpoints();
+
+await app.CreateOrUpdateDatabaseAsync();
 
 app.Run();

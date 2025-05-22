@@ -1,4 +1,6 @@
-﻿using System.Diagnostics;
+﻿using Codebreaker.GameAPIs.Infrastructure;
+
+using System.Diagnostics;
 
 namespace Codebreaker.GameAPIs.Services;
 
@@ -19,6 +21,7 @@ public class GamesService(IGamesRepository dataRepository, ILogger<GamesService>
                 .Start();
 
             await dataRepository.AddGameAsync(game, cancellationToken);
+
             metrics.GameStarted(game);
             logger.GameStarted(game.Id);
             activity?.SetStatus(ActivityStatusCode.Ok);
@@ -35,7 +38,7 @@ public class GamesService(IGamesRepository dataRepository, ILogger<GamesService>
             activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
             throw;
         }
-        return game;
+            return game;
     }
 
     public async Task<(Game Game, Move Move)> SetMoveAsync(Guid id, string gameType, string[] guesses, int moveNumber, CancellationToken cancellationToken = default)

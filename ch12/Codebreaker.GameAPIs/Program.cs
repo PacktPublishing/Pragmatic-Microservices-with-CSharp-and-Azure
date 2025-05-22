@@ -1,22 +1,8 @@
-using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Codebreaker.GameAPIs;
 
-using System.Diagnostics;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddMetrics();
-
-builder.Services.AddOpenTelemetry().WithMetrics(m => m.AddMeter(GamesMetrics.MeterName));
-
-builder.Services.AddSingleton<GamesMetrics>();
-
-builder.Services.AddKeyedSingleton("Codebreaker.GameAPIs", (services, _) => new ActivitySource("Codebreaker.GameAPIs", "1.0.0"));
-
-builder.Services.AddHealthChecks().AddCheck("dbupdate", () =>
-{
-    return ApplicationServices.IsDatabaseUpdateComplete ?
-        HealthCheckResult.Healthy("DB update done") :
-        HealthCheckResult.Degraded("DB update not ready");
-}, ["ready"]);
 
 builder.AddServiceDefaults();
 
@@ -44,13 +30,11 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 // Application Services
-builder.AddApplicationServices();
 
-builder.Services.AddCors(policy => policy.AddDefaultPolicy(builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
+builder.AddApplicationServices();
 
 var app = builder.Build();
 
-app.UseCors();
 app.MapDefaultEndpoints();
 
 app.UseSwagger();
@@ -59,8 +43,8 @@ app.UseSwaggerUI(options =>
     options.SwaggerEndpoint("/swagger/v3/swagger.json", "v3");
 });
 
-_ = app.CreateOrUpdateDatabaseAsync();
-
 app.MapGameEndpoints();
+
+await app.CreateOrUpdateDatabaseAsync();
 
 app.Run();

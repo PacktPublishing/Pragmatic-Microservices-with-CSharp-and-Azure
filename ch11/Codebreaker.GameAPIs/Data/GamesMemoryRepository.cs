@@ -5,13 +5,13 @@ namespace Codebreaker.GameAPIs.Data.InMemory;
 public partial class GamesMemoryRepository(ILogger<GamesMemoryRepository> logger) : IGamesRepository
 {
     private readonly ConcurrentDictionary<Guid, Game> _games = new();
+    private readonly ILogger _logger = logger;
 
     public Task AddGameAsync(Game game, CancellationToken cancellationToken = default)
     {
         if (!_games.TryAdd(game.Id, game))
         {
-            Log.GameExists(logger, game.Id);
-            
+            _logger.LogWarning("id {id} already exists", game.Id);
         }
         return Task.CompletedTask;
     }
@@ -20,7 +20,7 @@ public partial class GamesMemoryRepository(ILogger<GamesMemoryRepository> logger
     {
         if (!_games.TryRemove(id, out _))
         {
-            Log.GameNotFound(logger, id);
+            _logger.LogWarning("id {id} not available", id);
             return Task.FromResult(false);
         }
         return Task.FromResult(true);
@@ -74,6 +74,7 @@ public partial class GamesMemoryRepository(ILogger<GamesMemoryRepository> logger
         {
             return Task.FromResult(game);
         }
+        _logger.LogError("Game update failed with game id {gameId}", game.Id);
 
         throw new CodebreakerException($"Game update failed with game id {game.Id}") 
         { 

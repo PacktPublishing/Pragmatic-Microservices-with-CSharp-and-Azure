@@ -126,6 +126,6 @@ public class GamesServiceTests
     {
         IMeterFactory meterFactory = new TestMeterFactory();
         GamesMetrics metrics = new(meterFactory);
-        return new GamesService(_gamesRepositoryMock.Object, _distributedCacheMock.Object, NullLogger<GamesService>.Instance, metrics, new ActivitySource("TestSource"));
+        return new GamesService(_gamesRepositoryMock.Object, NullLogger<GamesService>.Instance, metrics, new ActivitySource("TestSource"));
     }
 }

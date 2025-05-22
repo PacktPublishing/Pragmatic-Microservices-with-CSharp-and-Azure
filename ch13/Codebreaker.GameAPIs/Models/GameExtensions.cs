@@ -15,5 +15,4 @@ public static class GameExtensions
 
     public static Game? ToGame(this string json) =>
         JsonSerializer.Deserialize<Game>(json);
-
 }

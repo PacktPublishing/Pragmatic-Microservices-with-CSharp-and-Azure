@@ -1,0 +1,18 @@
+﻿@Codebreaker.Bot_HostAddress = https://localhost:5142
+@ContentType = application/json
+
+### Start default games to play
+# @name startdefault
+POST {{Codebreaker.Bot_HostAddress}}/bot/bots
+
+### Get information on the bot request
+
+GET {{Codebreaker.Bot_HostAddress}}/bot/bots/{{startdefault.response.body.$.*}}
+
+### Start 30 games with different parameter settings
+# @name start30
+POST {{Codebreaker.Bot_HostAddress}}/bot/bots?count=30&delay=2&thinkTime=1
+
+### Get information on the bot request
+
+GET {{Codebreaker.Bot_HostAddress}}/bot/bots/{{start30.response.body.$.*}}

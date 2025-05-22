@@ -1,6 +1,4 @@
-﻿using System.Net.Mail;
-
-namespace Codebreaker.GameAPIs.Tests;
+﻿namespace Codebreaker.GameAPIs.Tests;
 
 public class GameExtensionsTests
 {

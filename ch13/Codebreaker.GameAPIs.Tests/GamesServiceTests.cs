@@ -17,7 +17,6 @@ public class GamesServiceTests
     private readonly Guid _running6x4MoveId1 = Guid.Parse("4786C27B-3F9A-4C47-9947-F983CF7053E9");
     private readonly string[] _guessesMove1 = ["Red", "Green", "Blue", "Yellow"];
     private readonly Mock<IDistributedCache> _distributedCacheMock = new();
-    private readonly Mock<ILiveReportClient> _liveClientMock = new();
 
     public GamesServiceTests()
     {
@@ -44,16 +43,6 @@ public class GamesServiceTests
         _gamesRepositoryMock.Setup(repo => repo.GetGameAsync(_running6x4GameId, CancellationToken.None)).ReturnsAsync(_running6x4Game);
         _gamesRepositoryMock.Setup(repo => repo.AddMoveAsync(_running6x4Game, It.IsAny<Move>(), CancellationToken.None));
     }
-
-    //[Fact]
-    //public async Task StartGame_Should_()
-    //{
-    //    GamesService gamesService = GetGamesService();
-    //    await Assert.ThrowsAsync<CodebreakerException>(async () =>
-    //    {
-    //        await gamesService.StartGameAsync("Game6x4", "Test", CancellationToken.None);
-    //    });
-    //}
 
     [Fact]
     public async Task SetMoveAsync_Should_ThrowWithEndedGame()
@@ -127,6 +116,6 @@ public class GamesServiceTests
     {
         IMeterFactory meterFactory = new TestMeterFactory();
         GamesMetrics metrics = new(meterFactory);
-        return new GamesService(_gamesRepositoryMock.Object, _distributedCacheMock.Object, _liveClientMock.Object, NullLogger<GamesService>.Instance, metrics, new ActivitySource("TestSource"));
+        return new GamesService(_gamesRepositoryMock.Object, NullLogger<GamesService>.Instance, metrics, new ActivitySource("TestSource"));
     }
 }
