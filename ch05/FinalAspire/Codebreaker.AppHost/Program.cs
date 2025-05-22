@@ -1,6 +1,6 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
-builder.AddDockerComposePublisher();
+builder.AddDockerComposeEnvironment("docker-compose");
 
 // the password for SQL Server is automatically created on first run and stored in user secrets
 // Check user secrets for the stored password
