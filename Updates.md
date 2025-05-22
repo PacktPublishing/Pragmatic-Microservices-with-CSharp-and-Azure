@@ -1,9 +1,33 @@
-# .NET Aspire updates
+# .NET Aspire and book updates
 
-What's changed with the new versions of .NET Aspire?
+What's changed with the new versions of .NET Aspire? What else changed with the book?
+
+## Overall changes
+
+### Central Package Management (CPM)
 
 With all the chapters (with the exception of chapter 1) we now use **NuGet Central Package Management (CPM)** with package versions specified in the file *Directory.Packages.props'. This makes it easier to update all chapters.
 In case you copy the content of just a single chapter, also copy the file *Directory.Packages.props* from the root folder to get all the projects compiled.
+
+### Easier configuration
+
+The book sample allows to be deployed to Microsoft Azure, or On-premises, using different services as needed. I've changed the configuration to make this easier, to allow configuring this on a service by service base. For various names, I've changed the code to use constants for easier consistency.
+
+The ServiceDefaults project now contains these files:
+
+- `CodebreakerSettings.cs`: contains the enum values for the configuration settings, and the `CodebreakerSettings` class which is filled reading the configuration.
+- `EnvVarNames.cs` - environment variables that are passed to service projects
+- `ServiceNames.cs` - const values for service names 
+
+This project is already referenced by the service projects.
+To reference it from the AppHost project to use the configuration with the app-model, the project reference needs this setting:
+`IsAspireProjectResource="false"`.
+
+All other project references are triggered to create manifest code for strongly-typed references.
+
+```xml
+    <ProjectReference Include="..\Codebreaker.ServiceDefaults\Codebreaker.ServiceDefaults.csproj" IsAspireProjectResource="false" />
+```
 
 ## .NET Aspire 9.0 - 9.3 Updates
 
