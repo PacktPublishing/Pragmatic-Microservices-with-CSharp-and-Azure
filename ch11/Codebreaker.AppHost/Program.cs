@@ -11,7 +11,7 @@ CodebreakerSettings settings = new();
 builder.Configuration.GetSection("CodebreakerSettings").Bind(settings);
 
 var gameApis = builder.AddProject<Projects.Codebreaker_GameAPIs>(GamesAPIs)
-    .WithHttpsHealthCheck("/health")
+    .WithHttpHealthCheck("/health")
     .WithEnvironment(EnvVarNames.DataStore, settings.DataStore.ToString())
     .WithEnvironment(EnvVarNames.TelemetryMode, settings.Telemetry.ToString())
     .WithExternalHttpEndpoints();
@@ -48,10 +48,8 @@ switch (settings.Telemetry)
 
         // Log Analytics workspace is created automatically
         var appInsights = builder.AddAzureApplicationInsights("insights");
-        gameApis.WithReference(appInsights)
-            .WaitFor(appInsights);
-        bot.WithReference(appInsights)
-            .WaitFor(appInsights);
+        gameApis.WithReference(appInsights).WaitFor(appInsights);
+        bot.WithReference(appInsights).WaitFor(appInsights);
         break;
 }
 
