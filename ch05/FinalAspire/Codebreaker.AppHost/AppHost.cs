@@ -1,3 +1,5 @@
+#pragma warning disable ASPIRECOSMOSDB001
+
 var builder = DistributedApplication.CreateBuilder(args);
 
 builder.AddDockerComposeEnvironment("docker-compose");

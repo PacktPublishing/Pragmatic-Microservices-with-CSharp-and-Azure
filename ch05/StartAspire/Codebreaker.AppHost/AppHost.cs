@@ -1,3 +1,5 @@
+#pragma warning disable ASPIRECOSMOSDB001
+
 var builder = DistributedApplication.CreateBuilder(args);
 
 // TODO 6: see updates.md file to publish as Docker Compose
