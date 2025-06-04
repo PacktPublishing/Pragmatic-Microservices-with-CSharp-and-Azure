@@ -29,17 +29,17 @@ switch (settings.Telemetry)
         break;
     case TelemetryType.GrafanaAndPrometheus:
         var prometheus = builder.AddPrometheus("prometheus");
+        var loki = builder.AddLoki("loki");
 
         var grafana = builder.AddGrafana("grafana")
+            .WithEnvironment("LOKI_URL", loki.GetEndpoint("api"))
             .WithEnvironment("PROMETHEUS_ENDPOINT", prometheus.GetEndpoint("http"));
+
+//        var jaeger = builder.AddJaeger("jaeger");
 
         builder.AddOpenTelemetryCollector("otelcollector", "../otelcollector/config.yaml")
           .WithEnvironment("PROMETHEUS_ENDPOINT", $"{prometheus.GetEndpoint("http")}/api/v1/otlp");
 
-        gameApis.WithEnvironment("GRAFANA_URL", grafana.GetEndpoint("http"))
-            .WaitFor(grafana);
-        bot.WithEnvironment("GRAFANA_URL", grafana.GetEndpoint("http"))
-            .WaitFor(grafana);
         break;
     case TelemetryType.AzureMonitor:
         // var logs = builder.AddAzureLogAnalyticsWorkspace("logs");

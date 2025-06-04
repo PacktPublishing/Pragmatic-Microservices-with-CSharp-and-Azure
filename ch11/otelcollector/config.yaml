@@ -12,28 +12,40 @@ processors:
 exporters:
   debug:
     verbosity: detailed
+  loki:
+    endpoint: "http://loki:3100/loki/api/v1/push"
+
+#  oltp/jaeger:
+#    endpoint: jaeger:4317
+#    tls:
+#      insecure: true
+
   otlp/aspire:
     endpoint: ${env:ASPIRE_ENDPOINT}
     headers:
       x-otlp-api-key: ${env:ASPIRE_API_KEY}
     tls:
-        insecure: ${env:ASPIRE_INSECURE}
-        insecure_skip_verify: true # Required in local development because cert is localhost and the endpoint is host.docker.internal
+      insecure: ${env:ASPIRE_INSECURE}
+      insecure_skip_verify: true # Required in local development because cert is localhost and the endpoint is host.docker.internal
   otlphttp/prometheus:
     endpoint: ${env:PROMETHEUS_ENDPOINT}
     tls:
-        insecure: true
+      insecure: true
   
 service:
   pipelines:
     traces:
       receivers: [otlp]
       processors: [batch]
-      exporters: [otlp/aspire]
+      exporters: 
+        - otlp/aspire
+        # - oltp/jaeger 
     logs:
       receivers: [otlp]
       processors: [batch]
-      exporters: [otlp/aspire]
+      exporters: 
+        - otlp/aspire
+        - loki
     metrics:
       receivers: [otlp]
       processors: [batch]

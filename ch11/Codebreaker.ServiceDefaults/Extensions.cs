@@ -86,6 +86,7 @@ public static class Extensions
         if (useOtlpExporter)
         {
             builder.Services.AddOpenTelemetry().UseOtlpExporter();
+
         }
 
         if (builder.Configuration[EnvVarNames.TelemetryMode] == nameof(TelemetryType.GrafanaAndPrometheus))

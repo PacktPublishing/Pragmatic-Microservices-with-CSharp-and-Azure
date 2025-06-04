@@ -1,0 +1,47 @@
+{
+  "id": null,
+  "title": "Games API Metrics",
+  "tags": ["aspnetcore", "gamesapi"],
+  "timezone": "browser",
+  "schemaVersion": 37,
+  "version": 1,
+  "refresh": "10s",
+  "panels": [
+    {
+      "type": "stat",
+      "title": "Total HTTP Requests",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "sum(increase(aspnetcore_http_requests_received_total{service=\"gamesapi\"}[5m]))",
+          "legendFormat": "Total Requests"
+        }
+      ],
+      "gridPos": { "x": 0, "y": 0, "w": 8, "h": 4 }
+    },
+    {
+      "type": "stat",
+      "title": "HTTP 5xx Errors",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "sum(increase(aspnetcore_http_requests_received_total{service=\"gamesapi\", http_status_code=~\"5..\"}[5m]))",
+          "legendFormat": "5xx Errors"
+        }
+      ],
+      "gridPos": { "x": 8, "y": 0, "w": 8, "h": 4 }
+    },
+    {
+      "type": "graph",
+      "title": "Request Duration (p95)",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.95, sum(rate(aspnetcore_http_request_duration_seconds_bucket{service=\"gamesapi\"}[5m])) by (le))",
+          "legendFormat": "p95"
+        }
+      ],
+      "gridPos": { "x": 0, "y": 4, "w": 16, "h": 8 }
+    }
+  ]
+}

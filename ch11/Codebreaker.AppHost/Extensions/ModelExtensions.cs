@@ -25,6 +25,30 @@ internal static class ModelExtensions
         return grafana;
     }
 
+    public static IResourceBuilder<ContainerResource> AddLoki(this IDistributedApplicationBuilder builder, string name)
+    {
+        var loki = builder.AddContainer(name, "grafana/loki", "latest")
+            .WithBindMount("../loki", "/etc/loki", isReadOnly: true)
+            .WithArgs("-config.file=/etc/loki/loki.yml", "-target=all")
+            .WithHttpEndpoint(targetPort: 3100, name: "api")
+            .WithEndpoint(targetPort: 9095, name: "grpc");
+
+        return loki;
+    }
+
+    public static IResourceBuilder<ContainerResource> AddJaeger(this IDistributedApplicationBuilder builder, string name)
+    {
+        var jaeger = builder.AddContainer(name, "jaegertracing/jaeger", "2.6.0")
+            .WithEnvironment("COLLECTOR_OTLP_ENABLED", "true")
+            .WithEnvironment("JAEGER_DISABLED", "false")
+            .WithHttpEndpoint(targetPort: 16686, name: "web-ui")
+            .WithEndpoint(targetPort: 4317, name: "otlp-grpc")
+            .WithEndpoint(targetPort: 4318, name: "otlp-http")
+            .WithEndpoint(targetPort: 14250, name: "model-proto");
+
+        return jaeger;
+    }
+
     public static void ConfigurePostgres(this IDistributedApplicationBuilder builder, IResourceBuilder<ProjectResource> gameApis)
     {
         var postgres = builder.AddPostgres(PostgresResourceName)
