@@ -362,6 +362,15 @@ With the new **Microsoft Testing Platform**, you can also do a simple `dotnet ru
 
 ### Chapter 11, Logging and Monitoring
 
+Instead of scraping with Prometheus, an OpenTelemetry collector is used to setup a pipeline to send metrics (Prometheus), log (Loki) and distributed tracing (Jaeger) information.
+
+This is based on this sample:
+The [.NET Aspire Metrics Sample](https://github.com/dotnet/aspire-samples/tree/main/samples/Metrics)
+
+New are the folders for the OpenTelemetry collector and the Loki configuration:
+- otelcollector
+- loki
+
 With the `Activity` class, recording exceptions has been renamed from `RecordException` to `AddException`.
 
 Grafana config:
