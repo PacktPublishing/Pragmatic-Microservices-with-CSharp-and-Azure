@@ -17,26 +17,26 @@ public static partial class LoggerExtensions
     [LoggerMessage(
         EventId = 4000,
         Level = LogLevel.Information,
-        Message = "Sending the move {Move} to {Game}")]
-    public static partial void SendMove(this ILogger logger, string move, string game);
+        Message = "Sending the move {Move} to {GameId}")]
+    public static partial void SendMove(this ILogger logger, string move, Guid gameId);
 
     [LoggerMessage(
         EventId = 4001,
         Level = LogLevel.Information,
-        Message = "Matched after {Count} moves with {Game}")]
-    public static partial void Matched(this ILogger logger, int count, string game);
+        Message = "Matched after {Count} moves with {GameId}")]
+    public static partial void Matched(this ILogger logger, int count, Guid gameId);
 
     [LoggerMessage(
         EventId = 4002,
         Level = LogLevel.Information,
-        Message = "Reduced the possible values to {Number} with {Color} hits in {Game}")]
-    public static partial void ReducedPossibleValues(this ILogger logger, int number, string color, string game);
+        Message = "Reduced the possible values to {Number} with {Color} hits in {GameId}")]
+    public static partial void ReducedPossibleValues(this ILogger logger, int number, string color, Guid gameId);
 
     [LoggerMessage(
         EventId = 4003,
         Level = LogLevel.Information,
-        Message = "Finished run with {Number} in {Game}")]
-    public static partial void FinishedRun(this ILogger logger, int number, string game);
+        Message = "Finished run with {Number} in {GameId}")]
+    public static partial void FinishedRun(this ILogger logger, int number, Guid gameId);
 
     [LoggerMessage(
         EventId = 4004,
