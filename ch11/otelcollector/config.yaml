@@ -37,9 +37,7 @@ service:
     traces:
       receivers: [otlp]
       processors: [batch]
-      exporters: 
-        - otlp/aspire
-        # - oltp/jaeger 
+      exporters: [otlp/aspire]
     logs:
       receivers: [otlp]
       processors: [batch]
