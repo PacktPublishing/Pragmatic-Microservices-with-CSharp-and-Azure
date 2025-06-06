@@ -15,6 +15,7 @@ public enum TelemetryType
 {
     None,
     GrafanaAndPrometheus,
+    Seq,
     AzureMonitor,
 }
 

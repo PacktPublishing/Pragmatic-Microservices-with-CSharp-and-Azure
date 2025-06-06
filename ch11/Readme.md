@@ -25,4 +25,4 @@ Working through the code with this chapter, you can start using the Start folder
 
 ## Running the solution
 
-To run the solution, running the application with Prometheus and Grafana, switch to the *Prometheus* environment (see `launchsettings.json` with the AppHost project)
+> Configure the `Telemetry` setting in `appsettings.json` to use just the *Aspire dashboard*, *Prometheus* or *Azure Monitor*. 

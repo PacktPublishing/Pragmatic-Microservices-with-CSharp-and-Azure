@@ -41,6 +41,14 @@ switch (settings.Telemetry)
           .WithEnvironment("PROMETHEUS_ENDPOINT", $"{prometheus.GetEndpoint("http")}/api/v1/otlp");
 
         break;
+    case TelemetryType.Seq:
+        var seq = builder.AddSeq("seq")
+            .WithDataVolume();
+
+        gameApis.WithReference(seq).WaitFor(seq);
+        bot.WithReference(seq).WaitFor(seq);
+
+        break;
     case TelemetryType.AzureMonitor:
         // var logs = builder.AddAzureLogAnalyticsWorkspace("logs");
         // var appInsights = builder.AddAzureApplicationInsights("insights", logs);

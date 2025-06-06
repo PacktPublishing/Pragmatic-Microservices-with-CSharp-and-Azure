@@ -95,6 +95,11 @@ public static class Extensions
                 .WithMetrics(metrics => metrics.AddPrometheusExporter());
         }
 
+        if (builder.Configuration[EnvVarNames.TelemetryMode] == nameof(TelemetryType.Seq))
+        {
+            builder.AddSeqEndpoint(connectionName: "seq");
+        }
+
         if (!string.IsNullOrEmpty(builder.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"]))
         {
             builder.Services.AddOpenTelemetry()
