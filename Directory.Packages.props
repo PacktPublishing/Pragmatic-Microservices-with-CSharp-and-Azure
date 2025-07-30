@@ -8,15 +8,15 @@
     <PackageVersion Include="Aspire.Hosting.Docker" Version="9.2.1-preview.1.25222.1" />
     <PackageVersion Include="Aspire.Hosting.Garnet" Version="9.3.0" />
     <PackageVersion Include="Aspire.Hosting.Keycloak" Version="9.2.1-preview.1.25222.1" />
-    <PackageVersion Include="Aspire.Hosting.Kubernetes" Version="9.2.1-preview.1.25222.1" />    
+    <PackageVersion Include="Aspire.Hosting.Kubernetes" Version="9.2.1-preview.1.25222.1" />
     <PackageVersion Include="Aspire.Hosting.PostgreSQL" Version="9.3.0" />
-    <PackageVersion Include="Aspire.Hosting.Valkey" Version="9.2.1" />    
+    <PackageVersion Include="Aspire.Hosting.Valkey" Version="9.2.1" />
     <PackageVersion Include="Aspire.Microsoft.Azure.Cosmos" Version="9.3.0" />
     <PackageVersion Include="Aspire.Azure.Messaging.EventHubs" Version="9.3.0" />
     <PackageVersion Include="Aspire.Azure.Storage.Blobs" Version="9.3.0" />
     <PackageVersion Include="Aspire.Azure.Storage.Queues" Version="9.3.0" />
     <PackageVersion Include="Aspire.Confluent.Kafka" Version="9.3.0" />
-    <PackageVersion Include="Aspire.Hosting.AppHost" Version="9.3.0" />
+    <PackageVersion Include="Aspire.Hosting.AppHost" Version="9.4.0" />
     <PackageVersion Include="Aspire.Hosting.Azure" Version="9.3.0" />
     <PackageVersion Include="Aspire.Hosting.Azure.AppConfiguration" Version="9.3.0" />
     <PackageVersion Include="Aspire.Hosting.Azure.ApplicationInsights" Version="9.3.0" />
@@ -54,7 +54,7 @@
     <PackageVersion Include="Grpc.AspNetCore" Version="2.71.0" />
     <PackageVersion Include="Grpc.Net.ClientFactory" Version="2.71.0" />
     <PackageVersion Include="Grpc.Tools" Version="2.72.0" />
-    <PackageVersion Include="Google.Protobuf" Version="3.31.0" />
+    <PackageVersion Include="Google.Protobuf" Version="3.31.1" />
     <PackageVersion Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="9.0.5" />
     <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.5" />
     <PackageVersion Include="Microsoft.AspNetCore.Authorization" Version="9.0.5" />
@@ -68,7 +68,7 @@
     <PackageVersion Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.5" />
     <PackageVersion Include="Microsoft.AspNetCore.SignalR.Client" Version="9.0.5" />
     <PackageVersion Include="Microsoft.AspNetCore.SignalR.Protocols.MessagePack" Version="9.0.5" />
-    <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="9.0.5" />
+    <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="9.0.7" />
     <PackageVersion Include="Microsoft.Authentication.WebAssembly.Msal" Version="9.0.5" />
     <PackageVersion Include="Microsoft.Azure.AppConfiguration.AspNetCore" Version="8.1.2" />
     <PackageVersion Include="Microsoft.Azure.Cosmos" Version="3.50.0" />
@@ -81,16 +81,16 @@
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.5" />
     <PackageVersion Include="Microsoft.Extensions.ApiDescription.Server" Version="9.0.5" />
     <PackageVersion Include="Microsoft.Extensions.Azure" Version="1.11.0" />
-    <PackageVersion Include="Microsoft.Extensions.Configuration" Version="9.0.5" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration" Version="9.0.7" />
     <PackageVersion Include="Microsoft.Extensions.Configuration.AzureAppConfiguration" Version="8.1.2" />
-    <PackageVersion Include="Microsoft.Extensions.Configuration.Binder" Version="9.0.5" />
-    <PackageVersion Include="Microsoft.Extensions.Configuration.Json" Version="9.0.5" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration.Binder" Version="9.0.7" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration.Json" Version="9.0.7" />
     <PackageVersion Include="Microsoft.Extensions.Diagnostics.Testing" Version="9.5.0" />
-    <PackageVersion Include="Microsoft.Extensions.Hosting" Version="9.0.5" />
-    <PackageVersion Include="Microsoft.Extensions.Http" Version="9.0.5" />
-    <PackageVersion Include="Microsoft.Extensions.Http.Resilience" Version="9.5.0" />
+    <PackageVersion Include="Microsoft.Extensions.Hosting" Version="9.0.7" />
+    <PackageVersion Include="Microsoft.Extensions.Http" Version="9.0.7" />
+    <PackageVersion Include="Microsoft.Extensions.Http.Resilience" Version="9.7.0" />
     <PackageVersion Include="Microsoft.Extensions.Localization" Version="9.0.5" />
-    <PackageVersion Include="Microsoft.Extensions.ServiceDiscovery" Version="9.2.1" />
+    <PackageVersion Include="Microsoft.Extensions.ServiceDiscovery" Version="9.4.0" />
     <PackageVersion Include="Microsoft.Extensions.ServiceDiscovery.Yarp" Version="9.2.1" />
     <PackageVersion Include="Microsoft.FeatureManagement.AspNetCore" Version="4.0.0" />
     <PackageVersion Include="Microsoft.Identity.Web.UI" Version="3.8.4" />
@@ -120,8 +120,8 @@
     <PackageVersion Include="OpenTelemetry.Instrumentation.Http" Version="1.12.0" />
     <PackageVersion Include="OpenTelemetry.Instrumentation.Runtime" Version="1.12.0" />
     <PackageVersion Include="Spectre.Console.Cli" Version="0.50.0" />
-    <PackageVersion Include="Swashbuckle.AspNetCore" Version="8.1.1" />
-    <PackageVersion Include="Swashbuckle.AspNetCore.Annotations" Version="8.1.1" />
+    <PackageVersion Include="Swashbuckle.AspNetCore" Version="9.0.3" />
+    <PackageVersion Include="Swashbuckle.AspNetCore.Annotations" Version="9.0.3" />
     <PackageVersion Include="xunit" Version="2.9.3" />
     <PackageVersion Include="xunit.v3" Version="2.0.2" />
     <PackageVersion Include="xunit.runner.visualstudio" Version="3.1.0" />
