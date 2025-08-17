@@ -3,37 +3,16 @@ using static Codebreaker.ServiceDefaults.ServiceNames;
 
 using Microsoft.Extensions.Configuration;
 
+#pragma warning disable ASPIRECOSMOSDB001 // Use Azure Cosmos DB emulator
+
 var builder = DistributedApplication.CreateBuilder(args);
 
-#pragma warning disable ASPIREAZURE001
-#pragma warning disable ASPIREPUBLISHERS001
-#pragma warning disable ASPIRECOSMOSDB001
-
-if (builder.ExecutionContext.PublisherName == "azure" ||
-    builder.ExecutionContext.IsInspectMode)
-{
-    builder.AddAzurePublisher();
-}
-
-if (builder.ExecutionContext.PublisherName == "docker-compose" ||
-    builder.ExecutionContext.IsInspectMode)
-{
-    builder.AddDockerComposePublisher();
-}
-
-if (builder.ExecutionContext.PublisherName == "kubernetes" ||
-    builder.ExecutionContext.IsInspectMode)
-{
-    builder.AddKubernetesPublisher("k8s-envr");
-}
-
 // open appsettings.json and appsettings.Development.json to set the DataStore value
-
 CodebreakerSettings settings = new();
 builder.Configuration.GetSection("CodebreakerSettings").Bind(settings);
 
 var gameApis = builder.AddProject<Projects.Codebreaker_GameAPIs>(GamesAPIs)
-    .WithHttpsHealthCheck("/health")
+    .WithHttpHealthCheck("/health")
     .WithEnvironment(EnvVarNames.DataStore, settings.DataStore.ToString())
     .WithExternalHttpEndpoints();
 
@@ -137,7 +116,3 @@ switch (settings.DataStore)
 }
 
 builder.Build().Run();
-
-#pragma warning restore ASPIREAZURE001
-#pragma warning restore ASPIREPUBLISHERS001
-#pragma warning restore ASPIRECOSMOSDB001
