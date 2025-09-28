@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <Sdk Name="Aspire.AppHost.Sdk" Version="9.2.1" />
+  <Sdk Name="Aspire.AppHost.Sdk" Version="9.5.0" />
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -24,6 +24,7 @@
     <ProjectReference Include="..\CodeBreaker.Bot\CodeBreaker.Bot.csproj" />
     <ProjectReference Include="..\Codebreaker.GameAPIs\Codebreaker.GameAPIs.csproj" />
 
-    <ProjectReference Include="..\Codebreaker.ServiceDefaults\Codebreaker.ServiceDefaults.csproj" IsAspireProjectResource="False" />  </ItemGroup>
+    <ProjectReference Include="..\Codebreaker.ServiceDefaults\Codebreaker.ServiceDefaults.csproj" IsAspireProjectResource="False" />  
+	</ItemGroup>
 
 </Project>

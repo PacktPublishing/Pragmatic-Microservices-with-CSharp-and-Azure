@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <Sdk Name="Aspire.AppHost.Sdk" Version="9.1.0" />
+  <Sdk Name="Aspire.AppHost.Sdk" Version="9.5.0" />
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -17,6 +17,8 @@
     <PackageReference Include="Aspire.Hosting.Azure.AppConfiguration" />
     <PackageReference Include="Aspire.Hosting.Azure.CosmosDB" />
     <PackageReference Include="Aspire.Hosting.MySql" />
+    <PackageReference Include="Aspire.Hosting.PostgreSQL" />
+    <PackageReference Include="Aspire.Hosting.SqlServer" />
   </ItemGroup>
   
   <ItemGroup>
@@ -25,6 +27,7 @@
     <ProjectReference Include="..\CodeBreaker.Bot\CodeBreaker.Bot.csproj" />
     <ProjectReference Include="..\Codebreaker.GameAPIs\Codebreaker.GameAPIs.csproj" />
     <ProjectReference Include="..\WebAppAuth\WebAppAuth.csproj" />
+		<ProjectReference Include="..\Codebreaker.ServiceDefaults\Codebreaker.ServiceDefaults.csproj" IsAspireProjectResource="false" />
   </ItemGroup>
 
 </Project>
