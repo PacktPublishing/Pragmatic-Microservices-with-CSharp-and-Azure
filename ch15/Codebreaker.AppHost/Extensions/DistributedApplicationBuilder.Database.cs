@@ -18,12 +18,14 @@ internal static partial class DistributedApplicationBuilderExtensions
 
         if (useEmulator)
         {
+#pragma warning disable ASPIRECOSMOSDB001
             // Cosmos emulator running in a Docker container
             // https://learn.microsoft.com/en-us/azure/cosmos-db/emulator-linux
             cosmos.RunAsPreviewEmulator(p =>
                 p.WithDataExplorer()
                     .WithDataVolume("codebreaker-cosmos-data")
                     .WithLifetime(ContainerLifetime.Session));
+#pragma warning restore ASPIRECOSDB001
         }
 
         var cosmosDB = cosmos.AddCosmosDatabase("codebreaker");

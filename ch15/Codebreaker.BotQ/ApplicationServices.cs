@@ -9,7 +9,7 @@ internal static class ApplicationServices
     public static void AddApplicationServices(this IHostApplicationBuilder builder)
     {
 
-        builder.AddAzureQueueClient("botqueue");
+        builder.AddAzureQueueServiceClient("botqueue");
         builder.Services.AddScoped<BotQueueClient>();
 
         var botConfig = builder.Configuration.GetSection("Bot");

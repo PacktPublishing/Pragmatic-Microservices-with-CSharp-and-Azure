@@ -42,10 +42,6 @@ if (startupMode == "OnPremises")
 }
 else // Azure
 {
-#pragma warning disable ASPIREAZURE001 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
-    builder.AddAzurePublisher();
-#pragma warning restore ASPIREAZURE001 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
-
     var logs = builder.AddAzureLogAnalyticsWorkspace("logs");
     var insights = builder.AddAzureApplicationInsights("insights", logs);
     var signalR = builder.AddAzureSignalR("signalr");
