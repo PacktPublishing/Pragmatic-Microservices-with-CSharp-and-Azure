@@ -5,42 +5,40 @@ using Microsoft.Extensions.Configuration;
 
 var builder = DistributedApplication.CreateBuilder(args);
 
-#pragma warning disable ASPIREAZURE001
-#pragma warning disable ASPIREPUBLISHERS001
-#pragma warning disable ASPIRECOSMOSDB001
-
-if (builder.ExecutionContext.PublisherName == "azure" ||
-    builder.ExecutionContext.IsInspectMode)
-{
-    builder.AddAzurePublisher();
-}
-
-if (builder.ExecutionContext.PublisherName == "docker-compose" ||
-    builder.ExecutionContext.IsInspectMode)
-{
-    builder.AddDockerComposePublisher();
-}
-
-if (builder.ExecutionContext.PublisherName == "kubernetes" ||
-    builder.ExecutionContext.IsInspectMode)
-{
-    builder.AddKubernetesPublisher("k8s-envr");
-}
-
 // open appsettings.json and appsettings.Development.json to set the DataStore value
 
 CodebreakerSettings settings = new();
 builder.Configuration.GetSection("CodebreakerSettings").Bind(settings);
 
+// this is new in this chapter, using Azure App Configuration and Azure Key Vault
+var appConfig = builder.AddAzureAppConfiguration("codebreakerconfig")
+    .WithParameter("sku", "Standard");
+
+var keyVault = builder.AddAzureKeyVault("codebreakervault");
+
+var initAppConfig = builder.AddProject<Projects.Codebreaker_InitalizeAppConfig>("initappconfig")
+    .WithReference(appConfig)
+    .WaitFor(appConfig);
+
+builder.AddProject<Projects.ConfigurationPrototype>("configurationprototype")
+    .WithReference(appConfig)
+    .WithReference(keyVault)
+    .WaitForCompletion(initAppConfig);
+
 var gameApis = builder.AddProject<Projects.Codebreaker_GameAPIs>(GamesAPIs)
-    .WithHttpsHealthCheck("/health")
+    .WithHttpHealthCheck("/health")
     .WithEnvironment(EnvVarNames.DataStore, settings.DataStore.ToString())
-    .WithExternalHttpEndpoints();
+    .WithExternalHttpEndpoints()
+    .WithReference(appConfig)
+    .WaitForCompletion(initAppConfig);
 
 builder.AddProject<Projects.CodeBreaker_Bot>(Bot)
     .WithExternalHttpEndpoints()
     .WithReference(gameApis)
-    .WaitFor(gameApis);
+    .WithReference(appConfig)
+    .WaitFor(gameApis)
+    .WaitFor(appConfig)
+    .WaitForCompletion(initAppConfig);
 
 var ConfigureSqlServer = () => {
     var sqlDB = builder.AddSqlServer(SqlResourceName)
@@ -70,6 +68,7 @@ var ConfigureCosmos = () =>
     }
     else if (settings.UseEmulator == EmulatorOption.PreferDocker)
     {
+#pragma warning disable ASPIRECOSMOSDB001 // Using the preview Cosmos DB Emulator in a container
         // Cosmos emulator running in a Docker container
         // https://learn.microsoft.com/en-us/azure/cosmos-db/emulator-linux
         cosmos = builder.AddAzureCosmosDB(CosmosResourceName)
@@ -77,6 +76,7 @@ var ConfigureCosmos = () =>
                 p.WithDataExplorer()
                 .WithDataVolume(CosmosDataVolume)
                 .WithLifetime(ContainerLifetime.Session));
+#pragma warning restore ASPIRECOSMOSDB001 
     }
     else
     {
@@ -121,7 +121,7 @@ var ConfigurePostgres = () =>
 switch (settings.DataStore)
 {
     case DataStoreType.InMemory:
-        // no action needed, in-memory is default
+        // no action needed, in-memory is the default
         break;
     case DataStoreType.SqlServer:
         ConfigureSqlServer();
@@ -137,7 +137,3 @@ switch (settings.DataStore)
 }
 
 builder.Build().Run();
-
-#pragma warning restore ASPIREAZURE001
-#pragma warning restore ASPIREPUBLISHERS001
-#pragma warning restore ASPIRECOSMOSDB001

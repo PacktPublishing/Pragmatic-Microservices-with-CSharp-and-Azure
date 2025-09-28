@@ -20,7 +20,7 @@ public static class ApplicationServices
         }
         else  // Azure
         {
-            builder.AddKeyedAzureBlobClient("checkpoints-ranking");
+            builder.AddKeyedAzureBlobServiceClient("checkpoints-ranking");
 
             builder.AddAzureEventProcessorClient("events", settings =>
             {

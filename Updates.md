@@ -29,7 +29,7 @@ All other project references are triggered to create manifest code for strongly-
     <ProjectReference Include="..\Codebreaker.ServiceDefaults\Codebreaker.ServiceDefaults.csproj" IsAspireProjectResource="false" />
 ```
 
-## .NET Aspire 9.0 - 9.3 Updates
+## .NET Aspire 9.0 - 9.4 Updates
 
 ### Chapter 1, Introduction to .NET Aspire and Microservices
 
@@ -247,27 +247,24 @@ var sqlDB = builder.AddSqlServer(SqlResourceName)
 
 #### Extension - Using Docker Compose with .NET Aspire
 
-This is a new feature (currently in preview with .NET Aspire 9.2) to use Docker Compose with .NET Aspire!
+This is a new feature available since .NET Aspire 9.3):
 
-This is in the additional TODO in the `StarterAspire` folder (`Codebreaker.AppHost\Program.cs`):
-
-```csharp
-// TODO 6: see updates.md file to publish as Docker Compose
-```
-
-And this needs to be done (see the `FinalAspire` folder - `Codebreaker.AppHost\Program.cs`):
+After adding the NuGet package `Aspire.Hosting.Docker` (currently in preview with .NET Aspire 9.4), you can use the `AddDockerComposePublisher` method to publish the application as a Docker Compose file:
 
 ```csharp
-builder.AddDockerComposePublisher();
+var builder = DistributedApplication.CreateBuilder(args);
+
+builder.AddDockerComposeEnvironment("docker-compose");
 ```
 
-Now use the .NET Aspire CLI to create the Docker Compose file:
+With this, you can use the `aspire publish` command to create the Docker Compose file.
 
-```bash
-cd Codebreaker.AppHost
-aspire publish
-docker compose up -d
-```
+### Chapter 6 - Microsoft Azure for Hosting Applications
+
+With .NET Aspire 9.4 and preview libraries, you can use and configure environments, e.g. `builder.AddAzureContainerAppEnvironment`.
+Expected with a future version the Aspire CLI can be used to deploy this environment (see `aspire deploy`).
+
+Currently, use the Azure Developer CLI (`azd`) as described in the book to deploy the application to Azure Container Apps.
 
 ### Chapter 8 - CI/CD - Publishing with GitHub Actions
 

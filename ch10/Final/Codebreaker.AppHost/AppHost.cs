@@ -3,15 +3,13 @@ using static Codebreaker.ServiceDefaults.ServiceNames;
 
 using Microsoft.Extensions.Configuration;
 
-#pragma warning disable ASPIRECOSMOSDB001
-
 var builder = DistributedApplication.CreateBuilder(args);
 
 CodebreakerSettings settings = new();
 builder.Configuration.GetSection("CodebreakerSettings").Bind(settings);
 
 var gameApis = builder.AddProject<Projects.Codebreaker_GameAPIs>(GamesAPIs)
-    .WithHttpsHealthCheck("/health")
+    .WithHttpHealthCheck("/health")
     .WithEnvironment(EnvVarNames.DataStore, settings.DataStore.ToString())
     .WithEnvironment(EnvVarNames.StartupMode, settings.StartupMode.ToString())
     .WithExternalHttpEndpoints();
@@ -44,6 +42,7 @@ var ConfigureCosmos = () =>
     }
     else if (settings.UseEmulator == EmulatorOption.PreferDocker)
     {
+#pragma warning disable ASPIRECOSMOSDB001
         // Cosmos emulator running in a Docker container
         // https://learn.microsoft.com/en-us/azure/cosmos-db/emulator-linux
         cosmos = builder.AddAzureCosmosDB(CosmosResourceName)
@@ -51,6 +50,7 @@ var ConfigureCosmos = () =>
                 p.WithDataExplorer()
                 .WithDataVolume(CosmosDataVolume)
                 .WithLifetime(ContainerLifetime.Session));
+#pragma warning restore ASPIRECOSMOSDB001
     }
     else
     {

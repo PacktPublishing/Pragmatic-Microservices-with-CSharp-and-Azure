@@ -3,42 +3,23 @@ using static Codebreaker.ServiceDefaults.ServiceNames;
 
 using Microsoft.Extensions.Configuration;
 
+#pragma warning disable ASPIRECOSMOSDB001 // Use Azure Cosmos DB emulator
+
 var builder = DistributedApplication.CreateBuilder(args);
 
 // open appsettings.json and appsettings.Development.json to set the DataStore value
-
 CodebreakerSettings settings = new();
 builder.Configuration.GetSection("CodebreakerSettings").Bind(settings);
 
-// this is new in this chapter, using Azure App Configuration and Azure Key Vault
-var appConfig = builder.AddAzureAppConfiguration("codebreakerconfig")
-    .WithParameter("sku", "Standard");
-
-var keyVault = builder.AddAzureKeyVault("codebreakervault");
-
-var initAppConfig = builder.AddProject<Projects.Codebreaker_InitalizeAppConfig>("initappconfig")
-    .WithReference(appConfig)
-    .WaitFor(appConfig);
-
-builder.AddProject<Projects.ConfigurationPrototype>("configurationprototype")
-    .WithReference(appConfig)
-    .WithReference(keyVault)
-    .WaitForCompletion(initAppConfig);
-
 var gameApis = builder.AddProject<Projects.Codebreaker_GameAPIs>(GamesAPIs)
-    .WithHttpsHealthCheck("/health")
+    .WithHttpHealthCheck("/health")
     .WithEnvironment(EnvVarNames.DataStore, settings.DataStore.ToString())
-    .WithExternalHttpEndpoints()
-    .WithReference(appConfig)
-    .WaitForCompletion(initAppConfig);
+    .WithExternalHttpEndpoints();
 
 builder.AddProject<Projects.CodeBreaker_Bot>(Bot)
     .WithExternalHttpEndpoints()
     .WithReference(gameApis)
-    .WithReference(appConfig)
-    .WaitFor(gameApis)
-    .WaitFor(appConfig)
-    .WaitForCompletion(initAppConfig);
+    .WaitFor(gameApis);
 
 var ConfigureSqlServer = () => {
     var sqlDB = builder.AddSqlServer(SqlResourceName)
@@ -119,7 +100,7 @@ var ConfigurePostgres = () =>
 switch (settings.DataStore)
 {
     case DataStoreType.InMemory:
-        // no action needed, in-memory is the default
+        // no action needed, in-memory is default
         break;
     case DataStoreType.SqlServer:
         ConfigureSqlServer();
