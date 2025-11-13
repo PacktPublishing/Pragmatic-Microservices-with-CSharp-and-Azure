@@ -15,6 +15,5 @@ public static class LiveGamesEndpoints
         })
         .WithName("ReportGameEnded")
         .WithSummary("Report game ended to notify connected clients")
-        .WithOpenApi();
     }
 }
