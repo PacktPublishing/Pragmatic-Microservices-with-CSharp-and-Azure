@@ -14,10 +14,10 @@ public static class OpenTelemetryCollectorResourceBuilderExtensions
     {
         builder.AddOpenTelemetryCollectorInfrastructure();
 
-        string url = builder.Configuration[DashboardOtlpUrlVariableName] ?? DashboardOtlpUrlDefaultValue;
-        bool isHttpsEnabled = url.StartsWith("https", StringComparison.OrdinalIgnoreCase);
+        var url = builder.Configuration[DashboardOtlpUrlVariableName] ?? DashboardOtlpUrlDefaultValue;
+        var isHttpsEnabled = url.StartsWith("https", StringComparison.OrdinalIgnoreCase);
 
-        HostUrl dashboardOtlpEndpoint = new(url);
+        var dashboardOtlpEndpoint = new HostUrl(url);
 
         var resource = new OpenTelemetryCollectorResource(name);
         var resourceBuilder = builder.AddResource(resource)
@@ -33,9 +33,11 @@ public static class OpenTelemetryCollectorResourceBuilderExtensions
         {
             DevCertHostingExtensions.RunWithHttpsDevCertificate(resourceBuilder, "HTTPS_CERT_FILE", "HTTPS_CERT_KEY_FILE", (_, __) =>
             {
+                // Set TLS details using YAML path via the command line. This allows the values to be added to the existing config file.
+                // Setting the values in the config file doesn't work because adding the "tls" section always enables TLS, even if there is no cert provided.
                 resourceBuilder.WithArgs(
-                    @"--config=yaml:receivers::otlp::protocols::grpc::tls::cert_file: \"dev-certs/dev-cert.pem\"",
-                    @"--config=yaml:receivers::otlp::protocols::grpc::tls::key_file: \"dev-certs/dev-cert.key\"",
+                    @"--config=yaml:receivers::otlp::protocols::grpc::tls::cert_file: ""dev-certs/dev-cert.pem""",
+                    @"--config=yaml:receivers::otlp::protocols::grpc::tls::key_file: ""dev-certs/dev-cert.key""",
                     @"--config=/etc/otelcol-contrib/config.yaml");
             });
         }

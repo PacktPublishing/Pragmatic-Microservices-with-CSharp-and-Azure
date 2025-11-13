@@ -12,7 +12,7 @@ CodebreakerSettings settings = new();
 builder.Configuration.GetSection("CodebreakerSettings").Bind(settings);
 
 var gameApis = builder.AddProject<Projects.Codebreaker_GameAPIs>(GamesAPIs)
-    .WithHttpsHealthCheck("/health")
+    .WithHttpHealthCheck("/health")
     .WithEnvironment(EnvVarNames.DataStore, settings.DataStore.ToString())
     .WithEnvironment(EnvVarNames.TelemetryMode, settings.Telemetry.ToString())
     .WithEnvironment(EnvVarNames.Caching, settings.Caching.ToString())
@@ -20,7 +20,7 @@ var gameApis = builder.AddProject<Projects.Codebreaker_GameAPIs>(GamesAPIs)
     .WithExternalHttpEndpoints();
 
 var bot = builder.AddProject<Projects.CodeBreaker_Bot>(Bot)
-     .WithHttpsHealthCheck("/health")
+    .WithHttpHealthCheck("/health")
     .WithExternalHttpEndpoints()
     .WithReference(gameApis)
     .WithEnvironment(EnvVarNames.TelemetryMode, settings.Telemetry.ToString())
@@ -29,7 +29,7 @@ var bot = builder.AddProject<Projects.CodeBreaker_Bot>(Bot)
 if (settings.LiveGameMonitoring == LiveGameMonitoringType.SignalR || settings.LiveGameMonitoring == LiveGameMonitoringType.SignalRWithAzure)
 {
     var live = builder.AddProject<Projects.Codebreaker_Live>(LiveGameMonitoring)
-        .WithHttpsHealthCheck("/health")
+        .WithHttpHealthCheck("/health")
         .WithExternalHttpEndpoints()
         .WithEnvironment(EnvVarNames.LiveGameMonitoring, settings.LiveGameMonitoring.ToString())
         .WithEnvironment(EnvVarNames.TelemetryMode, settings.Telemetry.ToString());
