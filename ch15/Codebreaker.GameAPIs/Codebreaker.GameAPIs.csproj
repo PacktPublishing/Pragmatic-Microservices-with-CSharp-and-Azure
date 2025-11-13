@@ -25,10 +25,6 @@
 		<PackageReference Include="Aspire.Azure.Storage.Blobs" />
 		<PackageReference Include="Aspire.Azure.Storage.Queues" />
 		<PackageReference Include="Aspire.Confluent.Kafka" />
-		<PackageReference Include="Aspire.Hosting.AppHost" />
-		<PackageReference Include="Aspire.Hosting.Azure" />
-		<PackageReference Include="Aspire.Hosting.Azure.AppConfiguration" />
-		<PackageReference Include="Aspire.Hosting.Kafka" />
 		<PackageReference Include="Aspire.StackExchange.Redis.DistributedCaching" />
 		<PackageReference Include="Aspire.Microsoft.EntityFrameworkCore.SqlServer" />
 		<PackageReference Include="Aspire.Microsoft.EntityFrameworkCore.Cosmos" />
