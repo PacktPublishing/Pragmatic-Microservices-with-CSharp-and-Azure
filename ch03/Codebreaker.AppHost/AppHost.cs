@@ -31,7 +31,4 @@ switch (settings.DataStore)
         throw new NotSupportedException($"DataStore {settings.DataStore} is not supported.");
 }
 
-
-
-
 builder.Build().Run();
