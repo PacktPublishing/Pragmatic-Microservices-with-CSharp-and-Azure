@@ -43,6 +43,10 @@ public class GamesServiceTests
         _gamesRepositoryMock.Setup(repo => repo.GetGameAsync(_endedGameId, CancellationToken.None)).ReturnsAsync(_endedGame);
         _gamesRepositoryMock.Setup(repo => repo.GetGameAsync(_running6x4GameId, CancellationToken.None)).ReturnsAsync(_running6x4Game);
         _gamesRepositoryMock.Setup(repo => repo.AddMoveAsync(_running6x4Game, It.IsAny<Move>(), CancellationToken.None));
+        
+        // Setup the distributed cache mock to return null (cache miss) so the service falls back to the repository
+        _distributedCacheMock.Setup(cache => cache.GetAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync((byte[]?)null);
     }
 
     //[Fact]

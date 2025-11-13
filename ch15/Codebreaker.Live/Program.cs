@@ -1,7 +1,6 @@
 using Codebreaker.Live;
 
-using Microsoft.OpenApi.Any;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,15 +18,7 @@ builder.AddServiceDefaults();
 builder.AddApplicationServices();
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(options =>
-{
-    // work-around with Swashbuckle: https://github.com/domaindrivendev/Swashbuckle.AspNetCore/issues/2505
-    options.MapType<TimeSpan>(() => new OpenApiSchema
-    {
-        Type = "string",
-        Example = new OpenApiString("00:00:00")
-    });
-});
+builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
