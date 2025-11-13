@@ -33,9 +33,11 @@ public static class OpenTelemetryCollectorResourceBuilderExtensions
         {
             DevCertHostingExtensions.RunWithHttpsDevCertificate(resourceBuilder, "HTTPS_CERT_FILE", "HTTPS_CERT_KEY_FILE", (_, __) =>
             {
+                // Set TLS details using YAML path via the command line. This allows the values to be added to the existing config file.
+                // Setting the values in the config file doesn't work because adding the "tls" section always enables TLS, even if there is no cert provided.
                 resourceBuilder.WithArgs(
-                    @"--config=yaml:receivers::otlp::protocols::grpc::tls::cert_file: \"dev-certs/dev-cert.pem\"",
-                    @"--config=yaml:receivers::otlp::protocols::grpc::tls::key_file: \"dev-certs/dev-cert.key\"",
+                    @"--config=yaml:receivers::otlp::protocols::grpc::tls::cert_file: ""dev-certs/dev-cert.pem""",
+                    @"--config=yaml:receivers::otlp::protocols::grpc::tls::key_file: ""dev-certs/dev-cert.key""",
                     @"--config=/etc/otelcol-contrib/config.yaml");
             });
         }
