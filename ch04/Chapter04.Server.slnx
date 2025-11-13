@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="../Directory.Packages.props" />
+    <File Path="gamesapi-swagger.json" />
+    <File Path="Readme.md" />
+  </Folder>
+  <Project Path="server/Codebreaker.AppHost/Codebreaker.AppHost.csproj" />
+  <Project Path="server/Codebreaker.GameAPIs/Codebreaker.GameAPIs.csproj" />
+  <Project Path="server/Codebreaker.ServiceDefaults/Codebreaker.ServiceDefaults.csproj" />
+</Solution>

@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="../Directory.Packages.props" />
+    <File Path="gamesapi-swagger.json" />
+  </Folder>
+  <Project Path="client/Codebreaker.Console/Codebreaker.Console.csproj" />
+  <Project Path="client/Codebreaker.GameAPIs.Client/Codebreaker.GameAPIs.Client.csproj" />
+  <Project Path="client/Codebreaker.GameApis.KiotaClient/Codebreaker.GameApis.KiotaClient.csproj" />
+  <Project Path="client/Codebreaker.KiotaConsole/Codebreaker.KiotaConsole.csproj" />
+</Solution>

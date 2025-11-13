@@ -85,8 +85,8 @@
     <PackageVersion Include="Microsoft.Extensions.Configuration.Binder" Version="9.0.9" />
     <PackageVersion Include="Microsoft.Extensions.Configuration.Json" Version="9.0.9" />
     <PackageVersion Include="Microsoft.Extensions.Diagnostics.Testing" Version="9.9.0" />
-    <PackageVersion Include="Microsoft.Extensions.Hosting" Version="9.0.9" />
-    <PackageVersion Include="Microsoft.Extensions.Http" Version="9.0.9" />
+    <PackageVersion Include="Microsoft.Extensions.Hosting" Version="10.0.0" />
+    <PackageVersion Include="Microsoft.Extensions.Http" Version="10.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Http.Resilience" Version="10.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Localization" Version="9.0.9" />
     <PackageVersion Include="Microsoft.Extensions.ServiceDiscovery" Version="10.0.0" />
@@ -95,11 +95,11 @@
     <PackageVersion Include="Microsoft.Identity.Web.UI" Version="3.14.1" />
     <PackageVersion Include="Microsoft.Identity.Web" Version="3.14.1" />
     <PackageVersion Include="Microsoft.Identity.Web.DownstreamApi" Version="3.14.1" />
-    <PackageVersion Include="Microsoft.Kiota.Http.HttpClientLibrary" Version="1.20.0" />
-    <PackageVersion Include="Microsoft.Kiota.Serialization.Form" Version="1.20.0" />
-    <PackageVersion Include="Microsoft.Kiota.Serialization.Json" Version="1.20.0" />
-    <PackageVersion Include="Microsoft.Kiota.Serialization.Multipart" Version="1.20.0" />
-    <PackageVersion Include="Microsoft.Kiota.Serialization.Text" Version="1.20.0" />
+    <PackageVersion Include="Microsoft.Kiota.Http.HttpClientLibrary" Version="1.21.0" />
+    <PackageVersion Include="Microsoft.Kiota.Serialization.Form" Version="1.21.0" />
+    <PackageVersion Include="Microsoft.Kiota.Serialization.Json" Version="1.21.0" />
+    <PackageVersion Include="Microsoft.Kiota.Serialization.Multipart" Version="1.21.0" />
+    <PackageVersion Include="Microsoft.Kiota.Serialization.Text" Version="1.21.0" />
     <PackageVersion Include="Microsoft.Playwright" Version="1.55.0" />
     <PackageVersion Include="Microsoft.Playwright.NUnit" Version="1.55.0" />
     <PackageVersion Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.22.1" />
@@ -118,7 +118,7 @@
     <PackageVersion Include="OpenTelemetry.Instrumentation.GrpcNetClient" Version="1.12.0-beta.1" />
     <PackageVersion Include="OpenTelemetry.Instrumentation.Http" Version="1.14.0" />
     <PackageVersion Include="OpenTelemetry.Instrumentation.Runtime" Version="1.14.0" />
-    <PackageVersion Include="Spectre.Console.Cli" Version="0.51.1" />
+    <PackageVersion Include="Spectre.Console.Cli" Version="0.53.0" />
     <PackageVersion Include="Swashbuckle.AspNetCore" Version="10.0.1" />
     <PackageVersion Include="Swashbuckle.AspNetCore.Annotations" Version="10.0.1" />
     <PackageVersion Include="xunit" Version="2.9.3" />
