@@ -14,18 +14,15 @@
 	<ItemGroup>
 		<PackageReference Include="Aspire.Microsoft.EntityFrameworkCore.Cosmos" />
 		<PackageReference Include="Aspire.Microsoft.EntityFrameworkCore.SqlServer" />
-		<PackageReference Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" />
 		<PackageReference Include="CNinnovation.Codebreaker.Analyzers" />
 		<PackageReference Include="CNinnovation.Codebreaker.BackendModels" />
 		<PackageReference Include="CNinnovation.Codebreaker.Cosmos" />
-		<PackageReference Include="CNinnovation.Codebreaker.Postgres" />
 		<PackageReference Include="CNinnovation.Codebreaker.SqlServer" />
 		<PackageReference Include="Microsoft.AspNetCore.OpenApi" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Design">
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="Npgsql.Json.NET" />
 		<PackageReference Include="Swashbuckle.AspNetCore" />
 		<PackageReference Include="Swashbuckle.AspNetCore.Annotations" />
 	</ItemGroup>
