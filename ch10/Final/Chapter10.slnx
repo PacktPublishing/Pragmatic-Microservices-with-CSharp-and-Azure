@@ -1,0 +1,21 @@
+<Solution>
+  <Folder Name="/Analyzers/">
+    <Project Path="Codebreaker.GameAPIs.Analyzers.Tests/Codebreaker.Analyzers.Tests.csproj" />
+    <Project Path="Codebreaker.GameAPIs.Analyzers/Codebreaker.Analyzers.csproj" />
+  </Folder>
+  <Folder Name="/Bot/">
+    <Project Path="CodeBreaker.Bot.Tests/CodeBreaker.Bot.Tests.csproj" />
+    <Project Path="CodeBreaker.Bot/CodeBreaker.Bot.csproj" />
+  </Folder>
+  <Folder Name="/GameAPIs/">
+    <Project Path="Codebreaker.GameAPIs.Playwright/Codebreaker.GameAPIs.Playwright.csproj" />
+    <Project Path="Codebreaker.GameAPIs.Tests/Codebreaker.GameAPIs.Tests.csproj" />
+    <Project Path="Codebreaker.GameAPIs/Codebreaker.GameAPIs.csproj" />
+  </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path="../../Directory.Packages.props" />
+  </Folder>
+  <Project Path="Codebreaker.AppHost/Codebreaker.AppHost.csproj" />
+  <Project Path="Codebreaker.IntegrationTests/Codebreaker.IntegrationTests.csproj" />
+  <Project Path="Codebreaker.ServiceDefaults/Codebreaker.ServiceDefaults.csproj" />
+</Solution>
