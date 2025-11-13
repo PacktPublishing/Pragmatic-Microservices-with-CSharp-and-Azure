@@ -31,14 +31,11 @@ public static class BotEndpoints
         .WithName("CreateBot")
         .WithSummary("Starts a bot playing one or more games")
         .AddOpenApiOperationTransformer((operation, context, ct) =>
-
         {
             operation.Parameters?[0].Description = "The number of games to play.";
             operation.Parameters?[1].Description = "The delay between the games (seconds).";
             operation.Parameters?[2].Description = "The think time between game moves (seconds).";
-
             return Task.CompletedTask;
-
         });
 
         group.MapGet("/session", () =>
@@ -71,12 +68,9 @@ public static class BotEndpoints
         .WithName("GetSession")
         .WithSummary("Gets the status of a bot")
         .AddOpenApiOperationTransformer((operation, context, ct) =>
-
         {
             operation.Parameters?[0].Description = "The id of the bot";
-
             return Task.CompletedTask;
-
         });
 
         group.MapDelete("/session/{id}", Results<NoContent, NotFound, BadRequest<string>> (Guid id) =>
@@ -99,12 +93,9 @@ public static class BotEndpoints
         .WithName("StopBot")
         .WithSummary("Stops the bot with the given id")
         .AddOpenApiOperationTransformer((operation, context, ct) =>
-
         {
             operation.Parameters?[0].Description = "The id of the bot";
-
             return Task.CompletedTask;
-
         });
     }
 }

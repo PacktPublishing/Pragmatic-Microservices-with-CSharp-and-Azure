@@ -137,7 +137,7 @@ public static class GameEndpoints
                 .WithName("GetGames")
                 .WithSummary("Get games based on query parameters")
                 .AddOpenApiOperationTransformer((operation, context, ct) =>
-                {
+        {
                     operation.Parameters?[0].Description = "The game type to filter by";
                     operation.Parameters?[1].Description = "The player name to filter by";
                     operation.Parameters?[2].Description = "The date to filter by";
