@@ -18,11 +18,20 @@ public enum EmulatorOption
     UseAzure
 }
 
+public enum ComputeEnvironment
+{
+    Local,
+    AzureAppService,
+    AzureContainerApps,
+}
+
 public class CodebreakerSettings
 {
     public DataStoreType DataStore { get; set; } = DataStoreType.InMemory;
 
     public EmulatorOption UseEmulator { get; set; } = EmulatorOption.PreferDocker;
+
+    public ComputeEnvironment ComputeEnvironment { get; set; } = ComputeEnvironment.Local;
 }
 
 public static class ConfigurationExtensions

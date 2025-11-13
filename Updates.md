@@ -217,7 +217,7 @@ cosmos = builder.AddAzureCosmosDB("codebreakercosmos")
     .WithLifetime(ContainerLifetime.Session));
 ```
 
-Aspire .NET 9.1 allows creating the Cosmos container - using `AddCosmosDatabase` and `AddContainer` instead of `AddDatabase`.
+Since Aspire .NET 9.1, the a container in the Azure Cosmos database can be created with  `AddCosmosDatabase` and `AddContainer` instead of `AddDatabase`.
 
 ```csharp
 // Codebreaker.AppHost/Program.cs
@@ -248,12 +248,12 @@ gameApis
 
 ### Chapter 5, Containerization of Microservices
 
-Because of the change to use *Central Package Management (CPM)*, the `Dockerfile` changed to copy the file `Directory.Packages.props` for a build.
+Because of the change to use *Central Package Management (CPM)*, the `Dockerfile` was changed to copy the file `Directory.Packages.props` for a successful build.
 
 #### Page 132, Codebreaker.GameAPIs/Dockerfile
 
 ```Dockerfile
-FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["Directory.Packages.props", "."]
@@ -300,10 +300,33 @@ With this, you can use the `aspire publish` command to create the Docker Compose
 
 ### Chapter 6 - Microsoft Azure for Hosting Applications
 
-With .NET Aspire 9.4 and preview libraries, you can use and configure environments, e.g. `builder.AddAzureContainerAppEnvironment`.
-Expected with a future version the Aspire CLI can be used to deploy this environment (see `aspire deploy`).
+With the release of Aspire 13, deployment can be done to **Azure App Services**. When you configure the `appsettings.json` file of the AppHost project, you can specify the deployment target:
 
-Currently, use the Azure Developer CLI (`azd`) as described in the book to deploy the application to Azure Container Apps.
+```json
+    "CodebreakerSettings": {
+        // change this to Local when running in local development environment
+        // change this to AzureContainerApps when running in Azure Container Apps
+        // change this to AzureAppService when running in Azure App Service
+        "ComputeEnvironment": "AzureAppService"
+    }
+```
+
+In the AppHost.cs, this is added for deployment to Azure App Services or Azure Container Apps:
+
+```csharp
+if (settings.ComputeEnvironment == ComputeEnvironment.AzureAppService)
+{
+    var appServices = builder.AddAzureAppServiceEnvironment("codebreaker-appservice-env");
+}
+else if (settings.ComputeEnvironment == ComputeEnvironment.AzureContainerApps)
+{
+    var containerApps = builder.AddAzureContainerAppEnvironment("codebreaker-containerapps-env");
+}
+```
+
+When you use `aspire deploy` locally, the application is deployed to the selected environment!
+
+The functionality previously described with `azd` can now be done with the Aspire CLI tool.
 
 ### Chapter 8 - CI/CD - Publishing with GitHub Actions
 

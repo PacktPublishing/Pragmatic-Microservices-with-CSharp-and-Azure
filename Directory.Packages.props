@@ -5,6 +5,8 @@
     <NoWarn>$(NoWarn);NU1507</NoWarn>
   </PropertyGroup>
   <ItemGroup>
+    <PackageVersion Include="Aspire.Hosting.Azure.AppContainers" Version="13.0.0" />
+    <PackageVersion Include="Aspire.Hosting.Azure.AppService" Version="13.0.0-preview.1.25560.3" />
     <PackageVersion Include="Aspire.Hosting.Docker" Version="13.0.0-preview.1.25560.3" />
     <PackageVersion Include="Aspire.Hosting.Garnet" Version="13.0.0" />
     <PackageVersion Include="Aspire.Hosting.Keycloak" Version="9.2.1-preview.1.25222.1" />
