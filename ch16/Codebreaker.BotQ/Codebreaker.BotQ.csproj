@@ -9,10 +9,6 @@
  
   <ItemGroup>
 	<PackageReference Include="Aspire.Azure.Storage.Queues" />
-	<PackageReference Include="Aspire.Hosting.AppHost" />
-	<PackageReference Include="Aspire.Hosting.Azure" />
-	<PackageReference Include="Aspire.Hosting.Azure.AppConfiguration" />
-	<PackageReference Include="Aspire.Hosting.Kafka" />
 	<PackageReference Include="Aspire.StackExchange.Redis.DistributedCaching" />
 	<PackageReference Include="CNinnovation.Codebreaker.GamesClient" />
 	<PackageReference Include="Google.Protobuf" />
