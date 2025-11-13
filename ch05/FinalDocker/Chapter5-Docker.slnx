@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="../../Directory.Packages.props" />
+    <File Path="../Readme.md" />
+    <File Path="gameapis.env" />
+  </Folder>
+  <Project Path="CodeBreaker.Bot/CodeBreaker.Bot.csproj" />
+  <Project Path="Codebreaker.GameAPIs/Codebreaker.GameAPIs.csproj" />
+</Solution>

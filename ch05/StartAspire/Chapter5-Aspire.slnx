@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="Codebreaker.AppHost/Codebreaker.AppHost.csproj" />
+  <Project Path="CodeBreaker.Bot.Tests/CodeBreaker.Bot.Tests.csproj" />
+  <Project Path="CodeBreaker.Bot/CodeBreaker.Bot.csproj" />
+  <Project Path="Codebreaker.GameAPIs/Codebreaker.GameAPIs.csproj" />
+  <Project Path="Codebreaker.ServiceDefaults/Codebreaker.ServiceDefaults.csproj" />
+</Solution>
