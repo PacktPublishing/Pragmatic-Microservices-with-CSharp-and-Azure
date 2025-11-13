@@ -16,7 +16,6 @@
     <PackageVersion Include="Aspire.Azure.Storage.Blobs" Version="13.0.0" />
     <PackageVersion Include="Aspire.Azure.Storage.Queues" Version="13.0.0" />
     <PackageVersion Include="Aspire.Confluent.Kafka" Version="13.0.0" />
-    <PackageVersion Include="Aspire.Hosting.AppHost" Version="13.0.0" />
     <PackageVersion Include="Aspire.Hosting.Azure" Version="13.0.0" />
     <PackageVersion Include="Aspire.Hosting.Azure.AppConfiguration" Version="13.0.0" />
     <PackageVersion Include="Aspire.Hosting.Azure.ApplicationInsights" Version="13.0.0" />
@@ -68,14 +67,14 @@
     <PackageVersion Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.9" />
     <PackageVersion Include="Microsoft.AspNetCore.SignalR.Client" Version="9.0.9" />
     <PackageVersion Include="Microsoft.AspNetCore.SignalR.Protocols.MessagePack" Version="9.0.9" />
-    <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="9.0.9" />
+    <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="10.0.0" />
     <PackageVersion Include="Microsoft.Authentication.WebAssembly.Msal" Version="9.0.9" />
     <PackageVersion Include="Microsoft.Azure.AppConfiguration.AspNetCore" Version="8.4.0" />
     <PackageVersion Include="Microsoft.Azure.Cosmos" Version="3.53.1" />
     <PackageVersion Include="Microsoft.Azure.SignalR" Version="1.32.0" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Cosmos" Version="9.0.9" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.9" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.0" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.9" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.9" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.9" />
@@ -88,9 +87,9 @@
     <PackageVersion Include="Microsoft.Extensions.Diagnostics.Testing" Version="9.9.0" />
     <PackageVersion Include="Microsoft.Extensions.Hosting" Version="9.0.9" />
     <PackageVersion Include="Microsoft.Extensions.Http" Version="9.0.9" />
-    <PackageVersion Include="Microsoft.Extensions.Http.Resilience" Version="9.9.0" />
+    <PackageVersion Include="Microsoft.Extensions.Http.Resilience" Version="10.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Localization" Version="9.0.9" />
-    <PackageVersion Include="Microsoft.Extensions.ServiceDiscovery" Version="9.5.0" />
+    <PackageVersion Include="Microsoft.Extensions.ServiceDiscovery" Version="10.0.0" />
     <PackageVersion Include="Microsoft.Extensions.ServiceDiscovery.Yarp" Version="9.5.0" />
     <PackageVersion Include="Microsoft.FeatureManagement.AspNetCore" Version="4.3.0" />
     <PackageVersion Include="Microsoft.Identity.Web.UI" Version="3.14.1" />
@@ -108,20 +107,20 @@
     <PackageVersion Include="Moq" Version="4.20.72" />
     <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
     <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL.Design" Version="1.1.0" />
-    <PackageVersion Include="Npgsql.Json.NET" Version="9.0.3" />
+    <PackageVersion Include="Npgsql.Json.NET" Version="9.0.4" />
     <PackageVersion Include="NUnit" Version="4.4.0" />
     <PackageVersion Include="NUnit.Analyzers" Version="4.10.0" />
     <PackageVersion Include="NUnit3TestAdapter" Version="5.1.0" />
-    <PackageVersion Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.12.0" />
+    <PackageVersion Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.14.0" />
     <PackageVersion Include="OpenTelemetry.Exporter.Prometheus.AspNetCore" Version="1.12.0-beta.1" />
-    <PackageVersion Include="OpenTelemetry.Extensions.Hosting" Version="1.12.0" />
-    <PackageVersion Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.12.0" />
+    <PackageVersion Include="OpenTelemetry.Extensions.Hosting" Version="1.14.0" />
+    <PackageVersion Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.14.0" />
     <PackageVersion Include="OpenTelemetry.Instrumentation.GrpcNetClient" Version="1.12.0-beta.1" />
-    <PackageVersion Include="OpenTelemetry.Instrumentation.Http" Version="1.12.0" />
-    <PackageVersion Include="OpenTelemetry.Instrumentation.Runtime" Version="1.12.0" />
+    <PackageVersion Include="OpenTelemetry.Instrumentation.Http" Version="1.14.0" />
+    <PackageVersion Include="OpenTelemetry.Instrumentation.Runtime" Version="1.13.0" />
     <PackageVersion Include="Spectre.Console.Cli" Version="0.51.1" />
-    <PackageVersion Include="Swashbuckle.AspNetCore" Version="9.0.4" />
-    <PackageVersion Include="Swashbuckle.AspNetCore.Annotations" Version="9.0.4" />
+    <PackageVersion Include="Swashbuckle.AspNetCore" Version="10.0.1" />
+    <PackageVersion Include="Swashbuckle.AspNetCore.Annotations" Version="10.0.1" />
     <PackageVersion Include="xunit" Version="2.9.3" />
     <PackageVersion Include="xunit.v3" Version="3.1.0" />
     <PackageVersion Include="xunit.runner.visualstudio" Version="3.1.5" />
