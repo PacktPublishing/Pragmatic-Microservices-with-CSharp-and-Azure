@@ -24,7 +24,7 @@ internal static class OpenTelemetryCollectorServiceExtensions
             var endpoint = collectorResource.GetEndpoint(OpenTelemetryCollectorResource.OtlpGrpcEndpointName);
             if (!endpoint.Exists)
             {
-                logger.LogWarning($"No {OpenTelemetryCollectorResource.OtlpGrpcEndpointName} endpoint for the collector.");
+                logger.LogWarning("No {OpenTelemetryEndpoint} endpoint for the collector.", OpenTelemetryCollectorResource.OtlpHttpEndpointName);
                 return;
             }
 
