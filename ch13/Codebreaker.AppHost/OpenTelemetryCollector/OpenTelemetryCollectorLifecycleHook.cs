@@ -29,8 +29,7 @@ internal sealed class OpenTelemetryCollectorLifecycleHook(ILogger<OpenTelemetryC
             {
                 if (context.EnvironmentVariables.ContainsKey(OtelExporterOtlpEndpoint))
                 {
-                    logger.LogDebug("Forwarding telemetry for {ResourceName} to the collector.", resource.Name);
-
+                    logger.LogDebug($"Forwarding telemetry for {resource.Name} to the collector.");
                     context.EnvironmentVariables[OtelExporterOtlpEndpoint] = endpoint;
                 }
             }));
