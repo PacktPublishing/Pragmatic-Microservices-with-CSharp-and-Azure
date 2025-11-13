@@ -1,0 +1,37 @@
+<Solution>
+  <Folder Name="/Bot/">
+    <Project Path="CodeBreaker.Bot.Tests/CodeBreaker.Bot.Tests.csproj" />
+    <Project Path="CodeBreaker.Bot/CodeBreaker.Bot.csproj" />
+  </Folder>
+  <Folder Name="/GamesAPI/">
+    <Project Path="Codebreaker.GameAPIs.Tests/Codebreaker.GameAPIs.Tests.csproj" />
+    <Project Path="Codebreaker.GameAPIs/Codebreaker.GameAPIs.csproj" />
+  </Folder>
+  <Folder Name="/grafana/" />
+  <Folder Name="/grafana/config/">
+    <File Path="grafana/config/grafana.ini" />
+  </Folder>
+  <Folder Name="/grafana/config/provisioning/" />
+  <Folder Name="/grafana/config/provisioning/dashboards/">
+    <File Path="grafana/config/provisioning/dashboards/default.yaml" />
+  </Folder>
+  <Folder Name="/grafana/config/provisioning/datasources/">
+    <File Path="grafana/config/provisioning/datasources/default.yaml" />
+  </Folder>
+  <Folder Name="/grafana/dashboards/">
+    <File Path="grafana/dashboards/aspnetcore-endpoint.json" />
+    <File Path="grafana/dashboards/aspnetcore.json" />
+  </Folder>
+  <Folder Name="/otelcollector/">
+    <File Path="config.yaml" />
+  </Folder>
+  <Folder Name="/prometheus/">
+    <File Path="prometheus/prometheus.yml" />
+  </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path="../Directory.Packages.props" />
+    <File Path="grafana/config/provisioning/dashboards/default.yaml" />
+  </Folder>
+  <Project Path="Codebreaker.AppHost/Codebreaker.AppHost.csproj" />
+  <Project Path="Codebreaker.ServiceDefaults/Codebreaker.ServiceDefaults.csproj" />
+</Solution>

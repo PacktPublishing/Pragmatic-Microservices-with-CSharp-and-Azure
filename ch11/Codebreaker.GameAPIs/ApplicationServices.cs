@@ -39,22 +39,22 @@ public static class ApplicationServices
             builder.EnrichSqlServerDbContext<GamesSqlServerContext>();
         }
 
-        static void ConfigurePostgres(IHostApplicationBuilder builder)
-        {
-            var connectionString = builder.Configuration.GetConnectionString(PostgresDatabaseName) ?? throw new InvalidOperationException("Could not read SQL Server connection string");
+        //static void ConfigurePostgres(IHostApplicationBuilder builder)
+        //{
+        //    var connectionString = builder.Configuration.GetConnectionString(PostgresDatabaseName) ?? throw new InvalidOperationException("Could not read SQL Server connection string");
 
-            builder.Services.AddNpgsqlDataSource(connectionString, dataSourceBuilder =>
-            {
-                dataSourceBuilder.EnableDynamicJson();
-            });
+        //    builder.Services.AddNpgsqlDataSource(connectionString, dataSourceBuilder =>
+        //    {
+        //        dataSourceBuilder.EnableDynamicJson();
+        //    });
 
-            builder.Services.AddDbContextPool<IGamesRepository, GamesPostgresContext>(options =>
-            {
-                options.UseNpgsql(connectionString);
-                options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
-            });
-            builder.EnrichNpgsqlDbContext<GamesPostgresContext>();
-        }
+        //    builder.Services.AddDbContextPool<IGamesRepository, GamesPostgresContext>(options =>
+        //    {
+        //        options.UseNpgsql(connectionString);
+        //        options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+        //    });
+        //    builder.EnrichNpgsqlDbContext<GamesPostgresContext>();
+        //}
 
         static void ConfigureCosmos(IHostApplicationBuilder builder)
         {
@@ -89,9 +89,9 @@ public static class ApplicationServices
             case DataStoreType.SqlServer:
                 ConfigureSqlServer(builder);
                 break;
-            case DataStoreType.Postgres:
-                ConfigurePostgres(builder);
-                break;
+            //case DataStoreType.Postgres:
+            //    ConfigurePostgres(builder);
+            //    break;
             default:
                 ConfigureInMemory(builder);
                 break;
@@ -123,26 +123,26 @@ public static class ApplicationServices
                 throw;
             }
         }
-        else if (dataStore == DataStoreType.Postgres)
-        {
-            try
-            {
-                using var scope = app.Services.CreateScope();
-                var repo = scope.ServiceProvider.GetRequiredService<IGamesRepository>();
-                if (repo is GamesPostgresContext context)
-                {
-                    // TODO: migrations might be done in another sprint
-                    // for now, just ensure the database is created
-                    await context.Database.EnsureCreatedAsync();
-                    app.Logger.LogInformation("PostgreSQL database created");
-                }
-            }
-            catch (Exception ex)
-            {
-                app.Logger.LogError(ex, "Error updating database");
-                throw;
-            }
-        }
+        //else if (dataStore == DataStoreType.Postgres)
+        //{
+        //    try
+        //    {
+        //        using var scope = app.Services.CreateScope();
+        //        var repo = scope.ServiceProvider.GetRequiredService<IGamesRepository>();
+        //        if (repo is GamesPostgresContext context)
+        //        {
+        //            // TODO: migrations might be done in another sprint
+        //            // for now, just ensure the database is created
+        //            await context.Database.EnsureCreatedAsync();
+        //            app.Logger.LogInformation("PostgreSQL database created");
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        app.Logger.LogError(ex, "Error updating database");
+        //        throw;
+        //    }
+        //}
         else if (dataStore == DataStoreType.Cosmos)
         {
             // with .NET Aspire 9.1 APIs, the container can be created with the app-model!
