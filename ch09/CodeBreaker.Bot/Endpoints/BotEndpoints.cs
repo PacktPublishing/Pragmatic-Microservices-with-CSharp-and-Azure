@@ -45,7 +45,8 @@ public static class BotEndpoints
             return TypedResults.Ok(results);
         })
         .WithName("GetSessions")
-        .WithSummary("Gets the statuses of all sessions")
+        .WithSummary("Gets the statuses of all sessions");
+
         group.MapGet("/session/{id}", Results<Ok<StatusInfo>, BadRequest<string>, NotFound> (Guid id) =>
         {
             StatusInfo result;
