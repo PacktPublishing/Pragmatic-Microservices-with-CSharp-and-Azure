@@ -1,10 +1,11 @@
-using Codebreaker.ServiceDefaults;
 using Codebreaker.AppHost.Extensions;
-using static Codebreaker.ServiceDefaults.ServiceNames;
+using Codebreaker.ServiceDefaults;
+
+using MetricsApp.AppHost.OpenTelemetryCollector;
 
 using Microsoft.Extensions.Configuration;
-using MetricsApp.AppHost.OpenTelemetryCollector;
-using Microsoft.AspNetCore.DataProtection.KeyManagement.Internal;
+
+using static Codebreaker.ServiceDefaults.ServiceNames;
 
 var builder = DistributedApplication.CreateBuilder(args);
 
@@ -12,14 +13,14 @@ CodebreakerSettings settings = new();
 builder.Configuration.GetSection("CodebreakerSettings").Bind(settings);
 
 var gameApis = builder.AddProject<Projects.Codebreaker_GameAPIs>(GamesAPIs)
-    .WithHttpsHealthCheck("/health")
+    .WithHttpHealthCheck("/health")
     .WithEnvironment(EnvVarNames.DataStore, settings.DataStore.ToString())
     .WithEnvironment(EnvVarNames.TelemetryMode, settings.Telemetry.ToString())
     .WithEnvironment(EnvVarNames.Caching, settings.Caching.ToString())
     .WithExternalHttpEndpoints();
 
 var bot = builder.AddProject<Projects.CodeBreaker_Bot>(Bot)
-     .WithHttpsHealthCheck("/health")
+    .WithHttpHealthCheck("/health")
     .WithExternalHttpEndpoints()
     .WithReference(gameApis)
     .WithEnvironment(EnvVarNames.TelemetryMode, settings.Telemetry.ToString())
@@ -92,11 +93,11 @@ switch (settings.Caching)
         gameApis.WithReference(valkey)
             .WaitFor(valkey);
         break;
-    //case CachingType.Garnet:
-    //    var garnet = builder.AddGarnet("garnet");
-    //    gameApis.WithReference(garnet)
-    //        .WaitFor(garnet);
-    //    break;
+        //case CachingType.Garnet:
+        //    var garnet = builder.AddGarnet("garnet");
+        //    gameApis.WithReference(garnet)
+        //        .WaitFor(garnet);
+        //    break;
 }
 
 builder.Build().Run();

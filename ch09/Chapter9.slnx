@@ -1,0 +1,22 @@
+<Solution>
+  <Folder Name="/Bot/">
+    <Project Path="CodeBreaker.Bot.Tests/CodeBreaker.Bot.Tests.csproj" />
+    <Project Path="CodeBreaker.Bot/CodeBreaker.Bot.csproj" />
+  </Folder>
+  <Folder Name="/Clients/">
+    <Project Path="WebAppAuth/WebAppAuth.csproj" />
+  </Folder>
+  <Folder Name="/GameAPIs/">
+    <Project Path="Codebreaker.GameAPIs/Codebreaker.GameAPIs.csproj" />
+  </Folder>
+  <Folder Name="/Gateway/">
+    <Project Path="Codebreaker.ApiGateway.Identities/Codebreaker.ApiGateway.Identities.Client/Codebreaker.ApiGateway.Identities.Client.csproj" />
+    <Project Path="Codebreaker.ApiGateway.Identities/Codebreaker.ApiGateway.Identities/Codebreaker.ApiGateway.Identities.csproj" />
+    <Project Path="Codebreaker.ApiGateway/Codebreaker.ApiGateway.csproj" />
+  </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path="../Directory.Packages.props" />
+  </Folder>
+  <Project Path="Codebreaker.AppHost/Codebreaker.AppHost.csproj" />
+  <Project Path="Codebreaker.ServiceDefaults/Codebreaker.ServiceDefaults.csproj" />
+</Solution>

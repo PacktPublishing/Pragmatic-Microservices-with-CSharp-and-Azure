@@ -2,7 +2,7 @@ using System.Runtime.CompilerServices;
 
 using Codebreaker.GameAPIs;
 
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 
 var builder = WebApplication.CreateBuilder(args);
 

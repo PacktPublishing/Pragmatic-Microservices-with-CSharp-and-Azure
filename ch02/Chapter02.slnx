@@ -1,0 +1,13 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="../Directory.Packages.props" />
+    <File Path="CreateAGame.md" />
+    <File Path="Readme.md" />
+    <File Path="SetMove.md" />
+  </Folder>
+  <Project Path="Codebreaker.AppHost/Codebreaker.AppHost.csproj" />
+  <Project Path="Codebreaker.GameAPIs.Analyzers/Codebreaker.Analyzers.csproj" />
+  <Project Path="Codebreaker.GameAPIs.Models/Codebreaker.GameAPIs.Models.csproj" />
+  <Project Path="Codebreaker.GameAPIs/Codebreaker.GameAPIs.csproj" />
+  <Project Path="Codebreaker.ServiceDefaults/Codebreaker.ServiceDefaults.csproj" />
+</Solution>

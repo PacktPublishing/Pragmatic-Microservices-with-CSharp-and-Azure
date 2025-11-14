@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="../Directory.Packages.props" />
+  </Folder>
+  <Project Path="Codebreaker.AppHost/Codebreaker.AppHost.csproj" />
+  <Project Path="CodeBreaker.Bot/CodeBreaker.Bot.csproj" />
+  <Project Path="Codebreaker.GameAPIs/Codebreaker.GameAPIs.csproj" />
+  <Project Path="Codebreaker.InitalizeAppConfig/Codebreaker.InitalizeAppConfig.csproj" />
+  <Project Path="Codebreaker.ServiceDefaults/Codebreaker.ServiceDefaults.csproj" />
+</Solution>

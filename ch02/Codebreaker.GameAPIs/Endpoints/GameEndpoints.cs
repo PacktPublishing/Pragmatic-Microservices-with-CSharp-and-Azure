@@ -32,10 +32,10 @@ public static class GameEndpoints
         })
         .WithName("CreateGame")
         .WithSummary("Creates and starts a game")
-        .WithOpenApi(op =>
+        .AddOpenApiOperationTransformer((operation, context, ct) =>
         {
-            op.RequestBody.Description = "The game type and the player name of the game to create";
-            return op;
+            operation.RequestBody?.Description = "The game type and the player name of the game to create";
+            return Task.CompletedTask;
         });
 
         // Update the game resource with a move
@@ -90,11 +90,11 @@ public static class GameEndpoints
         })
         .WithName("SetMove")
         .WithSummary("End the game or set a move")
-        .WithOpenApi(op =>
+        .AddOpenApiOperationTransformer((operation, context, ct) =>
         {
-            op.Parameters[0].Description = "The id of the game to set a move";
-            op.RequestBody.Description = "The data for creating the move";
-            return op;
+            operation.Parameters?[0]?.Description = "The id of the game to set a move";
+            operation.RequestBody?.Description = "The data for creating the move";
+            return Task.CompletedTask;
         });
 
         // Get game by id
@@ -115,10 +115,10 @@ public static class GameEndpoints
         })
         .WithName("GetGame")
         .WithSummary("Gets a game by the given id")
-        .WithOpenApi(op =>
+        .AddOpenApiOperationTransformer((operation, context, ct) =>
         {
-            op.Parameters[0].Description = "The id of the game to get";
-            return op;
+            operation.Parameters?[0].Description = "The id of the game to get";
+            return Task.CompletedTask;
         });
 
         group.MapGet("/", async (
@@ -135,13 +135,13 @@ public static class GameEndpoints
                 })
                 .WithName("GetGames")
                 .WithSummary("Get games based on query parameters")
-                .WithOpenApi(op =>
+                .AddOpenApiOperationTransformer((operation, context, ct) =>
                 {
-                    op.Parameters[0].Description = "The game type to filter by";
-                    op.Parameters[1].Description = "The player name to filter by";
-                    op.Parameters[2].Description = "The date to filter by";
-                    op.Parameters[3].Description = "Whether to filter by ended games";
-                    return op;
+                    operation.Parameters?[0].Description = "The game type to filter by";
+                    operation.Parameters?[1].Description = "The player name to filter by";
+                    operation.Parameters?[2].Description = "The date to filter by";
+                    operation.Parameters?[3].Description = "Whether to filter by ended games";
+                    return Task.CompletedTask;
                 });
 
         group.MapDelete("/{id:guid}", async (
@@ -157,10 +157,10 @@ public static class GameEndpoints
         .WithName("DeleteGame")
         .WithSummary("Deletes the game with the given id")
         .WithDescription("Deletes a game from the database")
-        .WithOpenApi(op =>
+        .AddOpenApiOperationTransformer((operation, context, ct) =>
         {
-            op.Parameters[0].Description = "The id of the game to delete or cancel";
-            return op;
+            operation.Parameters?[0].Description = "The id of the game to delete or cancel";
+            return Task.CompletedTask;
         });
     }
 }

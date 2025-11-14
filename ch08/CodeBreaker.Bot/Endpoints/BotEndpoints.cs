@@ -30,12 +30,12 @@ public static class BotEndpoints
         })
         .WithName("CreateBot")
         .WithSummary("Starts a bot playing one or more games")
-        .WithOpenApi(x =>
+        .AddOpenApiOperationTransformer((operation, context, ct) =>
         {
-            x.Parameters[0].Description = "The number of games to play.";
-            x.Parameters[1].Description = "The delay between the games (seconds).";
-            x.Parameters[2].Description = "The think time between game moves (seconds).";
-            return x;
+            operation.Parameters?[0].Description = "The number of games to play.";
+            operation.Parameters?[1].Description = "The delay between the games (seconds).";
+            operation.Parameters?[2].Description = "The think time between game moves (seconds).";
+            return Task.CompletedTask;
         });
 
         group.MapGet("/session", () =>
@@ -45,8 +45,7 @@ public static class BotEndpoints
             return TypedResults.Ok(results);
         })
         .WithName("GetSessions")
-        .WithSummary("Gets the statuses of all sessions")
-        .WithOpenApi();
+        .WithSummary("Gets the statuses of all sessions");
 
         group.MapGet("/session/{id}", Results<Ok<StatusInfo>, BadRequest<string>, NotFound> (Guid id) =>
         {
@@ -69,10 +68,10 @@ public static class BotEndpoints
         })
         .WithName("GetSession")
         .WithSummary("Gets the status of a bot")
-        .WithOpenApi(x =>
+        .AddOpenApiOperationTransformer((operation, context, ct) =>
         {
-            x.Parameters[0].Description = "The id of the bot";
-            return x;
+            operation.Parameters?[0].Description = "The id of the bot";
+            return Task.CompletedTask;
         });
 
         group.MapDelete("/session/{id}", Results<NoContent, NotFound, BadRequest<string>> (Guid id) =>
@@ -94,10 +93,10 @@ public static class BotEndpoints
         })
         .WithName("StopBot")
         .WithSummary("Stops the bot with the given id")
-        .WithOpenApi(x =>
+        .AddOpenApiOperationTransformer((operation, context, ct) =>
         {
-            x.Parameters[0].Description = "The id of the bot";
-            return x;
+            operation.Parameters?[0].Description = "The id of the bot";
+            return Task.CompletedTask;
         });
     }
 }

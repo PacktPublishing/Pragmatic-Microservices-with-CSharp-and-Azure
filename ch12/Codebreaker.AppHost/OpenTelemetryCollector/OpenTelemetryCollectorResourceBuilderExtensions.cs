@@ -14,10 +14,10 @@ public static class OpenTelemetryCollectorResourceBuilderExtensions
     {
         builder.AddOpenTelemetryCollectorInfrastructure();
 
-        var url = builder.Configuration[DashboardOtlpUrlVariableName] ?? DashboardOtlpUrlDefaultValue;
-        var isHttpsEnabled = url.StartsWith("https", StringComparison.OrdinalIgnoreCase);
+        string url = builder.Configuration[DashboardOtlpUrlVariableName] ?? DashboardOtlpUrlDefaultValue;
+        bool isHttpsEnabled = url.StartsWith("https", StringComparison.OrdinalIgnoreCase);
 
-        var dashboardOtlpEndpoint = new HostUrl(url);
+        HostUrl dashboardOtlpEndpoint = new(url);
 
         var resource = new OpenTelemetryCollectorResource(name);
         var resourceBuilder = builder.AddResource(resource)

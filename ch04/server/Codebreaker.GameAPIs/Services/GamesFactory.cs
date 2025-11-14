@@ -58,10 +58,9 @@ public static class GamesFactory
                     { FieldCategories.Colors, s_colors5 },
                     { FieldCategories.Shapes, s_shapes5 }
                 },
-                Codes = Random.Shared.GetItems(s_shapes5, 4)
+                Codes = [.. Random.Shared.GetItems(s_shapes5, 4)
                     .Zip(Random.Shared.GetItems(s_colors5, 4), (shape, color) => (Shape: shape, Color: color))
-                    .Select(item => string.Join(';', item.Shape, item.Color))
-                    .ToArray()
+                    .Select(item => string.Join(';', item.Shape, item.Color))]
             };
         
         return gameType switch

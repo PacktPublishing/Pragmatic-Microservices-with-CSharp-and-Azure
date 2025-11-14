@@ -1,13 +1,21 @@
-# .NET Aspire and book updates
+# Aspire and other book updates
 
 What's changed with the new versions of .NET Aspire? What else changed with the book?
 
 ## Overall changes
 
+### Name change
+
+.NET Aspire has been renamed to **Aspire** to better reflect the polyglot nature of the tools and framework. The SDK and tools are still based on .NET, but Aspire now supports other programming languages as well.
+
 ### Central Package Management (CPM)
 
 With all the chapters (with the exception of chapter 1) we now use **NuGet Central Package Management (CPM)** with package versions specified in the file *Directory.Packages.props'. This makes it easier to update all chapters.
 In case you copy the content of just a single chapter, also copy the file *Directory.Packages.props* from the root folder to get all the projects compiled.
+
+### Project files
+
+With all the chapters, the .sln solution files have been replaced with the new .slnx format. .slnx is XML-based with a simplified layout, easier to parse, and removed the "magic ids" (instead the SDK version in the project file is used to know about the kind of project. slnx is backward compatible with older tool versions.
 
 ### Easier configuration
 
@@ -29,7 +37,7 @@ All other project references are triggered to create manifest code for strongly-
     <ProjectReference Include="..\Codebreaker.ServiceDefaults\Codebreaker.ServiceDefaults.csproj" IsAspireProjectResource="false" />
 ```
 
-## .NET Aspire 9.0 - 9.4 Updates
+## .NET Aspire 9.0 - Aspire 13 Updates
 
 ### Chapter 1, Introduction to .NET Aspire and Microservices
 
@@ -41,21 +49,52 @@ The *Aspire workload* is no longer required with Aspire 9. Instead, the Aspire S
  <Sdk Name="Aspire.AppHost.Sdk" Version="9.0.0" />
 ```
 
+Aspire now offers a CLI tool which can be installed with this command:
+
+```bash
+dotnet tool install -g Aspire.Cli
+```
+
 The `IsAspireHost` property is no longer required in the project file. This property was moved to `Aspire.AppHost.Sdk`.
 
 https://github.com/dotnet/docs-aspire/blob/main/docs/whats-new/dotnet-aspire-9.2.md#-project-file-changes
 
-#### Page 6, The .NET Aspire app model
+With Aspire 13, the `Aspire.AppHost.Sdk` moved from a separate section in the project file to the `Project` element:
+
+```xml
+<Project Sdk="Aspire.AppHost.Sdk/13.0.0">
+```
+
+The package reference for `Aspire.Hosting.AppHost` is no longer needed, as this package is now resolved via the SDK.
+
+#### Page 5, Creating a Aspire project
+
+It's still possible to create new Aspire projects with the .NET CLI, such as `dotnet new aspire-starter -o AspireSample`. More functionality is available with the Aspire CLI tool.
+
+To create a new project with the starter template, use `aspire new`, and select `Blazor and Minimal API starter`:
+
+- Enter the project name: `AspireSample`
+- Enter the output path: `./AspireSample`
+- Use *.dev.localhost URLs: `Yes`
+- Use Redis Cache: `No`
+- Do you want to create a test project`: `No`
+
+> Using dev.localhost URLs is a new feature with .NET 10 and Aspire 13 to specify custom domains for local development instead of using `localhost`.
+> See https://github.com/dotnet/docs-aspire/issues/5321
+
+#### Page 6, The Aspire app model
+
+Instead of the filename `Program.cs`, now `AppHost.cs` is used for Aspire AppHost projects.
 
 Health checks are added to the app model:
 
 ```csharp
 var apiService = builder.AddProject<Projects.AspireSample_ApiService>("apiservice")
-    .WithHttpsHealthCheck("/health");
+    .WithHttpHealthCheck("/health");
 
 builder.AddProject<Projects.AspireSample_Web>("webfrontend")
     .WithExternalHttpEndpoints()
-    .WithHttpsHealthCheck("/health")
+    .WithHttpHealthCheck("/health")
     .WithReference(apiService)
     .WaitFor(apiService);
 ```
@@ -69,7 +108,7 @@ builder.AddProject<Projects.AspireSample_Web>("webfrontend")
     .WaitFor(apiService);
 ```
 
-The `WaitFor` method is new with .NET Aspire 9 which allows waiting with the start of the webfrontend until the `apiService` has been started and is healthy.
+The `WaitFor` method is new since Aspire 9 which allows waiting with the start of the webfrontend until the `apiService` has been started and is healthy.
 
 #### Page 8, The shared project for common configuration
 
@@ -96,13 +135,13 @@ See also https://github.com/PacktPublishing/Pragmatic-Microservices-with-CSharp-
 
 #### Page 11, Aspire/AspireSample.AppHost/Program.cs
 
-With the .NET Aspire 9.3 templates, the `Program.cs` file has been renamed to `AppHost.cs`.
+Since the .NET Aspire 9.3 templates, the `Program.cs` file has been renamed to `AppHost.cs`.
 
 See https://github.com/dotnet/aspire/issues/8681
 
-#### Page 13, .NET Aspire integrations
+#### Page 13, Aspire integrations
 
-*.NET Aspire components* have been renamed to *.NET Aspire integrations*
+*.NET Aspire components* have been renamed to *Aspire integrations*
 
 ### Chapter 2, Minimal APIs - Creating REST Services
 
@@ -178,7 +217,7 @@ cosmos = builder.AddAzureCosmosDB("codebreakercosmos")
     .WithLifetime(ContainerLifetime.Session));
 ```
 
-Aspire .NET 9.1 allows creating the Cosmos container - using `AddCosmosDatabase` and `AddContainer` instead of `AddDatabase`.
+Since Aspire .NET 9.1, the a container in the Azure Cosmos database can be created with  `AddCosmosDatabase` and `AddContainer` instead of `AddDatabase`.
 
 ```csharp
 // Codebreaker.AppHost/Program.cs
@@ -209,12 +248,12 @@ gameApis
 
 ### Chapter 5, Containerization of Microservices
 
-Because of the change to use *Central Package Management (CPM)*, the `Dockerfile` changed to copy the file `Directory.Packages.props` for a build.
+Because of the change to use *Central Package Management (CPM)*, the `Dockerfile` was changed to copy the file `Directory.Packages.props` for a successful build.
 
 #### Page 132, Codebreaker.GameAPIs/Dockerfile
 
 ```Dockerfile
-FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["Directory.Packages.props", "."]
@@ -261,10 +300,33 @@ With this, you can use the `aspire publish` command to create the Docker Compose
 
 ### Chapter 6 - Microsoft Azure for Hosting Applications
 
-With .NET Aspire 9.4 and preview libraries, you can use and configure environments, e.g. `builder.AddAzureContainerAppEnvironment`.
-Expected with a future version the Aspire CLI can be used to deploy this environment (see `aspire deploy`).
+With the release of Aspire 13, deployment can be done to **Azure App Services**. When you configure the `appsettings.json` file of the AppHost project, you can specify the deployment target:
 
-Currently, use the Azure Developer CLI (`azd`) as described in the book to deploy the application to Azure Container Apps.
+```json
+    "CodebreakerSettings": {
+        // change this to Local when running in local development environment
+        // change this to AzureContainerApps when running in Azure Container Apps
+        // change this to AzureAppService when running in Azure App Service
+        "ComputeEnvironment": "AzureAppService"
+    }
+```
+
+In the AppHost.cs, this is added for deployment to Azure App Services or Azure Container Apps:
+
+```csharp
+if (settings.ComputeEnvironment == ComputeEnvironment.AzureAppService)
+{
+    var appServices = builder.AddAzureAppServiceEnvironment("codebreaker-appservice-env");
+}
+else if (settings.ComputeEnvironment == ComputeEnvironment.AzureContainerApps)
+{
+    var containerApps = builder.AddAzureContainerAppEnvironment("codebreaker-containerapps-env");
+}
+```
+
+When you use `aspire deploy` locally, the application is deployed to the selected environment!
+
+The functionality previously described with `azd` can now be done with the Aspire CLI tool.
 
 ### Chapter 8 - CI/CD - Publishing with GitHub Actions
 

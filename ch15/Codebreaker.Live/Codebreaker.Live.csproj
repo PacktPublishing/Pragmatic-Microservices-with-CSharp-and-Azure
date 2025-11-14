@@ -1,11 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-	<IncludeOpenAPIAnalyzers>true</IncludeOpenAPIAnalyzers>
-	<UserSecretsId>38af0a0f-4021-416f-bc92-73f548a0a26c</UserSecretsId>
+	  <IncludeOpenAPIAnalyzers>true</IncludeOpenAPIAnalyzers>
+	  <UserSecretsId>38af0a0f-4021-416f-bc92-73f548a0a26c</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -15,12 +15,8 @@
   <ItemGroup>
     <PackageReference Include="Aspire.Azure.Messaging.EventHubs" />
     <PackageReference Include="Aspire.Azure.Storage.Queues" />
-	<PackageReference Include="Aspire.Confluent.Kafka" />
+	  <PackageReference Include="Aspire.Confluent.Kafka" />
     <PackageReference Include="Aspire.Azure.Storage.Blobs" />
-    <PackageReference Include="Aspire.Hosting.AppHost" />
-    <PackageReference Include="Aspire.Hosting.Azure" />
-    <PackageReference Include="Aspire.Hosting.Azure.AppConfiguration" />
-    <PackageReference Include="Aspire.Hosting.Kafka" />
     <PackageReference Include="Aspire.StackExchange.Redis.DistributedCaching" />
     <PackageReference Include="CNinnovation.Codebreaker.BackendModels" />
     <PackageReference Include="Grpc.AspNetCore" />
@@ -32,10 +28,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Codebreaker.ServiceDefaults\Codebreaker.ServiceDefaults.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Services\" />
   </ItemGroup>
 
 </Project>

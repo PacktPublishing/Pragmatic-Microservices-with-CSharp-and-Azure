@@ -1,6 +1,6 @@
 using System.Runtime.CompilerServices;
 
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 
 [assembly: InternalsVisibleTo("Codebreaker.APIs.Tests")]
 

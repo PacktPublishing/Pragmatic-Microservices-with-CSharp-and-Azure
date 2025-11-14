@@ -1,0 +1,17 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="../Directory.Packages.props" />
+    <File Path="../RunDevEnvironment.md" />
+    <File Path="components.drawio" />
+    <File Path="CreateAGameWithSQLServer.md" />
+    <File Path="Readme.md" />
+  </Folder>
+  <Project Path="Codebreaker.AppHost/Codebreaker.AppHost.csproj" />
+  <Project Path="Codebreaker.Data.Cosmos/Codebreaker.Data.Cosmos.csproj" />
+  <Project Path="Codebreaker.Data.Postgres/Codebreaker.Data.Postgres.csproj" />
+  <Project Path="Codebreaker.Data.SqlServer.Tests/Codebreaker.Data.SqlServer.Tests.csproj" />
+  <Project Path="Codebreaker.Data.SqlServer/Codebreaker.Data.SqlServer.csproj" />
+  <Project Path="Codebreaker.GameAPIs.Models/Codebreaker.GameAPIs.Models.csproj" />
+  <Project Path="Codebreaker.GameAPIs/Codebreaker.GameAPIs.csproj" />
+  <Project Path="Codebreaker.ServiceDefaults/Codebreaker.ServiceDefaults.csproj" />
+</Solution>

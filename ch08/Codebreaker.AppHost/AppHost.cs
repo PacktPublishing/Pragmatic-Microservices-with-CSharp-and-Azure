@@ -19,7 +19,7 @@ var initAppConfig = builder.AddProject<Projects.Codebreaker_InitalizeAppConfig>(
     .WaitFor(appConfig);
 
 var gameApis = builder.AddProject<Projects.Codebreaker_GameAPIs>(GamesAPIs)
-    .WithHttpsHealthCheck("/health")
+    .WithHttpHealthCheck("/health")
     .WithEnvironment(EnvVarNames.DataStore, settings.DataStore.ToString())
     .WithEnvironment(EnvVarNames.StartupMode, settings.StartupMode.ToString())
     .WithExternalHttpEndpoints()

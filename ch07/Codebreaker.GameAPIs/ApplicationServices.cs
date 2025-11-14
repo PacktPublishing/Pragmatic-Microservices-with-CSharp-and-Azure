@@ -1,4 +1,4 @@
-﻿using Codebreaker.Data.Postgres;
+﻿// using Codebreaker.Data.Postgres;
 
 namespace Codebreaker.GameAPIs;
 
@@ -17,22 +17,23 @@ public static class ApplicationServices
             builder.EnrichSqlServerDbContext<GamesSqlServerContext>();
         }
 
-        static void ConfigurePostgres(IHostApplicationBuilder builder)
-        {
-            var connectionString = builder.Configuration.GetConnectionString("CodebreakerPostgres") ?? throw new InvalidOperationException("Could not read SQL Server connection string");
+        // temporarily disabled Postgres support because of the Postgres package does not support EF Core 10 at the moment
+        //static void ConfigurePostgres(IHostApplicationBuilder builder)
+        //{
+        //    var connectionString = builder.Configuration.GetConnectionString("CodebreakerPostgres") ?? throw new InvalidOperationException("Could not read SQL Server connection string");
 
-            builder.Services.AddNpgsqlDataSource(connectionString, dataSourceBuilder =>
-            {
-                dataSourceBuilder.EnableDynamicJson(); 
-            });
+        //    builder.Services.AddNpgsqlDataSource(connectionString, dataSourceBuilder =>
+        //    {
+        //        dataSourceBuilder.EnableDynamicJson(); 
+        //    });
 
-            builder.Services.AddDbContextPool<IGamesRepository, GamesPostgresContext>(options =>
-            {
-                options.UseNpgsql(connectionString);
-                options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
-            });
-            builder.EnrichNpgsqlDbContext<GamesPostgresContext>();
-        }
+        //    builder.Services.AddDbContextPool<IGamesRepository, GamesPostgresContext>(options =>
+        //    {
+        //        options.UseNpgsql(connectionString);
+        //        options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+        //    });
+        //    builder.EnrichNpgsqlDbContext<GamesPostgresContext>();
+        //}
 
         static void ConfigureCosmos(IHostApplicationBuilder builder)
         {
@@ -67,9 +68,10 @@ public static class ApplicationServices
             case "SqlServer":
                 ConfigureSqlServer(builder);
                 break;
-            case "Postgres":
-                ConfigurePostgres(builder);
-                break;
+            // temporarily disabled Postgres support because of the Postgres package does not support EF Core 10 at the moment
+            //case "Postgres":
+            //    ConfigurePostgres(builder);
+            //    break;
             default:
                 ConfigureInMemory(builder);
                 break;
@@ -100,26 +102,26 @@ public static class ApplicationServices
                 throw;
             }
         }
-        else if (dataStore == "Postgres")
-        {
-            try
-            {
-                using var scope = app.Services.CreateScope();
-                var repo = scope.ServiceProvider.GetRequiredService<IGamesRepository>();
-                if (repo is GamesPostgresContext context)
-                {
-                    // TODO: migrations might be done in another sprint
-                    // for now, just ensure the database is created
-                    await context.Database.EnsureCreatedAsync();
-                    app.Logger.LogInformation("PostgreSQL database created");
-                }
-            }
-            catch (Exception ex)
-            {
-                app.Logger.LogError(ex, "Error updating database");
-                throw;
-            }
-        }
+        //else if (dataStore == "Postgres")
+        //{
+        //    try
+        //    {
+        //        using var scope = app.Services.CreateScope();
+        //        var repo = scope.ServiceProvider.GetRequiredService<IGamesRepository>();
+        //        if (repo is GamesPostgresContext context)
+        //        {
+        //            // TODO: migrations might be done in another sprint
+        //            // for now, just ensure the database is created
+        //            await context.Database.EnsureCreatedAsync();
+        //            app.Logger.LogInformation("PostgreSQL database created");
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        app.Logger.LogError(ex, "Error updating database");
+        //        throw;
+        //    }
+        //}
         else if (dataStore == "Cosmos")
         {
             // with .NET Aspire 9.1 APIs, the container can be created with the app-model!

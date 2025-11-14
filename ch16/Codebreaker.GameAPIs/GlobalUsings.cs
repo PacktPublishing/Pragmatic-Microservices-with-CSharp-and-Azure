@@ -11,4 +11,4 @@ global using Codebreaker.GameAPIs.Services;
 global using Codebreaker.GameAPIs.Infrastructure;
 
 global using Microsoft.EntityFrameworkCore;
-global using Microsoft.OpenApi.Models;
+global using Microsoft.OpenApi;

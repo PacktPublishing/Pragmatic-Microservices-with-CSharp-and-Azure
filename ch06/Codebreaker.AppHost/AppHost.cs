@@ -3,13 +3,20 @@ using static Codebreaker.ServiceDefaults.ServiceNames;
 
 using Microsoft.Extensions.Configuration;
 
-#pragma warning disable ASPIRECOSMOSDB001 // Use Azure Cosmos DB emulator
-
 var builder = DistributedApplication.CreateBuilder(args);
 
 // open appsettings.json and appsettings.Development.json to set the DataStore value
 CodebreakerSettings settings = new();
 builder.Configuration.GetSection("CodebreakerSettings").Bind(settings);
+
+if (settings.ComputeEnvironment == ComputeEnvironment.AzureAppService)
+{
+    var appServices = builder.AddAzureAppServiceEnvironment("codebreaker-appservice-env");
+}
+else if (settings.ComputeEnvironment == ComputeEnvironment.AzureContainerApps)
+{
+    var containerApps = builder.AddAzureContainerAppEnvironment("codebreaker-containerapps-env");
+}
 
 var gameApis = builder.AddProject<Projects.Codebreaker_GameAPIs>(GamesAPIs)
     .WithHttpHealthCheck("/health")
@@ -21,7 +28,8 @@ builder.AddProject<Projects.CodeBreaker_Bot>(Bot)
     .WithReference(gameApis)
     .WaitFor(gameApis);
 
-var ConfigureSqlServer = () => {
+var ConfigureSqlServer = () =>
+{
     var sqlDB = builder.AddSqlServer(SqlResourceName)
     .WithDataVolume(SqlDataVolume)
     .AddDatabase(SqlDatabaseResourceName, SqlDatabaseName);
@@ -49,6 +57,9 @@ var ConfigureCosmos = () =>
     }
     else if (settings.UseEmulator == EmulatorOption.PreferDocker)
     {
+#pragma warning disable ASPIRECOSMOSDB001 // Use Azure Cosmos DB emulator
+
+
         // Cosmos emulator running in a Docker container
         // https://learn.microsoft.com/en-us/azure/cosmos-db/emulator-linux
         cosmos = builder.AddAzureCosmosDB(CosmosResourceName)
@@ -56,6 +67,8 @@ var ConfigureCosmos = () =>
                 p.WithDataExplorer()
                 .WithDataVolume(CosmosDataVolume)
                 .WithLifetime(ContainerLifetime.Session));
+
+#pragma warning restore ASPIRECOSMOSDB001 // Use Azure Cosmos DB emulator
     }
     else
     {
