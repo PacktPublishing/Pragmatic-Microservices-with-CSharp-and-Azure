@@ -56,7 +56,13 @@ public static class Extensions
         builder.Services.AddOpenTelemetry()
             .WithMetrics(metrics =>
             {
-                metrics.AddMeter("EntityFramework.Core").AddAspNetCoreInstrumentation()
+                metrics
+                    .AddMeter("EntityFramework.Core")
+                    .AddMeter("Microsoft.AspNetCore.Hosting")
+                    .AddMeter("Microsoft.AspNetCore.Server.Kestrel")
+                    .AddMeter("System.Net.Http")
+                    .AddMeter("System.Net.NameResolution")
+                    .AddAspNetCoreInstrumentation()
                     .AddHttpClientInstrumentation()
                     .AddRuntimeInstrumentation();
             })
@@ -81,19 +87,12 @@ public static class Extensions
 
     private static TBuilder AddOpenTelemetryExporters<TBuilder>(this TBuilder builder) where TBuilder : IHostApplicationBuilder
     {
-        bool useOtlpExporter = !string.IsNullOrWhiteSpace(builder.Configuration["OTEL_EXPORTER_OTLP_ENDPOINT"]);
+        // Always add the OTLP exporter - it will read OTEL_EXPORTER_OTLP_ENDPOINT from the environment at runtime
+        // This ensures the exporter works even when the environment variable is set via Aspire callbacks
+        // OpenTelemetry SDK reads directly from Environment.GetEnvironmentVariable, not from IConfiguration
+        builder.Services.AddOpenTelemetry().UseOtlpExporter();
 
-        if (useOtlpExporter)
-        {
-            builder.Services.AddOpenTelemetry().UseOtlpExporter();
-        }
-
-        if (builder.Configuration[EnvVarNames.TelemetryMode] == nameof(TelemetryType.GrafanaAndPrometheus))
-        {
-            builder.Services.AddOpenTelemetry()
-                .WithMetrics(metrics => metrics.AddPrometheusExporter());
-        }
-
+        // Azure Monitor integration
         if (!string.IsNullOrEmpty(builder.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"]))
         {
             builder.Services.AddOpenTelemetry()

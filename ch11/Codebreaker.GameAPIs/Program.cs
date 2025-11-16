@@ -4,6 +4,27 @@ using Microsoft.OpenApi;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Debug: Log all OpenTelemetry related environment variables
+Console.WriteLine("=== OpenTelemetry Configuration ===");
+Console.WriteLine($"OTEL_EXPORTER_OTLP_ENDPOINT (config): {builder.Configuration["OTEL_EXPORTER_OTLP_ENDPOINT"] ?? "(not set)"}");
+Console.WriteLine($"OTEL_EXPORTER_OTLP_ENDPOINT (env): {Environment.GetEnvironmentVariable("OTEL_EXPORTER_OTLP_ENDPOINT") ?? "(not set)"}");
+Console.WriteLine($"OTEL_EXPORTER_OTLP_PROTOCOL (config): {builder.Configuration["OTEL_EXPORTER_OTLP_PROTOCOL"] ?? "(not set)"}");
+Console.WriteLine($"OTEL_EXPORTER_OTLP_PROTOCOL (env): {Environment.GetEnvironmentVariable("OTEL_EXPORTER_OTLP_PROTOCOL") ?? "(not set)"}");
+Console.WriteLine($"OTEL_SERVICE_NAME (config): {builder.Configuration["OTEL_SERVICE_NAME"] ?? "(not set)"}");
+Console.WriteLine($"OTEL_SERVICE_NAME (env): {Environment.GetEnvironmentVariable("OTEL_SERVICE_NAME") ?? "(not set)"}");
+Console.WriteLine("====================================");
+
+// Test DNS resolution for otelcollector
+try
+{
+    var addresses = System.Net.Dns.GetHostAddresses("otelcollector");
+    Console.WriteLine($"DNS Resolution for 'otelcollector': {string.Join(", ", addresses.Select(a => a.ToString()))}");
+}
+catch (Exception ex)
+{
+    Console.WriteLine($"DNS Resolution for 'otelcollector' FAILED: {ex.Message}");
+}
+
 builder.AddServiceDefaults();
 
 // Swagger/EndpointDocumentation

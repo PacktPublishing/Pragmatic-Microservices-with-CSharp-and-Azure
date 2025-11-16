@@ -428,3 +428,6 @@ Grafana config:
 provisioning/datasources/default.yaml
 
 url: $PROMETHEUS_ENDPOINT instead of using a fixed port
+
+The Prometheus/Grafana version now uses the OpenTelemetry Collector implemented with the NuGet package `CommunityToolkit.Aspire.Hosting.OpenTelemetryCollector` currently in preview. 
+Check the documentation [OpenTelemetry Collector, Grafana, and Prometheus Setup Guide](ch11/docs/OpenTelemetry-Grafana-Prometheus-Setup.md) for details.
