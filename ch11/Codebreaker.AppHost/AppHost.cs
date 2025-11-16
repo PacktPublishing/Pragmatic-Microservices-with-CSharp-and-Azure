@@ -3,7 +3,6 @@ using Codebreaker.AppHost.Extensions;
 using static Codebreaker.ServiceDefaults.ServiceNames;
 
 using Microsoft.Extensions.Configuration;
-using MetricsApp.AppHost.OpenTelemetryCollector;
 
 var builder = DistributedApplication.CreateBuilder(args);
 
@@ -25,7 +24,7 @@ var bot = builder.AddProject<Projects.CodeBreaker_Bot>(Bot)
 switch (settings.Telemetry)
 {
     case TelemetryType.None:
-        // no action needed, just using .NET Aspire dashboard
+        // no action needed, just using Aspire dashboard
         break;
     case TelemetryType.GrafanaAndPrometheus:
         var prometheus = builder.AddPrometheus("prometheus");
@@ -33,8 +32,17 @@ switch (settings.Telemetry)
         var grafana = builder.AddGrafana("grafana")
             .WithEnvironment("PROMETHEUS_ENDPOINT", prometheus.GetEndpoint("http"));
 
-        builder.AddOpenTelemetryCollector("otelcollector", "../otelcollector/config.yaml")
-          .WithEnvironment("PROMETHEUS_ENDPOINT", $"{prometheus.GetEndpoint("http")}/api/v1/otlp");
+        // Get the Aspire Dashboard OTLP endpoint
+        var dashboardOtlpUrl = builder.Configuration["ASPIRE_DASHBOARD_OTLP_ENDPOINT_URL"] ?? "http://localhost:18889";
+        var dashboardOtlpApiKey = builder.Configuration["AppHost:OtlpApiKey"];
+        var isHttpsEnabled = dashboardOtlpUrl.StartsWith("https", StringComparison.OrdinalIgnoreCase);
+
+        builder.AddOpenTelemetryCollector("otelcollector")
+            .WithConfig("../otelcollector/config.yaml")
+            .WithEndpoint(targetPort: 9464, name: "prometheus") // Expose Prometheus metrics endpoint
+            .WithEnvironment("ASPIRE_ENDPOINT", dashboardOtlpUrl)
+            .WithEnvironment("ASPIRE_API_KEY", dashboardOtlpApiKey ?? string.Empty)
+            .WithEnvironment("ASPIRE_INSECURE", isHttpsEnabled ? "false" : "true");
 
         gameApis.WithEnvironment("GRAFANA_URL", grafana.GetEndpoint("http"))
             .WaitFor(grafana);
@@ -42,10 +50,6 @@ switch (settings.Telemetry)
             .WaitFor(grafana);
         break;
     case TelemetryType.AzureMonitor:
-        // var logs = builder.AddAzureLogAnalyticsWorkspace("logs");
-        // var appInsights = builder.AddAzureApplicationInsights("insights", logs);
-        // gameApis.WithEnvironment("LOG_ANALYTICS_WORKSPACE_ID", $"{laws.WorkspaceId}");
-
         // Log Analytics workspace is created automatically
         var appInsights = builder.AddAzureApplicationInsights("insights");
         gameApis.WithReference(appInsights)

@@ -88,12 +88,6 @@ public static class Extensions
             builder.Services.AddOpenTelemetry().UseOtlpExporter();
         }
 
-        if (builder.Configuration[EnvVarNames.TelemetryMode] == nameof(TelemetryType.GrafanaAndPrometheus))
-        {
-            builder.Services.AddOpenTelemetry()
-                .WithMetrics(metrics => metrics.AddPrometheusExporter());
-        }
-
         if (!string.IsNullOrEmpty(builder.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"]))
         {
             builder.Services.AddOpenTelemetry()

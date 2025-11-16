@@ -51,6 +51,7 @@
     <PackageVersion Include="CNinnovation.Codebreaker.GamesClient" Version="3.8.0" />
     <PackageVersion Include="CNinnovation.Codebreaker.Postgres" Version="3.8.0-preview.1.13" />
     <PackageVersion Include="CNinnovation.Codebreaker.SqlServer" Version="3.8.0" />
+    <PackageVersion Include="CommunityToolkit.Aspire.Hosting.OpenTelemetryCollector" Version="13.0.0-beta.439" />
     <PackageVersion Include="coverlet.collector" Version="6.0.4" />
     <PackageVersion Include="Grpc.AspNetCore" Version="2.71.0" />
     <PackageVersion Include="Grpc.Net.ClientFactory" Version="2.71.0" />
