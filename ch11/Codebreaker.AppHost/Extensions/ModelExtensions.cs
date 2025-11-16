@@ -7,24 +7,6 @@ using static Codebreaker.ServiceDefaults.ServiceNames;
 namespace Codebreaker.AppHost.Extensions;
 internal static class ModelExtensions
 {
-    public static IResourceBuilder<ContainerResource> AddPrometheus(this IDistributedApplicationBuilder builder, string name)
-    {
-        var prometheus = builder.AddContainer(name, "prom/prometheus")
-           .WithBindMount("../prometheus", "/etc/prometheus", isReadOnly: true)
-           .WithArgs("--web.enable-otlp-receiver", "--config.file=/etc/prometheus/prometheus.yml")
-           .WithHttpEndpoint(targetPort: 9090, name: "http");
-        return prometheus;
-    }
-
-    public static IResourceBuilder<ContainerResource> AddGrafana(this IDistributedApplicationBuilder builder, string name)
-    {
-        var grafana = builder.AddContainer(name, "grafana/grafana")
-            .WithBindMount("../grafana/config", "/etc/grafana", isReadOnly: true)
-            .WithBindMount("../grafana/dashboards", "/var/lib/grafana/dashboards", isReadOnly: true)
-            .WithHttpEndpoint(targetPort: 3000, name: "http");
-        return grafana;
-    }
-
     public static void ConfigurePostgres(this IDistributedApplicationBuilder builder, IResourceBuilder<ProjectResource> gameApis)
     {
         var postgres = builder.AddPostgres(PostgresResourceName)

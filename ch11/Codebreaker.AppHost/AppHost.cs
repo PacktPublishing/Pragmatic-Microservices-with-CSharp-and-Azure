@@ -28,7 +28,6 @@ switch (settings.Telemetry)
         // no action needed, just using Aspire dashboard
         break;
     case TelemetryType.GrafanaAndPrometheus:
-        //        var prometheus = builder.AddPrometheus("prometheus");
         var prometheus = builder.AddContainer("prometheus", "prom/prometheus")
            .WithBindMount("../prometheus", "/etc/prometheus", isReadOnly: true)
            .WithArgs("--web.enable-otlp-receiver", "--config.file=/etc/prometheus/prometheus.yml")
@@ -39,9 +38,6 @@ switch (settings.Telemetry)
             .WithBindMount("../grafana/dashboards", "/var/lib/grafana/dashboards", isReadOnly: true)
             .WithHttpEndpoint(targetPort: 3000, name: "http")
             .WithEnvironment("PROMETHEUS_ENDPOINT", prometheus.GetEndpoint("http"));
-
-        //var grafana = builder.AddGrafana("grafana")
-        //    .WithEnvironment("PROMETHEUS_ENDPOINT", prometheus.GetEndpoint("http"));
 
         // Get the Aspire Dashboard OTLP endpoint
         var dashboardOtlpUrl = builder.Configuration["ASPIRE_DASHBOARD_OTLP_ENDPOINT_URL"] ?? "http://localhost:18889";
