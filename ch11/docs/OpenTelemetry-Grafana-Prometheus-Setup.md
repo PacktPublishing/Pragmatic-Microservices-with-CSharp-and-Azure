@@ -507,6 +507,102 @@ datasources:
     uid: PBFA97CFB590B2093
 ```
 
+### Issue 7: Grafana Dashboards Show No Data
+
+**Symptoms**:
+- Grafana "Explore" shows data when querying directly
+- Pre-configured ASP.NET Core dashboards show "No Data"
+- Dashboard variables ($job, $instance) are empty or showing "(All)"
+
+**Cause**: Dashboard template variables can't find metrics or datasource UID mismatch.
+
+**Diagnosis Steps**:
+
+1. **Check if metrics exist in Prometheus**:
+   ```promql
+   http_server_active_requests
+   ```
+   If this returns no data, the dashboard variables can't populate.
+
+2. **Check datasource UID in dashboard JSON**:
+   The dashboard may reference a hardcoded UID that doesn't match your Prometheus datasource.
+
+3. **Check dashboard variables**:
+   - Open Grafana ? Dashboard Settings ? Variables
+   - Check if `$job` and `$instance` have values
+
+**Solutions**:
+
+**Solution A: Fix Datasource Configuration** (RECOMMENDED)
+```yaml
+# grafana/config/provisioning/datasources/default.yaml
+apiVersion: 1
+
+datasources:
+  - name: Prometheus
+    type: prometheus
+    access: proxy
+    url: $PROMETHEUS_ENDPOINT
+    isDefault: true  # Make it the default datasource
+    editable: true
+    jsonData:
+      httpMethod: POST
+      timeInterval: 1s
+```
+
+**Solution B: Update Dashboard Variables**
+
+The dashboards use these queries for variables:
+- `$job`: `label_values(http_server_active_requests, job)`
+- `$instance`: `label_values(http_server_active_requests{job=~"$job"}, instance)`
+
+If `http_server_active_requests` doesn't exist, change the metric to one that does:
+
+1. Find available metrics in Prometheus:
+   ```promql
+   {__name__=~"http_server.*"}
+   ```
+
+2. Update dashboard variable queries to use an existing metric:
+   - Instead of: `label_values(http_server_active_requests, job)`
+   - Use: `label_values(http_server_request_duration_seconds_count, job)`
+
+**Solution C: Manually Set Dashboard Datasource**
+
+1. Open Grafana dashboard
+2. Click **Dashboard Settings** (gear icon)
+3. Go to **JSON Model**
+4. Search for all instances of `"uid": "PBFA97CFB590B2093"`
+5. Replace with `"uid": "${DS_PROMETHEUS}"` or remove the UID property
+6. Save dashboard
+
+**Solution D: Generate Traffic First**
+
+Some metrics only appear after there's been activity:
+- `http_server_request_duration_seconds` - Only after HTTP requests
+- `http_server_active_requests` - Only while requests are in flight
+- `kestrel_active_connections` - Only when connections exist
+
+**Steps to Fix**:
+1. Generate traffic to your services (make API calls)
+2. Wait 10-15 seconds for metrics to be scraped
+3. Refresh the Grafana dashboard
+
+**Solution E: Check Dashboard Time Range**
+
+- Dashboards default to "Last 5 minutes"
+- If your application hasn't been running that long, no data shows
+- Change time range to "Last 15 minutes" or "Last 1 hour"
+
+**Quick Fix Workflow**:
+1. ? Verify metrics exist in Prometheus Explore
+2. ? Check datasource is set to default in `default.yaml`
+3. ? Restart Grafana container to pick up datasource changes
+4. ? Generate traffic to your services
+5. ? Wait 10-15 seconds
+6. ? Refresh Grafana dashboard
+7. ? Check dashboard time range is appropriate
+
 ## Verification Steps
 
 ### 1. Check OTel Collector Logs

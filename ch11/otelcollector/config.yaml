@@ -21,7 +21,8 @@ exporters:
         insecure_skip_verify: true
   prometheus:
     endpoint: 0.0.0.0:9464
-    namespace: codebreaker
+    const_labels:
+      environment: development
   
 service:
   pipelines:
