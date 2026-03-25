@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Codebreaker.GameApis.KiotaClient\Codebreaker.GameApis.KiotaClient.csproj" />
+    <ProjectReference Include="..\Codebreaker.GameAPIs.KiotaClient\Codebreaker.GameAPIs.KiotaClient.csproj" />
   </ItemGroup>
 
   <ItemGroup>

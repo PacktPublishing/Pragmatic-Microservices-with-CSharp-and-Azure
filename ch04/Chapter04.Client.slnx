@@ -5,6 +5,6 @@
   </Folder>
   <Project Path="client/Codebreaker.Console/Codebreaker.Console.csproj" />
   <Project Path="client/Codebreaker.GameAPIs.Client/Codebreaker.GameAPIs.Client.csproj" />
-  <Project Path="client/Codebreaker.GameApis.KiotaClient/Codebreaker.GameApis.KiotaClient.csproj" />
+  <Project Path="client/Codebreaker.GameAPIs.KiotaClient/Codebreaker.GameAPIs.KiotaClient.csproj" />
   <Project Path="client/Codebreaker.KiotaConsole/Codebreaker.KiotaConsole.csproj" />
 </Solution>
