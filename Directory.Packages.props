@@ -11,21 +11,21 @@
     <PackageVersion Include="Aspire.Hosting.Garnet" Version="13.0.0" />
     <PackageVersion Include="Aspire.Hosting.Keycloak" Version="9.2.1-preview.1.25222.1" />
     <PackageVersion Include="Aspire.Hosting.Kubernetes" Version="9.2.1-preview.1.25222.1" />
-    <PackageVersion Include="Aspire.Hosting.PostgreSQL" Version="13.0.0" />
+    <PackageVersion Include="Aspire.Hosting.PostgreSQL" Version="13.3.1" />
     <PackageVersion Include="Aspire.Hosting.Valkey" Version="13.0.0" />
     <PackageVersion Include="Aspire.Microsoft.Azure.Cosmos" Version="9.3.0" />
     <PackageVersion Include="Aspire.Azure.Messaging.EventHubs" Version="13.0.0" />
     <PackageVersion Include="Aspire.Azure.Storage.Blobs" Version="13.0.0" />
     <PackageVersion Include="Aspire.Azure.Storage.Queues" Version="13.0.0" />
     <PackageVersion Include="Aspire.Confluent.Kafka" Version="13.0.0" />
-    <PackageVersion Include="Aspire.Hosting.Azure" Version="13.0.0" />
-    <PackageVersion Include="Aspire.Hosting.Azure.AppConfiguration" Version="13.0.0" />
-    <PackageVersion Include="Aspire.Hosting.Azure.ApplicationInsights" Version="13.0.0" />
-    <PackageVersion Include="Aspire.Hosting.Azure.CosmosDB" Version="13.0.0" />
+    <PackageVersion Include="Aspire.Hosting.Azure" Version="13.3.1" />
+    <PackageVersion Include="Aspire.Hosting.Azure.AppConfiguration" Version="13.3.1" />
+    <PackageVersion Include="Aspire.Hosting.Azure.ApplicationInsights" Version="13.3.1" />
+    <PackageVersion Include="Aspire.Hosting.Azure.CosmosDB" Version="13.3.1" />
     <PackageVersion Include="Aspire.Hosting.Azure.EventHubs" Version="13.0.0" />
-    <PackageVersion Include="Aspire.Hosting.Azure.KeyVault" Version="13.0.0" />
+    <PackageVersion Include="Aspire.Hosting.Azure.KeyVault" Version="13.3.1" />
     <PackageVersion Include="Aspire.Hosting.Azure.SignalR" Version="13.0.0" />
-    <PackageVersion Include="Aspire.Hosting.Azure.Sql" Version="13.0.0" />
+    <PackageVersion Include="Aspire.Hosting.Azure.Sql" Version="13.3.1" />
     <PackageVersion Include="Aspire.Hosting.Azure.Storage" Version="13.0.0" />
     <PackageVersion Include="Aspire.Hosting.MongoDB" Version="13.0.0" />
     <PackageVersion Include="Aspire.Hosting.MySql" Version="13.0.0" />
@@ -34,8 +34,8 @@
     <PackageVersion Include="Aspire.Hosting.Redis" Version="13.0.0" />
     <PackageVersion Include="Aspire.Hosting.SqlServer" Version="13.0.0" />
     <PackageVersion Include="Aspire.Hosting.Testing" Version="13.0.0" />
-    <PackageVersion Include="Aspire.Microsoft.EntityFrameworkCore.Cosmos" Version="13.0.0" />
-    <PackageVersion Include="Aspire.Microsoft.EntityFrameworkCore.SqlServer" Version="13.0.0" />
+    <PackageVersion Include="Aspire.Microsoft.EntityFrameworkCore.Cosmos" Version="13.3.1" />
+    <PackageVersion Include="Aspire.Microsoft.EntityFrameworkCore.SqlServer" Version="13.3.1" />
     <PackageVersion Include="Aspire.MongoDB.Driver.v3" Version="9.4.0" />
     <PackageVersion Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.5.2" />
     <PackageVersion Include="Aspire.Pomelo.EntityFrameworkCore.MySql" Version="13.0.0" />
@@ -43,15 +43,15 @@
     <PackageVersion Include="Aspire.StackExchange.Redis.DistributedCaching" Version="13.0.0" />
     <PackageVersion Include="Azure.Data.AppConfiguration" Version="1.7.0" />
     <PackageVersion Include="Azure.Identity" Version="1.17.0" />
-    <PackageVersion Include="Azure.Monitor.OpenTelemetry.AspNetCore" Version="1.3.0" />
+    <PackageVersion Include="Azure.Monitor.OpenTelemetry.AspNetCore" Version="1.5.0" />
     <PackageVersion Include="BlazorApplicationInsights" Version="3.3.0" />
     <PackageVersion Include="CNinnovation.Codebreaker.Analyzers" Version="3.8.0" />
     <PackageVersion Include="CNinnovation.Codebreaker.BackendModels" Version="3.8.0" />
-    <PackageVersion Include="CNinnovation.Codebreaker.Cosmos" Version="3.8.0" />
-    <PackageVersion Include="CNinnovation.Codebreaker.GamesClient" Version="3.8.0" />
+    <PackageVersion Include="CNinnovation.Codebreaker.Cosmos" Version="3.9.0" />
+    <PackageVersion Include="CNinnovation.Codebreaker.GamesClient" Version="3.9.0" />
     <PackageVersion Include="CNinnovation.Codebreaker.Postgres" Version="3.8.0-preview.1.13" />
-    <PackageVersion Include="CNinnovation.Codebreaker.SqlServer" Version="3.8.0" />
-    <PackageVersion Include="coverlet.collector" Version="6.0.4" />
+    <PackageVersion Include="CNinnovation.Codebreaker.SqlServer" Version="3.9.0" />
+    <PackageVersion Include="coverlet.collector" Version="10.0.0" />
     <PackageVersion Include="Grpc.AspNetCore" Version="2.71.0" />
     <PackageVersion Include="Grpc.Net.ClientFactory" Version="2.71.0" />
     <PackageVersion Include="Grpc.Tools" Version="2.76.0" />
@@ -69,31 +69,31 @@
     <PackageVersion Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.0" />
     <PackageVersion Include="Microsoft.AspNetCore.SignalR.Client" Version="10.0.0" />
     <PackageVersion Include="Microsoft.AspNetCore.SignalR.Protocols.MessagePack" Version="10.0.0" />
-    <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="10.0.0" />
+    <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="10.0.8" />
     <PackageVersion Include="Microsoft.Authentication.WebAssembly.Msal" Version="10.0.0" />
     <PackageVersion Include="Microsoft.Azure.AppConfiguration.AspNetCore" Version="8.4.0" />
     <PackageVersion Include="Microsoft.Azure.Cosmos" Version="3.54.1" />
     <PackageVersion Include="Microsoft.Azure.SignalR" Version="1.32.0" />
-    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.0.1" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.5.1" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Cosmos" Version="10.0.0" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.0" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.0" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.0" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.0" />
     <PackageVersion Include="Microsoft.Extensions.ApiDescription.Server" Version="10.0.0" />
-    <PackageVersion Include="Microsoft.Extensions.Azure" Version="1.13.0" />
+    <PackageVersion Include="Microsoft.Extensions.Azure" Version="1.14.0" />
     <PackageVersion Include="Microsoft.Extensions.Configuration" Version="10.0.0" />
-    <PackageVersion Include="Microsoft.Extensions.Configuration.AzureAppConfiguration" Version="8.4.0" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration.AzureAppConfiguration" Version="8.5.0" />
     <PackageVersion Include="Microsoft.Extensions.Configuration.Binder" Version="10.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Configuration.Json" Version="10.0.0" />
-    <PackageVersion Include="Microsoft.Extensions.Diagnostics.Testing" Version="10.0.0" />
+    <PackageVersion Include="Microsoft.Extensions.Diagnostics.Testing" Version="10.6.0" />
     <PackageVersion Include="Microsoft.Extensions.Hosting" Version="10.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Http" Version="10.0.0" />
-    <PackageVersion Include="Microsoft.Extensions.Http.Resilience" Version="10.0.0" />
+    <PackageVersion Include="Microsoft.Extensions.Http.Resilience" Version="10.6.0" />
     <PackageVersion Include="Microsoft.Extensions.Localization" Version="10.0.0" />
-    <PackageVersion Include="Microsoft.Extensions.ServiceDiscovery" Version="10.0.0" />
+    <PackageVersion Include="Microsoft.Extensions.ServiceDiscovery" Version="10.6.0" />
     <PackageVersion Include="Microsoft.Extensions.ServiceDiscovery.Yarp" Version="10.0.0" />
-    <PackageVersion Include="Microsoft.FeatureManagement.AspNetCore" Version="4.3.0" />
+    <PackageVersion Include="Microsoft.FeatureManagement.AspNetCore" Version="4.5.0" />
     <PackageVersion Include="Microsoft.Identity.Web.UI" Version="4.0.1" />
     <PackageVersion Include="Microsoft.Identity.Web" Version="4.0.1" />
     <PackageVersion Include="Microsoft.Identity.Web.DownstreamApi" Version="4.0.1" />
@@ -113,18 +113,18 @@
     <PackageVersion Include="NUnit" Version="4.4.0" />
     <PackageVersion Include="NUnit.Analyzers" Version="4.11.2" />
     <PackageVersion Include="NUnit3TestAdapter" Version="5.2.0" />
-    <PackageVersion Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.14.0" />
-    <PackageVersion Include="OpenTelemetry.Exporter.Prometheus.AspNetCore" Version="1.14.0-beta.1" />
-    <PackageVersion Include="OpenTelemetry.Extensions.Hosting" Version="1.14.0" />
-    <PackageVersion Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.14.0" />
-    <PackageVersion Include="OpenTelemetry.Instrumentation.GrpcNetClient" Version="1.14.0-beta.1" />
-    <PackageVersion Include="OpenTelemetry.Instrumentation.Http" Version="1.14.0" />
-    <PackageVersion Include="OpenTelemetry.Instrumentation.Runtime" Version="1.14.0" />
+    <PackageVersion Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.15.3" />
+    <PackageVersion Include="OpenTelemetry.Exporter.Prometheus.AspNetCore" Version="1.15.3-beta.1" />
+    <PackageVersion Include="OpenTelemetry.Extensions.Hosting" Version="1.15.3" />
+    <PackageVersion Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.15.2" />
+    <PackageVersion Include="OpenTelemetry.Instrumentation.GrpcNetClient" Version="1.15.1-beta.1" />
+    <PackageVersion Include="OpenTelemetry.Instrumentation.Http" Version="1.15.1" />
+    <PackageVersion Include="OpenTelemetry.Instrumentation.Runtime" Version="1.15.1" />
     <PackageVersion Include="Spectre.Console.Cli" Version="0.53.0" />
-    <PackageVersion Include="Swashbuckle.AspNetCore" Version="10.0.1" />
-    <PackageVersion Include="Swashbuckle.AspNetCore.Annotations" Version="10.0.1" />
+    <PackageVersion Include="Swashbuckle.AspNetCore" Version="10.1.7" />
+    <PackageVersion Include="Swashbuckle.AspNetCore.Annotations" Version="10.1.7" />
     <PackageVersion Include="xunit" Version="2.9.3" />
-    <PackageVersion Include="xunit.v3" Version="3.2.0" />
+    <PackageVersion Include="xunit.v3" Version="3.2.2" />
     <PackageVersion Include="xunit.runner.visualstudio" Version="3.1.5" />
     <PackageVersion Include="Yarp.ReverseProxy" Version="2.3.0" />
     <!-- Pomelo transitive package for Aspire.Pomelo.EntityFrameworkCore.MySql to use EF Core 9 instead of 8 -->
