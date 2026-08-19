@@ -26,7 +26,7 @@ public static class GameEndpoints1
                 GameError error = new(ErrorCodes.InvalidGameType, $"Game type {request.GameType} does not exist", context.Request.GetDisplayUrl(), Enum.GetNames<GameType>());
                 return Results.BadRequest(error);
             }
-            return Results.Created($"/games/{game.Id}", game.AsCreateGameResponse());
+            return Results.Created($"/games/{game.Id}", game.ToUpdateGameResponse());
         }).AddEndpointFilter<ValidatePlayernameEndpointFilter>()
         .AddEndpointFilter<CreateGameExceptionEndpointFilter>();
 
@@ -49,12 +49,12 @@ public static class GameEndpoints1
                     Game? game = await gameService.EndGameAsync(id, cancellationToken);
                     if (game is null)
                         return Results.NotFound();
-                    return Results.Ok(game.AsUpdateGameResponse());
+                    return Results.Ok(game.ToUpdateGameResponse());
                 }
                 else
                 {
                     (Game game, Move move) = await gameService.SetMoveAsync(id, request.GuessPegs!, request.MoveNumber, cancellationToken);
-                    return Results.Ok(game.AsUpdateGameResponse(move.KeyPegs));
+                    return Results.Ok(game.ToUpdateGameResponse(move.KeyPegs));
                 }
             }
             catch (ArgumentException ex) when (ex.HResult is <= 4400 and >= 4000)
